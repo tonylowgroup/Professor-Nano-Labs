@@ -52,6 +52,7 @@
   const plotBands = new NanoPlot($('plot-bands'), { xLabel: 'qₓ from the valley (nm⁻¹)', yLabel: 'Energy (eV)' });
   const plotTrans = new NanoPlot($('plot-trans'), { xLabel: 'Energy E (eV)', yLabel: 'Transmission T' });
   const plotLdos = new NanoPlot($('plot-ldos'), { xLabel: 'Position x (nm)', yLabel: 'Energy E (eV)' });
+  const plotGate = new NanoPlot($('plot-gate'), { xLabel: 'Channel Dirac point (eV)', yLabel: 'T at E₀' });
   const plotSlice = new NanoPlot($('plot-slice'), { xLabel: 'Position x (nm)', yLabel: 'ρ at E₀ (states/eV·nm)' });
 
   const COLORS = () => ({
@@ -196,6 +197,26 @@
     ]);
   }
 
+  // T at E0 against the channel Dirac point, for the same four k_y as T(E).
+  const GATE = Float64Array.from({ length: 141 }, (_, i) => +(-0.35 + 0.005 * i).toFixed(3));
+  let gateKey = '', gateCurves = [];
+  function drawGate(C) {
+    const key = JSON.stringify({ ...p, dirac_channel_eV: 0, eta_ldos_eV: 0, E0, ky });
+    if (key !== gateKey) {
+      gateCurves = [...REF_KY, ky].map(q => Float64Array.from(GATE, u =>
+        G.solve([E0], q, { ...p, dirac_channel_eV: u }, p.eta_transmission_eV, false).T[0]));
+      gateKey = key;
+    }
+    const colors = [C.blue, C.green, C.violet, C.brand], hg = spectral.halfGap;
+    plotGate.setRange([-0.35, 0.35], [0, 1.04]);
+    const layers = [{ type: 'vband', x0: E0 - hg, x1: E0 + hg, color: NanoPlot.alpha(C.brand, 0.10) }];
+    gateCurves.forEach((T, j) => layers.push({ type: 'line', x: GATE, y: T, color: colors[j], width: j === 3 ? 2.4 : 1.5, dash: j === 3 ? [6, 3] : [] }));
+    layers.push({ type: 'vline', x: E0, color: C.guide, dash: [2, 3], label: 'E₀' });
+    layers.push({ type: 'vline', x: p.dirac_channel_eV, color: C.brand, dash: [], width: 2, label: 'now' });
+    plotGate.draw(layers);
+    legend('gate-legend', [...REF_KY, ky].map((q, j) => [colors[j], j === 3 ? 'swatch--dash' : '', `k<sub>y</sub> = ${FMT(q)} nm⁻¹${j === 3 ? ' (selected)' : ''}`]));
+  }
+
   function modeLabel(U, gap) {
     const e = E0 - U;
     if (Math.abs(e) < gap - 1e-12) return 'evanescent';
@@ -223,7 +244,7 @@
   function drawAll() {
     if (!spectral) return;
     const C = COLORS();
-    drawProfile(C); drawBands(C); drawTransmission(C); drawLdos(C); drawSlice(C); stats();
+    drawProfile(C); drawBands(C); drawTransmission(C); drawGate(C); drawLdos(C); drawSlice(C); stats();
   }
 
   // ---------- controls ----------
@@ -237,6 +258,8 @@
   function labels() {
     for (const [id, key, f] of SLIDERS) $(id + '-out').textContent = f(p[key]);
     $('ky-out').textContent = FMT(ky) + ' nm⁻¹';
+    $('edc').value = p.dirac_channel_eV; $('edc-sweep').value = p.dirac_channel_eV;
+    $('edc-sweep-out').textContent = FMT(p.dirac_channel_eV) + ' eV';
     $('energy-out').textContent = FMT(E0) + ' eV';
     $('energy2-out').textContent = FMT(E0) + ' eV';
     document.querySelectorAll('.preset').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.preset === preset)));
@@ -266,6 +289,7 @@
     $(id).addEventListener('input', e => { stop(); p = { ...p, [key]: +e.target.value }; preset = null; labels(); schedule(); });
   }
   $('ky').addEventListener('input', e => { stop(); ky = +e.target.value; preset = null; labels(); schedule(); });
+  $('edc-sweep').addEventListener('input', e => { stop(); p = { ...p, dirac_channel_eV: +e.target.value }; preset = null; labels(); schedule(); });
   $('valley').addEventListener('change', e => { stop(); p = { ...p, valley: +e.target.value }; schedule(); });
   $('eta').addEventListener('change', e => { stop(); p = { ...p, eta_ldos_eV: +e.target.value }; schedule(); });
   $('log').addEventListener('change', () => { mapImage = null; drawAll(); });
@@ -287,13 +311,19 @@
     document.querySelector('.lab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
-  // ---------- energy sweep ----------
+  // ---------- channel Dirac-point (gate) sweep ----------
   let timer = null;
   function stop() { if (timer) { clearInterval(timer); timer = null; } $('play').textContent = '▶ Sweep'; }
   $('play').addEventListener('click', () => {
     if (timer) { stop(); return; }
     $('play').textContent = '❚❚ Pause';
-    timer = setInterval(() => { const next = E0 + 0.006; setEnergy(next > 0.45 ? -0.45 : +next.toFixed(3)); }, 130);
+    preset = null;
+    timer = setInterval(() => {
+      let v = +(p.dirac_channel_eV + 0.005).toFixed(3);
+      if (v > 0.35 + 1e-9) v = -0.35;
+      p = { ...p, dirac_channel_eV: v };
+      labels(); recompute();
+    }, 140);
   });
   window.addEventListener('pagehide', stop);
 
