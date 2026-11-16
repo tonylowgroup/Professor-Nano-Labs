@@ -190,13 +190,6 @@
       </section>
 
       <section class="panel plot-card">
-        <div class="plot-card__head"><h3>Gate sweep: T at E<sub>0</sub> against the channel Dirac point</h3></div>
-        <p class="plot-card__cap">What a gate sweep measures. T is calculated at the fixed probe energy while the channel Dirac point moves. Left of E<sub>0</sub> the channel is n-type like the leads; right of it, p-type. In the shaded band the selected mode is evanescent in the channel and T dips.</p>
-        <ul class="legend" id="gate-legend"></ul>
-        <div class="plot-box"><canvas id="plot-gate" role="img" aria-label="Transmission at the probe energy against the channel Dirac point"></canvas></div>
-      </section>
-
-      <section class="panel plot-card">
         <div class="plot-card__head"><h3>Local density of states ρ(x, E)</h3><button class="btn-quiet btn-small" id="export-rho" type="button">Export CSV</button></div>
         <p class="plot-card__cap">Cell-averaged, in states/(eV·nm), for one spin and one valley mode at this k<sub>y</sub>. Dashed lines: the mode edges in each region.</p>
         <div class="plot-box plot-box--map"><canvas id="plot-ldos" role="img" aria-label="Local density of states as a function of position and energy"></canvas></div>
@@ -293,7 +286,7 @@
           <li><strong>Leads:</strong> exact retarded self-energies of semi-infinite uniform graphene leads, from the root of \(z\Sigma^2-(z^2+b^2-t^2)\Sigma+zb^2=0\) with \(\mathrm{Im}\,\Sigma\le0\). No wide-band approximation.</li>
           <li><strong>Solver:</strong> a recursive Green's function (two passes along the chain) gives \(G^r_{1N}\) for the Caroli transmission and the full diagonal \(G^r_{ii}\) for the LDOS. If either lead mode is closed, T is set to exactly 0; an evanescent channel is kept, so tunnelling is exact.</li>
           <li><strong>Grids:</strong> 451 energies from −0.45 to 0.45 eV (2 meV steps) for the curves and the map. The LDOS map's fixed colour range is 10⁻³ to 5 states/(eV·nm) on the log scale, or 0 to 5 on the linear scale; values above 5 saturate in the picture but are kept in the CSV.</li>
-          <li><strong>Gate sweep:</strong> the Sweep button and the gate-sweep plot move only the channel Dirac point, from −0.35 to +0.35 eV in 5 meV steps, solving T at the fixed E₀ for each value. The leads, the length and E₀ stay fixed.</li>
+          <li><strong>Sweep:</strong> the Sweep button moves only the channel Dirac point, from −0.35 to +0.35 eV in 5 meV steps, and recalculates every plot at each step. The leads, the length and E₀ stay fixed.</li>
           <li><strong>Not in the model:</strong> self-consistent electrostatics, disorder, phonons, edge roughness and a bias between the reservoirs. The finite-k<sub>y</sub> gap is a projected mode gap, not a gap in the 2D sheet.</li>
           <li><strong>Checks:</strong> this page runs the notebook's own JavaScript engine, which matches the notebook's Python solver to about 10⁻¹⁴.</li>
         </ul>
