@@ -152,10 +152,10 @@
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 4</span><button class="predict__load" type="button" data-material="gallium">Load gallium</button><button class="predict__load" type="button" data-material="blackp">Black phosphorus</button></div>
-        <p>Alpha gallium and black phosphorus are each made of a single element. Does one element mean a one-atom basis?</p>
+        <div class="predict__head"><span class="predict__tag">Question 4</span><button class="predict__load" type="button" data-material="gallium">Load gallium</button><button class="predict__load" type="button" data-material="blackp">Black phosphorus</button><button class="predict__load" type="button" data-material="graphite">Graphite</button></div>
+        <p>Alpha gallium, black phosphorus and graphite are each made of a single element. Does one element mean a one-atom basis?</p>
         <details><summary>Show answer</summary>
-          <p>No. Both have four atoms in the primitive basis, on a base-centred orthorhombic (oC) lattice, with eight atoms in the conventional cell. "One element" and "one-atom basis" are different statements: atoms of the same element can sit at positions that no lattice translation connects.</p>
+          <p>No. Gallium and black phosphorus both have four atoms in the primitive basis, on a base-centred orthorhombic (oC) lattice. Graphite has four too, on a primitive hexagonal (hP) lattice: two honeycomb layers per cell, each shifted against the other (AB stacking). "One element" and "one-atom basis" are different statements: atoms of the same element can sit at positions that no lattice translation connects.</p>
         </details>
       </div>
       <div class="predict">
@@ -182,7 +182,7 @@
       <h2 id="nb-title">Run the same viewer in Python</h2>
       <p>The companion Jupyter notebook holds the full crystal dataset with its geometry checks, builds this viewer, renders a rotating GIF of all 14 lattices, and constructs silicon from its basis in plain Python. It needs NumPy and Pillow.</p>
     </div>
-    <a class="btn btn--brand" href="bravais_lattices_3d.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 261 KB</span></a>
+    <a class="btn btn--brand" href="bravais_lattices_3d.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 262 KB</span></a>
   </section>
 
   <!-- What is computed -->
@@ -195,7 +195,7 @@
           <li><strong>Checks:</strong> the notebook verifies atom counts, centring translations, cell volumes, and that no unexpected extra translation makes a stated basis non-primitive. These test internal consistency; they are not an independent check of an experimental phase assignment.</li>
           <li><strong>Drawing:</strong> the 3D view is drawn directly on a canvas, with no external libraries. Rotation moves the camera, not the atoms. Sphere sizes are illustrative, not ionic radii, and the nearest-distance guides are geometric aids, not chemical bonds.</li>
           <li><strong>Cells:</strong> for hR the conventional cell uses hexagonal axes and the primitive cell is rhombohedral. For hP the viewer uses the primitive 120° parallelepiped, not the larger hexagonal prism.</li>
-          <li><strong>Roles:</strong> each material card separates semiconductors, insulating device components, metallic contacts and interconnects, precursors, and structural references. A precursor's structure is not the structure of the device made from it, and high-pressure Si and GaAs are not substitutes for the ordinary device phases.</li>
+          <li><strong>Roles:</strong> each material card separates semiconductors, insulating device components, metallic contacts and interconnects, precursors, and structural references. A precursor's structure is not the structure of the device made from it, and high-pressure GaAs is not a substitute for ordinary zincblende GaAs.</li>
         </ul>
         <p>Main structural references: the <a href="https://www.iucr.org/who-we-are/commissions/commission-on-crystallographic-nomenclature/published-reports/bravais" target="_blank" rel="noopener">IUCr Bravais-lattice nomenclature</a> and the AFLOW crystal-prototype encyclopedia (Mehl et al., <i>Comput. Mater. Sci.</i> <b>136</b>, S1 (2017); Hicks et al., <b>199</b>, 110450 (2021)). Each material card links its own sources.</p>
       </div>
