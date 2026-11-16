@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en" data-track="quantum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackbody Radiation · Professor Nano Labs</title>
+<meta name="description" content="Compare Planck's law with the classical Rayleigh–Jeans prediction, find the ultraviolet catastrophe, and watch the peak move with temperature. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>Blackbody Radiation</h1>
+    <p>Heat anything and it glows. Classical physics predicts infinite power at short wavelengths; Planck's energy quanta fix it. Change the temperature and watch the peak, the colour and the failure of the classical law.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="blackbody_radiation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=jpu36CYydkc" target="_blank" rel="noopener" title="The light wave and particle debate, from Newton to Einstein">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/jpu36CYydkc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The light wave and particle debate, from Newton to Einstein<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=e9TQs-EDiUs" target="_blank" rel="noopener" title="Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/e9TQs-EDiUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=BLqMA8YWkDY" target="_blank" rel="noopener" title="Deriving the Bose Einstein distribution function">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/BLqMA8YWkDY/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the Bose Einstein distribution function<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Counting light modes, then filling them</h2>
+    <p>Light inside a hot cavity is a set of standing-wave modes, and the number of modes per unit wavelength grows as \(1/\lambda^4\). Classical physics gives every mode the same average energy \(k_BT\), which yields the Rayleigh–Jeans law. Planck instead let each mode hold energy only in quanta \(hc/\lambda\), so short-wavelength modes are rarely excited:</p>
+    <div class="equation">$$B_\lambda^{\rm RJ}(T)=\frac{2ck_BT}{\lambda^4},\qquad B_\lambda(T)=\frac{2hc^2}{\lambda^5}\,\frac{1}{e^{hc/\lambda k_BT}-1},\qquad \frac{\langle E\rangle}{k_BT}=\frac{x}{e^{x}-1},\quad x=\frac{hc}{\lambda k_BT}$$</div>
+    <p class="ctrl__hint">\(B_\lambda\) is the spectral radiance, in W·m⁻²·sr⁻¹ per unit wavelength. The energy density inside the cavity is \(u_\lambda=4\pi B_\lambda/c\). The occupation \(1/(e^x-1)\) is the Bose–Einstein distribution for photons.</p>
+
+    <div class="label-caps" style="margin-top:18px">Try an example</div>
+    <div class="presets" id="presets">
+      <button class="preset" type="button" data-preset="default"><strong>4000 K</strong><span>The notebook's default</span></button>
+      <button class="preset" type="button" data-preset="sun"><strong>The Sun, 5772 K</strong><span>Its effective surface temperature</span></button>
+      <button class="preset" type="button" data-preset="bulb"><strong>Light bulb, about 2800 K</strong><span>An incandescent tungsten filament</span></button>
+      <button class="preset" type="button" data-preset="body"><strong>You, about 310 K</strong><span>Body temperature</span></button>
+      <button class="preset" type="button" data-preset="redhot"><strong>Red hot, 1000 K</strong><span>Just above the first visible glow</span></button>
+      <button class="preset" type="button" data-preset="star"><strong>Sirius A, about 9940 K</strong><span>A hot blue-white star</span></button>
+    </div>
+  </section>
+
+  <!-- The lab -->
+  <div class="lab-grid">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">Source</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="T">Temperature T</label><output id="T-out" for="T"></output></div>
+          <input id="T" type="range" min="0" max="1000" step="1">
+          <div class="ctrl__type"><label for="T-num">Or type it:</label><input id="T-num" type="number" min="300" max="20000" step="1" inputmode="numeric"> K</div>
+          <div class="ctrl__hint">300 K to 20,000 K. The slider is logarithmic.</div>
+        </div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="qty-label">Plot</span>
+          <div class="seg" role="group" aria-labelledby="qty-label">
+            <button type="button" data-qty="radiance" aria-pressed="true">Radiance B<sub>λ</sub></button>
+            <button type="button" data-qty="density" aria-pressed="false">Energy density u<sub>λ</sub></button>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">Compare</div>
+        <label class="check"><input id="rj" type="checkbox" checked> Rayleigh–Jeans (classical)</label>
+        <div class="ctrl">
+          <button class="btn-quiet" id="pin" type="button">Pin this curve</button>
+          <div class="ctrl__hint" id="pin-hint">Pin a temperature, then change T to compare the two curves.</div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">View</div>
+        <div class="ctrl ctrl__row">
+          <label for="range">Wavelengths</label>
+          <select id="range">
+            <option value="auto">Auto</option>
+            <option value="1500">0–1500 nm</option>
+            <option value="3000">0–3000 nm</option>
+            <option value="10000">0–10 µm</option>
+            <option value="50000">0–50 µm</option>
+          </select>
+        </div>
+        <label class="check"><input id="visible" type="checkbox" checked> Visible band (380–750 nm)</label>
+        <label class="check"><input id="peak" type="checkbox" checked> Peak wavelength</label>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Temperature sweep">
+        <div class="transport transport--bb">
+          <button class="btn-play" id="play" type="button">▶ Heat up</button>
+          <button class="btn-quiet" id="reset" type="button">Reset</button>
+          <div class="glow" id="glow" aria-hidden="true"></div>
+          <div class="transport__time" id="T-big" aria-live="off"></div>
+        </div>
+        <div class="transport__more"><span>Heat up raises the temperature smoothly from where it is to 20,000 K, then starts again at 300 K.</span></div>
+      </section>
+
+      <div class="stats" id="stats">
+        <div class="stat"><div class="stat__label">Peak wavelength</div><div class="stat__value" id="st-peak"></div><div class="stat__sub">Wien: λ<sub>max</sub>T = 2.898 mm·K</div></div>
+        <div class="stat"><div class="stat__label">Peak value</div><div class="stat__value" id="st-peakval"></div><div class="stat__sub" id="st-peakval-sub"></div></div>
+        <div class="stat"><div class="stat__label">Power per area</div><div class="stat__value" id="st-power"></div><div class="stat__sub">Stefan–Boltzmann: σT⁴</div></div>
+        <div class="stat"><div class="stat__label">Visible share</div><div class="stat__value" id="st-visible"></div><div class="stat__sub">of all radiance, 380–750 nm</div></div>
+        <div class="stat"><div class="stat__label">Classical at peak</div><div class="stat__value" id="st-rj"></div><div class="stat__sub">Rayleigh–Jeans ÷ Planck at λ<sub>max</sub></div></div>
+        <div class="stat"><div class="stat__label">Glow colour</div><div class="stat__value stat__value--swatch"><span class="swatch-chip" id="st-colour-chip"></span><span id="st-colour"></span></div><div class="stat__sub" id="st-colour-sub">hue only, brightness scaled</div></div>
+      </div>
+      <div class="note" id="note" role="status"></div>
+
+      <section class="panel plot-card" aria-labelledby="p1-title">
+        <div class="plot-card__head"><h3 id="p1-title">Spectrum</h3></div>
+        <ul class="legend" id="spec-legend"></ul>
+        <div class="plot-box plot-box--tall"><canvas id="plot-spec" role="img" aria-label="Blackbody spectrum against wavelength"></canvas></div>
+      </section>
+
+      <section class="panel plot-card" aria-labelledby="p2-title">
+        <div class="plot-card__head"><h3 id="p2-title">Average energy per mode, \(\langle E\rangle/k_BT\)</h3></div>
+        <p class="plot-card__cap">Classical physics gives every mode k<sub>B</sub>T (dashed line). With quanta of hc/λ, modes whose quantum is larger than k<sub>B</sub>T are frozen out. This factor is exactly Planck ÷ Rayleigh–Jeans.</p>
+        <div class="plot-box plot-box--short"><canvas id="plot-mode" role="img" aria-label="Average energy per mode against wavelength"></canvas></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it with the readouts and plots.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1</span><button class="predict__load" type="button" data-q="q1">Load 4000 K</button></div>
+        <p>At 4000 K, where is the peak, and how much of the radiance falls in the visible range?</p>
+        <details><summary>Show answer</summary>
+          <p>The peak is at 724 nm, right at the red edge of the visible. Only about 26% of the radiance is visible; most of the rest is infrared. The glow looks warm orange-white.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2</span><button class="predict__load" type="button" data-q="q2">Load the Sun</button></div>
+        <p>The Sun's surface is about 5772 K. Compared with 4000 K, where does the peak move, and how much more power does each square metre radiate?</p>
+        <details><summary>Show answer</summary>
+          <p>The peak moves to 502 nm, in the blue-green, close to where our eyes are most sensitive. The power per area rises by \((5772/4000)^4 \approx 4.3\) times, to about 63 MW/m². About 44% of the radiance is now visible, so sunlight looks nearly white.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3</span><button class="predict__load" type="button" data-q="q3">Load 4000 K with Rayleigh–Jeans</button></div>
+        <p>Rayleigh–Jeans agrees with Planck at long wavelengths. At 4000 K, how far off is it at 3000 nm, and at 400 nm?</p>
+        <details><summary>Show answer</summary>
+          <p>At 3000 nm it is 1.9 times too high; at 400 nm, 894 times too high. Integrated over all wavelengths it predicts infinite power: the ultraviolet catastrophe. At the peak it is always 28.7 times too high, whatever the temperature, because the peak always sits at the same value of \(x=hc/\lambda k_BT\approx 4.97\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4</span><button class="predict__load" type="button" data-q="q4">Load body temperature</button></div>
+        <p>You are at about 310 K. Do you glow?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes, in the infrared. Your spectrum peaks near 9.3 µm and your skin radiates about 520 W/m², though you absorb most of that back from your surroundings. The visible share is about 5 × 10⁻²³, far too little to see. Thermal cameras image exactly this light.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5</span><button class="predict__load" type="button" data-q="q5">Load 3000 K and pin it</button></div>
+        <p>The 3000 K curve is pinned. Raise the temperature to 6000 K. What happens to the peak wavelength, the peak height and the total power?</p>
+        <details><summary>Show answer</summary>
+          <p>The peak wavelength halves, from 966 to 483 nm. The peak height rises 32 times (\(T^5\)) and the total power 16 times (\(T^4\)). The area under the curve grows more slowly than its height because the curve also gets narrower.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6</span><button class="predict__load" type="button" data-q="q6">Load 4000 K</button></div>
+        <p>In the lower plot, at what wavelength does each mode carry only half the classical k<sub>B</sub>T?</p>
+        <details><summary>Show answer</summary>
+          <p>At about 2.86 µm, where \(x/(e^x-1)=\tfrac12\), that is \(x\approx1.26\). At shorter wavelengths a single quantum \(hc/\lambda\) costs more than the thermal energy \(k_BT\) available, so those modes are rarely excited. This freezing-out is what removes the ultraviolet catastrophe.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook plots Planck's law against Rayleigh–Jeans for both radiance and energy density, then checks Wien's law and the Stefan–Boltzmann law numerically. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="blackbody_radiation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 9 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Spectra:</strong> Planck's law and the Rayleigh–Jeans law exactly as written above, with the exact SI constants \(h\), \(c\) and \(k_B\). The Bose–Einstein factor uses <code>expm1</code>, which computes \(e^x-1\) accurately even when \(x\) is small.</li>
+          <li><strong>Readouts:</strong> Wien's law \(\lambda_{\max}=b/T\) with \(b=2.8978\) mm·K; the power per area \(\sigma T^4\) with \(\sigma=5.6704\times10^{-8}\) W·m⁻²·K⁻⁴; and the visible share, from integrating \(B_\lambda\) over 380–750 nm (Simpson's rule) and dividing by \(\sigma T^4/\pi\).</li>
+          <li><strong>Colour:</strong> the spectrum is weighted by the CIE 1931 colour-matching functions (the analytic fit of Wyman, Sloan and Shirley, 2013), converted to sRGB, and scaled to full brightness. It shows the hue only; below about 800 K the real glow is too faint to see.</li>
+          <li><strong>Model limits:</strong> an ideal blackbody, which absorbs everything that falls on it. Real surfaces emit less by a factor called the emissivity, which depends on wavelength.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

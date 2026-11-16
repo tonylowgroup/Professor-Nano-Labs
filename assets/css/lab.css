@@ -215,6 +215,13 @@ mjx-container svg { display: inline; }
 .centering th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--tint); }
 .predict__head .predict__load + .predict__load { margin-left: -4px; }
 
+/* Blackbody: glow strip and colour swatch */
+.glow { height: 38px; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), 0 0 24px rgba(255, 190, 120, .25); transition: background-color .2s ease; }
+.ctrl__type { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13.5px; color: var(--muted); }
+.ctrl__type input { width: 92px; font: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid #c9d7de; border-radius: 8px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.stat__value--swatch { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.swatch-chip { width: 26px; height: 26px; border-radius: 7px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); flex: none; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {

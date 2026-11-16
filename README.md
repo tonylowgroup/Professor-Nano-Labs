@@ -16,6 +16,19 @@ assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 ```
 
+## Labs
+
+| Track | Lab | Folder |
+|---|---|---|
+| Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
+| Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
+| Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
+| Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
+| Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
+
+Each lab folder holds its page, its JavaScript and its companion Jupyter
+notebook (saved without outputs).
+
 ## Track colours
 
 Each track has its own accent colour, set in `assets/css/site.css`:
