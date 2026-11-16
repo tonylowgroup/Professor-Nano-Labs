@@ -5,7 +5,7 @@
   --plot-text: #5f7382;
   --plot-grid: #e8eef1;
   --plot-axis: #a9bcc5;
-  --series-1: #175569;     /* density, main curve */
+  --series-1: var(--brand);   /* main curve: follows the track colour */
   --series-re: #1f6fb4;    /* Re psi */
   --series-im: #e07b1f;    /* Im psi */
   --series-ghost: #9fb1ba;
@@ -22,11 +22,12 @@ mjx-container svg { display: inline; }
 .lab-hero {
   background:
     radial-gradient(700px 300px at 90% 0%, rgba(127, 224, 232, .14), transparent 60%),
-    linear-gradient(140deg, var(--brand-ink) 0%, #12384a 55%, var(--brand) 100%);
+    linear-gradient(140deg, var(--brand-ink) 0%, var(--track-hero, var(--brand)) 100%);
   color: #fff; padding: 40px 0 36px;
 }
-.lab-hero .crumbs { font-size: 13px; color: var(--cyan-soft); margin-bottom: 14px; }
-.lab-hero .crumbs a { color: var(--cyan-soft); }
+.lab-hero .crumbs { font-size: 13px; color: var(--track-tint, var(--cyan-soft)); margin-bottom: 14px; }
+.lab-hero .crumbs a { color: var(--track-tint, var(--cyan-soft)); }
+.lab-hero .eyebrow--light { color: var(--track-tint, var(--cyan-soft)); }
 .lab-hero .crumbs a:hover { text-decoration: underline; }
 .lab-hero h1 { font-size: clamp(30px, 4vw, 42px); letter-spacing: -.03em; margin: 10px 0 8px; line-height: 1.1; }
 .lab-hero p { margin: 0; color: #d3e6ec; font-size: 17px; max-width: 680px; line-height: 1.6; }

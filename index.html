@@ -95,7 +95,7 @@
       </div>
 
       <ol class="tracks">
-        <li class="track" aria-labelledby="track-01">
+        <li class="track" data-track="quantum" aria-labelledby="track-01">
           <div class="track__num" aria-hidden="true">01</div>
           <div class="track__head">
             <h3 class="track__title" id="track-01">Quantum foundations</h3>
@@ -131,13 +131,13 @@
                 <svg viewBox="0 0 440 150" role="presentation">
                   <line x1="24" y1="78" x2="416" y2="78" stroke="#b9cfd7" stroke-width="1.2"/>
                   <path d="M52 78.0 L54 78.0 L56 78.0 L58 78.0 L60 77.9 L62 77.9 L64 77.8 L66 77.7 L68 77.5 L70 77.3 L72 76.9 L74 76.4 L76 75.7 L78 74.6 L80 73.3 L82 71.6 L84 69.3 L86 66.6 L88 63.3 L90 59.4 L92 54.9 L94 50.0 L96 44.7 L98 39.2 L100 33.7 L102 28.4 L104 23.6 L106 19.6 L108 16.6 L110 14.6 L112 14.0 L114 14.6 L116 16.6 L118 19.6 L120 23.6 L122 28.4 L124 33.7 L126 39.2 L128 44.7 L130 50.0 L132 54.9 L134 59.4 L136 63.3 L138 66.6 L140 69.3 L142 71.6 L144 73.3 L146 74.6 L148 75.7 L150 76.4 L152 76.9 L154 77.3 L156 77.5 L158 77.7 L160 77.8 L162 77.9 L164 77.9 L166 78.0 L168 78.0 L170 78.0 L172 78.0" fill="none" stroke="#8fa5af" stroke-width="2" stroke-dasharray="5 4"/>
-                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0L412 78L172 78Z" fill="#175569" fill-opacity=".14"/>
-                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0" fill="none" stroke="#175569" stroke-width="2.4"/>
+                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0L412 78L172 78Z" fill="currentColor" fill-opacity=".14"/>
+                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0" fill="none" stroke="currentColor" stroke-width="2.4"/>
                   <path d="M182 76.8 L183.5 78.0 L185 79.4 L186.5 80.4 L188 80.4 L189.5 79.3 L191 77.3 L192.5 75.4 L194 74.4 L195.5 74.9 L197 77.1 L198.5 80.0 L200 82.3 L201.5 83.0 L203 81.4 L204.5 78.0 L206 74.1 L207.5 71.5 L209 71.6 L210.5 74.7 L212 79.8 L213.5 84.6 L215 86.9 L216.5 85.4 L218 80.2 L219.5 73.4 L221 68.0 L222.5 66.6 L224 70.3 L225.5 78.0 L227 86.4 L228.5 91.8 L230 91.4 L231.5 84.7 L233 74.4 L234.5 64.7 L236 60.3 L237.5 63.6 L239 73.7 L240.5 86.6 L242 96.6 L243.5 98.9 L245 91.8 L246.5 78.0 L248 63.2 L249.5 54.2 L251 55.3 L252.5 66.7 L254 83.9 L255.5 99.5 L257 106.2 L258.5 100.6 L260 84.6 L261.5 64.9 L263 50.1 L264.5 47.2 L266 57.9 L267.5 78.0 L269 98.8 L270.5 111.1 L272 109.1 L273.5 93.2 L275 70.1 L276.5 50.0 L278 41.8 L279.5 49.4 L281 69.8 L282.5 94.1 L284 111.7 L285.5 114.7 L287 101.5 L288.5 78.0 L290 54.3 L291.5 41.0 L293 43.8 L294.5 61.5 L296 86.4 L297.5 107.5 L299 115.5 L300.5 107.2 L302 86.3 L303.5 62.0 L305 45.1 L306.5 42.8 L308 55.7 L309.5 78.0 L311 99.7 L312.5 111.4 L314 108.4 L315.5 92.4 L317 70.7 L318.5 53.0 L320 46.6 L321.5 54.0 L323 71.3 L324.5 90.7 L326 103.8 L327.5 105.2 L329 95.0 L330.5 78.0 L332 62.0 L333.5 53.7 L335 56.2 L336.5 67.8 L338 83.0 L339.5 95.1 L341 99.1 L342.5 93.9 L344 82.4 L345.5 69.8 L347 61.6 L348.5 61.0 L350 67.6 L351.5 78.0 L353 87.6 L354.5 92.3 L356 90.6 L357.5 83.8 L359 75.2 L360.5 68.6 L362 66.5 L363.5 69.5 L365 75.7 L366.5 82.3 L368 86.4 L369.5 86.5 L371 83.2 L372.5 78.0 L374 73.4 L375.5 71.2 L377 72.1 L378.5 75.3 L380 79.3 L381.5 82.2 L383 83.0 L384.5 81.7 L386 79.0 L387.5 76.2 L389 74.6 L390.5 74.5 L392 75.9 L393.5 78.0 L395 79.8 L396.5 80.6 L398 80.2 L399.5 79.0 L401 77.5" fill="none" stroke="#1f6fb4" stroke-width="1.6"/>
                   <path d="M150 137H246" stroke="#c47a12" stroke-width="2" stroke-linecap="round"/>
                   <path d="M240 132l7 5-7 5" fill="none" stroke="#c47a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <text x="112" y="141" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">t = 0</text>
-                  <text x="292" y="141" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#175569">later</text>
+                  <text x="292" y="141" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="currentColor">later</text>
                 </svg>
               </a>
               <div class="lab-card__body">
@@ -174,7 +174,7 @@
           </div>
         </li>
 
-        <li class="track" aria-labelledby="track-02">
+        <li class="track" data-track="crystals" aria-labelledby="track-02">
           <div class="track__num" aria-hidden="true">02</div>
           <div class="track__head">
             <h3 class="track__title" id="track-02">Crystals &amp; energy bands</h3>
@@ -210,41 +210,41 @@
                   <svg viewBox="0 0 440 150" role="presentation">
                   <line x1="28" y1="20" x2="418" y2="20" stroke="#c47a12" stroke-width="1.3" stroke-dasharray="5 4"/>
                   <line x1="28" y1="112" x2="418" y2="112" stroke="#c47a12" stroke-width="1.3" stroke-dasharray="5 4"/>
-                  <line x1="36" y1="66.0" x2="88" y2="66.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="36" y1="66.0" x2="88" y2="66.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
                   <text x="62" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 1</text>
-                  <line x1="116" y1="89.0" x2="168" y2="89.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="116" y1="43.0" x2="168" y2="43.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="116" y1="89.0" x2="168" y2="89.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="116" y1="43.0" x2="168" y2="43.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
                   <text x="142" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 2</text>
-                  <line x1="196" y1="103.2" x2="248" y2="103.2" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="196" y1="80.2" x2="248" y2="80.2" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="196" y1="51.8" x2="248" y2="51.8" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="196" y1="28.8" x2="248" y2="28.8" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="103.2" x2="248" y2="103.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="80.2" x2="248" y2="80.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="51.8" x2="248" y2="51.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="28.8" x2="248" y2="28.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
                   <text x="222" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 4</text>
-                  <line x1="276" y1="109.2" x2="328" y2="109.2" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="101.2" x2="328" y2="101.2" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="89.0" x2="328" y2="89.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="74.0" x2="328" y2="74.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="58.0" x2="328" y2="58.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="43.0" x2="328" y2="43.0" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="30.8" x2="328" y2="30.8" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
-                  <line x1="276" y1="22.8" x2="328" y2="22.8" stroke="#175569" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="109.2" x2="328" y2="109.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="101.2" x2="328" y2="101.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="89.0" x2="328" y2="89.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="74.0" x2="328" y2="74.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="58.0" x2="328" y2="58.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="43.0" x2="328" y2="43.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="30.8" x2="328" y2="30.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="22.8" x2="328" y2="22.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
                   <text x="302" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 8</text>
-                  <line x1="356" y1="111.2" x2="408" y2="111.2" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="108.9" x2="408" y2="108.9" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="105.1" x2="408" y2="105.1" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="100.0" x2="408" y2="100.0" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="93.7" x2="408" y2="93.7" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="86.5" x2="408" y2="86.5" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="78.6" x2="408" y2="78.6" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="70.2" x2="408" y2="70.2" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="61.8" x2="408" y2="61.8" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="53.4" x2="408" y2="53.4" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="45.5" x2="408" y2="45.5" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="38.3" x2="408" y2="38.3" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="32.0" x2="408" y2="32.0" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="26.9" x2="408" y2="26.9" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="23.1" x2="408" y2="23.1" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
-                  <line x1="356" y1="20.8" x2="408" y2="20.8" stroke="#175569" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="111.2" x2="408" y2="111.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="108.9" x2="408" y2="108.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="105.1" x2="408" y2="105.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="100.0" x2="408" y2="100.0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="93.7" x2="408" y2="93.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="86.5" x2="408" y2="86.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="78.6" x2="408" y2="78.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="70.2" x2="408" y2="70.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="61.8" x2="408" y2="61.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="53.4" x2="408" y2="53.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="45.5" x2="408" y2="45.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="38.3" x2="408" y2="38.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="32.0" x2="408" y2="32.0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="26.9" x2="408" y2="26.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="23.1" x2="408" y2="23.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="20.8" x2="408" y2="20.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                   <text x="382" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 16</text>
                   </svg>
               </a>
@@ -282,7 +282,7 @@
           </div>
         </li>
 
-        <li class="track" aria-labelledby="track-03">
+        <li class="track" data-track="transport" aria-labelledby="track-03">
           <div class="track__num" aria-hidden="true">03</div>
           <div class="track__head">
             <h3 class="track__title" id="track-03">Nanoscale transport</h3>

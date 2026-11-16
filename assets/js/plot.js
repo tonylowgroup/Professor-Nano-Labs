@@ -232,5 +232,13 @@
     }
   }
 
+  /* '#5b45b0' + alpha -> 'rgba(91, 69, 176, alpha)' (for fills derived from CSS tokens). */
+  NanoPlot.alpha = function (hex, a) {
+    const h = String(hex).trim().replace('#', '');
+    const v = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    const n = parseInt(v, 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+  };
+
   window.NanoPlot = NanoPlot;
 })();

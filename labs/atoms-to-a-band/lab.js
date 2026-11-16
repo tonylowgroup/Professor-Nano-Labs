@@ -132,7 +132,7 @@
     const fan = [];
     for (let n = 1; n <= N; n += stride) {
       const c = Math.cos(n * Math.PI / (N + 1));
-      fan.push({ type: 'line', x: aa, y: aa.map(v => eps + 2 * L.hopping(v, k) * c), color: 'rgba(23, 85, 105, .38)', width: 1 });
+      fan.push({ type: 'line', x: aa, y: aa.map(v => eps + 2 * L.hopping(v, k) * c), color: NanoPlot.alpha(css('--series-1'), .38), width: 1 });
     }
     plotA.opts.xLabel = 'Spacing a (Å)';
     plotA.setRange([3, 10], [eps - spread, eps + spread]);
@@ -187,7 +187,7 @@
       ...edges,
       { type: 'line', x: q, y: q.map(v => eps + 2 * t * Math.cos(Math.PI * v)), color: css('--series-im'), width: 1.6, dash: [6, 4] },
       { type: 'dots', x: es.map((_, i) => (i + 1) / (N + 1)), y: es, r: N > 100 ? 2.2 : 3.4,
-        colors: Array.from(es, e => (e > lo && e <= hi) ? amber : 'rgba(23, 85, 105, .35)') },
+        colors: Array.from(es, e => (e > lo && e <= hi) ? amber : NanoPlot.alpha(css('--series-1'), .35)) },
     ]);
 
     let dmax = 0; for (let i = 0; i < D.length; i++) dmax = Math.max(dmax, D[i], B[i]);

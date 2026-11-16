@@ -16,6 +16,15 @@ assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 ```
 
+## Track colours
+
+Each track has its own accent colour, set in `assets/css/site.css`:
+quantum foundations (violet), crystals and energy bands (emerald) and
+nanoscale transport (copper). A lab page picks its colour with
+`<html data-track="quantum">` (or `crystals`, `transport`); on the homepage
+each track row carries the same attribute. Everything inside follows the
+`--brand` tokens, so new labs need no extra colour work.
+
 ## Preview locally
 
 ```bash

@@ -68,7 +68,7 @@
     plotD.setRange([-state.X, state.X], [0, model.densMax]);
     const dl = [];
     if (state.ghost) dl.push({ type: 'line', x, y: dens0, color: css('--series-ghost'), width: 1.5, dash: [5, 4] });
-    dl.push({ type: 'line', x, y: dens, color: css('--series-1'), width: 2.2, fill: 'rgba(23, 85, 105, .12)' });
+    dl.push({ type: 'line', x, y: dens, color: css('--series-1'), width: 2.2, fill: NanoPlot.alpha(css('--series-1'), .12) });
     if (model.Nk > 1) dl.push({ type: 'vline', x: model.vg * state.t, color: css('--series-amber'), dash: [3, 4], label: '⟨x⟩' });
     plotD.draw(dl);
 
@@ -87,7 +87,7 @@
 
   function drawK() {
     plotK.setRange(kCurve.range, [0, 1.15 * kCurve.max]);
-    const layers = [{ type: 'line', x: kCurve.x, y: kCurve.y, color: css('--series-1'), width: 2.2, fill: 'rgba(23, 85, 105, .10)' }];
+    const layers = [{ type: 'line', x: kCurve.x, y: kCurve.y, color: css('--series-1'), width: 2.2, fill: NanoPlot.alpha(css('--series-1'), .10) }];
     const showStems = model.Nk <= 101;
     $('stem-legend').hidden = !showStems;
     if (showStems) {

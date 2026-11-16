@@ -119,6 +119,16 @@ img, svg { display: block; }
 .section__head { margin-bottom: 34px; }
 .section h2 { font-size: clamp(26px, 3vw, 32px); letter-spacing: -.025em; margin: 8px 0 10px; }
 
+/* ---------- Track colours ----------
+   Each track overrides the brand tokens for everything inside it: homepage
+   track rows (<li data-track>) and whole lab pages (<html data-track>).
+   The site chrome (top bar, homepage banner, About) keeps the teal brand. */
+[data-track="quantum"]   { --brand: #5b45b0; --brand-strong: #46349a; --brand-soft: #eeebfb; --track-hero: #4a3a9c; --track-tint: #d3cbf7; }
+[data-track="crystals"]  { --brand: #127a5e; --brand-strong: #0d5f49; --brand-soft: #e2f3ec; --track-hero: #0f6a50; --track-tint: #b4ead6; }
+[data-track="transport"] { --brand: #b0561b; --brand-strong: #8f4413; --brand-soft: #fbeee3; --track-hero: #9a4a16; --track-tint: #f7cfae; }
+/* The top bar and footer always use the site teal. */
+[data-track] .site-nav, [data-track] .site-footer { --brand: #175569; --brand-strong: #0f3d4c; --brand-soft: #e3eff2; }
+
 /* ---------- Learning path ---------- */
 .tracks { list-style: none; margin: 0; padding: 0; }
 .track { position: relative; padding: 0 0 48px 66px; }
@@ -154,7 +164,7 @@ img, svg { display: block; }
 }
 
 /* Live lab cards: illustration, features and a launch link */
-.lab-card__art { display: block; background: #e6f1f3; border-bottom: 1px solid var(--line); }
+.lab-card__art { display: block; background: var(--brand-soft); color: var(--brand); border-bottom: 1px solid var(--line); }
 .lab-card__art svg { width: 100%; height: auto; }
 .lab-card__title a:hover { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
 .chip--live { color: #0f5132; background: #dcf2e6; }
