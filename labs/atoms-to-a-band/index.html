@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" data-track="crystals">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Atoms to a Band · Professor Nano Labs</title>
+<meta name="description" content="Add atoms to a chain, watch their levels merge into an energy band, and count states to build the density of states. A live, in-browser lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Crystals &amp; energy bands</div>
+    <div class="eyebrow eyebrow--light">Crystals &amp; energy bands · Live lab</div>
+    <h1>From Atoms to a Band</h1>
+    <p>Line atoms up in a chain and switch on the coupling between neighbours. One level per atom spreads into an energy band, and counting those levels gives the density of states.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="atoms_to_a_band.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=Hm-v4Eby0hk" target="_blank" rel="noopener" title="How energy bands are formed? Key quantum concepts simplified">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/Hm-v4Eby0hk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How energy bands are formed? Key quantum concepts simplified<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=vNBttmWca_U" target="_blank" rel="noopener" title="Deriving the density-of-states for any dispersion and dimensionality">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/vNBttmWca_U/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the density-of-states for any dispersion and dimensionality<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=5vOvjeTRcqM" target="_blank" rel="noopener" title="Linear combination of atomic orbitals (tight-binding method) for electrons in crystalline solids">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/5vOvjeTRcqM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Linear combination of atomic orbitals (tight-binding method) for electrons in crystalline solids<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">One orbital per atom, one coupling between neighbours</h2>
+    <p>Each site in the chain contributes one atomic orbital with energy \(\varepsilon\). Neighbouring orbitals are coupled by a hopping energy \(t<0\), and the ends are open. The Hamiltonian is tridiagonal, and its \(N\) levels are known exactly:</p>
+    <div class="equation">$$H=\begin{pmatrix}\varepsilon&t&&\\ t&\varepsilon&\ddots&\\ &\ddots&\ddots&t\\ &&t&\varepsilon\end{pmatrix},\qquad E_n=\varepsilon+2t\cos\!\left(\frac{n\pi}{N+1}\right),\quad n=1,\dots,N.$$</div>
+    <p class="ctrl__hint">Energies are in eV and lengths in Å. One spin channel is counted throughout.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-band" aria-controls="lab" aria-selected="true" data-mode="band">1 · Add atoms</button>
+      <button class="tab" role="tab" id="tab-spacing" aria-controls="lab" aria-selected="false" data-mode="spacing" tabindex="-1">2 · Change the spacing</button>
+      <button class="tab" role="tab" id="tab-dos" aria-controls="lab" aria-selected="false" data-mode="dos" tabindex="-1">3 · Density of states</button>
+    </div>
+    <div class="mode-intro" data-for="band">
+      <h2>Add atoms. Watch an energy band form.</h2>
+      <p>Each site contributes one state. Turn on the coupling and increase N to see those states split into a densely filled band.</p>
+      <div class="equation">$$W_N=E_N-E_1=4|t|\cos\!\left(\frac{\pi}{N+1}\right)\;\longrightarrow\;W_\infty=4|t|\quad\text{as } N\to\infty$$</div>
+    </div>
+    <div class="mode-intro" data-for="spacing" hidden>
+      <h2>Pull the atoms apart. Collapse the band.</h2>
+      <p>Keep the number of orbitals fixed and vary only the spacing, which sets the coupling. The fan follows every level as the spacing changes; the vertical line marks the current spacing.</p>
+      <div class="equation">$$t(a)=t_{\rm ref}\,\frac{a}{a_{\rm ref}}\,e^{-\kappa(a-a_{\rm ref})},\qquad W_\infty(a)=4\,|t(a)|$$</div>
+    </div>
+    <div class="mode-intro" data-for="dos" hidden>
+      <h2>Count states. Build the density of states.</h2>
+      <p>The shaded energy window is linked across all three plots. Move it from the band centre to an edge, or animate N to turn separate peaks into a smooth curve.</p>
+      <div class="equation">$$\Omega_N(E)=\#\{E_n\le E\},\qquad D_\sigma(E)=\frac{1}{Na}\sum_n G_\sigma(E-E_n),\qquad D_\infty(E)=\frac{1}{\pi a\sqrt{4t^2-(E-\varepsilon)^2}}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-band">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">Chain</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="N">Number of sites N</label><output id="N-out" for="N"></output></div>
+          <input id="N" type="range" min="1" max="256" step="1" value="32">
+          <div class="chips" role="group" aria-label="Quick N">
+            <button class="chip-btn" type="button" data-n="1">1</button><button class="chip-btn" type="button" data-n="2">2</button><button class="chip-btn" type="button" data-n="3">3</button><button class="chip-btn" type="button" data-n="4">4</button><button class="chip-btn" type="button" data-n="8">8</button><button class="chip-btn" type="button" data-n="16">16</button><button class="chip-btn" type="button" data-n="32">32</button><button class="chip-btn" type="button" data-n="64">64</button><button class="chip-btn" type="button" data-n="128">128</button><button class="chip-btn" type="button" data-n="256">256</button>
+          </div>
+        </div>
+        <div class="ctrl" data-modes="band dos">
+          <div class="ctrl__row"><label for="mag">Coupling |t|</label><output id="mag-out" for="mag"></output></div>
+          <input id="mag" type="range" min="0" max="1.2" step="0.01" value="0.4">
+          <div class="ctrl__hint" data-modes="band">Set |t| to 0 for isolated atoms.</div>
+        </div>
+        <div class="ctrl" data-modes="band">
+          <div class="ctrl__row"><label for="eps">On-site energy ε</label><output id="eps-out" for="eps"></output></div>
+          <input id="eps" type="range" min="-1" max="1" step="0.02" value="0">
+        </div>
+        <div class="ctrl" data-modes="spacing dos">
+          <div class="ctrl__row"><label for="a" id="a-label">Spacing a</label><output id="a-out" for="a"></output></div>
+          <input id="a" type="range" min="3" max="10" step="0.05" value="5">
+          <div class="ctrl__hint" data-modes="dos">Changes only the per-length normalization; t is held fixed here.</div>
+        </div>
+        <div class="ctrl" data-modes="spacing">
+          <div class="ctrl__row"><label for="kappa">Orbital decay κ</label><output id="kappa-out" for="kappa"></output></div>
+          <input id="kappa" type="range" min="0.6" max="1.8" step="0.05" value="1">
+          <div class="ctrl__hint">How quickly each orbital's tail decays. Larger κ makes t(a) fall faster.</div>
+        </div>
+      </div>
+
+      <div class="ctrl-group" data-modes="dos">
+        <div class="label-caps">Energy window</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="center">Window centre</label><output id="center-out" for="center"></output></div>
+          <input id="center" type="range" min="-1.1" max="1.1" step="0.01" value="0">
+          <div class="ctrl__hint">(E<sub>c</sub> − ε)/(2|t|): −1 and +1 are the band edges.</div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="width">Window width</label><output id="width-out" for="width"></output></div>
+          <input id="width" type="range" min="0.02" max="0.35" step="0.01" value="0.1">
+          <div class="ctrl__hint">ΔE as a fraction of the full band, 4|t|.</div>
+        </div>
+      </div>
+
+      <div class="ctrl-group" data-modes="dos">
+        <div class="label-caps">Display</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="eta">Display resolution σ/|t|</label><output id="eta-out" for="eta"></output></div>
+          <input id="eta" type="range" min="0.02" max="0.3" step="0.01" value="0.08">
+          <div class="ctrl__hint">Width of the Gaussian drawn for each level. It changes the picture, not the counts.</div>
+        </div>
+        <div class="ctrl ctrl__row">
+          <label for="norm">DOS per</label>
+          <select id="norm"><option value="length">length: D(E)</option><option value="site">site: a·D(E)</option></select>
+        </div>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Sweep controls">
+        <div class="player">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <button class="btn-quiet" id="reverse" type="button">↶ Reverse</button>
+          <button class="btn-quiet" id="back" type="button" aria-label="Step back">◀ Step</button>
+          <button class="btn-quiet" id="forward" type="button" aria-label="Step forward">Step ▶</button>
+          <button class="btn-quiet" id="reset" type="button">Reset</button>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+          </label>
+          <label data-modes="dos">Animate
+            <select id="sweep"><option value="N">number of sites N</option><option value="window">energy window</option></select>
+          </label>
+          <span id="sweep-note"></span>
+        </div>
+      </section>
+
+      <div class="stats stats--4" id="stats"></div>
+
+      <section class="panel chain-card" data-modes="band spacing" aria-label="Chain">
+        <div id="chain"></div>
+      </section>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="Energy levels"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall" id="pb-box"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+          <div id="matrix" class="matrix" hidden></div>
+        </section>
+      </div>
+
+      <section class="panel plot-card" data-modes="dos">
+        <div class="plot-card__head"><h3>Ω<sub>N</sub>(E): the staircase whose slope is the DOS</h3></div>
+        <p class="plot-card__cap">Each step is exactly one state, of height 1/N. The dashed curve is the large-N cumulative fraction.</p>
+        <ul class="legend">
+          <li style="color:var(--series-1)"><span class="swatch"></span><span>finite N</span></li>
+          <li style="color:var(--series-im)"><span class="swatch swatch--dash"></span><span>large N</span></li>
+        </ul>
+        <div class="plot-box"><canvas id="plot-c" role="img" aria-label="Cumulative number of states against energy"></canvas></div>
+      </section>
+
+      <div class="note" id="takeaway" role="status"></div>
+      <p class="lab-status" id="lab-status"></p>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then press Play or move the slider to check it.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Add atoms</span><button class="predict__load" type="button" data-q="q1">Load N = 2</button></div>
+        <p>With two atoms, |t| = 0.4 eV and ε = 0, what are the two energies? If you keep doubling N, does the band keep getting wider?</p>
+        <details><summary>Show answer</summary>
+          <p>The two levels are \(\varepsilon\pm t = \pm 0.4\) eV: a bonding and an antibonding state. The band does not keep widening. The full width is \(W_N = 4|t|\cos[\pi/(N+1)]\): 0.80, 1.29, 1.50 and 1.57 eV for N = 2, 4, 8 and 16, approaching \(4|t| = 1.6\) eV. More atoms fill in the band; they do not stretch it.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Add atoms</span><button class="predict__load" type="button" data-q="q2">Load |t| = 0, N = 8</button></div>
+        <p>Switch the coupling off completely with eight atoms. How many states are there, and at what energy?</p>
+        <details><summary>Show answer</summary>
+          <p>Still eight states, all at \(E=\varepsilon\). Isolated atoms have identical, degenerate levels; the coupling is what splits them into a band. Raise |t| slowly and watch the eight levels fan out symmetrically around ε.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Spacing</span><button class="predict__load" type="button" data-q="q3">Load a = 5 Å</button></div>
+        <p>Pull the atoms from 5 Å to 7 Å apart. Do any states disappear?</p>
+        <details><summary>Show answer</summary>
+          <p>No: there are still N states. With κ = 1 Å⁻¹ the coupling falls from 0.40 to about 0.076 eV, so the band narrows from 1.6 eV to about 0.30 eV and the levels crowd toward ε, the isolated-atom limit. Squeeze them to 3 Å instead and |t| rises to about 1.77 eV, a band about 7.1 eV wide.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Density of states</span><button class="predict__load" type="button" data-q="q4">Load N = 64, window at the centre</button></div>
+        <p>A window 0.16 eV wide sits at the centre of the band. Will the same window hold more states near the band edge or fewer?</p>
+        <details><summary>Show answer</summary>
+          <p>More. With N = 64 the window holds 4 states at the centre but 13 states when centred at −0.72 eV, near the bottom edge (window centre −0.90). Near an edge \(E_n\) changes slowly with n, so many levels share a small energy range. In the large-N limit \(D_\infty(E)\) is smallest at the centre and diverges at both edges, a van Hove singularity.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Density of states</span><button class="predict__load" type="button" data-q="q5">Load N = 16</button></div>
+        <p>Change the display resolution σ/|t| from 0.08 to 0.25. Does the number of states in the window change?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The count comes from the exact levels, and σ only sets how wide each drawn peak is. Larger σ blurs the separate peaks into one smooth curve, but the area check stays at 1: each level still contributes exactly one state.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Density of states</span><button class="predict__load" type="button" data-q="q6">Load N = 8</button></div>
+        <p>Keep σ fixed and raise N from 8 to 256. Which curve does the finite-N density of states approach?</p>
+        <details><summary>Show answer</summary>
+          <p>The bulk curve with the same broadening (dotted), not the ideal bulk curve (dashed). The ideal curve diverges at the edges; any finite resolution rounds those spikes off. The two bulk curves only meet when σ goes to zero as well.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the Hamiltonian, diagonalizes it with NumPy, checks the cosine formula, and computes the density of states with the same normalization as this lab. It needs NumPy, Matplotlib and Pillow.</p>
+    </div>
+    <a class="btn btn--brand" href="atoms_to_a_band.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 62 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Levels:</strong> the exact eigenvalues of the open, real, tridiagonal chain, \(E_n=\varepsilon+2t\cos[n\pi/(N+1)]\). With \(t<0\), \(n=1\) is the lowest level. The finite width is \(W_N=4|t|\cos[\pi/(N+1)]\), and the large-N width is \(W_\infty=4|t|\). The notebook diagonalizes the matrix independently with NumPy and agrees to about \(10^{-15}\) eV.</li>
+          <li><strong>Spacing:</strong> the hopping follows the approximate dependence \(t\propto a\,e^{-\kappa a}\), normalized to \(t_{\rm ref}=-0.40\) eV at \(a_{\rm ref}=5\) Å. These are illustrative inputs, not a fit to a particular material. Only nearest neighbours are coupled.</li>
+          <li><strong>Density of states:</strong> a finite chain has a DOS made of delta functions, \(D_N(E)=\frac{1}{Na}\sum_n\delta(E-E_n)\). Each one is drawn as a unit-area Gaussian of width \(\sigma\), so \(\int D_\sigma\,dE=1/a\) per length and 1 per site. \(\sigma\) is a display resolution, not a temperature or a lifetime.</li>
+          <li><strong>Bulk references:</strong> the ideal curve is \(D_\infty(E)=1/[\pi a\sqrt{4t^2-(E-\varepsilon)^2}]\), clipped where it diverges at the edges. The broadened bulk curve applies the same \(\sigma\) to the continuum, evaluated by midpoint quadrature over 1024 values of \(q=n\pi/(N+1)\).</li>
+          <li><strong>Counting:</strong> the window counts levels with \(E_{\rm low}<E_n\le E_{\rm high}\), and the average DOS is \(\Delta\Omega/(Na\,\Delta E)\). Animations are sweeps through a parameter, not motion in time.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en" data-track="crystals">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14 Bravais Lattices in 3D · Professor Nano Labs</title>
+<meta name="description" content="Rotate all 14 Bravais lattices and 30 real crystal structures, from copper and silicon to GaN. A live, in-browser lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<link rel="stylesheet" href="viewer.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Crystals &amp; energy bands</div>
+    <div class="eyebrow eyebrow--light">Crystals &amp; energy bands · Live lab</div>
+    <h1>14 Bravais Lattices in 3D</h1>
+    <p>Rotate all 14 Bravais lattices and 30 real crystal structures, from copper and silicon to GaN. Compare the lattice with the crystal, and keep lattice points, basis atoms and chemical species apart.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="bravais_lattices_3d.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=rpZOt_rBx4I" target="_blank" rel="noopener" title="Basics of crystal structure and terminologies, we make it easier to understand in 2D">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/rpZOt_rBx4I/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Basics of crystal structure and terminologies, we make it easier to understand in 2D<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=uwelK0CTjqQ" target="_blank" rel="noopener" title="The map of semiconductor materials">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/uwelK0CTjqQ/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The map of semiconductor materials<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=KI25B8Vz4rk" target="_blank" rel="noopener" title="Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/KI25B8Vz4rk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Crystal = lattice + basis</h2>
+    <p>A Bravais lattice is the set of translations that leave a crystal unchanged. Three primitive vectors generate every lattice point, and a basis of \(N_b\) atoms at positions \(\mathbf p_\alpha\) is repeated at each one:</p>
+    <div class="equation">$$\mathbf R=n_1\mathbf a_1+n_2\mathbf a_2+n_3\mathbf a_3,\quad n_i\in\mathbb Z,\qquad \mathbf r_{n_1n_2n_3,\alpha}=\mathbf R+\mathbf p_\alpha,\qquad N_{\text{atoms, conventional}}=N_{\text{lattice points, conventional}}\times N_b$$</div>
+    <div class="centering">
+      <table>
+        <thead><tr><th>Centring</th><th>Lattice points per conventional cell</th><th>Extra translations (fractions of the conventional cell)</th></tr></thead>
+        <tbody>
+          <tr><td><b>P</b> primitive</td><td>1</td><td>none</td></tr>
+          <tr><td><b>C</b> base-centred</td><td>2</td><td>(½, ½, 0)</td></tr>
+          <tr><td><b>I</b> body-centred</td><td>2</td><td>(½, ½, ½)</td></tr>
+          <tr><td><b>F</b> face-centred</td><td>4</td><td>(0, ½, ½), (½, 0, ½), (½, ½, 0)</td></tr>
+          <tr><td><b>R</b> rhombohedral, hexagonal axes</td><td>3</td><td>(⅔, ⅓, ⅓), (⅓, ⅔, ⅔)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ctrl__hint"><b>Two layers of examples.</b> Every lattice has ideal one- and two-atom teaching models. The real-material collection has two cases per lattice, plus GaAs and GaN, each with its <b>actual</b> primitive-basis size rather than a forced one/two pairing. Basis size always means the number of atoms in a primitive cell of the complete crystal, not the number of chemical elements, and not the number of spheres drawn in a conventional cell.</p>
+  </section>
+
+  <!-- The viewer (generated from the notebook's template) -->
+  <section class="bv" aria-label="Interactive 3D crystal viewer">
+<!-- VIEWER:START -->
+<div class="sectionline"><h2>1 · Choose a Bravais lattice</h2><span class="hint">P primitive · C base-centered · I body-centered · F face-centered · R rhombohedral</span></div>
+<div class="atlas" id="atlas" aria-label="Select a Bravais lattice"></div>
+<div class="modebar"><div><label class="fieldlabel" for="mode">2 · What to display</label><select id="mode"><option value="real">Real crystal structure</option><option value="lattice">Bravais lattice points only</option><option value="one">Ideal one-atom teaching model</option><option value="two">Hypothetical two-atom teaching model</option></select></div><div><label class="fieldlabel" for="material">Material / example</label><select id="material"></select></div></div>
+<div class="stagegrid">
+<section class="stagecard"><div class="stagetitle"><h2 id="viewTitle">Crystal structure</h2><span class="codepill" id="codePill">cF</span></div><div class="stagewrap" id="stagewrap"><canvas id="scene" aria-label="Interactive three-dimensional crystal structure. Drag to rotate." tabindex="0"></canvas><div class="viewhint">Drag to rotate · scroll to zoom · hover to inspect an atom</div><div id="tooltip" class="tooltip"></div></div>
+<div class="stagefooter"><div class="bv-legend" id="legend"></div><span id="renderCount"></span></div>
+<div class="bv-controls"><button id="spin" class="primary smallbtn">Pause rotation</button><label>Speed <input id="speed" type="range" min="2" max="45" value="12" aria-label="Rotation speed"></label><button id="reset" class="smallbtn">Reset view</button><button id="top" class="smallbtn">Top</button><button id="front" class="smallbtn">Front</button><label>Zoom <input id="zoom" type="range" min="45" max="200" value="100" aria-label="Zoom"></label></div>
+<div class="bv-controls"><label for="cell">Cell <select id="cell"><option value="conventional">Conventional</option><option value="primitive">Primitive</option></select></label><label for="repeat">Repeat <select id="repeat"><option value="1">1 × 1 × 1</option><option value="2">2 × 2 × 2</option><option value="3">3 × 3 × 3</option></select></label><label>Sphere size <input id="size" type="range" min="20" max="130" value="62" aria-label="Atom sphere size"></label><button id="next" class="smallbtn">Next real example →</button></div>
+<div class="checks"><label><input id="wire" type="checkbox" checked> Cell edges</label><label><input id="axes" type="checkbox" checked> Cell vectors</label><label><input id="labels" type="checkbox"> Atom labels</label><label><input id="boundary" type="checkbox" checked> Boundary copies</label><label><input id="neighbors" type="checkbox"> Nearest-distance guides</label></div>
+</section>
+<aside class="sidebar"><section class="card" id="info"></section></aside>
+</div>
+<div class="tour"><strong>Useful comparisons:</strong><button class="smallbtn" data-jump="copper">Cu · cF + 1</button><button class="smallbtn" data-jump="silicon">Si · cF + 2</button><button class="smallbtn" data-jump="gaas">GaAs · cF + 2</button><button class="smallbtn" data-jump="ruthenium">Ru · hP + 2</button><button class="smallbtn" data-jump="gan">GaN · hP + 4</button><button class="smallbtn" data-jump="csi">CsI is not cI</button></div>
+<div class="lowergrid"><section class="card"><h3 id="coordinateHeading">Fractional coordinates</h3><p class="metric" id="coordinateNote"></p><div class="tablewrap"><table><thead><tr><th>Atom</th><th>u</th><th>v</th><th>w</th></tr></thead><tbody id="coords"></tbody></table></div><div class="exportrow"><button class="smallbtn" id="exportJSON">Export selected geometry (JSON)</button><button class="smallbtn" id="exportXYZ">Export displayed atoms (XYZ)</button><button class="smallbtn" id="savePNG">Save current view (PNG)</button></div></section><section class="card"><h3>Cell geometry &amp; atom counting</h3><div id="geometry"></div></section></div>
+<section class="card overview"><details><summary>Open the complete material index: 28 principal cases + 2 semiconductor bonuses</summary><p class="metric">Numbers in parentheses are atoms per <b>primitive</b> basis. “Exact 1 / 2” describes the selected pair, not every possible material of that Bravais type.</p><div class="tablewrap"><table><thead><tr><th>Type</th><th>First real example</th><th>Second real example</th><th>Exact 1 / 2?</th></tr></thead><tbody id="indexRows"></tbody></table></div></details></section>
+<div class="bottomnote"><b>Model boundaries.</b> This is a static-structure viewer; animation rotates the camera, not vibrating or moving atoms. Coordinates are rounded, full-occupancy structural models. Sphere sizes are illustrative and are not ionic radii. Nearest-distance lines, when enabled, are geometric guides and do not define chemical bonds. A finite cropped drawing is not a nanoparticle model. The lattice/basis language follows the standard “crystal = lattice + basis” construction; external crystallographic and application sources are linked in each material card. No network access is needed to operate the viewer.<br><span id="generalSources"></span></div>
+<!-- VIEWER:END -->
+  </section>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Each button loads a structure into the viewer. Predict the answer, then check the counts in the material card.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1</span><button class="predict__load" type="button" data-material="copper">Load copper</button><button class="predict__load" type="button" data-material="silicon">Silicon</button><button class="predict__load" type="button" data-material="gaas">GaAs</button></div>
+        <p>Copper, silicon and gallium arsenide all have a face-centred cubic (cF) lattice. How many atoms does each have in its primitive basis, and in the conventional cube?</p>
+        <details><summary>Show answer</summary>
+          <p>Copper: 1 basis atom, 4 atoms per cube. Silicon: 2 identical atoms, 8 per cube. GaAs: 2 different atoms, one Ga and one As, also 8 per cube. Same lattice, different bases. Silicon's "diamond" structure is not a Bravais lattice: it is cF plus a two-atom basis, and zincblende GaAs is the same with the two basis sites filled by different elements.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2</span><button class="predict__load" type="button" data-material="tungsten">Load tungsten</button><button class="predict__load" type="button" data-material="csi">CsI</button></div>
+        <p>Tungsten and caesium iodide both look like a cube with an atom in the middle. Are they both body-centred cubic?</p>
+        <details><summary>Show answer</summary>
+          <p>No. Tungsten is body-centred cubic (cI) with a one-atom basis. CsI is primitive cubic (cP) with a two-atom basis: the centre is iodine and the corners are caesium. A lattice translation must carry every atom onto the same kind of atom, and the shift (½, ½, ½) moves Cs onto I, so it is not a lattice vector.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3</span><button class="predict__load" type="button" data-material="ruthenium">Load ruthenium</button><button class="predict__load" type="button" data-material="gan">GaN</button></div>
+        <p>Ruthenium (hexagonal close-packed) and wurtzite GaN both sit on a primitive hexagonal (hP) lattice. How many basis atoms does each have?</p>
+        <details><summary>Show answer</summary>
+          <p>Ruthenium has 2, so hexagonal close-packed is hP plus a two-atom basis, not a Bravais lattice of its own. Wurtzite GaN has 4: two Ga and two N. Two chemical elements do not mean two basis atoms.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4</span><button class="predict__load" type="button" data-material="gallium">Load gallium</button><button class="predict__load" type="button" data-material="blackp">Black phosphorus</button></div>
+        <p>Alpha gallium and black phosphorus are each made of a single element. Does one element mean a one-atom basis?</p>
+        <details><summary>Show answer</summary>
+          <p>No. Both have four atoms in the primitive basis, on a base-centred orthorhombic (oC) lattice, with eight atoms in the conventional cell. "One element" and "one-atom basis" are different statements: atoms of the same element can sit at positions that no lattice translation connects.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5</span><button class="predict__load" type="button" data-material="gaas">Load GaAs</button><button class="predict__load" type="button" data-material="gaas_hp">High-pressure GaAs</button></div>
+        <p>Both structures have the formula GaAs. Do they share a Bravais lattice?</p>
+        <details><summary>Show answer</summary>
+          <p>No. Ordinary zincblende GaAs is face-centred cubic (cF) with 8 atoms per conventional cell. The high-pressure phase listed here is body-centred orthorhombic (oI) with 4. A chemical formula does not fix the crystal structure, and properties or device uses do not carry over from one phase to another.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6</span><button class="predict__load" type="button" data-material="silicon">Load silicon</button></div>
+        <p>With boundary copies on, silicon's conventional cube shows 18 spheres. Why does the card say 8 atoms per conventional cell?</p>
+        <details><summary>Show answer</summary>
+          <p>Atoms on the boundary are shared with neighbouring cells. The 8 corner atoms each count 1/8 (1 in total), the 6 face atoms each count ½ (3 in total), and the 4 atoms inside count fully: 1 + 3 + 4 = 8. Untick <b>Boundary copies</b> and the viewer draws exactly those 8.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same viewer in Python</h2>
+      <p>The companion Jupyter notebook holds the full crystal dataset with its geometry checks, builds this viewer, renders a rotating GIF of all 14 lattices, and constructs silicon from its basis in plain Python. It needs NumPy and Pillow.</p>
+    </div>
+    <a class="btn btn--brand" href="bravais_lattices_3d.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 261 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being shown?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Structures:</strong> every material's atomic positions were expanded from its space group when the notebook was prepared and are stored in full, so nothing is fitted in the browser. Coordinates are rounded, full-occupancy models; thermal motion, defects, dopants and surfaces are not included.</li>
+          <li><strong>Checks:</strong> the notebook verifies atom counts, centring translations, cell volumes, and that no unexpected extra translation makes a stated basis non-primitive. These test internal consistency; they are not an independent check of an experimental phase assignment.</li>
+          <li><strong>Drawing:</strong> the 3D view is drawn directly on a canvas, with no external libraries. Rotation moves the camera, not the atoms. Sphere sizes are illustrative, not ionic radii, and the nearest-distance guides are geometric aids, not chemical bonds.</li>
+          <li><strong>Cells:</strong> for hR the conventional cell uses hexagonal axes and the primitive cell is rhombohedral. For hP the viewer uses the primitive 120° parallelepiped, not the larger hexagonal prism.</li>
+          <li><strong>Roles:</strong> each material card separates semiconductors, insulating device components, metallic contacts and interconnects, precursors, and structural references. A precursor's structure is not the structure of the device made from it, and high-pressure Si and GaAs are not substitutes for the ordinary device phases.</li>
+        </ul>
+        <p>Main structural references: the <a href="https://www.iucr.org/who-we-are/commissions/commission-on-crystallographic-nomenclature/published-reports/bravais" target="_blank" rel="noopener">IUCr Bravais-lattice nomenclature</a> and the AFLOW crystal-prototype encyclopedia (Mehl et al., <i>Comput. Mater. Sci.</i> <b>136</b>, S1 (2017); Hicks et al., <b>199</b>, 110450 (2021)). Each material card links its own sources.</p>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="viewer.js"></script>
+<script>
+  // Predict-first buttons load a structure into the viewer.
+  document.querySelectorAll('[data-material]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      window.crystalSelect(b.dataset.material);
+      document.getElementById('atlas').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>

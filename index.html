@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Professor Nano Labs</title>
+<meta name="description" content="Interactive nanoscience labs from the Professor Nano YouTube channel. Build crystals, watch energy bands form, and send electrons through graphene, live in your browser.">
+<meta property="og:title" content="Professor Nano Labs">
+<meta property="og:description" content="Interactive companions to the Professor Nano YouTube channel. Every experiment runs live in your browser.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============ Top bar (shared by every page) ============ -->
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="#labs">Labs</a>
+      <a href="#how">How it works</a>
+      <a href="#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano" data-youtube>YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ Hero ============ -->
+<header class="hero">
+  <div class="shell hero__grid">
+    <div class="hero__text">
+      <div class="eyebrow eyebrow--light">Professor Nano · Interactive labs</div>
+      <h1>See the quantum world.<br>Run the physics yourself.</h1>
+      <p>Hands-on companions to the Professor Nano YouTube channel. Build crystals atom by atom, watch energy bands form, and send electrons through graphene. Every experiment runs live in your browser, with nothing to install.</p>
+      <div class="hero__buttons">
+        <a class="btn" href="#labs">Start exploring <span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="https://www.youtube.com/@professornano" data-youtube>Watch on YouTube <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    <figure class="hero__art" aria-hidden="true">
+      <svg viewBox="0 0 520 380" role="presentation">
+        <defs>
+          <pattern id="honeycomb" width="38.105" height="66" patternUnits="userSpaceOnUse" x="7" y="12">
+            <path d="M19.05 0V11L38.1 22V44L19.05 55V66M19.05 11L0 22V44L19.05 55" fill="none" stroke="#9fe3ea" stroke-width="1.3" stroke-opacity=".55"/>
+            <g fill="#9fe3ea" fill-opacity=".8">
+              <circle cx="19.05" cy="11" r="2.4"/><circle cx="38.1" cy="22" r="2.4"/><circle cx="38.1" cy="44" r="2.4"/>
+              <circle cx="19.05" cy="55" r="2.4"/><circle cx="0" cy="22" r="2.4"/><circle cx="0" cy="44" r="2.4"/>
+            </g>
+          </pattern>
+          <radialGradient id="fade" cx="50%" cy="50%" r="55%">
+            <stop offset="0" stop-color="#fff" stop-opacity=".9"/>
+            <stop offset=".65" stop-color="#fff" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <mask id="fadeMask"><rect width="520" height="380" fill="url(#fade)"/></mask>
+          <linearGradient id="densityFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f2a541" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#f2a541" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <rect width="520" height="380" fill="url(#honeycomb)" mask="url(#fadeMask)"/>
+        <line x1="20" y1="230" x2="500" y2="230" stroke="#d3e6ec" stroke-opacity=".35" stroke-width="1"/>
+        <path id="heroDensity" d="" fill="url(#densityFill)"/>
+        <path id="heroEnvelope" d="" fill="none" stroke="#d3e6ec" stroke-opacity=".55" stroke-width="1.4" stroke-dasharray="4 5"/>
+        <path id="heroWave" d="" fill="none" stroke="#7fe0e8" stroke-width="2.6" stroke-linejoin="round"/>
+      </svg>
+      <figcaption class="hero__caption">A free electron's wave packet over a graphene lattice</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ Labs (learning path) ============ -->
+  <section class="section" id="labs" aria-labelledby="labs-title">
+    <div class="shell">
+      <div class="section__head">
+        <div class="eyebrow">The labs</div>
+        <h2 id="labs-title">From atoms to devices</h2>
+        <p class="lead">Labs are grouped into three tracks, from the ideas quantum mechanics is built on to electrons moving through real nanoscale devices. Each lab comes with the Professor Nano videos that explain its physics.</p>
+      </div>
+
+      <ol class="tracks">
+        <li class="track" data-track="quantum" aria-labelledby="track-01">
+          <div class="track__num" aria-hidden="true">01</div>
+          <div class="track__head">
+            <h3 class="track__title" id="track-01">Quantum foundations</h3>
+            <p class="track__desc">Light, waves and probability: why classical physics fails at small scales, and what replaces it.</p>
+          </div>
+          <div class="cards">
+            <article class="lab-card lab-card--live">
+              <a class="lab-card__art" href="labs/blackbody-radiation/index.html" tabindex="-1" aria-hidden="true">
+                  <svg viewBox="0 0 440 150" role="presentation">
+                  <defs><linearGradient id="bb-visible" x1="0" x2="1" y1="0" y2="0"><stop offset="0.000" stop-color="#610061"/><stop offset="0.100" stop-color="#7100f4"/><stop offset="0.200" stop-color="#005cff"/><stop offset="0.300" stop-color="#00fff5"/><stop offset="0.400" stop-color="#56ff00"/><stop offset="0.500" stop-color="#d2ff00"/><stop offset="0.600" stop-color="#ffb700"/><stop offset="0.700" stop-color="#ff2600"/><stop offset="0.800" stop-color="#ff0000"/><stop offset="0.900" stop-color="#e80000"/><stop offset="1.000" stop-color="#a10000"/></linearGradient></defs>
+                  <rect x="83.6" y="14" width="58.0" height="96" fill="url(#bb-visible)" opacity=".32"/>
+                  <line x1="24" y1="110" x2="416" y2="110" stroke="#b9c7cf" stroke-width="1.2"/>
+                  <path d="M25.6 -20.0 L26.8 -20.0 L28.1 -20.0 L29.3 -20.0 L30.6 -20.0 L31.8 -20.0 L33.1 -20.0 L34.3 -20.0 L35.6 -20.0 L36.9 -20.0 L38.1 -20.0 L39.4 -20.0 L40.6 -20.0 L41.9 -20.0 L43.1 -20.0 L44.4 -20.0 L45.6 -20.0 L46.9 -20.0 L48.1 -20.0 L49.4 -20.0 L50.7 -20.0 L51.9 -20.0 L53.2 -20.0 L54.4 -20.0 L55.7 -20.0 L56.9 -20.0 L58.2 -20.0 L59.4 -20.0 L60.7 -20.0 L61.9 -20.0 L63.2 -20.0 L64.5 -20.0 L65.7 -20.0 L67.0 -20.0 L68.2 -20.0 L69.5 -20.0 L70.7 -20.0 L72.0 -20.0 L73.2 -20.0 L74.5 -20.0 L75.7 -20.0 L77.0 -20.0 L78.3 -20.0 L79.5 -20.0 L80.8 -20.0 L82.0 -20.0 L83.3 -20.0 L84.5 -20.0 L85.8 -20.0 L87.0 -20.0 L88.3 -20.0 L89.5 -20.0 L90.8 -20.0 L92.1 -20.0 L93.3 -20.0 L94.6 -20.0 L95.8 -20.0 L97.1 -20.0 L98.3 -20.0 L99.6 -20.0 L100.8 -20.0 L102.1 -20.0 L103.3 -20.0 L104.6 -20.0 L105.8 -20.0 L107.1 -20.0 L108.4 -20.0 L109.6 -20.0 L110.9 -20.0 L112.1 -20.0 L113.4 -20.0 L114.6 -20.0 L115.9 -20.0 L117.1 -20.0 L118.4 -20.0 L119.6 -20.0 L120.9 -20.0 L122.2 -20.0 L123.4 -20.0 L124.7 -20.0 L125.9 -20.0 L127.2 -20.0 L128.4 -20.0 L129.7 -20.0 L130.9 -20.0 L132.2 -20.0 L133.4 -20.0 L134.7 -20.0 L136.0 -20.0 L137.2 -20.0 L138.5 -20.0 L139.7 -20.0 L141.0 -20.0 L142.2 -20.0 L143.5 -20.0 L144.7 -20.0 L146.0 -20.0 L147.2 -20.0 L148.5 -20.0 L149.8 -20.0 L151.0 -20.0 L152.3 -20.0 L153.5 -20.0 L154.8 -20.0 L156.0 -20.0 L157.3 -20.0 L158.5 -20.0 L159.8 -20.0 L161.0 -20.0 L162.3 -20.0 L163.6 -20.0 L164.8 -20.0 L166.1 -20.0 L167.3 -20.0 L168.6 -20.0 L169.8 -20.0 L171.1 -20.0 L172.3 -20.0 L173.6 -20.0 L174.8 -20.0 L176.1 -20.0 L177.4 -20.0 L178.6 -20.0 L179.9 -20.0 L181.1 -20.0 L182.4 -20.0 L183.6 -20.0 L184.9 -20.0 L186.1 -20.0 L187.4 -20.0 L188.6 -20.0 L189.9 -20.0 L191.1 -20.0 L192.4 -20.0 L193.7 -20.0 L194.9 -20.0 L196.2 -20.0 L197.4 -20.0 L198.7 -20.0 L199.9 -20.0 L201.2 -20.0 L202.4 -20.0 L203.7 -20.0 L204.9 -20.0 L206.2 -20.0 L207.5 -20.0 L208.7 -20.0 L210.0 -20.0 L211.2 -20.0 L212.5 -20.0 L213.7 -20.0 L215.0 -20.0 L216.2 -18.8 L217.5 -15.5 L218.7 -12.3 L220.0 -9.2 L221.3 -6.2 L222.5 -3.3 L223.8 -0.5 L225.0 2.2 L226.3 4.9 L227.5 7.5 L228.8 10.0 L230.0 12.4 L231.3 14.7 L232.5 17.0 L233.8 19.2 L235.1 21.3 L236.3 23.4 L237.6 25.4 L238.8 27.4 L240.1 29.3 L241.3 31.1 L242.6 32.9 L243.8 34.7 L245.1 36.4 L246.3 38.0 L247.6 39.6 L248.9 41.2 L250.1 42.7 L251.4 44.2 L252.6 45.6 L253.9 47.0 L255.1 48.3 L256.4 49.7 L257.6 50.9 L258.9 52.2 L260.1 53.4 L261.4 54.6 L262.6 55.8 L263.9 56.9 L265.2 58.0 L266.4 59.1 L267.7 60.1 L268.9 61.1 L270.2 62.1 L271.4 63.1 L272.7 64.0 L273.9 64.9 L275.2 65.8 L276.4 66.7 L277.7 67.5 L279.0 68.4 L280.2 69.2 L281.5 70.0 L282.7 70.7 L284.0 71.5 L285.2 72.2 L286.5 72.9 L287.7 73.6 L289.0 74.3 L290.2 75.0 L291.5 75.6 L292.8 76.3 L294.0 76.9 L295.3 77.5 L296.5 78.1 L297.8 78.7 L299.0 79.2 L300.3 79.8 L301.5 80.3 L302.8 80.9 L304.0 81.4 L305.3 81.9 L306.6 82.4 L307.8 82.9 L309.1 83.4 L310.3 83.8 L311.6 84.3 L312.8 84.7 L314.1 85.2 L315.3 85.6 L316.6 86.0 L317.8 86.4 L319.1 86.8 L320.4 87.2 L321.6 87.6 L322.9 87.9 L324.1 88.3 L325.4 88.7 L326.6 89.0 L327.9 89.4 L329.1 89.7 L330.4 90.0 L331.6 90.4 L332.9 90.7 L334.2 91.0 L335.4 91.3 L336.7 91.6 L337.9 91.9 L339.2 92.2 L340.4 92.4 L341.7 92.7 L342.9 93.0 L344.2 93.3 L345.4 93.5 L346.7 93.8 L347.9 94.0 L349.2 94.3 L350.5 94.5 L351.7 94.7 L353.0 95.0 L354.2 95.2 L355.5 95.4 L356.7 95.6 L358.0 95.9 L359.2 96.1 L360.5 96.3 L361.7 96.5 L363.0 96.7 L364.3 96.9 L365.5 97.1 L366.8 97.3 L368.0 97.4 L369.3 97.6 L370.5 97.8 L371.8 98.0 L373.0 98.1 L374.3 98.3 L375.5 98.5 L376.8 98.6 L378.1 98.8 L379.3 99.0 L380.6 99.1 L381.8 99.3 L383.1 99.4 L384.3 99.6 L385.6 99.7 L386.8 99.8 L388.1 100.0 L389.3 100.1 L390.6 100.3 L391.9 100.4 L393.1 100.5 L394.4 100.6 L395.6 100.8 L396.9 100.9 L398.1 101.0 L399.4 101.1 L400.6 101.3 L401.9 101.4 L403.1 101.5 L404.4 101.6 L405.7 101.7 L406.9 101.8 L408.2 101.9 L409.4 102.0 L410.7 102.1 L411.9 102.2 L413.2 102.3 L414.4 102.4 L415.7 102.5" fill="none" stroke="#e07b1f" stroke-width="1.8" stroke-dasharray="6 4"/>
+                  <path d="M25.6 110.0 L26.8 110.0 L28.1 110.0 L29.3 110.0 L30.6 110.0 L31.8 110.0 L33.1 110.0 L34.3 110.0 L35.6 110.0 L36.9 110.0 L38.1 110.0 L39.4 110.0 L40.6 110.0 L41.9 110.0 L43.1 110.0 L44.4 110.0 L45.6 110.0 L46.9 110.0 L48.1 110.0 L49.4 110.0 L50.7 110.0 L51.9 110.0 L53.2 110.0 L54.4 110.0 L55.7 110.0 L56.9 110.0 L58.2 110.0 L59.4 110.0 L60.7 110.0 L61.9 110.0 L63.2 110.0 L64.5 110.0 L65.7 110.0 L67.0 110.0 L68.2 110.0 L69.5 110.0 L70.7 110.0 L72.0 110.0 L73.2 109.9 L74.5 109.9 L75.7 109.9 L77.0 109.9 L78.3 109.8 L79.5 109.8 L80.8 109.8 L82.0 109.7 L83.3 109.7 L84.5 109.6 L85.8 109.5 L87.0 109.5 L88.3 109.4 L89.5 109.3 L90.8 109.2 L92.1 109.1 L93.3 109.0 L94.6 108.9 L95.8 108.8 L97.1 108.7 L98.3 108.6 L99.6 108.5 L100.8 108.3 L102.1 108.2 L103.3 108.1 L104.6 107.9 L105.8 107.8 L107.1 107.6 L108.4 107.5 L109.6 107.4 L110.9 107.2 L112.1 107.1 L113.4 106.9 L114.6 106.8 L115.9 106.6 L117.1 106.5 L118.4 106.3 L119.6 106.2 L120.9 106.0 L122.2 105.9 L123.4 105.8 L124.7 105.6 L125.9 105.5 L127.2 105.4 L128.4 105.2 L129.7 105.1 L130.9 105.0 L132.2 104.9 L133.4 104.8 L134.7 104.6 L136.0 104.5 L137.2 104.4 L138.5 104.3 L139.7 104.2 L141.0 104.1 L142.2 104.1 L143.5 104.0 L144.7 103.9 L146.0 103.8 L147.2 103.7 L148.5 103.7 L149.8 103.6 L151.0 103.5 L152.3 103.5 L153.5 103.4 L154.8 103.4 L156.0 103.3 L157.3 103.3 L158.5 103.2 L159.8 103.2 L161.0 103.2 L162.3 103.1 L163.6 103.1 L164.8 103.1 L166.1 103.1 L167.3 103.1 L168.6 103.0 L169.8 103.0 L171.1 103.0 L172.3 103.0 L173.6 103.0 L174.8 103.0 L176.1 103.0 L177.4 103.0 L178.6 103.0 L179.9 103.0 L181.1 103.0 L182.4 103.0 L183.6 103.0 L184.9 103.1 L186.1 103.1 L187.4 103.1 L188.6 103.1 L189.9 103.1 L191.1 103.2 L192.4 103.2 L193.7 103.2 L194.9 103.2 L196.2 103.3 L197.4 103.3 L198.7 103.3 L199.9 103.4 L201.2 103.4 L202.4 103.4 L203.7 103.4 L204.9 103.5 L206.2 103.5 L207.5 103.6 L208.7 103.6 L210.0 103.6 L211.2 103.7 L212.5 103.7 L213.7 103.7 L215.0 103.8 L216.2 103.8 L217.5 103.9 L218.7 103.9 L220.0 104.0 L221.3 104.0 L222.5 104.0 L223.8 104.1 L225.0 104.1 L226.3 104.2 L227.5 104.2 L228.8 104.3 L230.0 104.3 L231.3 104.3 L232.5 104.4 L233.8 104.4 L235.1 104.5 L236.3 104.5 L237.6 104.6 L238.8 104.6 L240.1 104.6 L241.3 104.7 L242.6 104.7 L243.8 104.8 L245.1 104.8 L246.3 104.9 L247.6 104.9 L248.9 104.9 L250.1 105.0 L251.4 105.0 L252.6 105.1 L253.9 105.1 L255.1 105.2 L256.4 105.2 L257.6 105.2 L258.9 105.3 L260.1 105.3 L261.4 105.4 L262.6 105.4 L263.9 105.5 L265.2 105.5 L266.4 105.5 L267.7 105.6 L268.9 105.6 L270.2 105.7 L271.4 105.7 L272.7 105.7 L273.9 105.8 L275.2 105.8 L276.4 105.9 L277.7 105.9 L279.0 105.9 L280.2 106.0 L281.5 106.0 L282.7 106.0 L284.0 106.1 L285.2 106.1 L286.5 106.1 L287.7 106.2 L289.0 106.2 L290.2 106.3 L291.5 106.3 L292.8 106.3 L294.0 106.4 L295.3 106.4 L296.5 106.4 L297.8 106.5 L299.0 106.5 L300.3 106.5 L301.5 106.6 L302.8 106.6 L304.0 106.6 L305.3 106.7 L306.6 106.7 L307.8 106.7 L309.1 106.8 L310.3 106.8 L311.6 106.8 L312.8 106.8 L314.1 106.9 L315.3 106.9 L316.6 106.9 L317.8 107.0 L319.1 107.0 L320.4 107.0 L321.6 107.0 L322.9 107.1 L324.1 107.1 L325.4 107.1 L326.6 107.2 L327.9 107.2 L329.1 107.2 L330.4 107.2 L331.6 107.3 L332.9 107.3 L334.2 107.3 L335.4 107.3 L336.7 107.4 L337.9 107.4 L339.2 107.4 L340.4 107.4 L341.7 107.5 L342.9 107.5 L344.2 107.5 L345.4 107.5 L346.7 107.6 L347.9 107.6 L349.2 107.6 L350.5 107.6 L351.7 107.6 L353.0 107.7 L354.2 107.7 L355.5 107.7 L356.7 107.7 L358.0 107.8 L359.2 107.8 L360.5 107.8 L361.7 107.8 L363.0 107.8 L364.3 107.9 L365.5 107.9 L366.8 107.9 L368.0 107.9 L369.3 107.9 L370.5 108.0 L371.8 108.0 L373.0 108.0 L374.3 108.0 L375.5 108.0 L376.8 108.0 L378.1 108.1 L379.3 108.1 L380.6 108.1 L381.8 108.1 L383.1 108.1 L384.3 108.1 L385.6 108.2 L386.8 108.2 L388.1 108.2 L389.3 108.2 L390.6 108.2 L391.9 108.2 L393.1 108.3 L394.4 108.3 L395.6 108.3 L396.9 108.3 L398.1 108.3 L399.4 108.3 L400.6 108.4 L401.9 108.4 L403.1 108.4 L404.4 108.4 L405.7 108.4 L406.9 108.4 L408.2 108.4 L409.4 108.5 L410.7 108.5 L411.9 108.5 L413.2 108.5 L414.4 108.5 L415.7 108.5" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.8"/>
+                  <path d="M25.6 110.0 L26.8 110.0 L28.1 110.0 L29.3 110.0 L30.6 110.0 L31.8 110.0 L33.1 110.0 L34.3 110.0 L35.6 110.0 L36.9 110.0 L38.1 110.0 L39.4 110.0 L40.6 110.0 L41.9 110.0 L43.1 110.0 L44.4 110.0 L45.6 110.0 L46.9 110.0 L48.1 110.0 L49.4 110.0 L50.7 110.0 L51.9 110.0 L53.2 110.0 L54.4 110.0 L55.7 110.0 L56.9 109.9 L58.2 109.9 L59.4 109.8 L60.7 109.7 L61.9 109.6 L63.2 109.5 L64.5 109.4 L65.7 109.2 L67.0 108.9 L68.2 108.6 L69.5 108.3 L70.7 108.0 L72.0 107.5 L73.2 107.1 L74.5 106.6 L75.7 106.0 L77.0 105.5 L78.3 104.8 L79.5 104.2 L80.8 103.5 L82.0 102.8 L83.3 102.0 L84.5 101.2 L85.8 100.4 L87.0 99.6 L88.3 98.8 L89.5 98.0 L90.8 97.1 L92.1 96.3 L93.3 95.5 L94.6 94.7 L95.8 93.9 L97.1 93.1 L98.3 92.3 L99.6 91.5 L100.8 90.8 L102.1 90.0 L103.3 89.3 L104.6 88.6 L105.8 88.0 L107.1 87.4 L108.4 86.8 L109.6 86.2 L110.9 85.7 L112.1 85.1 L113.4 84.7 L114.6 84.2 L115.9 83.8 L117.1 83.4 L118.4 83.0 L119.6 82.7 L120.9 82.4 L122.2 82.1 L123.4 81.8 L124.7 81.6 L125.9 81.4 L127.2 81.2 L128.4 81.0 L129.7 80.9 L130.9 80.8 L132.2 80.7 L133.4 80.6 L134.7 80.6 L136.0 80.5 L137.2 80.5 L138.5 80.5 L139.7 80.5 L141.0 80.6 L142.2 80.6 L143.5 80.7 L144.7 80.8 L146.0 80.9 L147.2 81.0 L148.5 81.1 L149.8 81.2 L151.0 81.3 L152.3 81.5 L153.5 81.7 L154.8 81.8 L156.0 82.0 L157.3 82.2 L158.5 82.4 L159.8 82.6 L161.0 82.8 L162.3 83.0 L163.6 83.2 L164.8 83.4 L166.1 83.6 L167.3 83.8 L168.6 84.1 L169.8 84.3 L171.1 84.5 L172.3 84.8 L173.6 85.0 L174.8 85.2 L176.1 85.5 L177.4 85.7 L178.6 86.0 L179.9 86.2 L181.1 86.5 L182.4 86.7 L183.6 87.0 L184.9 87.2 L186.1 87.4 L187.4 87.7 L188.6 87.9 L189.9 88.2 L191.1 88.4 L192.4 88.7 L193.7 88.9 L194.9 89.2 L196.2 89.4 L197.4 89.6 L198.7 89.9 L199.9 90.1 L201.2 90.3 L202.4 90.6 L203.7 90.8 L204.9 91.0 L206.2 91.3 L207.5 91.5 L208.7 91.7 L210.0 91.9 L211.2 92.2 L212.5 92.4 L213.7 92.6 L215.0 92.8 L216.2 93.0 L217.5 93.2 L218.7 93.4 L220.0 93.6 L221.3 93.8 L222.5 94.0 L223.8 94.2 L225.0 94.4 L226.3 94.6 L227.5 94.8 L228.8 95.0 L230.0 95.2 L231.3 95.4 L232.5 95.6 L233.8 95.8 L235.1 95.9 L236.3 96.1 L237.6 96.3 L238.8 96.5 L240.1 96.6 L241.3 96.8 L242.6 97.0 L243.8 97.1 L245.1 97.3 L246.3 97.4 L247.6 97.6 L248.9 97.8 L250.1 97.9 L251.4 98.1 L252.6 98.2 L253.9 98.4 L255.1 98.5 L256.4 98.7 L257.6 98.8 L258.9 98.9 L260.1 99.1 L261.4 99.2 L262.6 99.3 L263.9 99.5 L265.2 99.6 L266.4 99.7 L267.7 99.9 L268.9 100.0 L270.2 100.1 L271.4 100.2 L272.7 100.4 L273.9 100.5 L275.2 100.6 L276.4 100.7 L277.7 100.8 L279.0 100.9 L280.2 101.1 L281.5 101.2 L282.7 101.3 L284.0 101.4 L285.2 101.5 L286.5 101.6 L287.7 101.7 L289.0 101.8 L290.2 101.9 L291.5 102.0 L292.8 102.1 L294.0 102.2 L295.3 102.3 L296.5 102.4 L297.8 102.5 L299.0 102.6 L300.3 102.6 L301.5 102.7 L302.8 102.8 L304.0 102.9 L305.3 103.0 L306.6 103.1 L307.8 103.2 L309.1 103.2 L310.3 103.3 L311.6 103.4 L312.8 103.5 L314.1 103.5 L315.3 103.6 L316.6 103.7 L317.8 103.8 L319.1 103.8 L320.4 103.9 L321.6 104.0 L322.9 104.1 L324.1 104.1 L325.4 104.2 L326.6 104.3 L327.9 104.3 L329.1 104.4 L330.4 104.5 L331.6 104.5 L332.9 104.6 L334.2 104.6 L335.4 104.7 L336.7 104.8 L337.9 104.8 L339.2 104.9 L340.4 104.9 L341.7 105.0 L342.9 105.1 L344.2 105.1 L345.4 105.2 L346.7 105.2 L347.9 105.3 L349.2 105.3 L350.5 105.4 L351.7 105.4 L353.0 105.5 L354.2 105.5 L355.5 105.6 L356.7 105.6 L358.0 105.7 L359.2 105.7 L360.5 105.8 L361.7 105.8 L363.0 105.9 L364.3 105.9 L365.5 105.9 L366.8 106.0 L368.0 106.0 L369.3 106.1 L370.5 106.1 L371.8 106.2 L373.0 106.2 L374.3 106.2 L375.5 106.3 L376.8 106.3 L378.1 106.4 L379.3 106.4 L380.6 106.4 L381.8 106.5 L383.1 106.5 L384.3 106.5 L385.6 106.6 L386.8 106.6 L388.1 106.7 L389.3 106.7 L390.6 106.7 L391.9 106.8 L393.1 106.8 L394.4 106.8 L395.6 106.9 L396.9 106.9 L398.1 106.9 L399.4 107.0 L400.6 107.0 L401.9 107.0 L403.1 107.0 L404.4 107.1 L405.7 107.1 L406.9 107.1 L408.2 107.2 L409.4 107.2 L410.7 107.2 L411.9 107.2 L413.2 107.3 L414.4 107.3 L415.7 107.3" fill="none" stroke="currentColor" stroke-opacity="0.7" stroke-width="2"/>
+                  <path d="M25.6 110.0 L26.8 110.0 L28.1 110.0 L29.3 110.0 L30.6 110.0 L31.8 110.0 L33.1 110.0 L34.3 110.0 L35.6 110.0 L36.9 110.0 L38.1 110.0 L39.4 110.0 L40.6 110.0 L41.9 110.0 L43.1 110.0 L44.4 110.0 L45.6 110.0 L46.9 110.0 L48.1 109.9 L49.4 109.9 L50.7 109.7 L51.9 109.6 L53.2 109.3 L54.4 108.9 L55.7 108.4 L56.9 107.7 L58.2 106.9 L59.4 105.8 L60.7 104.6 L61.9 103.1 L63.2 101.4 L64.5 99.5 L65.7 97.4 L67.0 95.1 L68.2 92.6 L69.5 90.0 L70.7 87.2 L72.0 84.3 L73.2 81.3 L74.5 78.2 L75.7 75.0 L77.0 71.9 L78.3 68.7 L79.5 65.6 L80.8 62.4 L82.0 59.3 L83.3 56.3 L84.5 53.4 L85.8 50.6 L87.0 47.8 L88.3 45.2 L89.5 42.7 L90.8 40.4 L92.1 38.1 L93.3 36.0 L94.6 34.0 L95.8 32.2 L97.1 30.5 L98.3 29.0 L99.6 27.6 L100.8 26.3 L102.1 25.1 L103.3 24.1 L104.6 23.2 L105.8 22.4 L107.1 21.8 L108.4 21.2 L109.6 20.8 L110.9 20.4 L112.1 20.2 L113.4 20.1 L114.6 20.0 L115.9 20.0 L117.1 20.1 L118.4 20.3 L119.6 20.6 L120.9 20.9 L122.2 21.2 L123.4 21.7 L124.7 22.2 L125.9 22.7 L127.2 23.3 L128.4 23.9 L129.7 24.6 L130.9 25.3 L132.2 26.0 L133.4 26.7 L134.7 27.5 L136.0 28.3 L137.2 29.2 L138.5 30.0 L139.7 30.9 L141.0 31.8 L142.2 32.7 L143.5 33.6 L144.7 34.5 L146.0 35.4 L147.2 36.3 L148.5 37.3 L149.8 38.2 L151.0 39.1 L152.3 40.1 L153.5 41.0 L154.8 42.0 L156.0 42.9 L157.3 43.8 L158.5 44.8 L159.8 45.7 L161.0 46.6 L162.3 47.5 L163.6 48.4 L164.8 49.3 L166.1 50.2 L167.3 51.1 L168.6 52.0 L169.8 52.9 L171.1 53.7 L172.3 54.6 L173.6 55.4 L174.8 56.2 L176.1 57.1 L177.4 57.9 L178.6 58.7 L179.9 59.5 L181.1 60.3 L182.4 61.0 L183.6 61.8 L184.9 62.5 L186.1 63.3 L187.4 64.0 L188.6 64.7 L189.9 65.4 L191.1 66.1 L192.4 66.8 L193.7 67.5 L194.9 68.2 L196.2 68.8 L197.4 69.5 L198.7 70.1 L199.9 70.7 L201.2 71.4 L202.4 72.0 L203.7 72.6 L204.9 73.1 L206.2 73.7 L207.5 74.3 L208.7 74.9 L210.0 75.4 L211.2 75.9 L212.5 76.5 L213.7 77.0 L215.0 77.5 L216.2 78.0 L217.5 78.5 L218.7 79.0 L220.0 79.5 L221.3 80.0 L222.5 80.4 L223.8 80.9 L225.0 81.3 L226.3 81.8 L227.5 82.2 L228.8 82.6 L230.0 83.1 L231.3 83.5 L232.5 83.9 L233.8 84.3 L235.1 84.7 L236.3 85.0 L237.6 85.4 L238.8 85.8 L240.1 86.2 L241.3 86.5 L242.6 86.9 L243.8 87.2 L245.1 87.6 L246.3 87.9 L247.6 88.2 L248.9 88.5 L250.1 88.9 L251.4 89.2 L252.6 89.5 L253.9 89.8 L255.1 90.1 L256.4 90.4 L257.6 90.7 L258.9 90.9 L260.1 91.2 L261.4 91.5 L262.6 91.8 L263.9 92.0 L265.2 92.3 L266.4 92.5 L267.7 92.8 L268.9 93.0 L270.2 93.3 L271.4 93.5 L272.7 93.8 L273.9 94.0 L275.2 94.2 L276.4 94.4 L277.7 94.7 L279.0 94.9 L280.2 95.1 L281.5 95.3 L282.7 95.5 L284.0 95.7 L285.2 95.9 L286.5 96.1 L287.7 96.3 L289.0 96.5 L290.2 96.7 L291.5 96.8 L292.8 97.0 L294.0 97.2 L295.3 97.4 L296.5 97.5 L297.8 97.7 L299.0 97.9 L300.3 98.0 L301.5 98.2 L302.8 98.3 L304.0 98.5 L305.3 98.7 L306.6 98.8 L307.8 99.0 L309.1 99.1 L310.3 99.2 L311.6 99.4 L312.8 99.5 L314.1 99.7 L315.3 99.8 L316.6 99.9 L317.8 100.1 L319.1 100.2 L320.4 100.3 L321.6 100.4 L322.9 100.6 L324.1 100.7 L325.4 100.8 L326.6 100.9 L327.9 101.0 L329.1 101.1 L330.4 101.3 L331.6 101.4 L332.9 101.5 L334.2 101.6 L335.4 101.7 L336.7 101.8 L337.9 101.9 L339.2 102.0 L340.4 102.1 L341.7 102.2 L342.9 102.3 L344.2 102.4 L345.4 102.5 L346.7 102.6 L347.9 102.6 L349.2 102.7 L350.5 102.8 L351.7 102.9 L353.0 103.0 L354.2 103.1 L355.5 103.2 L356.7 103.2 L358.0 103.3 L359.2 103.4 L360.5 103.5 L361.7 103.6 L363.0 103.6 L364.3 103.7 L365.5 103.8 L366.8 103.9 L368.0 103.9 L369.3 104.0 L370.5 104.1 L371.8 104.1 L373.0 104.2 L374.3 104.3 L375.5 104.3 L376.8 104.4 L378.1 104.5 L379.3 104.5 L380.6 104.6 L381.8 104.6 L383.1 104.7 L384.3 104.8 L385.6 104.8 L386.8 104.9 L388.1 104.9 L389.3 105.0 L390.6 105.1 L391.9 105.1 L393.1 105.2 L394.4 105.2 L395.6 105.3 L396.9 105.3 L398.1 105.4 L399.4 105.4 L400.6 105.5 L401.9 105.5 L403.1 105.6 L404.4 105.6 L405.7 105.7 L406.9 105.7 L408.2 105.8 L409.4 105.8 L410.7 105.8 L411.9 105.9 L413.2 105.9 L414.4 106.0 L415.7 106.0" fill="none" stroke="currentColor" stroke-opacity="1" stroke-width="2.6"/>
+                  <text x="24" y="138" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">Planck at 3000, 4000, 5000 K</text>
+                  <text x="416" y="138" text-anchor="end" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#c47a12">classical: Rayleigh–Jeans</text>
+                  </svg>
+              </a>
+              <div class="lab-card__body">
+                <span class="chip chip--live">Live lab</span>
+                <h4 class="lab-card__title"><a href="labs/blackbody-radiation/index.html">Blackbody Radiation</a></h4>
+                <p>Planck vs. Rayleigh–Jeans: change the temperature and watch the peak, the colour and the ultraviolet catastrophe.</p>
+                <ul class="lab-card__features">
+                  <li>Temperatures from 300 K to 20,000 K, from you to a hot star</li>
+                  <li>Wien's peak, Stefan–Boltzmann power and the visible share</li>
+                  <li>The colour of the glow, and a pinned curve to compare against</li>
+                  <li>Energy per mode: where classical physics breaks down</li>
+                  <li>Comes with a corrected Jupyter notebook</li>
+                </ul>
+                <a class="lab-card__launch" href="labs/blackbody-radiation/index.html">Launch lab <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="videos">
+                <div class="videos__label">Related videos</div>
+                <ul>
+                  <li><a class="video video--first" href="https://www.youtube.com/watch?v=jpu36CYydkc" target="_blank" rel="noopener" title="The light wave and particle debate, from Newton to Einstein">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/jpu36CYydkc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
+                    <span class="video__title">The light wave and particle debate, from Newton to Einstein<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=e9TQs-EDiUs" target="_blank" rel="noopener" title="Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/e9TQs-EDiUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=BLqMA8YWkDY" target="_blank" rel="noopener" title="Deriving the Bose Einstein distribution function">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/BLqMA8YWkDY/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Deriving the Bose Einstein distribution function<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                </ul>
+              </div>
+            </article>
+            <article class="lab-card lab-card--live">
+              <a class="lab-card__art" href="labs/gaussian-wave-packet/index.html" tabindex="-1" aria-hidden="true">
+                <svg viewBox="0 0 440 150" role="presentation">
+                  <line x1="24" y1="78" x2="416" y2="78" stroke="#b9cfd7" stroke-width="1.2"/>
+                  <path d="M52 78.0 L54 78.0 L56 78.0 L58 78.0 L60 77.9 L62 77.9 L64 77.8 L66 77.7 L68 77.5 L70 77.3 L72 76.9 L74 76.4 L76 75.7 L78 74.6 L80 73.3 L82 71.6 L84 69.3 L86 66.6 L88 63.3 L90 59.4 L92 54.9 L94 50.0 L96 44.7 L98 39.2 L100 33.7 L102 28.4 L104 23.6 L106 19.6 L108 16.6 L110 14.6 L112 14.0 L114 14.6 L116 16.6 L118 19.6 L120 23.6 L122 28.4 L124 33.7 L126 39.2 L128 44.7 L130 50.0 L132 54.9 L134 59.4 L136 63.3 L138 66.6 L140 69.3 L142 71.6 L144 73.3 L146 74.6 L148 75.7 L150 76.4 L152 76.9 L154 77.3 L156 77.5 L158 77.7 L160 77.8 L162 77.9 L164 77.9 L166 78.0 L168 78.0 L170 78.0 L172 78.0" fill="none" stroke="#8fa5af" stroke-width="2" stroke-dasharray="5 4"/>
+                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0L412 78L172 78Z" fill="currentColor" fill-opacity=".14"/>
+                  <path d="M172 78.0 L175 78.0 L178 78.0 L181 77.9 L184 77.9 L187 77.9 L190 77.8 L193 77.8 L196 77.7 L199 77.6 L202 77.5 L205 77.3 L208 77.1 L211 76.9 L214 76.6 L217 76.2 L220 75.8 L223 75.3 L226 74.7 L229 74.0 L232 73.2 L235 72.3 L238 71.3 L241 70.1 L244 68.9 L247 67.6 L250 66.2 L253 64.7 L256 63.1 L259 61.5 L262 60.0 L265 58.4 L268 56.9 L271 55.4 L274 54.1 L277 52.9 L280 51.9 L283 51.1 L286 50.5 L289 50.1 L292 50.0 L295 50.1 L298 50.5 L301 51.1 L304 51.9 L307 52.9 L310 54.1 L313 55.4 L316 56.9 L319 58.4 L322 60.0 L325 61.5 L328 63.1 L331 64.7 L334 66.2 L337 67.6 L340 68.9 L343 70.1 L346 71.3 L349 72.3 L352 73.2 L355 74.0 L358 74.7 L361 75.3 L364 75.8 L367 76.2 L370 76.6 L373 76.9 L376 77.1 L379 77.3 L382 77.5 L385 77.6 L388 77.7 L391 77.8 L394 77.8 L397 77.9 L400 77.9 L403 77.9 L406 78.0 L409 78.0 L412 78.0" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                  <path d="M182 76.8 L183.5 78.0 L185 79.4 L186.5 80.4 L188 80.4 L189.5 79.3 L191 77.3 L192.5 75.4 L194 74.4 L195.5 74.9 L197 77.1 L198.5 80.0 L200 82.3 L201.5 83.0 L203 81.4 L204.5 78.0 L206 74.1 L207.5 71.5 L209 71.6 L210.5 74.7 L212 79.8 L213.5 84.6 L215 86.9 L216.5 85.4 L218 80.2 L219.5 73.4 L221 68.0 L222.5 66.6 L224 70.3 L225.5 78.0 L227 86.4 L228.5 91.8 L230 91.4 L231.5 84.7 L233 74.4 L234.5 64.7 L236 60.3 L237.5 63.6 L239 73.7 L240.5 86.6 L242 96.6 L243.5 98.9 L245 91.8 L246.5 78.0 L248 63.2 L249.5 54.2 L251 55.3 L252.5 66.7 L254 83.9 L255.5 99.5 L257 106.2 L258.5 100.6 L260 84.6 L261.5 64.9 L263 50.1 L264.5 47.2 L266 57.9 L267.5 78.0 L269 98.8 L270.5 111.1 L272 109.1 L273.5 93.2 L275 70.1 L276.5 50.0 L278 41.8 L279.5 49.4 L281 69.8 L282.5 94.1 L284 111.7 L285.5 114.7 L287 101.5 L288.5 78.0 L290 54.3 L291.5 41.0 L293 43.8 L294.5 61.5 L296 86.4 L297.5 107.5 L299 115.5 L300.5 107.2 L302 86.3 L303.5 62.0 L305 45.1 L306.5 42.8 L308 55.7 L309.5 78.0 L311 99.7 L312.5 111.4 L314 108.4 L315.5 92.4 L317 70.7 L318.5 53.0 L320 46.6 L321.5 54.0 L323 71.3 L324.5 90.7 L326 103.8 L327.5 105.2 L329 95.0 L330.5 78.0 L332 62.0 L333.5 53.7 L335 56.2 L336.5 67.8 L338 83.0 L339.5 95.1 L341 99.1 L342.5 93.9 L344 82.4 L345.5 69.8 L347 61.6 L348.5 61.0 L350 67.6 L351.5 78.0 L353 87.6 L354.5 92.3 L356 90.6 L357.5 83.8 L359 75.2 L360.5 68.6 L362 66.5 L363.5 69.5 L365 75.7 L366.5 82.3 L368 86.4 L369.5 86.5 L371 83.2 L372.5 78.0 L374 73.4 L375.5 71.2 L377 72.1 L378.5 75.3 L380 79.3 L381.5 82.2 L383 83.0 L384.5 81.7 L386 79.0 L387.5 76.2 L389 74.6 L390.5 74.5 L392 75.9 L393.5 78.0 L395 79.8 L396.5 80.6 L398 80.2 L399.5 79.0 L401 77.5" fill="none" stroke="#1f6fb4" stroke-width="1.6"/>
+                  <path d="M150 137H246" stroke="#c47a12" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M240 132l7 5-7 5" fill="none" stroke="#c47a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="112" y="141" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">t = 0</text>
+                  <text x="292" y="141" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="currentColor">later</text>
+                </svg>
+              </a>
+              <div class="lab-card__body">
+                <span class="chip chip--live">Live lab</span>
+                <h4 class="lab-card__title"><a href="labs/gaussian-wave-packet/index.html">Gaussian Wave Packet</a></h4>
+                <p>Build a free electron from plane waves, then let time run and watch it move and spread.</p>
+                <ul class="lab-card__features">
+                  <li>Width, momentum and mass sliders with live playback</li>
+                  <li>Density, real and imaginary parts, and momentum side by side</li>
+                  <li>Build the packet from as few as one plane wave</li>
+                  <li>Full vs. linearized dispersion: where spreading comes from</li>
+                  <li>Comes with a downloadable Jupyter notebook</li>
+                </ul>
+                <a class="lab-card__launch" href="labs/gaussian-wave-packet/index.html">Launch lab <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="videos">
+                <div class="videos__label">Related videos</div>
+                <ul>
+                  <li><a class="video video--first" href="https://www.youtube.com/watch?v=7hOyxlRb2LM" target="_blank" rel="noopener" title="Free quantum electron wave versus Gaussian packet">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/7hOyxlRb2LM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
+                    <span class="video__title">Free quantum electron wave versus Gaussian packet<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=jfwoUOOw5ms" target="_blank" rel="noopener" title="Fourier vs Heisenberg uncertainty principle">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/jfwoUOOw5ms/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Fourier vs Heisenberg uncertainty principle<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=gXkbSp2xzlc" target="_blank" rel="noopener" title="Schrodinger equation and time evolution of quantum state">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/gXkbSp2xzlc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Schrodinger equation and time evolution of quantum state<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </li>
+
+        <li class="track" data-track="crystals" aria-labelledby="track-02">
+          <div class="track__num" aria-hidden="true">02</div>
+          <div class="track__head">
+            <h3 class="track__title" id="track-02">Crystals &amp; energy bands</h3>
+            <p class="track__desc">How atoms arrange into crystals, and how their individual states merge into energy bands.</p>
+          </div>
+          <div class="cards">
+            <article class="lab-card lab-card--live">
+              <a class="lab-card__art" href="labs/bravais-lattices/index.html" tabindex="-1" aria-hidden="true">
+                  <svg viewBox="0 0 440 150" role="presentation">
+                  <line x1="52.5" y1="101.3" x2="52.5" y2="52.8" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="52.5" y1="101.3" x2="24.0" y2="85.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="52.5" y1="101.3" x2="96.0" y2="91.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="52.5" y1="52.8" x2="24.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="52.5" y1="52.8" x2="96.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="24.0" y1="85.5" x2="24.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="24.0" y1="85.5" x2="67.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="24.0" y1="37.0" x2="67.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="96.0" y1="91.0" x2="96.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="96.0" y1="91.0" x2="67.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="96.0" y1="42.5" x2="67.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="67.5" y1="75.2" x2="67.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <circle cx="67.5" cy="75.2" r="4.2" fill="currentColor"/>
+                  <circle cx="67.5" cy="26.7" r="4.2" fill="currentColor"/>
+                  <circle cx="24.0" cy="85.5" r="4.2" fill="currentColor"/>
+                  <circle cx="96.0" cy="91.0" r="4.2" fill="currentColor"/>
+                  <circle cx="24.0" cy="37.0" r="4.2" fill="currentColor"/>
+                  <circle cx="96.0" cy="42.5" r="4.2" fill="currentColor"/>
+                  <circle cx="52.5" cy="101.3" r="4.2" fill="currentColor"/>
+                  <circle cx="52.5" cy="52.8" r="4.2" fill="currentColor"/>
+                  <text x="60" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">cP</text>
+                  <line x1="155.5" y1="101.3" x2="155.5" y2="52.8" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="155.5" y1="101.3" x2="127.0" y2="85.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="155.5" y1="101.3" x2="199.0" y2="91.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="155.5" y1="52.8" x2="127.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="155.5" y1="52.8" x2="199.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="127.0" y1="85.5" x2="127.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="127.0" y1="85.5" x2="170.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="127.0" y1="37.0" x2="170.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="199.0" y1="91.0" x2="199.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="199.0" y1="91.0" x2="170.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="199.0" y1="42.5" x2="170.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="170.5" y1="75.2" x2="170.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <circle cx="170.5" cy="75.2" r="4.2" fill="currentColor"/>
+                  <circle cx="170.5" cy="26.7" r="4.2" fill="currentColor"/>
+                  <circle cx="127.0" cy="85.5" r="4.2" fill="currentColor"/>
+                  <circle cx="199.0" cy="91.0" r="4.2" fill="currentColor"/>
+                  <circle cx="163.0" cy="64.0" r="4.2" fill="currentColor"/>
+                  <circle cx="127.0" cy="37.0" r="4.2" fill="currentColor"/>
+                  <circle cx="199.0" cy="42.5" r="4.2" fill="currentColor"/>
+                  <circle cx="155.5" cy="101.3" r="4.2" fill="currentColor"/>
+                  <circle cx="155.5" cy="52.8" r="4.2" fill="currentColor"/>
+                  <text x="163" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">cI</text>
+                  <line x1="258.5" y1="101.3" x2="258.5" y2="52.8" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="258.5" y1="101.3" x2="230.0" y2="85.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="258.5" y1="101.3" x2="302.0" y2="91.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="258.5" y1="52.8" x2="230.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="258.5" y1="52.8" x2="302.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="230.0" y1="85.5" x2="230.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="230.0" y1="85.5" x2="273.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="230.0" y1="37.0" x2="273.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="302.0" y1="91.0" x2="302.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="302.0" y1="91.0" x2="273.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="302.0" y1="42.5" x2="273.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="273.5" y1="75.2" x2="273.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <circle cx="273.5" cy="75.2" r="4.2" fill="currentColor"/>
+                  <circle cx="273.5" cy="26.7" r="4.2" fill="currentColor"/>
+                  <circle cx="251.8" cy="56.1" r="4.2" fill="currentColor"/>
+                  <circle cx="230.0" cy="85.5" r="4.2" fill="currentColor"/>
+                  <circle cx="287.7" cy="58.8" r="4.2" fill="currentColor"/>
+                  <circle cx="266.0" cy="88.2" r="4.2" fill="currentColor"/>
+                  <circle cx="302.0" cy="91.0" r="4.2" fill="currentColor"/>
+                  <circle cx="230.0" cy="37.0" r="4.2" fill="currentColor"/>
+                  <circle cx="266.0" cy="39.8" r="4.2" fill="currentColor"/>
+                  <circle cx="244.3" cy="69.2" r="4.2" fill="currentColor"/>
+                  <circle cx="302.0" cy="42.5" r="4.2" fill="currentColor"/>
+                  <circle cx="280.2" cy="71.9" r="4.2" fill="currentColor"/>
+                  <circle cx="258.5" cy="101.3" r="4.2" fill="currentColor"/>
+                  <circle cx="258.5" cy="52.8" r="4.2" fill="currentColor"/>
+                  <text x="266" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">cF</text>
+                  <line x1="367.5" y1="101.3" x2="367.5" y2="52.8" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="367.5" y1="101.3" x2="339.0" y2="85.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="367.5" y1="101.3" x2="411.0" y2="91.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="367.5" y1="52.8" x2="339.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="367.5" y1="52.8" x2="411.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="339.0" y1="85.5" x2="339.0" y2="37.0" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="339.0" y1="85.5" x2="382.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="339.0" y1="37.0" x2="382.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="411.0" y1="91.0" x2="411.0" y2="42.5" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="411.0" y1="91.0" x2="382.5" y2="75.2" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="411.0" y1="42.5" x2="382.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <line x1="382.5" y1="75.2" x2="382.5" y2="26.7" stroke="#8fa5af" stroke-width="1.1"/>
+                  <circle cx="382.5" cy="75.2" r="4.2" fill="currentColor"/>
+                  <circle cx="382.5" cy="26.7" r="4.2" fill="currentColor"/>
+                  <circle cx="378.7" cy="69.6" r="4.2" fill="#e6a13b"/>
+                  <circle cx="360.8" cy="56.1" r="4.2" fill="currentColor"/>
+                  <circle cx="339.0" cy="85.5" r="4.2" fill="currentColor"/>
+                  <circle cx="396.7" cy="58.8" r="4.2" fill="currentColor"/>
+                  <circle cx="375.0" cy="88.2" r="4.2" fill="currentColor"/>
+                  <circle cx="411.0" cy="91.0" r="4.2" fill="currentColor"/>
+                  <circle cx="357.0" cy="50.5" r="4.2" fill="#e6a13b"/>
+                  <circle cx="339.0" cy="37.0" r="4.2" fill="currentColor"/>
+                  <circle cx="393.0" cy="53.2" r="4.2" fill="#e6a13b"/>
+                  <circle cx="375.0" cy="39.8" r="4.2" fill="currentColor"/>
+                  <circle cx="371.3" cy="82.6" r="4.2" fill="#e6a13b"/>
+                  <circle cx="353.3" cy="69.2" r="4.2" fill="currentColor"/>
+                  <circle cx="411.0" cy="42.5" r="4.2" fill="currentColor"/>
+                  <circle cx="389.2" cy="71.9" r="4.2" fill="currentColor"/>
+                  <circle cx="367.5" cy="101.3" r="4.2" fill="currentColor"/>
+                  <circle cx="367.5" cy="52.8" r="4.2" fill="currentColor"/>
+                  <text x="375" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="currentColor">Si: cF + 2</text>
+                  </svg>
+              </a>
+              <div class="lab-card__body">
+                <span class="chip chip--live">Live lab</span>
+                <h4 class="lab-card__title"><a href="labs/bravais-lattices/index.html">14 Bravais Lattices in 3D</a></h4>
+                <p>Rotate every Bravais lattice and 30 real crystal structures, from copper and silicon to GaN, and see why a crystal is a lattice plus a basis.</p>
+                <ul class="lab-card__features">
+                  <li>All 14 lattices, with conventional and primitive cells</li>
+                  <li>30 real materials with sourced structures and device roles</li>
+                  <li>Atom counting: basis, conventional cell and boundary copies</li>
+                  <li>Export coordinates (JSON, XYZ) or the current view (PNG)</li>
+                  <li>Comes with a downloadable Jupyter notebook</li>
+                </ul>
+                <a class="lab-card__launch" href="labs/bravais-lattices/index.html">Launch lab <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="videos">
+                <div class="videos__label">Related videos</div>
+                <ul>
+                  <li><a class="video video--first" href="https://www.youtube.com/watch?v=rpZOt_rBx4I" target="_blank" rel="noopener" title="Basics of crystal structure and terminologies, we make it easier to understand in 2D">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/rpZOt_rBx4I/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
+                    <span class="video__title">Basics of crystal structure and terminologies, we make it easier to understand in 2D<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=uwelK0CTjqQ" target="_blank" rel="noopener" title="The map of semiconductor materials">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/uwelK0CTjqQ/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">The map of semiconductor materials<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=KI25B8Vz4rk" target="_blank" rel="noopener" title="Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/KI25B8Vz4rk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                </ul>
+              </div>
+            </article>
+            <article class="lab-card lab-card--live">
+              <a class="lab-card__art" href="labs/atoms-to-a-band/index.html" tabindex="-1" aria-hidden="true">
+                  <svg viewBox="0 0 440 150" role="presentation">
+                  <line x1="28" y1="20" x2="418" y2="20" stroke="#c47a12" stroke-width="1.3" stroke-dasharray="5 4"/>
+                  <line x1="28" y1="112" x2="418" y2="112" stroke="#c47a12" stroke-width="1.3" stroke-dasharray="5 4"/>
+                  <line x1="36" y1="66.0" x2="88" y2="66.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <text x="62" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 1</text>
+                  <line x1="116" y1="89.0" x2="168" y2="89.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="116" y1="43.0" x2="168" y2="43.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <text x="142" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 2</text>
+                  <line x1="196" y1="103.2" x2="248" y2="103.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="80.2" x2="248" y2="80.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="51.8" x2="248" y2="51.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="196" y1="28.8" x2="248" y2="28.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <text x="222" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 4</text>
+                  <line x1="276" y1="109.2" x2="328" y2="109.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="101.2" x2="328" y2="101.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="89.0" x2="328" y2="89.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="74.0" x2="328" y2="74.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="58.0" x2="328" y2="58.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="43.0" x2="328" y2="43.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="30.8" x2="328" y2="30.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <line x1="276" y1="22.8" x2="328" y2="22.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                  <text x="302" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 8</text>
+                  <line x1="356" y1="111.2" x2="408" y2="111.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="108.9" x2="408" y2="108.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="105.1" x2="408" y2="105.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="100.0" x2="408" y2="100.0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="93.7" x2="408" y2="93.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="86.5" x2="408" y2="86.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="78.6" x2="408" y2="78.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="70.2" x2="408" y2="70.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="61.8" x2="408" y2="61.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="53.4" x2="408" y2="53.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="45.5" x2="408" y2="45.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="38.3" x2="408" y2="38.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="32.0" x2="408" y2="32.0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="26.9" x2="408" y2="26.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="23.1" x2="408" y2="23.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="356" y1="20.8" x2="408" y2="20.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <text x="382" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">N = 16</text>
+                  </svg>
+              </a>
+              <div class="lab-card__body">
+                <span class="chip chip--live">Live lab</span>
+                <h4 class="lab-card__title"><a href="labs/atoms-to-a-band/index.html">From Atoms to a Band</a></h4>
+                <p>Line atoms up in a chain, switch on the coupling, and watch single levels spread into an energy band. Then count them to build the density of states.</p>
+                <ul class="lab-card__features">
+                  <li>Add atoms one at a time, from N = 1 to 256</li>
+                  <li>Pull the atoms apart and watch the band collapse</li>
+                  <li>Slide an energy window to count states and build the DOS</li>
+                  <li>Exact levels, checked against the full Hamiltonian</li>
+                  <li>Comes with a downloadable Jupyter notebook</li>
+                </ul>
+                <a class="lab-card__launch" href="labs/atoms-to-a-band/index.html">Launch lab <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="videos">
+                <div class="videos__label">Related videos</div>
+                <ul>
+                  <li><a class="video video--first" href="https://www.youtube.com/watch?v=Hm-v4Eby0hk" target="_blank" rel="noopener" title="How energy bands are formed? Key quantum concepts simplified">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/Hm-v4Eby0hk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
+                    <span class="video__title">How energy bands are formed? Key quantum concepts simplified<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=vNBttmWca_U" target="_blank" rel="noopener" title="Deriving the density-of-states for any dispersion and dimensionality">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/vNBttmWca_U/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Deriving the density-of-states for any dispersion and dimensionality<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=5vOvjeTRcqM" target="_blank" rel="noopener" title="Linear combination of atomic orbitals (tight-binding method) for electrons in crystalline solids">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/5vOvjeTRcqM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Linear combination of atomic orbitals (tight-binding method) for electrons in crystalline solids<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </li>
+
+        <li class="track" data-track="transport" aria-labelledby="track-03">
+          <div class="track__num" aria-hidden="true">03</div>
+          <div class="track__head">
+            <h3 class="track__title" id="track-03">Nanoscale transport</h3>
+            <p class="track__desc">How electrons flow through devices only tens of nanometers long, where quantum effects take over.</p>
+          </div>
+          <div class="cards">
+            <article class="lab-card lab-card--live">
+              <a class="lab-card__art" href="labs/graphene-ballistic-transport/index.html" tabindex="-1" aria-hidden="true">
+                <svg viewBox="0 0 440 150" role="presentation">
+                  <rect x="160" y="14" width="140" height="104" fill="currentColor" fill-opacity=".09"/>
+                  <path d="M22 108H160V40H300V108H418" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
+                  <path d="M22 74.0 L23.5 68.7 L25 64.1 L26.5 60.7 L28 59.1 L29.5 59.4 L31 61.7 L32.5 65.5 L34 70.4 L35.5 75.8 L37 81.0 L38.5 85.2 L40 88.0 L41.5 89.0 L43 88.0 L44.5 85.2 L46 81.0 L47.5 75.8 L49 70.4 L50.5 65.5 L52 61.7 L53.5 59.4 L55 59.1 L56.5 60.7 L58 64.1 L59.5 68.7 L61 74.0 L62.5 79.3 L64 83.9 L65.5 87.3 L67 88.9 L68.5 88.6 L70 86.3 L71.5 82.5 L73 77.6 L74.5 72.2 L76 67.0 L77.5 62.8 L79 60.0 L80.5 59.0 L82 60.0 L83.5 62.8 L85 67.0 L86.5 72.2 L88 77.6 L89.5 82.5 L91 86.3 L92.5 88.6 L94 88.9 L95.5 87.3 L97 83.9 L98.5 79.3 L100 74.0 L101.5 68.7 L103 64.1 L104.5 60.7 L106 59.1 L107.5 59.4 L109 61.7 L110.5 65.5 L112 70.4 L113.5 75.8 L115 81.0 L116.5 85.2 L118 88.0 L119.5 89.0 L121 88.0 L122.5 85.2 L124 81.0 L125.5 75.8 L127 70.4 L128.5 65.5 L130 61.7 L131.5 59.4 L133 59.1 L134.5 60.7 L136 64.1 L137.5 68.7 L139 74.0 L140.5 79.3 L142 83.9 L143.5 87.3 L145 88.9 L146.5 88.6 L148 86.3 L149.5 82.5 L151 77.6 L152.5 72.2 L154 67.0 L155.5 62.8 L157 60.0 L158.5 59.0 L160 63.7 L161.5 64.8 L163 66.3 L164.5 68.1 L166 70.2 L167.5 72.5 L169 74.8 L170.5 77.2 L172 79.3 L173.5 81.2 L175 82.8 L176.5 84.0 L178 84.8 L179.5 85.0 L181 84.7 L182.5 84.0 L184 82.8 L185.5 81.2 L187 79.2 L188.5 77.0 L190 74.7 L191.5 72.4 L193 70.1 L194.5 68.0 L196 66.2 L197.5 64.7 L199 63.7 L200.5 63.1 L202 63.0 L203.5 63.5 L205 64.4 L206.5 65.7 L208 67.5 L209.5 69.5 L211 71.7 L212.5 74.1 L214 76.4 L215.5 78.6 L217 80.6 L218.5 82.4 L220 83.7 L221.5 84.6 L223 85.0 L224.5 84.9 L226 84.3 L227.5 83.2 L229 81.7 L230.5 79.9 L232 77.8 L233.5 75.5 L235 73.2 L236.5 70.8 L238 68.7 L239.5 66.8 L241 65.2 L242.5 64.0 L244 63.2 L245.5 63.0 L247 63.3 L248.5 64.0 L250 65.2 L251.5 66.8 L253 68.8 L254.5 71.0 L256 73.3 L257.5 75.6 L259 77.9 L260.5 80.0 L262 81.8 L263.5 83.3 L265 84.3 L266.5 84.9 L268 85.0 L269.5 84.5 L271 83.6 L272.5 82.3 L274 80.5 L275.5 78.5 L277 76.3 L278.5 73.9 L280 71.6 L281.5 69.4 L283 67.4 L284.5 65.6 L286 64.3 L287.5 63.4 L289 63.0 L290.5 63.1 L292 63.7 L293.5 64.8 L295 66.3 L296.5 68.1 L298 70.2 L299.5 72.5 L301 76.3 L302.5 80.7 L304 84.2 L305.5 86.4 L307 87.0 L308.5 85.9 L310 83.2 L311.5 79.4 L313 74.9 L314.5 70.2 L316 66.0 L317.5 62.9 L319 61.2 L320.5 61.2 L322 62.8 L323.5 65.9 L325 70.1 L326.5 74.7 L328 79.3 L329.5 83.1 L331 85.8 L332.5 87.0 L334 86.4 L335.5 84.3 L337 80.8 L338.5 76.4 L340 71.7 L341.5 67.3 L343 63.8 L344.5 61.6 L346 61.0 L347.5 62.1 L349 64.8 L350.5 68.6 L352 73.1 L353.5 77.8 L355 82.0 L356.5 85.1 L358 86.8 L359.5 86.8 L361 85.2 L362.5 82.1 L364 77.9 L365.5 73.3 L367 68.7 L368.5 64.9 L370 62.2 L371.5 61.0 L373 61.6 L374.5 63.7 L376 67.2 L377.5 71.6 L379 76.3 L380.5 80.7 L382 84.2 L383.5 86.4 L385 87.0 L386.5 85.9 L388 83.2 L389.5 79.4 L391 74.9 L392.5 70.2 L394 66.0 L395.5 62.9 L397 61.2 L398.5 61.2 L400 62.8 L401.5 65.9 L403 70.1 L404.5 74.7 L406 79.3 L407.5 83.1 L409 85.8 L410.5 87.0 L412 86.4 L413.5 84.3 L415 80.8 L416.5 76.4 L418 71.7" fill="none" stroke="#1f6fb4" stroke-width="1.8"/>
+                  <text x="91" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">source (n)</text>
+                  <text x="230" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="currentColor">channel (p)</text>
+                  <text x="359" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#5f7382">drain (n)</text>
+                </svg>
+              </a>
+              <div class="lab-card__body">
+                <span class="chip chip--live">Live lab</span>
+                <h4 class="lab-card__title"><a href="labs/graphene-ballistic-transport/index.html">Graphene Ballistic Transport</a></h4>
+                <p>Send electrons through a graphene junction and watch them tunnel, reflect and interfere, computed live with NEGF.</p>
+                <ul class="lab-card__features">
+                  <li>Set the source, channel and drain Dirac points, length and k<sub>y</sub></li>
+                  <li>Klein tunnelling, Fabry–Pérot resonances and evanescent transport</li>
+                  <li>Transmission, band slices and a position–energy LDOS map</li>
+                  <li>Export transmission and LDOS as CSV</li>
+                  <li>Comes with a downloadable Jupyter notebook</li>
+                </ul>
+                <a class="lab-card__launch" href="labs/graphene-ballistic-transport/index.html">Launch lab <span aria-hidden="true">→</span></a>
+              </div>
+              <div class="videos">
+                <div class="videos__label">Related videos</div>
+                <ul>
+                  <li><a class="video video--first" href="https://www.youtube.com/watch?v=2RoP7nZv474" target="_blank" rel="noopener" title="Ballistic electronic transport in graphene devices">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/2RoP7nZv474/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
+                    <span class="video__title">Ballistic electronic transport in graphene devices<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=TuWvO8oig0E" target="_blank" rel="noopener" title="Deriving the Dirac Hamiltonian in Graphene">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/TuWvO8oig0E/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">Deriving the Dirac Hamiltonian in Graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                  <li><a class="video" href="https://www.youtube.com/watch?v=z7dVABiYnTk" target="_blank" rel="noopener" title="How electricity actually works at the nanoscale?">
+                    <span class="video__thumb"><img src="https://i.ytimg.com/vi/z7dVABiYnTk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+                    <span class="video__title">How electricity actually works at the nanoscale?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+                  </a></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ How it works ============ -->
+  <section class="section section--tint" id="how" aria-labelledby="how-title">
+    <div class="shell">
+      <div class="section__head">
+        <div class="eyebrow">How it works</div>
+        <h2 id="how-title">Watch. Predict. Test.</h2>
+        <p class="lead">Each lab is built around a short loop. The prediction step is the one that makes the physics stick.</p>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9.2v5.6l4.8-2.8Z" fill="currentColor"/></svg>
+          </div>
+          <div class="step__label">Step 1</div>
+          <h3>Watch</h3>
+          <p>Start with the Professor Nano episode. Each lab links back to the video it goes with.</p>
+        </li>
+        <li class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step__label">Step 2</div>
+          <h3>Predict</h3>
+          <p>Before you move a slider, commit to a guess. Which way will the curve shift, and by roughly how much?</p>
+        </li>
+        <li class="step">
+          <div class="step__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 20h18M4 16l4.5-5 3.5 3 6-7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="6.5" r="1.8" fill="currentColor"/></svg>
+          </div>
+          <div class="step__label">Step 3</div>
+          <h3>Test</h3>
+          <p>Run the live model, compare it with your prediction, then open the explanation when you're ready.</p>
+        </li>
+      </ol>
+
+      <ul class="principles">
+        <li>
+          <h3>Live, not pre-recorded</h3>
+          <p>Every plot is computed in your browser as you move the controls. Nothing to install, and it works on a phone.</p>
+        </li>
+        <li>
+          <h3>Code you can read</h3>
+          <p>Each lab comes with its Jupyter notebook, so you can check the physics line by line and change it.</p>
+        </li>
+        <li>
+          <h3>Assumptions stated</h3>
+          <p>Every model says what it includes, what it leaves out, and where it stops being valid.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ About ============ -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="shell about">
+      <div class="about__badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <path d="M60 8 105 34v52L60 112 15 86V34Z" fill="#175569"/>
+          <path d="M60 8 105 34v52L60 112 15 86V34Z" fill="none" stroke="#7fe0e8" stroke-width="2" stroke-opacity=".6"/>
+          <text x="60" y="71" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="30" fill="#fff" letter-spacing="-1">PN</text>
+        </svg>
+      </div>
+      <div class="about__text">
+        <div class="eyebrow">About</div>
+        <h2 id="about-title">Professor Nano</h2>
+        <p>Hello, I’m Tony Low, a professor at the University of Minnesota, with over two decades of research experience in semiconductors, nano-devices, quantum materials and emerging technologies at IBM T.J. Watson Research Center, Columbia University, Yale University, Purdue University and the National University of Singapore.</p>
+        <p>Professor Nano shares key ideas through concise, 10-minute “knowledge nuggets” built from first principles, spanning semiconductors, electronic and optical devices, quantum physics, nanotechnology and the science behind future computing. We won’t shy away from math, because equations often provide the clearest path to understanding.</p>
+        <p>These labs put those equations in motion: change a parameter and see what the model predicts.</p>
+        <div class="about__links">
+          <a class="btn btn--brand" href="https://www.youtube.com/@professornano" data-youtube>Visit the channel <span aria-hidden="true">↗</span></a>
+          <a class="btn btn--outline" href="https://github.com/tonylowgroup/Professor-Nano-Labs">Notebooks on GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ Footer (shared by every page) ============ -->
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="https://www.youtube.com/@professornano" data-youtube>YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/hero.js" defer></script>
+</body>
+</html>
