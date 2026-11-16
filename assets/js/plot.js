@@ -5,6 +5,9 @@
    const p = new NanoPlot(canvas, { xLabel: 'x (nm)', yLabel: '...' });
    p.setRange([xmin, xmax], [ymin, ymax]);
    p.draw([{ type: 'line', x, y, color, width, dash, fill }, ...]);
+
+   Layer types: line (non-finite points break the curve), stems, dots,
+   vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded).
 */
 (function () {
   'use strict';
@@ -136,19 +139,29 @@
       for (const L of this.layers) {
         if (L.type === 'line') this._line(L);
         else if (L.type === 'stems') this._stems(L);
+        else if (L.type === 'dots') this._dots(L);
         else if (L.type === 'vline') this._vline(L);
+        else if (L.type === 'hline') this._hline(L);
+        else if (L.type === 'vband' || L.type === 'hband') this._band(L);
       }
       c.restore();
+    }
+
+    _trace(L) {
+      const c = this.ctx;
+      let pen = false;
+      c.beginPath();
+      for (let i = 0; i < L.x.length; i++) {
+        if (!Number.isFinite(L.x[i]) || !Number.isFinite(L.y[i])) { pen = false; continue; }
+        const X = this.px(L.x[i]), Y = this.py(L.y[i]);
+        if (pen) c.lineTo(X, Y); else { c.moveTo(X, Y); pen = true; }
+      }
     }
 
     _line(L) {
       const c = this.ctx, n = L.x.length;
       if (!n) return;
-      c.beginPath();
-      for (let i = 0; i < n; i++) {
-        const X = this.px(L.x[i]), Y = this.py(L.y[i]);
-        if (i === 0) c.moveTo(X, Y); else c.lineTo(X, Y);
-      }
+      this._trace(L);
       if (L.fill) {
         c.save();
         const base = this.py(L.fillTo || 0);
@@ -158,11 +171,7 @@
         c.fillStyle = L.fill;
         c.fill();
         c.restore();
-        c.beginPath();
-        for (let i = 0; i < n; i++) {
-          const X = this.px(L.x[i]), Y = this.py(L.y[i]);
-          if (i === 0) c.moveTo(X, Y); else c.lineTo(X, Y);
-        }
+        this._trace(L);
       }
       c.strokeStyle = L.color; c.lineWidth = L.width || 2;
       c.lineJoin = 'round';
@@ -178,6 +187,34 @@
         const X = this.px(L.x[i]), Y = this.py(L.y[i]);
         c.beginPath(); c.moveTo(X, base); c.lineTo(X, Y); c.stroke();
         c.beginPath(); c.arc(X, Y, L.r || 3, 0, Math.PI * 2); c.fill();
+      }
+    }
+
+    _dots(L) {
+      const c = this.ctx, r = L.r || 3;
+      for (let i = 0; i < L.x.length; i++) {
+        c.fillStyle = L.colors ? L.colors[i] : L.color;
+        c.beginPath(); c.arc(this.px(L.x[i]), this.py(L.y[i]), r, 0, Math.PI * 2); c.fill();
+      }
+    }
+
+    _hline(L) {
+      const c = this.ctx, Y = Math.round(this.py(L.y)) + .5;
+      c.strokeStyle = L.color; c.lineWidth = L.width || 1;
+      c.setLineDash(L.dash || [4, 4]);
+      c.beginPath(); c.moveTo(this.m.l, Y); c.lineTo(this.w - this.m.r, Y); c.stroke();
+      c.setLineDash([]);
+    }
+
+    _band(L) {
+      const c = this.ctx;
+      c.fillStyle = L.color;
+      if (L.type === 'vband') {
+        const a = this.px(L.x0), b = this.px(L.x1);
+        c.fillRect(Math.min(a, b), this.m.t, Math.abs(b - a), this.h - this.m.t - this.m.b);
+      } else {
+        const a = this.py(L.y0), b = this.py(L.y1);
+        c.fillRect(this.m.l, Math.min(a, b), this.w - this.m.l - this.m.r, Math.abs(b - a));
       }
     }
 

@@ -161,6 +161,38 @@ mjx-container svg { display: inline; }
 .plot-box--short { height: 210px; }
 .plot-box canvas { display: block; }
 
+/* ---------- Experiment tabs ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 16px; }
+.tab {
+  font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; border-radius: 10px; padding: 10px 16px;
+  background: var(--surface); color: var(--ink-2); border: 1px solid #c9d7de;
+}
+.tab:hover { border-color: var(--brand); color: var(--brand); }
+.tab[aria-selected="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+.mode-intro h2 { font-size: 21px; margin: 0 0 6px; }
+.mode-intro p { margin: 0; color: var(--ink-2); line-height: 1.6; max-width: 760px; }
+.chip-btn[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+.player { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.stats--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.chain-card { padding: 10px 18px; color: var(--brand); }
+.chain { width: 100%; height: auto; }
+.chain__label { font-size: 18px; fill: var(--muted); }
+.chain__note { font-size: 17px; fill: var(--muted); }
+.plots { container-type: inline-size; }
+.plot-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@container (max-width: 620px) { .plot-pair { grid-template-columns: 1fr; } }
+.plot-box--tall { height: 300px; }
+.matrix { color: var(--ink-2); }
+.matrix__svg { width: 100%; max-width: 380px; height: auto; margin: 4px auto 0; }
+.matrix__diag { fill: var(--brand-soft); }
+.matrix__bond { fill: #fdf1dc; }
+.matrix__zero { fill: none; }
+.matrix__v { fill: var(--ink); font-weight: 700; }
+.matrix__z { fill: #a9bcc5; }
+.matrix .chain__note { font-size: 12.5px; }
+.lab-status { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
@@ -191,7 +223,7 @@ mjx-container svg { display: inline; }
 @media (max-width: 760px) {
   .watch { grid-template-columns: 1fr; }
   .watch__later { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 20px; }
-  .presets, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .presets, .stats, .stats--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 400px) {
   .presets { grid-template-columns: 1fr; }
