@@ -541,7 +541,6 @@
     document.querySelectorAll('#basis [data-basis]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.basis === state.basis)));
     document.querySelectorAll('#basis-a [data-basis]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.basis === state.basisA)));
     document.querySelectorAll('#basis-b [data-basis]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.basis === state.basisB)));
-    document.querySelectorAll('[data-alpha]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.alpha === state.alpha)));
     const full = gatesNow().length >= MAX_GATES;
     document.querySelectorAll('[data-gate], [data-gate2], #add-r').forEach(b => { b.disabled = full; });
     const n1 = state.gates1.length;
@@ -560,7 +559,7 @@
   }
 
   const TEXT = {
-    gates: ['Bloch sphere', 'Drag to turn the sphere. Solid trail: the path so far. Dashed trail: what is still to come. θ and φ are drawn at the input.', 'Bloch components along the circuit', 'The arrow\'s x, y and z components at every point of the replay. z = P(0) − P(1).'],
+    gates: ['Bloch sphere', 'Drag to turn the sphere. Solid trail: the path so far; dashed: still to come; amber: a preview of the rotation gate. θ and φ are drawn at the input.', 'Bloch components along the circuit', 'The arrow\'s x, y and z components at every point of the replay. z = P(0) − P(1).'],
     measure: ['The state being measured', 'The thick line is the measurement axis. The circles at its ends are sized by the two probabilities, coloured like the bars; the dashed arrow is rebuilt from your shots.', '', ''],
     pair: ['Qubit A on its own', 'Length 1: a definite direction. Length 0: completely random on its own.', 'Entanglement along the circuit', 'Concurrence, single-qubit arrow length and entropy at every point of the replay.'],
   };
@@ -684,7 +683,6 @@
   }
   document.querySelectorAll('#axis [data-axis]').forEach(b => b.addEventListener('click', () => { state.axis = b.dataset.axis; touchRotation(); }));
   $('alpha').addEventListener('input', e => { state.alpha = +e.target.value; touchRotation(); });
-  document.querySelectorAll('[data-alpha]').forEach(b => b.addEventListener('click', () => { state.alpha = +b.dataset.alpha; touchRotation(); }));
   $('add-r').addEventListener('click', () => {
     const g = rotationR();
     if (mode === 'pair') g.target = state.target;

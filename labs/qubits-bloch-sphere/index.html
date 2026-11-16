@@ -131,15 +131,17 @@
             <button class="chip-btn ket-chip" type="button" data-start="0">|0⟩</button><button class="chip-btn ket-chip" type="button" data-start="1">|1⟩</button><button class="chip-btn ket-chip" type="button" data-start="+">|+⟩</button><button class="chip-btn ket-chip" type="button" data-start="-">|−⟩</button><button class="chip-btn ket-chip" type="button" data-start="+i">|+i⟩</button><button class="chip-btn ket-chip" type="button" data-start="-i">|−i⟩</button>
           </div>
         </div>
-        <div class="ctrl">
-          <div class="ctrl__row"><label for="theta">Polar angle θ</label><output id="theta-out" for="theta"></output></div>
-          <input id="theta" type="range" min="0" max="180" step="1" value="0">
-          <div class="ctrl__hint">Measured down from |0⟩. θ = 90° is the equator.</div>
-        </div>
-        <div class="ctrl">
-          <div class="ctrl__row"><label for="phi">Azimuth φ</label><output id="phi-out" for="phi"></output></div>
-          <input id="phi" type="range" min="0" max="360" step="1" value="0">
-          <div class="ctrl__hint">Measured around the equator from |+⟩, toward |+i⟩.</div>
+        <div class="ctrl-duo">
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="theta">Polar angle θ</label><output id="theta-out" for="theta"></output></div>
+            <input id="theta" type="range" min="0" max="180" step="1" value="0">
+            <div class="ctrl__hint">Down from |0⟩; 90° is the equator.</div>
+          </div>
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="phi">Azimuth φ</label><output id="phi-out" for="phi"></output></div>
+            <input id="phi" type="range" min="0" max="360" step="1" value="0">
+            <div class="ctrl__hint">Around the equator from |+⟩ toward |+i⟩.</div>
+          </div>
         </div>
         <div class="ctrl__hint" id="input-note"></div>
       </div>
@@ -147,7 +149,7 @@
       <div class="ctrl-group" data-modes="pair">
         <div class="label-caps">Examples</div>
         <div class="ctrl">
-          <div class="chips chips--stack" role="group" aria-label="Example circuits">
+          <div class="chips chips--examples" role="group" aria-label="Example circuits">
             <button class="chip-btn" type="button" data-example="bell">Bell pair Φ⁺: H, then CNOT</button>
             <button class="chip-btn" type="button" data-example="singlet">Singlet Ψ⁻</button>
             <button class="chip-btn" type="button" data-example="partial">Partly entangled: R<sub>y</sub>(60°), CNOT</button>
@@ -155,55 +157,6 @@
             <button class="chip-btn" type="button" data-example="swap">SWAP |0⟩|1⟩</button>
           </div>
           <div class="ctrl__hint">Both qubits start in |0⟩. Replay a circuit to watch the arrows change.</div>
-        </div>
-      </div>
-
-      <div class="ctrl-group" data-modes="gates pair">
-        <div class="label-caps">Add a gate</div>
-        <div class="ctrl" data-modes="pair">
-          <span class="ctrl__name" id="target-label">Apply to</span>
-          <div class="seg" role="group" aria-labelledby="target-label" id="target">
-            <button type="button" data-target="A" aria-pressed="true">Qubit A</button>
-            <button type="button" data-target="B" aria-pressed="false">Qubit B</button>
-          </div>
-        </div>
-        <div class="gate-grid" role="group" aria-label="Single-qubit gates">
-          <button class="gate-btn" type="button" data-gate="X" title="X: half turn about x (bit flip)">X</button>
-          <button class="gate-btn" type="button" data-gate="Y" title="Y: half turn about y">Y</button>
-          <button class="gate-btn" type="button" data-gate="Z" title="Z: half turn about z (phase flip)">Z</button>
-          <button class="gate-btn" type="button" data-gate="H" title="H: half turn about the x–z diagonal">H</button>
-          <button class="gate-btn" type="button" data-gate="S" title="S: quarter turn about z">S</button>
-          <button class="gate-btn" type="button" data-gate="Sdg" title="S†: quarter turn about z, backwards">S†</button>
-          <button class="gate-btn" type="button" data-gate="T" title="T: eighth turn about z">T</button>
-          <button class="gate-btn" type="button" data-gate="Tdg" title="T†: eighth turn about z, backwards">T†</button>
-        </div>
-        <div class="gate-grid gate-grid--two" role="group" aria-label="Two-qubit gates" data-modes="pair">
-          <button class="gate-btn" type="button" data-gate2="CNOT-A" title="Flip B when A is 1">CNOT A→B</button>
-          <button class="gate-btn" type="button" data-gate2="CNOT-B" title="Flip A when B is 1">CNOT B→A</button>
-          <button class="gate-btn" type="button" data-gate2="CZ" title="Phase −1 on |11⟩">CZ</button>
-          <button class="gate-btn" type="button" data-gate2="SWAP" title="Exchange the two qubits">SWAP</button>
-        </div>
-      </div>
-
-      <div class="ctrl-group" data-modes="gates pair">
-        <div class="label-caps">Rotation gate</div>
-        <div class="ctrl">
-          <span class="ctrl__name" id="axis-label">Axis n</span>
-          <div class="seg" role="group" aria-labelledby="axis-label" id="axis">
-            <button type="button" data-axis="x" aria-pressed="false">x</button>
-            <button type="button" data-axis="y" aria-pressed="true">y</button>
-            <button type="button" data-axis="z" aria-pressed="false">z</button>
-            <button type="button" data-axis="h" aria-pressed="false" title="The Hadamard axis, halfway between x and z">x+z</button>
-          </div>
-        </div>
-        <div class="ctrl">
-          <div class="ctrl__row"><label for="alpha">Angle α</label><output id="alpha-out" for="alpha"></output></div>
-          <input id="alpha" type="range" min="-360" max="360" step="5" value="90">
-          <div class="chips" role="group" aria-label="Quick angles">
-            <button class="chip-btn" type="button" data-alpha="45">45°</button><button class="chip-btn" type="button" data-alpha="90">90°</button><button class="chip-btn" type="button" data-alpha="180">180°</button><button class="chip-btn" type="button" data-alpha="360">360°</button><button class="chip-btn" type="button" data-alpha="-90">−90°</button>
-          </div>
-          <button class="btn-play btn-add" id="add-r" type="button">Add R<sub>y</sub>(90°)</button>
-          <div class="ctrl__hint">The dashed path previews where the gate will take the arrow.</div>
         </div>
       </div>
 
@@ -235,6 +188,45 @@
       <section class="panel circuit-card" aria-label="Circuit and replay">
         <div data-modes="gates pair">
           <div class="plot-card__head"><h3>Circuit</h3><span class="circuit__tools"><button class="btn-quiet btn-small" id="undo" type="button">Undo</button><button class="btn-quiet btn-small" id="clear" type="button">Clear</button></span></div>
+          <div class="builder">
+            <div class="builder__row">
+              <div class="seg seg--inline" role="group" aria-label="Single-qubit gates act on" id="target" data-modes="pair">
+                <button type="button" data-target="A" aria-pressed="true">On A</button>
+                <button type="button" data-target="B" aria-pressed="false">On B</button>
+              </div>
+              <div class="gate-row" role="group" aria-label="Single-qubit gates">
+                <button class="gate-btn" type="button" data-gate="X" title="X: half turn about x (bit flip)">X</button>
+                <button class="gate-btn" type="button" data-gate="Y" title="Y: half turn about y">Y</button>
+                <button class="gate-btn" type="button" data-gate="Z" title="Z: half turn about z (phase flip)">Z</button>
+                <button class="gate-btn" type="button" data-gate="H" title="H: half turn about the x–z diagonal">H</button>
+                <button class="gate-btn" type="button" data-gate="S" title="S: quarter turn about z">S</button>
+                <button class="gate-btn" type="button" data-gate="Sdg" title="S†: quarter turn about z, backwards">S†</button>
+                <button class="gate-btn" type="button" data-gate="T" title="T: eighth turn about z">T</button>
+                <button class="gate-btn" type="button" data-gate="Tdg" title="T†: eighth turn about z, backwards">T†</button>
+              </div>
+              <div class="gate-row gate-row--two" role="group" aria-label="Two-qubit gates" data-modes="pair">
+                <button class="gate-btn" type="button" data-gate2="CNOT-A" title="Flip B when A is 1">CNOT A→B</button>
+                <button class="gate-btn" type="button" data-gate2="CNOT-B" title="Flip A when B is 1">CNOT B→A</button>
+                <button class="gate-btn" type="button" data-gate2="CZ" title="Phase −1 on |11⟩">CZ</button>
+                <button class="gate-btn" type="button" data-gate2="SWAP" title="Exchange the two qubits">SWAP</button>
+              </div>
+            </div>
+            <div class="builder__row builder__rot">
+              <span class="builder__label" id="axis-label">Rotate about</span>
+              <div class="seg seg--inline" role="group" aria-labelledby="axis-label" id="axis">
+                <button type="button" data-axis="x" aria-pressed="false">x</button>
+                <button type="button" data-axis="y" aria-pressed="true">y</button>
+                <button type="button" data-axis="z" aria-pressed="false">z</button>
+                <button type="button" data-axis="h" aria-pressed="false" title="The Hadamard axis, halfway between x and z">x+z</button>
+              </div>
+              <span class="builder__angle">
+                <label class="builder__label" for="alpha">by</label>
+                <input id="alpha" type="range" min="-360" max="360" step="5" value="90">
+                <output id="alpha-out" for="alpha"></output>
+              </span>
+              <button class="btn-play btn-add" id="add-r" type="button" title="The amber dashed path on the sphere previews where this gate takes the arrow">Add R<sub>y</sub>(90°)</button>
+            </div>
+          </div>
           <div class="circuit" id="circuit"></div>
         </div>
         <div class="transport">

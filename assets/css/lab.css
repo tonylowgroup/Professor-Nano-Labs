@@ -87,7 +87,7 @@ mjx-container svg { display: inline; }
 .lab-grid { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 22px; align-items: start; }
 .controls { position: sticky; top: 78px; max-height: calc(100vh - 94px); overflow-y: auto; display: grid; gap: 20px; }
 .ctrl-group { display: grid; gap: 14px; }
-.ctrl-group + .ctrl-group { border-top: 1px solid var(--line); padding-top: 18px; }
+.ctrl-group:not([hidden]) ~ .ctrl-group { border-top: 1px solid var(--line); padding-top: 18px; }
 .ctrl label, .ctrl .ctrl__name { font-weight: 600; font-size: 14px; color: var(--ink); }
 .ctrl__row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .ctrl output { font-weight: 700; color: var(--brand); font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -223,18 +223,25 @@ mjx-container svg { display: inline; }
 .swatch-chip { width: 26px; height: 26px; border-radius: 7px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); flex: none; }
 
 /* Qubits: gates, circuit, sphere, outcomes */
-.gate-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.gate-grid--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.builder { display: grid; gap: 10px; margin-top: 12px; }
+.builder__row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.gate-row { display: grid; grid-template-columns: repeat(8, minmax(32px, 42px)); gap: 5px; }
+.gate-row--two { grid-template-columns: repeat(4, auto); }
 .gate-btn {
-  font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; border-radius: 9px; padding: 9px 4px;
+  font: inherit; font-weight: 800; font-size: 14.5px; cursor: pointer; border-radius: 8px; padding: 6px 0;
   background: var(--brand-soft); color: var(--brand-strong); border: 1px solid transparent;
 }
-.gate-grid--two .gate-btn { font-size: 13px; font-weight: 700; }
+.gate-row--two .gate-btn { font-size: 12.5px; font-weight: 700; padding: 7px 10px; }
 .gate-btn:hover { border-color: var(--brand); }
 .gate-btn:disabled, .btn-quiet:disabled, .btn-play:disabled { opacity: .45; cursor: not-allowed; }
-.btn-add { width: 100%; margin-top: 10px; font-size: 14.5px; }
-.chips--stack { flex-direction: column; align-items: stretch; }
-.chips--stack .chip-btn { text-align: left; border-radius: 9px; padding: 7px 10px; }
+.seg.seg--inline { width: auto; margin-top: 0; }
+.seg--inline button { padding: 6px 11px; }
+.builder__label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.builder__angle { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; min-width: 180px; }
+.builder__angle input { flex: 1; min-width: 80px; accent-color: var(--brand); }
+.builder__angle output { font-weight: 700; color: var(--brand); font-size: 14px; min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+.btn-add { min-width: 0; padding: 7px 14px; font-size: 14px; }
+.ctrl-duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 22px; }
 .ket-chip { min-width: 46px; font-weight: 600; }
 .circuit-card { display: grid; gap: 12px; }
 .circuit__tools { display: flex; gap: 6px; }
