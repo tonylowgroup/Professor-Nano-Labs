@@ -31,7 +31,17 @@ mjx-container svg { display: inline; }
 .lab-hero h1 { font-size: clamp(30px, 4vw, 42px); letter-spacing: -.03em; margin: 10px 0 8px; line-height: 1.1; }
 .lab-hero p { margin: 0; color: #d3e6ec; font-size: 17px; max-width: 680px; line-height: 1.6; }
 
+.lab-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.lab-hero__actions .btn { padding: 11px 16px; font-size: 14.5px; }
+.btn__icon { width: 18px; height: 18px; flex: none; }
+.btn__meta { font-weight: 500; opacity: .8; font-size: 13px; margin-left: 4px; }
+
 .lab-main { padding: 28px 0 64px; display: grid; gap: 22px; }
+
+/* Notebook download panel */
+.notebook { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
+.notebook__text { flex: 1 1 420px; min-width: 0; }
+.notebook__text p { margin: 0; color: var(--ink-2); line-height: 1.65; max-width: 680px; }
 
 /* ---------- Panels ---------- */
 .panel {
