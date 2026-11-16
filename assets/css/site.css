@@ -53,7 +53,7 @@ img, svg { display: block; }
 .skip-link:focus { top: 12px; }
 
 /* ---------- Top bar ---------- */
-.site-nav { background: var(--brand-ink); color: #e4f1f4; position: sticky; top: 0; z-index: 5; }
+.site-nav { background: var(--brand-ink); color: #e4f1f4; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
 .site-nav__inner {
   max-width: var(--maxw); margin: 0 auto; padding: 14px 24px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap;
