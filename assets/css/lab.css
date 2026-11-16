@@ -54,13 +54,16 @@ mjx-container svg { display: inline; }
   font-size: 11.5px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--brand);
 }
 
-/* Watch-first strip */
-.watch { display: grid; grid-template-columns: 180px 1fr; gap: 20px; align-items: center; }
-.watch .videos { padding: 0; margin: 0; }
-.watch .videos ul { grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.watch .video { grid-template-columns: 1fr; gap: 8px; align-items: start; }
-.watch__intro h2 { font-size: 18px; margin: 6px 0 4px; }
-.watch__intro p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+/* Watch first / watch later */
+.watch { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 24px 32px; }
+.watch h2 { font-size: 19px; margin: 6px 0 2px; }
+.watch p { margin: 0 0 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.watch__later { border-left: 1px solid var(--line); padding-left: 32px; }
+.label-caps--muted { color: var(--muted); }
+.watch .video { grid-template-columns: 136px 1fr; gap: 14px; align-items: center; }
+.watch .video--feature { grid-template-columns: minmax(0, 260px) 1fr; }
+.watch .video--feature .video__title { font-size: 16px; font-weight: 600; color: var(--ink); }
+.watch__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 
 .equation {
   background: var(--tint); border-radius: 12px; padding: 14px 18px; margin: 16px 0 6px;
@@ -187,6 +190,7 @@ mjx-container svg { display: inline; }
 }
 @media (max-width: 760px) {
   .watch { grid-template-columns: 1fr; }
+  .watch__later { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 20px; }
   .presets, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 400px) {
@@ -197,8 +201,8 @@ mjx-container svg { display: inline; }
   .panel { padding: 18px 16px; }
   .plot-card { padding: 14px 12px 10px; }
   .plot-box { height: 220px; }
-  .watch .videos ul { grid-template-columns: 1fr; }
-  .watch .video { grid-template-columns: 112px 1fr; align-items: center; }
+  .watch .video { grid-template-columns: 112px 1fr; }
+  .watch .video--feature { grid-template-columns: 1fr; gap: 10px; }
   .transport { grid-template-columns: auto auto 1fr; }
   .transport input[type="range"] { grid-column: 1 / -1; grid-row: 2; }
 }
