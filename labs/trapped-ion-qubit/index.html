@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en" data-track="computing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trapped-Ion Qubit · Professor Nano Labs</title>
+<meta name="description" content="Drive a single trapped ion with a laser: Rabi flopping, Ramsey fringes, spin echoes and the T1 and T2 times that limit them, on a live Bloch sphere. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum computing</div>
+    <div class="eyebrow eyebrow--light">Quantum computing · Live lab</div>
+    <h1>Trapped-Ion Qubit</h1>
+    <p>A single ion held in a trap stores a qubit in two of its energy levels, and laser pulses are its gates. Drive it, time the pulses, and see how noise and energy loss slowly erase what it stores.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="trapped_ion_qubit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=5qpXdGSLWig" target="_blank" rel="noopener" title="How exactly does trapped ions perform quantum computing?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/5qpXdGSLWig/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How exactly does trapped ions perform quantum computing?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=8p6P-QTQM2M" target="_blank" rel="noopener" title="How to trap ions for quantum computing?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/8p6P-QTQM2M/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How to trap ions for quantum computing?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=ma136N8d3Xc" target="_blank" rel="noopener" title="Quick introduction to the density matrix in quantum mechanics">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/ma136N8d3Xc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quick introduction to the density matrix in quantum mechanics<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A two-level ion driven by a laser</h2>
+    <p>Two long-lived levels of the ion store the qubit: \(|0\rangle\), the ground state, and \(|1\rangle\), an excited state. A laser tuned close to the transition frequency \(\omega_0\) drives the ion between them. In a frame that rotates with the laser, and keeping only the near-resonant terms (the rotating-wave approximation), the ion feels a fixed "drive vector" \(\vec W\), and its Bloch vector precesses about it like a spinning top:</p>
+    <div class="equation">$$H=\frac{\hbar}{2}\,\vec W\cdot\vec\sigma,\qquad \vec W=\begin{pmatrix}\Omega\cos\phi\\ \Omega\sin\phi\\ \Delta\end{pmatrix},\qquad \Delta=\omega_{\rm laser}-\omega_0 ,\qquad \frac{d\vec r}{dt}=\vec W\times\vec r-\begin{pmatrix}r_x/T_2\\ r_y/T_2\\ (r_z-1)/T_1\end{pmatrix}$$</div>
+    <p>The Rabi frequency \(\Omega\) is set by the laser's strength, \(\phi\) by its phase and \(\Delta\) by its tuning. The last term adds the two kinds of decay: energy loss back to the ground state with time \(T_1\), and loss of phase with time \(T_2\). To read the qubit out, a second laser makes the ion glow only when it is in \(|0\rangle\); repeating the experiment gives the probability \(P(1)\) plotted throughout this lab.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-rabi" aria-controls="lab" aria-selected="true" data-mode="rabi">1 · Rabi flopping</button>
+      <button class="tab" role="tab" id="tab-ramsey" aria-controls="lab" aria-selected="false" data-mode="ramsey" tabindex="-1">2 · Ramsey and spin echo</button>
+      <button class="tab" role="tab" id="tab-decay" aria-controls="lab" aria-selected="false" data-mode="decay" tabindex="-1">3 · T₁ and T₂</button>
+    </div>
+    <div class="mode-intro" data-for="rabi">
+      <h2>Switch the laser on. The ion flops between its two levels.</h2>
+      <p>On resonance the arrow swings all the way from \(|0\rangle\) to \(|1\rangle\) and back. Detune the laser and the drive axis tilts out of the equator: the swing gets faster but never reaches \(|1\rangle\). A pulse that stops after half a swing is a π pulse, the ion's X gate.</p>
+      <div class="equation">$$P_1(t)=\frac{\Omega^2}{\Omega^2+\Delta^2}\,\sin^2\!\left(\frac{\sqrt{\Omega^2+\Delta^2}\;t}{2}\right),\qquad t_\pi=\frac{\pi}{\Omega}$$</div>
+    </div>
+    <div class="mode-intro" data-for="ramsey" hidden>
+      <h2>Two short pulses and a wait: the most precise clock there is.</h2>
+      <p>A π/2 pulse puts the arrow on the equator. During the wait, with the laser off, it precesses at the detuning; a second π/2 pulse turns that phase into a probability. Slow field noise blurs the result, and a π pulse in the middle of the wait, a spin echo, undoes it.</p>
+      <div class="equation">$$P_1^{\rm Ramsey}\approx\tfrac12\left[1+\cos(\Delta\tau)\,e^{-\tau/T_2}\,e^{-\sigma^2\tau^2/2}\right],\qquad P_1^{\rm echo}\approx\tfrac12\left[1+e^{-\tau/T_2}\right]$$</div>
+    </div>
+    <div class="mode-intro" data-for="decay" hidden>
+      <h2>Leave the ion alone. It forgets.</h2>
+      <p>After a pulse, energy loss pulls the arrow back toward the ground state with time \(T_1\), and dephasing shrinks its part in the equator with time \(T_2\). Either way the arrow moves inside the sphere: the ion is now in a mixed state, described by a density matrix rather than a single ket.</p>
+      <div class="equation">$$\rho=\frac{I+\vec r\cdot\vec\sigma}{2}=\begin{pmatrix}1-P_1&\rho_{01}\\ \rho_{01}^{*}&P_1\end{pmatrix},\qquad P_1(t)=P_1(0)\,e^{-t/T_1},\qquad |\rho_{01}(t)|=|\rho_{01}(0)|\,e^{-t/T_2},\qquad T_2\le 2T_1$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-rabi">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">Laser</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="omega">Rabi frequency Ω/2π</label><output id="omega-out" for="omega"></output></div>
+          <input id="omega" type="range" min="10" max="250" step="5" value="100">
+          <div class="ctrl__hint" id="omega-hint"></div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="delta">Detuning Δ/2π</label><output id="delta-out" for="delta"></output></div>
+          <input id="delta" type="range" min="-250" max="250" step="1" value="0">
+          <div class="chips" role="group" aria-label="Quick detunings">
+            <button class="chip-btn" type="button" data-delta="0">on resonance</button><button class="chip-btn" type="button" data-delta="0.5">Δ = Ω/2</button><button class="chip-btn" type="button" data-delta="1">Δ = Ω</button>
+          </div>
+        </div>
+        <div class="ctrl" data-modes="rabi">
+          <div class="ctrl__row"><label for="phase">Laser phase φ</label><output id="phase-out" for="phase"></output></div>
+          <input id="phase" type="range" min="0" max="360" step="5" value="0">
+          <div class="ctrl__hint">0° turns the arrow about x, 90° about y.</div>
+        </div>
+      </div>
+
+      <div class="ctrl-group" data-modes="ramsey">
+        <div class="label-caps">Sequence</div>
+        <div class="seg" role="group" aria-label="Pulse sequence" id="seq">
+          <button type="button" data-seq="ramsey" aria-pressed="true">Ramsey</button>
+          <button type="button" data-seq="echo" aria-pressed="false">Spin echo</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="tau">Wait τ</label><output id="tau-out" for="tau"></output></div>
+          <input id="tau" type="range" min="0" max="300" step="1" value="50">
+        </div>
+      </div>
+
+      <div class="ctrl-group" data-modes="decay">
+        <div class="label-caps">First pulse</div>
+        <div class="seg" role="group" aria-label="First pulse" id="prep">
+          <button type="button" data-prep="pi" aria-pressed="true">π: to |1⟩</button>
+          <button type="button" data-prep="half" aria-pressed="false">π/2: to the equator</button>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="label-caps">Noise</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="sigma">Field noise σ/2π</label><output id="sigma-out" for="sigma"></output></div>
+          <input id="sigma" type="range" min="0" max="10" step="0.5" value="0">
+          <div class="ctrl__hint">A slow, shot-to-shot spread in the detuning, such as a drifting magnetic field.</div>
+        </div>
+        <div class="ctrl-duo">
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="t1">Energy loss T₁</label><output id="t1-out" for="t1"></output></div>
+            <input id="t1" type="range" min="0" max="13" step="1" value="13">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="t2">Dephasing T₂</label><output id="t2-out" for="t2"></output></div>
+            <input id="t2" type="range" min="0" max="13" step="1" value="13">
+          </div>
+        </div>
+        <div class="ctrl__hint" id="noise-note"></div>
+        <button class="btn-quiet btn-small" id="ideal" type="button">Ideal ion: no noise</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Pulse sequence and time controls">
+        <div class="plot-card__head"><h3>Laser pulses</h3><span class="timeline__note">not to scale</span></div>
+        <div class="timeline" id="timeline"></div>
+        <div class="transport">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <button class="btn-quiet" id="rewind" type="button">⏮ Start</button>
+          <input id="time" type="range" min="0" max="1000" step="1" value="1000" aria-label="Time">
+          <div class="transport__time" id="time-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed">
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <label data-modes="rabi">Laser on for
+            <select id="window">
+              <option value="20">20 µs</option>
+              <option value="50" selected>50 µs</option>
+              <option value="100">100 µs</option>
+              <option value="200">200 µs</option>
+            </select>
+          </label>
+          <span id="transport-note"></span>
+        </div>
+      </section>
+
+      <div class="stats stats--4" id="stats"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3>Bloch sphere</h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
+          <p class="plot-card__cap" id="sphere-cap"></p>
+          <div class="plot-box plot-box--sphere"><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere"></canvas></div>
+          <div class="rho" id="rho" aria-label="Density matrix"></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="Excitation probability against time"></canvas></div>
+        </section>
+      </div>
+
+      <section class="panel plot-card">
+        <div class="plot-card__head"><h3 id="pb-title"></h3>
+          <div class="seg seg--inline" role="group" aria-label="Scan" id="scan" data-modes="ramsey">
+            <button type="button" data-scan="tau" aria-pressed="true">against wait τ</button>
+            <button type="button" data-scan="delta" aria-pressed="false">against detuning Δ</button>
+          </div>
+        </div>
+        <p class="plot-card__cap" id="pb-cap"></p>
+        <ul class="legend" id="pb-legend"></ul>
+        <div class="plot-box"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+      </section>
+
+      <div class="note" id="takeaway" role="status"></div>
+      <p class="lab-status" id="lab-status"></p>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then press Play or move a slider to check it.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Rabi</span><button class="predict__load" type="button" data-q="q1">Load Ω/2π = 100 kHz, on resonance</button></div>
+        <p>How long must the laser stay on to put the ion in |1⟩ for certain? What does a pulse twice as long do?</p>
+        <details><summary>Show answer</summary>
+          <p>A π pulse: \(t_\pi=\pi/\Omega=1/(2\times100\ \text{kHz})=5\ \mu\text{s}\). Twice as long, a 2π pulse, brings the arrow all the way round to \(|0\rangle\) again. The ion is back where it started, though its amplitudes have changed sign, the same −1 as a 360° rotation in the Bloch-sphere lab.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Rabi</span><button class="predict__load" type="button" data-q="q2">Load Δ = Ω</button></div>
+        <p>Detune the laser by exactly the Rabi frequency, 100 kHz. Will the ion ever be fully excited? Does it flop faster or slower than on resonance?</p>
+        <details><summary>Show answer</summary>
+          <p>Never. P(1) peaks at \(\Omega^2/(\Omega^2+\Delta^2)=1/2\). It flops faster, at \(\sqrt{\Omega^2+\Delta^2}/2\pi\approx141\) kHz, because the arrow now circles a drive axis tilted 45° out of the equator, and that circle never reaches the south pole.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Rabi</span><button class="predict__load" type="button" data-q="q3">Load the π-pulse spectrum</button></div>
+        <p>A π pulse excites the ion only when the laser is close to resonance. Halve the Rabi frequency from 100 to 50 kHz, so the π pulse lasts twice as long. Does the line in the spectrum get wider or narrower?</p>
+        <details><summary>Show answer</summary>
+          <p>Narrower, by a factor of two. The first zeros sit at \(\Delta=\pm\sqrt3\,\Omega\): ±173 kHz at 100 kHz and ±87 kHz at 50 kHz. A longer, weaker pulse resolves frequency more finely, the same trade-off as in a Fourier transform. Precision spectroscopy uses long pulses for exactly this reason.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Ramsey</span><button class="predict__load" type="button" data-q="q4">Load τ = 50 µs, Δ/2π = 10 kHz</button></div>
+        <p>With a 10 kHz detuning and a 50 µs wait, how far round the equator does the arrow get during the wait? What is P(1) at the end? How far apart are the fringes when you scan the detuning?</p>
+        <details><summary>Show answer</summary>
+          <p>\(\Delta\tau=2\pi\times10\ \text{kHz}\times50\ \mu\text{s}=\pi\): exactly half a turn, so the second π/2 pulse sends the arrow back up and P(1) ends close to 0 (about 0.01, because the detuning also acts during the pulses). Scanning the detuning gives fringes \(1/\tau=20\) kHz apart, far narrower than the π-pulse line. That is why atomic clocks use Ramsey's method.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Ramsey</span><button class="predict__load" type="button" data-q="q5">Load field noise σ/2π = 3 kHz</button></div>
+        <p>Now the detuning drifts from shot to shot by about 3 kHz. The Ramsey fringes against wait time fade out. Will a spin echo bring them back?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes, completely. Each shot has a slightly different detuning, so the arrows fan out around the equator and their average shrinks: the contrast falls as \(e^{-\sigma^2\tau^2/2}\), to 0.64 at 50 µs and 0.17 at 100 µs. The echo's π pulse flips the fan over, so the second half of the wait undoes the first, whatever each shot's detuning. Watch the thin arrows close up again. With no other noise, the echo ends within about 1% of P(1) = 1 for every wait; the small shortfall comes from the detuning acting during the pulses themselves.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Ramsey</span><button class="predict__load" type="button" data-q="q6">Load noise and T₂ = 100 µs</button></div>
+        <p>Keep the field noise and add dephasing with T₂ = 100 µs. Does the echo still rescue everything?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The echo cancels only noise that stays the same throughout a shot. T₂ describes fast, random phase kicks that differ between the two halves of the wait, so they do not cancel. The echo signal now decays roughly as \(\tfrac12(1+e^{-\tau/T_2})\), to about 0.67 at τ = 100 µs.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · T₁ and T₂</span><button class="predict__load" type="button" data-q="q7">Load π pulse, T₁ = 300 µs</button></div>
+        <p>A π pulse puts the ion in |1⟩, then it is left alone. With T₁ = 300 µs, what is P(1) after 300 µs? Where does the arrow end up much later, and is that a mixed state?</p>
+        <details><summary>Show answer</summary>
+          <p>\(e^{-1}\approx0.37\). The arrow slides straight up the z axis, shrinking to nothing as it passes the centre, and ends at \(|0\rangle\) on the surface. Energy loss eventually returns the ion to a pure state, the ground state, but on the way it passes through mixed states, with a purity of only 0.5 when P(1) = 0.5.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · T₁ and T₂</span><button class="predict__load" type="button" data-q="q8">Load π/2 pulse, T₁ = 300 µs, no dephasing</button></div>
+        <p>T₂ is set to ∞, so there is no dephasing at all. After the π/2 pulse, will the arrow's part in the equator still shrink?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes, with \(T_2=2T_1=600\ \mu\text{s}\). Every decay from \(|1\rangle\) to \(|0\rangle\) also destroys the phase between them, so energy loss alone sets \(T_2\le2T_1\). The lab caps T₂ at that limit; a larger value would make the density matrix unphysical.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook derives the Rabi formula, solves the Bloch equations, checks them against the Lindblad master equation for the density matrix, and reproduces the π-pulse spectrum, Ramsey fringes, the spin echo and T₁ and T₂ decay. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="trapped_ion_qubit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 20 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Model:</strong> one two-level ion in the frame rotating with the laser, after the rotating-wave approximation. \(|0\rangle\) is the ground state at the north pole. The ion's motion in the trap, other levels and laser intensity noise are left out. All lasers here drive the qubit transition directly.</li>
+          <li><strong>Evolution:</strong> the Bloch equations above, linear in \(\vec r\) for constant \(\vec W\), are solved exactly for each pulse and wait with a 4 × 4 matrix exponential. Waits use the closed form: precession at Δ, transverse decay \(e^{-t/T_2}\), and \(r_z\) relaxing to +1 as \(e^{-t/T_1}\). This is equivalent to the Lindblad master equation with energy loss at rate \(1/T_1\) and pure dephasing at rate \(1/T_2-1/2T_1\). T₂ is capped at \(2T_1\).</li>
+          <li><strong>Field noise:</strong> a Gaussian spread of standard deviation σ in the detuning, constant during a shot and random between shots. The plotted state is the average over 41 detunings evenly spaced over ±4σ with Gaussian weights; the thin arrows on the sphere are some of those shots.</li>
+          <li><strong>Sequences:</strong> Ramsey is π/2 – wait τ – π/2, all pulses about x. The echo is π/2 – τ/2 – π – τ/2 – π/2, with the last pulse about −x so that an ideal echo ends in \(|1\rangle\) like an ideal Ramsey sequence on resonance. Pulse lengths are \(t_\pi=\pi/\Omega\) and \(t_\pi/2\), and decay and detuning act during the pulses too.</li>
+          <li><strong>Scale:</strong> the noise sliders reach far shorter times than a good experiment, so the decay fits on the plots. In real trapped-ion qubits T₁ ranges from about a second (optical qubits) to effectively forever (hyperfine qubits), and T₂ from milliseconds to many seconds.</li>
+          <li><strong>Checks:</strong> the notebook solves the same problems with the Lindblad master equation for the density matrix in NumPy. It agrees with this page to about \(10^{-14}\).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

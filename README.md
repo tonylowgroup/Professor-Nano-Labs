@@ -12,9 +12,10 @@ assets/css/site.css   Shared styles: top bar, footer, buttons, cards, colour tok
 assets/css/lab.css    Shared lab components: controls, stat tiles, plots, questions
 assets/js/hero.js     Homepage wave-packet animation
 assets/js/plot.js     Small canvas plotting helper used by the labs
+assets/js/bloch-sphere.js
+                      Bloch-sphere drawing shared by the quantum computing labs
 assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js
-                      (the qubit lab adds sphere.js for its Bloch-sphere drawing)
 ```
 
 ## Labs
@@ -24,6 +25,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
 | Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
+| Quantum computing | Trapped-Ion Qubit | `labs/trapped-ion-qubit/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |

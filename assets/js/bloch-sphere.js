@@ -1,4 +1,4 @@
-/* Bloch sphere and phasor drawings on canvas, for the qubit lab.
+/* Bloch sphere and phasor drawings on canvas, shared by the quantum computing labs.
 
    const s = new BlochSphere(canvas);
    s.draw({ arrows: [{ v: [x, y, z], color }], trail: [{ pts, color }], axis, marks, measure, angles });
@@ -9,6 +9,8 @@
 (function () {
   'use strict';
   const DEG = Math.PI / 180;
+  // Labels at the six axis ends; a page can override any of them with opts.labels.
+  const LABELS = { z0: '|0⟩', z1: '|1⟩', xp: '|+⟩', xm: '|−⟩', yp: '|+i⟩', ym: '|−i⟩' };
 
   function cssVar(el, name, fallback) {
     const v = getComputedStyle(el).getPropertyValue(name).trim();
@@ -289,8 +291,8 @@
       // state labels on the six axis ends
       const small = this.w < 300;
       const kf = (small ? '600 12px' : '600 13.5px') + ' Inter, system-ui, sans-serif';
-      const L = 1.2;
-      [[[0, 0, L], '|0⟩', 0, -4], [[0, 0, -L], '|1⟩', 0, 4], [[L, 0, 0], '|+⟩'], [[-L, 0, 0], '|−⟩'], [[0, L, 0], '|+i⟩'], [[0, -L, 0], '|−i⟩']]
+      const L = 1.2, lab = Object.assign({}, LABELS, this.opts.labels || {});
+      [[[0, 0, L], lab.z0, 0, -4], [[0, 0, -L], lab.z1, 0, 4], [[L, 0, 0], lab.xp], [[-L, 0, 0], lab.xm], [[0, L, 0], lab.yp], [[0, -L, 0], lab.ym]]
         .forEach(([v, t, dx, dy]) => this._label(v, t, ink, kf, dx, dy));
       const af = 'italic 600 12px Inter, system-ui, sans-serif';
       [[[1.04, 0, 0], 'x'], [[0, 1.04, 0], 'y'], [[0, 0, 1.04], 'z']].forEach(([v, t]) => this._label(v, t, muted, af, 9, -7));

@@ -306,6 +306,19 @@ mjx-container svg { display: inline; }
   .corr__grid { grid-template-columns: 44px repeat(3, minmax(52px, 1fr)); }
 }
 
+/* Trapped ion: pulse timeline and density matrix */
+.timeline { margin: 10px 0 14px; overflow: hidden; }
+.timeline svg { display: block; font-family: Inter, system-ui, sans-serif; }
+.timeline__note { font-size: 12px; color: var(--muted); }
+.tl__pulse { fill: var(--brand); }
+.tl__wire { stroke: #9fb3bd; stroke-width: 2; stroke-dasharray: 5 4; }
+.tl__t { font-size: 12px; font-weight: 600; fill: var(--muted); text-anchor: middle; }
+.tl__t--on { font-size: 13px; font-weight: 800; fill: #fff; }
+.rho { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.rho__name { font-weight: 700; font-size: 16px; color: var(--ink); font-style: italic; }
+.rho__m { display: grid; grid-template-columns: auto auto; gap: 2px 16px; padding: 4px 12px; border-left: 2px solid var(--ink-2); border-right: 2px solid var(--ink-2); border-radius: 6px; font-size: 13.5px; color: var(--ink); }
+.rho__side { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
@@ -332,6 +345,11 @@ mjx-container svg { display: inline; }
 @media (max-width: 980px) {
   .lab-grid { grid-template-columns: 1fr; }
   .controls { position: static; max-height: none; overflow: visible; }
+}
+/* When the controls span the page, put their groups side by side so the plots stay close. */
+@media (max-width: 980px) and (min-width: 700px) {
+  .controls { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px 32px; align-items: start; }
+  .controls > .ctrl-group:not([hidden]) ~ .ctrl-group { border-top: 0; padding-top: 0; }
 }
 @media (max-width: 760px) {
   .watch { grid-template-columns: 1fr; }
