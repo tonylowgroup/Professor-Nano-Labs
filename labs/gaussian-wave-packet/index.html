@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gaussian Wave Packet · Professor Nano Labs</title>
+<meta name="description" content="Build a free electron from plane waves and watch it move and spread. A live, in-browser lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>Gaussian Wave Packet</h1>
+    <p>Add up plane waves to build a free electron, then let time run. Watch the packet move, spread, and keep every bit of its momentum distribution.</p>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first -->
+  <section class="panel watch" aria-labelledby="watch-title">
+    <div class="watch__intro">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2 id="watch-title">Watch first</h2>
+      <p>These episodes explain the physics behind this lab.</p>
+    </div>
+    <div class="videos">
+      <ul>
+        <li><a class="video" href="https://www.youtube.com/watch?v=7hOyxlRb2LM" target="_blank" rel="noopener" title="Free quantum electron wave versus Gaussian packet">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/7hOyxlRb2LM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Free quantum electron wave versus Gaussian packet<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=jfwoUOOw5ms" target="_blank" rel="noopener" title="Fourier vs Heisenberg uncertainty principle">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/jfwoUOOw5ms/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Fourier vs Heisenberg uncertainty principle<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=gXkbSp2xzlc" target="_blank" rel="noopener" title="Schrodinger equation and time evolution of quantum state">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/gXkbSp2xzlc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Schrodinger equation and time evolution of quantum state<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Idea + presets -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A particle built from plane waves</h2>
+    <p>A single plane wave \(e^{ikx}\) has one momentum but is spread over all space. Adding many of them, each weighted by a Gaussian \(\Phi(k)\), produces a packet localized near \(x = 0\). Each plane wave then evolves with its own frequency \(\omega_k = \hbar k^2/2m\), and this lab adds them up again at every moment:</p>
+    <div class="equation">$$\Psi(x,t)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\Phi(k)\,e^{ikx}\,e^{-i\omega_k t}\,dk,\qquad \Phi(k)=\left(\frac{2}{\pi}\right)^{1/4}\sqrt{\sigma}\;e^{-\sigma^2(k-k_0)^2}$$</div>
+    <p class="ctrl__hint">Here \(\sigma\) is the initial standard deviation of \(|\Psi(x,0)|^2\) and \(k_0\) is the central wavevector.</p>
+
+    <div class="label-caps" style="margin-top:18px">Try an example</div>
+    <div class="presets" id="presets">
+      <button class="preset" type="button" data-preset="rest"><strong>Spreading at rest</strong><span>σ = 0.71 nm, k₀ = 0, m = 0.5 m₀</span></button>
+      <button class="preset" type="button" data-preset="narrow"><strong>Narrower start</strong><span>Half the initial width</span></button>
+      <button class="preset" type="button" data-preset="heavy"><strong>Heavier particle</strong><span>m = 2 m₀</span></button>
+      <button class="preset" type="button" data-preset="moving"><strong>Moving packet</strong><span>k₀ = 3 nm⁻¹, σ = 2 nm</span></button>
+      <button class="preset" type="button" data-preset="linear"><strong>No-spreading approximation</strong><span>Linearized ω(k)</span></button>
+      <button class="preset" type="button" data-preset="few"><strong>Only 15 plane waves</strong><span>Where do the copies come from?</span></button>
+    </div>
+  </section>
+
+  <!-- The lab -->
+  <div class="lab-grid">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">Initial packet</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="sigma">Initial width σ</label><output id="sigma-out" for="sigma"></output></div>
+          <input id="sigma" type="range" min="0.3" max="3" step="0.01" value="0.71">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="k0">Central wavevector k₀</label><output id="k0-out" for="k0"></output></div>
+          <input id="k0" type="range" min="-5" max="5" step="0.1" value="0">
+          <div class="ctrl__hint" id="k0-hint"></div>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="label-caps">Particle</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="mass">Mass m</label><output id="mass-out" for="mass"></output></div>
+          <input id="mass" type="range" min="0" max="1000" step="1" value="0">
+          <div class="chips" role="group" aria-label="Mass shortcuts">
+            <button class="chip-btn" type="button" data-mass="0.067">0.067 m₀ · GaAs electron</button>
+            <button class="chip-btn" type="button" data-mass="0.5">0.5 m₀</button>
+            <button class="chip-btn" type="button" data-mass="1">1 m₀ · free electron</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="label-caps">Model</div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="disp-label">Dispersion ω(k)</span>
+          <div class="seg" role="group" aria-labelledby="disp-label">
+            <button type="button" data-mode="full" aria-pressed="true">Full ħk²/2m</button>
+            <button type="button" data-mode="linear" aria-pressed="false">Linearized</button>
+          </div>
+          <div class="ctrl__hint" id="mode-hint"></div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="waves">Plane waves in the sum</label><output id="waves-out" for="waves"></output></div>
+          <input id="waves" type="range" min="0" max="9" step="1" value="9">
+          <div class="ctrl__hint" id="waves-hint"></div>
+        </div>
+      </div>
+
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Time controls">
+        <div class="transport">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <button class="btn-quiet" id="reset" type="button">Reset</button>
+          <input id="time" type="range" min="0" max="1000" step="1" value="0" aria-label="Time">
+          <div class="transport__time" id="time-out" aria-live="off">0.0 fs</div>
+        </div>
+        <div class="transport__more">
+          <label>Time range
+            <select id="tmax">
+              <option value="20">0–20 fs</option>
+              <option value="50" selected>0–50 fs</option>
+              <option value="100">0–100 fs</option>
+              <option value="200">0–200 fs</option>
+              <option value="500">0–500 fs</option>
+            </select>
+          </label>
+          <label>Speed
+            <select id="speed">
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <label>View
+            <select id="window">
+              <option value="10">±10 nm</option>
+              <option value="20" selected>±20 nm</option>
+              <option value="40">±40 nm</option>
+              <option value="80">±80 nm</option>
+            </select>
+          </label>
+          <label class="check"><input id="ghost" type="checkbox" checked> Packet at t = 0</label>
+          <label class="check"><input id="envelope" type="checkbox" checked> Envelope ±|Ψ|</label>
+        </div>
+      </section>
+
+      <div class="stats" id="stats">
+        <div class="stat"><div class="stat__label">Centre</div><div class="stat__value" id="st-center"></div><div class="stat__sub">⟨x⟩ = v<sub>g</sub>t</div></div>
+        <div class="stat"><div class="stat__label">Group velocity</div><div class="stat__value" id="st-vg"></div><div class="stat__sub" id="st-vg-sub"></div></div>
+        <div class="stat"><div class="stat__label">Width</div><div class="stat__value" id="st-width"></div><div class="stat__sub" id="st-width-sub"></div></div>
+        <div class="stat"><div class="stat__label">Spreading time</div><div class="stat__value" id="st-tau"></div><div class="stat__sub" id="st-tau-sub"></div></div>
+        <div class="stat"><div class="stat__label">Inside the view</div><div class="stat__value" id="st-prob"></div><div class="stat__sub" id="st-prob-sub"></div></div>
+        <div class="stat"><div class="stat__label">Uncertainty</div><div class="stat__value" id="st-unc"></div><div class="stat__sub">Δx·Δp in units of ħ/2</div></div>
+      </div>
+      <div class="note" id="note" role="status"></div>
+
+      <section class="panel plot-card" aria-labelledby="p1-title">
+        <div class="plot-card__head"><h3 id="p1-title">Probability density |Ψ(x,t)|²</h3></div>
+        <ul class="legend">
+          <li style="color:var(--series-1)"><span class="swatch"></span><span>at time t</span></li>
+          <li style="color:var(--series-ghost)" data-show="ghost"><span class="swatch swatch--dash"></span><span>at t = 0</span></li>
+        </ul>
+        <div class="plot-box"><canvas id="plot-density" role="img" aria-label="Probability density of the wave packet against position"></canvas></div>
+      </section>
+
+      <section class="panel plot-card" aria-labelledby="p2-title">
+        <div class="plot-card__head"><h3 id="p2-title">Real and imaginary parts</h3></div>
+        <ul class="legend">
+          <li style="color:var(--series-re)"><span class="swatch"></span><span>Re Ψ</span></li>
+          <li style="color:var(--series-im)"><span class="swatch swatch--dash"></span><span>Im Ψ</span></li>
+          <li style="color:var(--series-ghost)" data-show="envelope"><span class="swatch swatch--dot"></span><span>±|Ψ|</span></li>
+        </ul>
+        <div class="plot-box"><canvas id="plot-reim" role="img" aria-label="Real and imaginary parts of the wavefunction against position"></canvas></div>
+      </section>
+
+      <section class="panel plot-card" aria-labelledby="p3-title">
+        <div class="plot-card__head"><h3 id="p3-title">Momentum distribution |Φ(k)|²</h3></div>
+        <p class="plot-card__cap">For a free particle this never changes. Only the phase of each plane wave evolves in time.</p>
+        <ul class="legend">
+          <li style="color:var(--series-1)"><span class="swatch"></span><span>|Φ(k)|²</span></li>
+          <li style="color:var(--series-amber)" id="stem-legend"><span class="swatch swatch--stem"></span><span>plane waves in the sum</span></li>
+        </ul>
+        <div class="plot-box plot-box--short"><canvas id="plot-k" role="img" aria-label="Momentum distribution against wavevector"></canvas></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction before pressing Play, then check it against the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1</span><button class="predict__load" type="button" data-preset="rest">Load “Spreading at rest”</button></div>
+        <p>The packet starts with σ = 0.71 nm and k₀ = 0, for a particle of mass 0.5 m₀. Will it move? Roughly how wide will it be after 50 fs?</p>
+        <details><summary>Show answer</summary>
+          <p>It does not move: with k₀ = 0 the average momentum is zero. It does spread, as \(\sigma(t)=\sigma\sqrt{1+(t/\tau)^2}\) with spreading time \(\tau = 2m\sigma^2/\hbar \approx 4.3\) fs. After 50 fs the width is about 8.2 nm, nearly 12 times wider, and the peak density is 12 times lower. The total probability stays 1; about 98.5% of it is still inside the ±20 nm view.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2</span><button class="predict__load" type="button" data-preset="narrow">Load “Narrower start”</button></div>
+        <p>Halve the initial width to σ = 0.35 nm. After 50 fs, will this packet be narrower or wider than the one in Question 1?</p>
+        <details><summary>Show answer</summary>
+          <p>Wider, about 16.4 nm compared with 8.2 nm. A narrower packet is built from a wider range of wavevectors (\(\Delta p = \hbar/2\sigma\)), so its parts move apart faster. The spreading time drops four times, to about 1.1 fs, and at late times the width grows as \(\hbar t/2m\sigma\). Squeezing a particle harder makes it spread faster.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3</span><button class="predict__load" type="button" data-preset="heavy">Load “Heavier particle”</button></div>
+        <p>Keep σ = 0.71 nm but raise the mass from 0.5 m₀ to 2 m₀. How does the spreading change?</p>
+        <details><summary>Show answer</summary>
+          <p>It slows down. The spreading time grows in proportion to the mass, from 4.3 fs to about 17.3 fs, and after 50 fs the width is about 2.2 nm instead of 8.2 nm. This is why everyday objects never visibly spread: for a 145 g baseball located to within a micrometre, τ is about 6,000 times the age of the universe.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4</span><button class="predict__load" type="button" data-preset="moving">Load “Moving packet”</button></div>
+        <p>Now k₀ = 3 nm⁻¹ and m = m₀, so the packet moves to the right. Follow one crest of Re Ψ. Does it travel with the packet?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The envelope moves at the group velocity \(v_g = \hbar k_0/m \approx 0.35\) nm/fs, about 17 nm in 50 fs. Each crest moves at the phase velocity \(v_p = \omega/k = \hbar k_0/2m\), only half as fast. So crests appear at the front of the packet, drift backward through it, and fade out at the rear. Use the time slider to step through slowly.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5</span><button class="predict__load" type="button" data-preset="linear">Load “No-spreading approximation”</button></div>
+        <p>Replace ω(k) by its straight-line approximation around k₀, \(\omega \approx \omega_0 + v_g (k-k_0)\). What happens to the spreading?</p>
+        <details><summary>Show answer</summary>
+          <p>It disappears. Every plane wave now has the same group velocity, so the whole packet slides along rigidly at \(v_g\), crests included. Spreading comes entirely from the curvature of the dispersion, \(d^2\omega/dk^2 = \hbar/m\), which is also why the spreading time depends on the mass.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6</span><button class="predict__load" type="button" data-preset="few">Load “Only 15 plane waves”</button></div>
+        <p>Use only 15 evenly spaced plane waves instead of a continuous spread. What appears in the probability density?</p>
+        <details><summary>Show answer</summary>
+          <p>Copies of the packet. A sum of plane waves spaced by Δk repeats itself every \(2\pi/\Delta k\) in position. Here Δk ≈ 0.21 nm⁻¹, so copies sit about 29 nm apart. Adding more plane waves makes Δk smaller and pushes the copies out of view; only a continuous range of k gives a single, localized particle. A single plane wave (N = 1) is spread evenly over all space.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <p>The lab evaluates the plane-wave sum directly, with no closed-form shortcut. On a grid of wavevectors \(k_j\) spaced by \(\Delta k\), with trapezoidal weights \(w_j\) (½ at the two ends, 1 elsewhere),</p>
+        <div class="equation">$$\Psi(x_i,t)\approx\frac{\Delta k}{\sqrt{2\pi}}\sum_j w_j\,\Phi(k_j)\,e^{ik_jx_i}\,e^{-i\omega_{k_j}t}.$$</div>
+        <ul>
+          <li><strong>Full dispersion:</strong> \(\omega_k=\hbar k^2/2m\). <strong>Linearized:</strong> \(\omega_k\approx\omega_{k_0}+v_g(k-k_0)\), with \(v_g=\hbar k_0/m\).</li>
+          <li><strong>Converged sum:</strong> wavevectors span \(k_0\pm 8/\sigma\), where \(\Phi\) has fallen to \(e^{-64}\) of its peak. The spacing \(\Delta k\) is chosen so that the repeated copies at \(2\pi/\Delta k\) stay outside the view for the whole time range.</li>
+          <li><strong>Few plane waves:</strong> N evenly spaced wavevectors span \(k_0\pm 3/\sigma\). With N = 1 the single plane wave is drawn with the packet's initial peak amplitude.</li>
+          <li><strong>Tiles:</strong> the centre, width, spreading time and \(\Delta x\,\Delta p\) are the exact free-particle results \(\langle x\rangle = v_g t\), \(\sigma(t)=\sigma\sqrt{1+(t/\tau)^2}\), \(\tau = 2m\sigma^2/\hbar\) and \(\Delta x\,\Delta p = \tfrac{\hbar}{2}\sqrt{1+(t/\tau)^2}\). "Inside the view" integrates the computed \(|\Psi|^2\) over the window and is never renormalized.</li>
+          <li><strong>Constants:</strong> \(\hbar/m_0 = 0.115768\ \text{nm}^2/\text{fs}\) (CODATA 2018). Units: x in nm, t in fs, k in nm⁻¹, Ψ in nm⁻¹ᐟ².</li>
+          <li><strong>Model limits:</strong> one dimension, no potential (a free particle), non-relativistic, spin ignored.</li>
+        </ul>
+        <p>The defaults (σ = 1/√2 nm, m = 0.5 m₀, ±20 nm, 0–50 fs) match the companion Jupyter notebook.</p>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
