@@ -208,6 +208,13 @@ mjx-container svg { display: inline; }
 .transport__label { font-size: 13px; font-weight: 600; color: var(--muted); }
 @media (max-width: 640px) { .colorbar { margin: 6px 8px 0 50px; } }
 
+/* Reference tables inside panels */
+.centering { overflow-x: auto; margin: 6px 0 14px; }
+.centering table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.centering th, .centering td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.centering th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--tint); }
+.predict__head .predict__load + .predict__load { margin-left: -4px; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
