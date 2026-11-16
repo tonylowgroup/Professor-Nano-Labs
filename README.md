@@ -14,6 +14,7 @@ assets/js/hero.js     Homepage wave-packet animation
 assets/js/plot.js     Small canvas plotting helper used by the labs
 assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js
+                      (the qubit lab adds sphere.js for its Bloch-sphere drawing)
 ```
 
 ## Labs
@@ -22,6 +23,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 |---|---|---|
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
+| Quantum foundations | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
