@@ -25,7 +25,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
 | Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
-| Quantum computing | Trapped-Ion Qubit | `labs/trapped-ion-qubit/` |
+| Quantum computing | Trapped Ions and Phonon Sidebands | `labs/trapped-ion-qubit/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |

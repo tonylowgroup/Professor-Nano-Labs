@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trapped-Ion Qubit · Professor Nano Labs</title>
-<meta name="description" content="Drive a single trapped ion with a laser: Rabi flopping, Ramsey fringes, spin echoes and the T1 and T2 times that limit them, on a live Bloch sphere. A lab from the Professor Nano YouTube channel.">
+<title>Trapped Ions and Phonon Sidebands · Professor Nano Labs</title>
+<meta name="description" content="Drive a trapped calcium ion with carrier, blue-sideband and red-sideband lasers, link two qubits through the phonon bus, cool the ion chain to its motional ground state, then initialize and read out the qubit. A lab from the Professor Nano YouTube channel.">
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,10 +43,10 @@
   <div class="shell">
     <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum computing</div>
     <div class="eyebrow eyebrow--light">Quantum computing · Live lab</div>
-    <h1>Trapped-Ion Qubit</h1>
-    <p>A single ion held in a trap stores a qubit in two of its energy levels, and laser pulses are its gates. Drive it, time the pulses, and see how noise and energy loss slowly erase what it stores.</p>
+    <h1>Trapped Ions and Phonon Sidebands</h1>
+    <p>A calcium ion stores a qubit in two of its levels, and the whole ion chain shares its motion as phonons. Tune the laser to the carrier or to a sideband, pass a qubit through the phonon bus, cool the chain to its motional ground state, then read the qubit out.</p>
     <div class="lab-hero__actions">
-      <a class="btn btn--ghost" href="trapped_ion_qubit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+      <a class="btn btn--ghost" href="trapped_ions_phonon_sidebands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
     </div>
   </div>
 </header>
@@ -58,7 +58,7 @@
     <div class="watch__first">
       <div class="label-caps">Step 1 · Watch</div>
       <h2>Watch first</h2>
-      <p>The episode this lab is built on.</p>
+      <p>The episode this lab is built on. The four experiments below follow its chapters.</p>
       <a class="video video--feature" href="https://www.youtube.com/watch?v=5qpXdGSLWig" target="_blank" rel="noopener" title="How exactly does trapped ions perform quantum computing?">
           <span class="video__thumb"><img src="https://i.ytimg.com/vi/5qpXdGSLWig/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
           <span class="video__title">How exactly does trapped ions perform quantum computing?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
@@ -73,13 +73,13 @@
           <span class="video__thumb"><img src="https://i.ytimg.com/vi/8p6P-QTQM2M/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
           <span class="video__title">How to trap ions for quantum computing?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
         </a></li>
-        <li><a class="video" href="https://www.youtube.com/watch?v=ma136N8d3Xc" target="_blank" rel="noopener" title="Quick introduction to the density matrix in quantum mechanics">
-          <span class="video__thumb"><img src="https://i.ytimg.com/vi/ma136N8d3Xc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
-          <span class="video__title">Quick introduction to the density matrix in quantum mechanics<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        <li><a class="video" href="https://www.youtube.com/watch?v=iMjpZwISIlA" target="_blank" rel="noopener" title="Two and three qubits quantum gates">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/iMjpZwISIlA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two and three qubits quantum gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
         </a></li>
-        <li><a class="video" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
-          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
-          <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        <li><a class="video" href="https://www.youtube.com/watch?v=4BRQsrh4oGw" target="_blank" rel="noopener" title="Two qubit state: Separable vs Entangled vs Bell states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4BRQsrh4oGw/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two qubit state: Separable vs Entangled vs Bell states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
         </a></li>
       </ul>
     </div>
@@ -87,159 +87,222 @@
 
   <!-- The model -->
   <section class="panel" aria-labelledby="idea-title">
-    <h2 id="idea-title">A two-level ion driven by a laser</h2>
-    <p>Two long-lived levels of the ion store the qubit: \(|0\rangle\), the ground state, and \(|1\rangle\), an excited state. A laser tuned close to the transition frequency \(\omega_0\) drives the ion between them. In a frame that rotates with the laser, and keeping only the near-resonant terms (the rotating-wave approximation), the ion feels a fixed "drive vector" \(\vec W\), and its Bloch vector precesses about it like a spinning top:</p>
-    <div class="equation">$$H=\frac{\hbar}{2}\,\vec W\cdot\vec\sigma,\qquad \vec W=\begin{pmatrix}\Omega\cos\phi\\ \Omega\sin\phi\\ \Delta\end{pmatrix},\qquad \Delta=\omega_{\rm laser}-\omega_0 ,\qquad \frac{d\vec r}{dt}=\vec W\times\vec r-\begin{pmatrix}r_x/T_2\\ r_y/T_2\\ (r_z-1)/T_1\end{pmatrix}$$</div>
-    <p>The Rabi frequency \(\Omega\) is set by the laser's strength, \(\phi\) by its phase and \(\Delta\) by its tuning. The last term adds the two kinds of decay: energy loss back to the ground state with time \(T_1\), and loss of phase with time \(T_2\). To read the qubit out, a second laser makes the ion glow only when it is in \(|0\rangle\); repeating the experiment gives the probability \(P(1)\) plotted throughout this lab.</p>
+    <h2 id="idea-title">An optical qubit that shares a phonon bus</h2>
+    <p>As in the video, the qubit is a calcium ion, Ca⁺. Its ground state 4S<sub>1/2</sub> is \(|0\rangle\) and the long-lived excited state 3D<sub>5/2</sub> is \(|1\rangle\), joined by a 729 nm transition that is dipole-forbidden and lives for about a second: an <em>optical qubit</em>. Inside the trap the video writes the same two levels as \(|g\rangle\) and \(|e\rangle\). The ions in a Paul trap also share their motion, quantized into phonons \(|n_p\rangle\) spaced by \(\hbar\omega_p\), so each ion's states form a ladder \(|g,n_p\rangle\), \(|e,n_p\rangle\). The laser's colour decides which rungs it connects:</p>
+    <div class="equation">$$\underbrace{|g,n_p\rangle\leftrightarrow|e,n_p\rangle}_{\text{carrier: }\hbar\omega_0}\qquad\underbrace{|g,n_p\rangle\leftrightarrow|e,n_p+1\rangle}_{\text{blue sideband: }\hbar(\omega_0+\omega_p)}\qquad\underbrace{|g,n_p\rangle\leftrightarrow|e,n_p-1\rangle}_{\text{red sideband: }\hbar(\omega_0-\omega_p)}$$</div>
+    <p>One thing the video does not need, but a simulation does, is how fast each transition goes. The carrier flips the ion at the Rabi frequency \(\Omega\); a sideband also has to change the motion, so it is slower, at \(\eta\sqrt{n_p+1}\,\Omega\) (blue) or \(\eta\sqrt{n_p}\,\Omega\) (red). Here \(\Omega/2\pi=50\) kHz, so a carrier π pulse takes 10 µs, and the Lamb–Dicke parameter \(\eta=0.1\), so a sideband π pulse takes about 100 µs.</p>
   </section>
 
   <!-- The lab -->
   <section class="panel lab-tabs" aria-label="Experiments">
     <div class="tabs" role="tablist" aria-label="Experiments">
-      <button class="tab" role="tab" id="tab-rabi" aria-controls="lab" aria-selected="true" data-mode="rabi">1 · Rabi flopping</button>
-      <button class="tab" role="tab" id="tab-ramsey" aria-controls="lab" aria-selected="false" data-mode="ramsey" tabindex="-1">2 · Ramsey and spin echo</button>
-      <button class="tab" role="tab" id="tab-decay" aria-controls="lab" aria-selected="false" data-mode="decay" tabindex="-1">3 · T₁ and T₂</button>
+      <button class="tab" role="tab" id="tab-sidebands" aria-controls="lab" aria-selected="true" data-mode="sidebands">1 · Carrier and sidebands</button>
+      <button class="tab" role="tab" id="tab-bus" aria-controls="lab" aria-selected="false" data-mode="bus" tabindex="-1">2 · Phonon bus</button>
+      <button class="tab" role="tab" id="tab-cooling" aria-controls="lab" aria-selected="false" data-mode="cooling" tabindex="-1">3 · Sideband cooling</button>
+      <button class="tab" role="tab" id="tab-readout" aria-controls="lab" aria-selected="false" data-mode="readout" tabindex="-1">4 · Initialize and read out</button>
     </div>
-    <div class="mode-intro" data-for="rabi">
-      <h2>Switch the laser on. The ion flops between its two levels.</h2>
-      <p>On resonance the arrow swings all the way from \(|0\rangle\) to \(|1\rangle\) and back. Detune the laser and the drive axis tilts out of the equator: the swing gets faster but never reaches \(|1\rangle\). A pulse that stops after half a swing is a π pulse, the ion's X gate.</p>
-      <div class="equation">$$P_1(t)=\frac{\Omega^2}{\Omega^2+\Delta^2}\,\sin^2\!\left(\frac{\sqrt{\Omega^2+\Delta^2}\;t}{2}\right),\qquad t_\pi=\frac{\pi}{\Omega}$$</div>
+    <div class="mode-intro" data-for="sidebands">
+      <div class="from-video">In the video: Chapter 2, computation with trapped-ion qubits</div>
+      <h2>The laser's colour picks the transition.</h2>
+      <p>The green carrier changes only the electronic state, so the phonon number is conserved. Raise the laser frequency by one vibrational quantum and the blue sideband excites the ion while adding a phonon; lower it and the red sideband excites the ion while taking one away. Start from \(|g,0_p\rangle\) and see which colours can do anything at all.</p>
     </div>
-    <div class="mode-intro" data-for="ramsey" hidden>
-      <h2>Two short pulses and a wait: the most precise clock there is.</h2>
-      <p>A π/2 pulse puts the arrow on the equator. During the wait, with the laser off, it precesses at the detuning; a second π/2 pulse turns that phase into a probability. Slow field noise blurs the result, and a π pulse in the middle of the wait, a spin echo, undoes it.</p>
-      <div class="equation">$$P_1^{\rm Ramsey}\approx\tfrac12\left[1+\cos(\Delta\tau)\,e^{-\tau/T_2}\,e^{-\sigma^2\tau^2/2}\right],\qquad P_1^{\rm echo}\approx\tfrac12\left[1+e^{-\tau/T_2}\right]$$</div>
+    <div class="mode-intro" data-for="bus" hidden>
+      <div class="from-video">In the video: Chapter 2, phonon-mediated coupling</div>
+      <h2>The phonon bus lets qubit 2 talk to qubit 3.</h2>
+      <p>The shared motion acts as a bus qubit, \(|0_p\rangle\) or \(|1_p\rangle\). When the bus is in \(|0_p\rangle\), the red laser lowers a qubit and the blue laser raises it; when it is in \(|1_p\rangle\), their roles swap. Apply pulses to qubit 2 and qubit 3 and use that rule to pass a qubit along the chain, or to entangle two ions that never touch.</p>
     </div>
-    <div class="mode-intro" data-for="decay" hidden>
-      <h2>Leave the ion alone. It forgets.</h2>
-      <p>After a pulse, energy loss pulls the arrow back toward the ground state with time \(T_1\), and dephasing shrinks its part in the equator with time \(T_2\). Either way the arrow moves inside the sphere: the ion is now in a mixed state, described by a density matrix rather than a single ket.</p>
-      <div class="equation">$$\rho=\frac{I+\vec r\cdot\vec\sigma}{2}=\begin{pmatrix}1-P_1&\rho_{01}\\ \rho_{01}^{*}&P_1\end{pmatrix},\qquad P_1(t)=P_1(0)\,e^{-t/T_1},\qquad |\rho_{01}(t)|=|\rho_{01}(0)|\,e^{-t/T_2},\qquad T_2\le 2T_1$$</div>
+    <div class="mode-intro" data-for="cooling" hidden>
+      <div class="from-video">In the video: Chapter 3, sideband cooling of qubits</div>
+      <h2>Pump the phonons out, one at a time.</h2>
+      <p>After ordinary laser cooling the chain still holds a few phonons. A red-sideband pulse moves \(|g,n_p\rangle\) to \(|e,n_p-1\rangle\), taking a phonon away; the ion then emits a photon and drops back to \(|g\rangle\), usually keeping the lower phonon number. Repeat, and the ion piles up in its motional ground state \(|g,0_p\rangle\).</p>
+    </div>
+    <div class="mode-intro" data-for="readout" hidden>
+      <div class="from-video">In the video: Chapter 4, qubit encoding, initialization and readout</div>
+      <h2>Reset with optical pumping, read out with fluorescence.</h2>
+      <p>Optical pumping empties \(|1\rangle\) through the short-lived 4P level, which decays to \(|0\rangle\). A 729 nm pulse then writes the qubit. To read it, a laser on the 4S–4P transition makes the ion glow only if it is in \(|0\rangle\): bright means 0, dark means 1. A superposition gives bright on some shots and dark on others.</p>
     </div>
   </section>
 
-  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-rabi">
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-sidebands">
     <aside class="panel controls" aria-label="Lab controls">
-      <div class="ctrl-group">
-        <div class="label-caps">Laser</div>
-        <div class="ctrl">
-          <div class="ctrl__row"><label for="omega">Rabi frequency Ω/2π</label><output id="omega-out" for="omega"></output></div>
-          <input id="omega" type="range" min="10" max="250" step="5" value="100">
-          <div class="ctrl__hint" id="omega-hint"></div>
+      <!-- 1 -->
+      <div class="ctrl-group" data-modes="sidebands">
+        <div class="label-caps">Laser colour</div>
+        <div class="seg seg--laser" role="group" aria-label="Laser frequency" id="laser">
+          <button type="button" data-laser="red" aria-pressed="false">Red<small>ω₀ − ω<sub>p</sub></small></button>
+          <button type="button" data-laser="carrier" aria-pressed="true">Carrier<small>ω₀</small></button>
+          <button type="button" data-laser="blue" aria-pressed="false">Blue<small>ω₀ + ω<sub>p</sub></small></button>
         </div>
-        <div class="ctrl">
-          <div class="ctrl__row"><label for="delta">Detuning Δ/2π</label><output id="delta-out" for="delta"></output></div>
-          <input id="delta" type="range" min="-250" max="250" step="1" value="0">
-          <div class="chips" role="group" aria-label="Quick detunings">
-            <button class="chip-btn" type="button" data-delta="0">on resonance</button><button class="chip-btn" type="button" data-delta="0.5">Δ = Ω/2</button><button class="chip-btn" type="button" data-delta="1">Δ = Ω</button>
+      </div>
+      <div class="ctrl-group" data-modes="sidebands">
+        <div class="label-caps">Ion starts in</div>
+        <div class="seg" role="group" aria-label="Phonon state" id="pstart">
+          <button type="button" data-pstart="fock" aria-pressed="true">One phonon number</button>
+          <button type="button" data-pstart="thermal" aria-pressed="false">Thermal</button>
+        </div>
+        <div class="ctrl" data-pstart-show="fock">
+          <span class="ctrl__name" id="np-label">|g, n<sub>p</sub>⟩ with n<sub>p</sub> =</span>
+          <div class="chips" role="group" aria-labelledby="np-label">
+            <button class="chip-btn" type="button" data-np="0">0</button><button class="chip-btn" type="button" data-np="1">1</button><button class="chip-btn" type="button" data-np="2">2</button><button class="chip-btn" type="button" data-np="3">3</button><button class="chip-btn" type="button" data-np="4">4</button>
           </div>
         </div>
-        <div class="ctrl" data-modes="rabi">
-          <div class="ctrl__row"><label for="phase">Laser phase φ</label><output id="phase-out" for="phase"></output></div>
-          <input id="phase" type="range" min="0" max="360" step="5" value="0">
-          <div class="ctrl__hint">0° turns the arrow about x, 90° about y.</div>
+        <div class="ctrl" data-pstart-show="thermal" hidden>
+          <div class="ctrl__row"><label for="nbar1">Mean phonon number n̄</label><output id="nbar1-out" for="nbar1"></output></div>
+          <input id="nbar1" type="range" min="0.1" max="3" step="0.1" value="1">
+          <div class="ctrl__hint">A thermal mix of phonon numbers, as left by ordinary laser cooling.</div>
         </div>
       </div>
 
-      <div class="ctrl-group" data-modes="ramsey">
-        <div class="label-caps">Sequence</div>
-        <div class="seg" role="group" aria-label="Pulse sequence" id="seq">
-          <button type="button" data-seq="ramsey" aria-pressed="true">Ramsey</button>
-          <button type="button" data-seq="echo" aria-pressed="false">Spin echo</button>
+      <!-- 2 -->
+      <div class="ctrl-group" data-modes="bus">
+        <div class="label-caps">Start from</div>
+        <div class="chips chips--examples" role="group" aria-label="Start state">
+          <button class="chip-btn" type="button" data-bstart="0,0,0">|g₂ g₃, 0<sub>p</sub>⟩</button><button class="chip-btn" type="button" data-bstart="0,1,0">|g₂ e₃, 0<sub>p</sub>⟩</button><button class="chip-btn" type="button" data-bstart="0,0,1">|g₂ g₃, 1<sub>p</sub>⟩</button><button class="chip-btn" type="button" data-bstart="0,1,1">|g₂ e₃, 1<sub>p</sub>⟩</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="bus">
+        <div class="label-caps">Recipes</div>
+        <div class="chips chips--examples" role="group" aria-label="Pulse recipes">
+          <button class="chip-btn" type="button" data-recipe="swap">Red and blue swap roles</button>
+          <button class="chip-btn" type="button" data-recipe="transfer">Move qubit 2 onto qubit 3</button>
+          <button class="chip-btn" type="button" data-recipe="entangle">Entangle qubits 2 and 3</button>
+        </div>
+        <div class="ctrl__hint">Each recipe replays from its start state.</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="ctrl-group" data-modes="cooling">
+        <div class="label-caps">Before sideband cooling</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="nbar3">Mean phonon number n̄</label><output id="nbar3-out" for="nbar3"></output></div>
+          <input id="nbar3" type="range" min="1" max="10" step="0.5" value="5">
+          <div class="ctrl__hint">Typical after ordinary (Doppler) laser cooling.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="cooling">
+        <div class="label-caps">Each cycle</div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="plan-label">Red-sideband pulse length</span>
+          <div class="seg" role="group" aria-labelledby="plan-label" id="plan">
+            <button type="button" data-plan="fixed" aria-pressed="true">π pulse for 1<sub>p</sub></button>
+            <button type="button" data-plan="varied" aria-pressed="false">Varied</button>
+          </div>
+          <div class="ctrl__hint" id="plan-hint"></div>
         </div>
         <div class="ctrl">
-          <div class="ctrl__row"><label for="tau">Wait τ</label><output id="tau-out" for="tau"></output></div>
-          <input id="tau" type="range" min="0" max="300" step="1" value="50">
+          <div class="ctrl__row"><label for="recoil">Recoil when the photon is emitted</label><output id="recoil-out" for="recoil"></output></div>
+          <input id="recoil" type="range" min="0" max="5" step="0.5" value="1">
+          <div class="ctrl__hint">Chance that the emitted photon adds (or removes) a phonon.</div>
         </div>
       </div>
 
-      <div class="ctrl-group" data-modes="decay">
-        <div class="label-caps">First pulse</div>
-        <div class="seg" role="group" aria-label="First pulse" id="prep">
-          <button type="button" data-prep="pi" aria-pressed="true">π: to |1⟩</button>
-          <button type="button" data-prep="half" aria-pressed="false">π/2: to the equator</button>
+      <!-- 4 -->
+      <div class="ctrl-group" data-modes="readout">
+        <div class="label-caps">Encode with 729 nm</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="theta">Pulse area θ</label><output id="theta-out" for="theta"></output></div>
+          <input id="theta" type="range" min="0" max="360" step="5" value="90">
+          <div class="chips" role="group" aria-label="Quick pulse areas">
+            <button class="chip-btn" type="button" data-theta="0">0</button><button class="chip-btn" type="button" data-theta="90">π/2</button><button class="chip-btn" type="button" data-theta="180">π</button>
+          </div>
+          <div class="ctrl__hint">A carrier pulse leaves cos(θ/2)|0⟩ − i sin(θ/2)|1⟩.</div>
         </div>
       </div>
-
-      <div class="ctrl-group">
-        <div class="label-caps">Noise</div>
+      <div class="ctrl-group" data-modes="readout">
+        <div class="label-caps">Detector</div>
         <div class="ctrl">
-          <div class="ctrl__row"><label for="sigma">Field noise σ/2π</label><output id="sigma-out" for="sigma"></output></div>
-          <input id="sigma" type="range" min="0" max="10" step="0.5" value="0">
-          <div class="ctrl__hint">A slow, shot-to-shot spread in the detuning, such as a drifting magnetic field.</div>
+          <div class="ctrl__row"><label for="mub">Photons from a bright ion</label><output id="mub-out" for="mub"></output></div>
+          <input id="mub" type="range" min="1" max="20" step="0.5" value="8">
+          <div class="ctrl__hint">Average counts per shot when the ion fluoresces.</div>
         </div>
-        <div class="ctrl-duo">
-          <div class="ctrl">
-            <div class="ctrl__row"><label for="t1">Energy loss T₁</label><output id="t1-out" for="t1"></output></div>
-            <input id="t1" type="range" min="0" max="13" step="1" value="13">
-          </div>
-          <div class="ctrl">
-            <div class="ctrl__row"><label for="t2">Dephasing T₂</label><output id="t2-out" for="t2"></output></div>
-            <input id="t2" type="range" min="0" max="13" step="1" value="13">
-          </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="mud">Background counts</label><output id="mud-out" for="mud"></output></div>
+          <input id="mud" type="range" min="0" max="2" step="0.1" value="0.3">
         </div>
-        <div class="ctrl__hint" id="noise-note"></div>
-        <button class="btn-quiet btn-small" id="ideal" type="button">Ideal ion: no noise</button>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="thr">Call it bright from</label><output id="thr-out" for="thr"></output></div>
+          <input id="thr" type="range" min="1" max="10" step="1" value="3">
+        </div>
       </div>
     </aside>
 
     <div class="plots">
-      <section class="panel" aria-label="Pulse sequence and time controls">
-        <div class="plot-card__head"><h3>Laser pulses</h3><span class="timeline__note">not to scale</span></div>
-        <div class="timeline" id="timeline"></div>
+      <section class="panel circuit-card" aria-label="Controls for the experiment">
+        <div data-modes="bus">
+          <div class="plot-card__head"><h3>Laser pulses</h3><span class="circuit__tools"><button class="btn-quiet btn-small" id="undo" type="button">Undo</button><button class="btn-quiet btn-small" id="clear" type="button">Clear</button></span></div>
+          <div class="builder">
+            <div class="builder__row">
+              <div class="seg seg--inline" role="group" aria-label="Pulse acts on" id="target">
+                <button type="button" data-target="2" aria-pressed="false">Qubit 2</button>
+                <button type="button" data-target="3" aria-pressed="true">Qubit 3</button>
+              </div>
+              <div class="pulse-row" role="group" aria-label="Add a pulse">
+                <button class="pulse-btn pulse-btn--carrier" type="button" data-pulse="carrier" data-area="0.5">carrier π/2</button>
+                <button class="pulse-btn pulse-btn--carrier" type="button" data-pulse="carrier" data-area="1">carrier π</button>
+                <button class="pulse-btn pulse-btn--red" type="button" data-pulse="red" data-area="0.5">red π/2</button>
+                <button class="pulse-btn pulse-btn--red" type="button" data-pulse="red" data-area="1">red π</button>
+                <button class="pulse-btn pulse-btn--blue" type="button" data-pulse="blue" data-area="0.5">blue π/2</button>
+                <button class="pulse-btn pulse-btn--blue" type="button" data-pulse="blue" data-area="1">blue π</button>
+              </div>
+            </div>
+          </div>
+          <div class="pulse-seq" id="pulse-seq"></div>
+        </div>
         <div class="transport">
           <button class="btn-play" id="play" type="button">▶ Play</button>
           <button class="btn-quiet" id="rewind" type="button">⏮ Start</button>
-          <input id="time" type="range" min="0" max="1000" step="1" value="1000" aria-label="Time">
+          <input id="time" type="range" min="0" max="1000" step="1" value="0" aria-label="Time" data-modes="sidebands bus cooling">
           <div class="transport__time" id="time-out" aria-live="off"></div>
         </div>
         <div class="transport__more">
-          <label>Speed
+          <label data-modes="sidebands bus cooling">Speed
             <select id="speed">
               <option value="0.5">0.5×</option>
               <option value="1" selected>1×</option>
               <option value="2">2×</option>
             </select>
           </label>
-          <label data-modes="rabi">Laser on for
-            <select id="window">
-              <option value="20">20 µs</option>
-              <option value="50" selected>50 µs</option>
-              <option value="100">100 µs</option>
-              <option value="200">200 µs</option>
+          <label data-modes="cooling">Cycles
+            <select id="cycles">
+              <option value="20">20</option>
+              <option value="40" selected>40</option>
+              <option value="80">80</option>
             </select>
           </label>
+          <span class="readout-actions" data-modes="readout">
+            <button class="btn-quiet btn-small" id="pump" type="button">Optical pumping cycle</button>
+            <button class="btn-quiet btn-small" id="unpump" type="button">Scramble the ion</button>
+            <button class="chip-btn" type="button" data-shots="1">+1 shot</button><button class="chip-btn" type="button" data-shots="100">+100</button><button class="chip-btn" type="button" data-shots="1000">+1000</button>
+          </span>
           <span id="transport-note"></span>
         </div>
       </section>
 
       <div class="stats stats--4" id="stats"></div>
 
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><span class="dg-legend" id="dg-legend"></span></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="diagram" id="diagram" role="img" aria-label="Energy levels"></div>
+      </section>
+
+      <div class="note ket" id="ket" role="status"></div>
+
       <div class="plot-pair">
-        <section class="panel plot-card">
-          <div class="plot-card__head"><h3>Bloch sphere</h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
-          <p class="plot-card__cap" id="sphere-cap"></p>
-          <div class="plot-box plot-box--sphere"><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere"></canvas></div>
-          <div class="rho" id="rho" aria-label="Density matrix"></div>
-        </section>
         <section class="panel plot-card">
           <div class="plot-card__head"><h3 id="pa-title"></h3></div>
           <p class="plot-card__cap" id="pa-cap"></p>
           <ul class="legend" id="pa-legend"></ul>
-          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="Excitation probability against time"></canvas></div>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall" id="pb-box"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+          <div class="popgrid" id="popgrid" hidden></div>
         </section>
       </div>
-
-      <section class="panel plot-card">
-        <div class="plot-card__head"><h3 id="pb-title"></h3>
-          <div class="seg seg--inline" role="group" aria-label="Scan" id="scan" data-modes="ramsey">
-            <button type="button" data-scan="tau" aria-pressed="true">against wait τ</button>
-            <button type="button" data-scan="delta" aria-pressed="false">against detuning Δ</button>
-          </div>
-        </div>
-        <p class="plot-card__cap" id="pb-cap"></p>
-        <ul class="legend" id="pb-legend"></ul>
-        <div class="plot-box"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
-      </section>
 
       <div class="note" id="takeaway" role="status"></div>
       <p class="lab-status" id="lab-status"></p>
@@ -250,62 +313,62 @@
   <section class="panel" aria-labelledby="predict-title">
     <div class="label-caps">Step 2 · Predict, then test</div>
     <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
-    <p>Load each example, make a prediction, then press Play or move a slider to check it.</p>
+    <p>Load each example, make a prediction, then press Play, add a pulse or take shots to check it.</p>
     <div class="predict-list">
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 1 · Rabi</span><button class="predict__load" type="button" data-q="q1">Load Ω/2π = 100 kHz, on resonance</button></div>
-        <p>How long must the laser stay on to put the ion in |1⟩ for certain? What does a pulse twice as long do?</p>
+        <div class="predict__head"><span class="predict__tag">Question 1 · Sidebands</span><button class="predict__load" type="button" data-q="q1">Load |g, 0<sub>p</sub>⟩, red laser</button></div>
+        <p>The ion is cold, in \(|g,0_p\rangle\). Which of the three laser colours can excite it, and which cannot?</p>
         <details><summary>Show answer</summary>
-          <p>A π pulse: \(t_\pi=\pi/\Omega=1/(2\times100\ \text{kHz})=5\ \mu\text{s}\). Twice as long, a 2π pulse, brings the arrow all the way round to \(|0\rangle\) again. The ion is back where it started, though its amplitudes have changed sign, the same −1 as a 360° rotation in the Bloch-sphere lab.</p>
+          <p>The carrier and the blue sideband can; the red sideband cannot. Red has to take a phonon away, and in \(|0_p\rangle\) there is none to take: there is no \(|e,-1_p\rangle\). That missing red sideband is how experiments confirm the ion really is in its motional ground state.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 2 · Rabi</span><button class="predict__load" type="button" data-q="q2">Load Δ = Ω</button></div>
-        <p>Detune the laser by exactly the Rabi frequency, 100 kHz. Will the ion ever be fully excited? Does it flop faster or slower than on resonance?</p>
+        <div class="predict__head"><span class="predict__tag">Question 2 · Sidebands</span><button class="predict__load" type="button" data-q="q2">Load |g, 0<sub>p</sub>⟩, blue laser</button></div>
+        <p>A carrier π pulse takes 10 µs. How long does a blue-sideband π pulse take from \(|g,0_p\rangle\)? And from \(|g,1_p\rangle\)?</p>
         <details><summary>Show answer</summary>
-          <p>Never. P(1) peaks at \(\Omega^2/(\Omega^2+\Delta^2)=1/2\). It flops faster, at \(\sqrt{\Omega^2+\Delta^2}/2\pi\approx141\) kHz, because the arrow now circles a drive axis tilted 45° out of the equator, and that circle never reaches the south pole.</p>
+          <p>100 µs from \(|g,0_p\rangle\), ten times longer, because the sideband runs at \(\eta\Omega\) with \(\eta=0.1\). From \(|g,1_p\rangle\) it is faster, 71 µs, because the rate grows as \(\sqrt{n_p+1}\): more phonons, faster sidebands.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 3 · Rabi</span><button class="predict__load" type="button" data-q="q3">Load the π-pulse spectrum</button></div>
-        <p>A π pulse excites the ion only when the laser is close to resonance. Halve the Rabi frequency from 100 to 50 kHz, so the π pulse lasts twice as long. Does the line in the spectrum get wider or narrower?</p>
+        <div class="predict__head"><span class="predict__tag">Question 3 · Sidebands</span><button class="predict__load" type="button" data-q="q3">Load a thermal ion, n̄ = 1, blue laser</button></div>
+        <p>The ion is warm: a thermal mix with an average of one phonon. Drive the blue sideband. Will it ever be fully excited?</p>
         <details><summary>Show answer</summary>
-          <p>Narrower, by a factor of two. The first zeros sit at \(\Delta=\pm\sqrt3\,\Omega\): ±173 kHz at 100 kHz and ±87 kHz at 50 kHz. A longer, weaker pulse resolves frequency more finely, the same trade-off as in a Fourier transform. Precision spectroscopy uses long pulses for exactly this reason.</p>
+          <p>No. Each phonon number flops at its own rate \(\eta\sqrt{n_p+1}\,\Omega\), so the oscillations drift out of step and wash out. The best you get is about 0.82, at 72 µs. The shape of this washed-out flopping is a thermometer for the ion's motion.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 4 · Ramsey</span><button class="predict__load" type="button" data-q="q4">Load τ = 50 µs, Δ/2π = 10 kHz</button></div>
-        <p>With a 10 kHz detuning and a 50 µs wait, how far round the equator does the arrow get during the wait? What is P(1) at the end? How far apart are the fringes when you scan the detuning?</p>
+        <div class="predict__head"><span class="predict__tag">Question 4 · Phonon bus</span><button class="predict__load" type="button" data-q="q4">Load |g₂ e₃, 0<sub>p</sub>⟩</button></div>
+        <p>Qubit 3 is excited and the bus is in \(|0_p\rangle\). What does a red π pulse on qubit 3 do? Now start from \(|g_2 g_3, 1_p\rangle\) instead: what does the same red pulse do?</p>
         <details><summary>Show answer</summary>
-          <p>\(\Delta\tau=2\pi\times10\ \text{kHz}\times50\ \mu\text{s}=\pi\): exactly half a turn, so the second π/2 pulse sends the arrow back up and P(1) ends close to 0 (about 0.01, because the detuning also acts during the pulses). Scanning the detuning gives fringes \(1/\tau=20\) kHz apart, far narrower than the π-pulse line. That is why atomic clocks use Ramsey's method.</p>
+          <p>With the bus in \(|0_p\rangle\), red lowers qubit 3 to \(|g_3\rangle\) and puts a phonon on the bus: \(|e_3,0_p\rangle\to|g_3,1_p\rangle\). With the bus in \(|1_p\rangle\), red raises it instead, \(|g_3,1_p\rangle\to|e_3,0_p\rangle\), and empties the bus. Which way a qubit goes depends on the bus: exactly the rule the video uses for qubits to communicate.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 5 · Ramsey</span><button class="predict__load" type="button" data-q="q5">Load field noise σ/2π = 3 kHz</button></div>
-        <p>Now the detuning drifts from shot to shot by about 3 kHz. The Ramsey fringes against wait time fade out. Will a spin echo bring them back?</p>
+        <div class="predict__head"><span class="predict__tag">Question 5 · Phonon bus</span><button class="predict__load" type="button" data-q="q5">Load the first two pulses</button></div>
+        <p>A carrier π pulse excited qubit 2, then a red π/2 pulse left it half in \(|e_2,0_p\rangle\) and half in \(|g_2,1_p\rangle\). Predict what a red π pulse on qubit 3 does, then add it.</p>
         <details><summary>Show answer</summary>
-          <p>Yes, completely. Each shot has a slightly different detuning, so the arrows fan out around the equator and their average shrinks: the contrast falls as \(e^{-\sigma^2\tau^2/2}\), to 0.64 at 50 µs and 0.17 at 100 µs. The echo's π pulse flips the fan over, so the second half of the wait undoes the first, whatever each shot's detuning. Watch the thin arrows close up again. With no other noise, the echo ends within about 1% of P(1) = 1 for every wait; the small shortfall comes from the detuning acting during the pulses themselves.</p>
+          <p>Where the bus holds a phonon, red raises qubit 3 and takes the phonon back; where it holds none, nothing happens. The result is \((|e_2 g_3\rangle-|g_2 e_3\rangle)/\sqrt2\) with the bus back in \(|0_p\rangle\): qubits 2 and 3 are fully entangled (concurrence 1), though no laser ever touched both. This is the idea behind the entangling gates the video mentions.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 6 · Ramsey</span><button class="predict__load" type="button" data-q="q6">Load noise and T₂ = 100 µs</button></div>
-        <p>Keep the field noise and add dephasing with T₂ = 100 µs. Does the echo still rescue everything?</p>
+        <div class="predict__head"><span class="predict__tag">Question 6 · Phonon bus</span><button class="predict__load" type="button" data-q="q6">Load the recipe with a warm bus</button></div>
+        <p>Run the same three pulses, but with the bus starting in \(|1_p\rangle\), a chain that was not cooled. Do the qubits still end up entangled?</p>
         <details><summary>Show answer</summary>
-          <p>No. The echo cancels only noise that stays the same throughout a shot. T₂ describes fast, random phase kicks that differ between the two halves of the wait, so they do not cancel. The echo signal now decays roughly as \(\tfrac12(1+e^{-\tau/T_2})\), to about 0.67 at τ = 100 µs.</p>
+          <p>No. The bus ends up spread over \(|0_p\rangle\), \(|1_p\rangle\) and \(|2_p\rangle\) and stays entangled with the qubits, and the red pulses no longer have the right length because the rate depends on \(\sqrt{n_p}\). Extra motion ruins the gate, which is why the video cools the chain first.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 7 · T₁ and T₂</span><button class="predict__load" type="button" data-q="q7">Load π pulse, T₁ = 300 µs</button></div>
-        <p>A π pulse puts the ion in |1⟩, then it is left alone. With T₁ = 300 µs, what is P(1) after 300 µs? Where does the arrow end up much later, and is that a mixed state?</p>
+        <div class="predict__head"><span class="predict__tag">Question 7 · Sideband cooling</span><button class="predict__load" type="button" data-q="q7">Load n̄ = 5, π pulses for 1<sub>p</sub></button></div>
+        <p>Each cycle uses a red pulse that is exactly a π pulse for \(|g,1_p\rangle\to|e,0_p\rangle\). After 40 cycles, does the whole population reach \(|g,0_p\rangle\)?</p>
         <details><summary>Show answer</summary>
-          <p>\(e^{-1}\approx0.37\). The arrow slides straight up the z axis, shrinking to nothing as it passes the centre, and ends at \(|0\rangle\) on the surface. Energy loss eventually returns the ion to a pure state, the ground state, but on the way it passes through mixed states, with a purity of only 0.5 when P(1) = 0.5.</p>
+          <p>No, only about half. The red rate grows as \(\sqrt{n_p}\), so for \(n_p=4\) the same pulse is a 2π pulse: the ion goes up and comes straight back, and the phonon stays. About 40% of the population piles up in \(4_p\) (and a little in \(16_p\)). Switch to varied pulse lengths and about 97% reaches \(0_p\) in the same 40 cycles, over 99% in 80.</p>
         </details>
       </div>
       <div class="predict">
-        <div class="predict__head"><span class="predict__tag">Question 8 · T₁ and T₂</span><button class="predict__load" type="button" data-q="q8">Load π/2 pulse, T₁ = 300 µs, no dephasing</button></div>
-        <p>T₂ is set to ∞, so there is no dephasing at all. After the π/2 pulse, will the arrow's part in the equator still shrink?</p>
+        <div class="predict__head"><span class="predict__tag">Question 8 · Readout</span><button class="predict__load" type="button" data-q="q8">Load π/2, dim detector</button></div>
+        <p>The qubit is in an equal superposition and the detector sees only 3 photons from a bright ion, with a threshold of 2. Out of 1000 shots, how many will be called bright, and how often is a bright ion mistaken for a dark one?</p>
         <details><summary>Show answer</summary>
-          <p>Yes, with \(T_2=2T_1=600\ \mu\text{s}\). Every decay from \(|1\rangle\) to \(|0\rangle\) also destroys the phase between them, so energy loss alone sets \(T_2\le2T_1\). The lab caps T₂ at that limit; a larger value would make the density matrix unphysical.</p>
+          <p>About 440, not 500. A bright ion gives fewer than 2 counts about 16% of the time, and a dark ion more than 1 about 4% of the time, so the bright fraction comes out near \(0.5\times0.84+0.5\times0.04=0.44\). Brighten the detector to 8 photons with a threshold of 3 and both errors fall below 2%: the nearly perfect bright-or-dark readout of the video.</p>
         </details>
       </div>
     </div>
@@ -316,9 +379,9 @@
     <div class="notebook__text">
       <div class="label-caps">Python notebook</div>
       <h2 id="nb-title">Run the same calculation in Python</h2>
-      <p>The companion Jupyter notebook derives the Rabi formula, solves the Bloch equations, checks them against the Lindblad master equation for the density matrix, and reproduces the π-pulse spectrum, Ramsey fringes, the spin echo and T₁ and T₂ decay. It needs only NumPy and Matplotlib.</p>
+      <p>The companion Jupyter notebook builds the \(|g,n_p\rangle\), \(|e,n_p\rangle\) ladder, checks the carrier and sideband model against the full ion–phonon Hamiltonian, runs the phonon-bus recipes, sideband cooling and fluorescence readout, and reproduces the numbers in the answers above. It needs only NumPy and Matplotlib.</p>
     </div>
-    <a class="btn btn--brand" href="trapped_ion_qubit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 20 KB</span></a>
+    <a class="btn btn--brand" href="trapped_ions_phonon_sidebands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 23 KB</span></a>
   </section>
 
   <!-- What is computed -->
@@ -327,12 +390,12 @@
       <summary>What is being computed?</summary>
       <div class="prose">
         <ul>
-          <li><strong>Model:</strong> one two-level ion in the frame rotating with the laser, after the rotating-wave approximation. \(|0\rangle\) is the ground state at the north pole. The ion's motion in the trap, other levels and laser intensity noise are left out. All lasers here drive the qubit transition directly.</li>
-          <li><strong>Evolution:</strong> the Bloch equations above, linear in \(\vec r\) for constant \(\vec W\), are solved exactly for each pulse and wait with a 4 × 4 matrix exponential. Waits use the closed form: precession at Δ, transverse decay \(e^{-t/T_2}\), and \(r_z\) relaxing to +1 as \(e^{-t/T_1}\). This is equivalent to the Lindblad master equation with energy loss at rate \(1/T_1\) and pure dephasing at rate \(1/T_2-1/2T_1\). T₂ is capped at \(2T_1\).</li>
-          <li><strong>Field noise:</strong> a Gaussian spread of standard deviation σ in the detuning, constant during a shot and random between shots. The plotted state is the average over 41 detunings evenly spaced over ±4σ with Gaussian weights; the thin arrows on the sphere are some of those shots.</li>
-          <li><strong>Sequences:</strong> Ramsey is π/2 – wait τ – π/2, all pulses about x. The echo is π/2 – τ/2 – π – τ/2 – π/2, with the last pulse about −x so that an ideal echo ends in \(|1\rangle\) like an ideal Ramsey sequence on resonance. Pulse lengths are \(t_\pi=\pi/\Omega\) and \(t_\pi/2\), and decay and detuning act during the pulses too.</li>
-          <li><strong>Scale:</strong> the noise sliders reach far shorter times than a good experiment, so the decay fits on the plots. In real trapped-ion qubits T₁ ranges from about a second (optical qubits) to effectively forever (hyperfine qubits), and T₂ from milliseconds to many seconds.</li>
-          <li><strong>Checks:</strong> the notebook solves the same problems with the Lindblad master equation for the density matrix in NumPy. It agrees with this page to about \(10^{-14}\).</li>
+          <li><strong>Notation:</strong> as in the video, \(|g\rangle=|0\rangle\) is 4S<sub>1/2</sub> and \(|e\rangle=|1\rangle\) is 3D<sub>5/2</sub> of Ca⁺; \(|n_p\rangle\) is the number of phonons in one shared motional mode of frequency \(\omega_p\); the carrier is at \(\omega_0\) and the sidebands at \(\omega_0\pm\omega_p\). The colours (green carrier, blue and red sidebands) match the video's diagrams.</li>
+          <li><strong>Transitions:</strong> in the Lamb–Dicke limit (\(\eta\ll1\)) and with resolved sidebands (\(\Omega\ll\omega_p\)), each laser colour drives only its own transitions, and each \(|g,n_p\rangle\leftrightarrow|e,n_p'\rangle\) pair is an exact two-level rotation at \(\Omega\), \(\eta\sqrt{n_p+1}\,\Omega\) or \(\eta\sqrt{n_p}\,\Omega\). The notebook checks this against the full ion–phonon Hamiltonian with \(\omega_p/2\pi=1\) MHz. The carrier agrees within 0.5%. On a sideband, the off-resonant carrier shifts the line by \(\Omega^2/2\omega_p\approx2\pi\times1.25\) kHz (a light shift); retuning the laser by that amount, as experiments do, brings agreement within 1%.</li>
+          <li><strong>Phonon bus:</strong> two ions and one mode, kept up to \(4_p\). Pulse areas refer to \(|g,0_p\rangle\leftrightarrow|e,1_p\rangle\) for blue and \(|g,1_p\rangle\leftrightarrow|e,0_p\rangle\) for red; other phonon numbers rotate faster by \(\sqrt{n_p+1}\) or \(\sqrt{n_p}\). Concurrence is shown when the bus holds a single phonon number.</li>
+          <li><strong>Sideband cooling:</strong> a rate model on the phonon distribution, starting thermal. Each cycle moves \(|g,n_p\rangle\to|e,n_p-1\rangle\) with probability \(\sin^2(\theta\sqrt{n_p}/2)\), then spontaneous emission returns the ion to \(|g\rangle\), changing \(n_p\) by ±1 with the chosen recoil probability. "Varied" cycles through pulses tuned to \(1_p\), \(2_p\) and \(4_p\).</li>
+          <li><strong>Readout:</strong> each shot projects the qubit; a bright ion gives Poisson-distributed counts with the chosen mean plus background, a dark one background only. Optical pumping returns 94% of the \(|1\rangle\) population to \(|0\rangle\) per cycle, roughly the branching of the 4P<sub>3/2</sub> decay in Ca⁺. In Ca⁺ the readout uses the 397 nm line to 4P<sub>1/2</sub> and the reset uses 854 nm to 4P<sub>3/2</sub>; the lab, like the video, draws one 4P level.</li>
+          <li><strong>Checks:</strong> the notebook repeats every calculation in NumPy and agrees with this page to about \(10^{-15}\).</li>
         </ul>
       </div>
     </details>
@@ -355,8 +418,8 @@
 </footer>
 
 <script src="../../assets/js/plot.js"></script>
-<script src="../../assets/js/bloch-sphere.js"></script>
 <script src="physics.js"></script>
+<script src="diagrams.js"></script>
 <script src="lab.js"></script>
 </body>
 </html>

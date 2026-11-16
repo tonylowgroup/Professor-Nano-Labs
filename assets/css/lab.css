@@ -306,18 +306,47 @@ mjx-container svg { display: inline; }
   .corr__grid { grid-template-columns: 44px repeat(3, minmax(52px, 1fr)); }
 }
 
-/* Trapped ion: pulse timeline and density matrix */
-.timeline { margin: 10px 0 14px; overflow: hidden; }
-.timeline svg { display: block; font-family: Inter, system-ui, sans-serif; }
-.timeline__note { font-size: 12px; color: var(--muted); }
-.tl__pulse { fill: var(--brand); }
-.tl__wire { stroke: #9fb3bd; stroke-width: 2; stroke-dasharray: 5 4; }
-.tl__t { font-size: 12px; font-weight: 600; fill: var(--muted); text-anchor: middle; }
-.tl__t--on { font-size: 13px; font-weight: 800; fill: #fff; }
-.rho { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
-.rho__name { font-weight: 700; font-size: 16px; color: var(--ink); font-style: italic; }
-.rho__m { display: grid; grid-template-columns: auto auto; gap: 2px 16px; padding: 4px 12px; border-left: 2px solid var(--ink-2); border-right: 2px solid var(--ink-2); border-radius: 6px; font-size: 13.5px; color: var(--ink); }
-.rho__side { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+/* Trapped ions: laser colours from the video, level diagrams, pulse chips */
+:root { --laser-carrier: #3d9a4f; --laser-blue: #3f74d6; --laser-red: #d9495f; --pop-yellow: #e0a21b; }
+.from-video { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--brand-strong); background: var(--brand-soft); border-radius: 999px; padding: 4px 10px; margin-bottom: 8px; }
+.seg--laser button { display: grid; gap: 1px; padding: 7px 6px; }
+.seg--laser button small { font-size: 11.5px; font-weight: 600; opacity: .85; }
+.seg--laser button[data-laser="carrier"][aria-pressed="true"] { background: var(--laser-carrier); }
+.seg--laser button[data-laser="blue"][aria-pressed="true"] { background: var(--laser-blue); }
+.seg--laser button[data-laser="red"][aria-pressed="true"] { background: var(--laser-red); }
+.diagram { margin-top: 8px; overflow-x: auto; }
+.diagram__svg { display: block; width: 100%; max-width: 760px; height: auto; margin: 0 auto; min-width: 460px; }
+.diagram__svg--ca { max-width: 620px; }
+.diagram__svg.diagram__svg--narrow { min-width: 0; max-width: 460px; }
+.dg-legend { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.pulse-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.pulse-btn { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 8px; padding: 6px 10px; border: 1px solid transparent; color: #fff; }
+.pulse-btn--carrier { background: var(--laser-carrier); }
+.pulse-btn--blue { background: var(--laser-blue); }
+.pulse-btn--red { background: var(--laser-red); }
+.pulse-btn:hover { filter: brightness(1.08); border-color: var(--ink); }
+.pulse-seq { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--tint); min-height: 52px; }
+.pulse-seq__start { font-weight: 700; font-size: 14px; color: var(--ink); margin-right: 4px; }
+.pulse-seq__arrow { color: var(--muted); }
+.pulse-seq__empty { font-size: 13px; color: var(--muted); }
+.pulse-chip { font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; border-radius: 8px; padding: 4px 9px; display: grid; line-height: 1.25; text-align: left; background: #fff; border: 2px solid; }
+.pulse-chip small { font-size: 11px; font-weight: 600; color: var(--muted); }
+.pulse-chip--carrier { border-color: var(--laser-carrier); color: var(--laser-carrier); }
+.pulse-chip--blue { border-color: var(--laser-blue); color: var(--laser-blue); }
+.pulse-chip--red { border-color: var(--laser-red); color: var(--laser-red); }
+.pulse-chip.is-done { color: #fff; }
+.pulse-chip.is-done small { color: rgba(255, 255, 255, .85); }
+.pulse-chip--carrier.is-done { background: var(--laser-carrier); }
+.pulse-chip--blue.is-done { background: var(--laser-blue); }
+.pulse-chip--red.is-done { background: var(--laser-red); }
+.popgrid { margin-top: 12px; overflow-x: auto; }
+.popgrid__grid { display: grid; grid-template-columns: auto repeat(3, minmax(64px, 1fr)); gap: 6px; align-items: center; }
+.popgrid__h { font-size: 13px; font-weight: 700; color: var(--muted); text-align: center; }
+.popgrid__row { text-align: right; color: var(--ink); padding-right: 6px; white-space: nowrap; }
+.popgrid__c { height: 54px; border-radius: 8px; background: var(--tint); display: grid; place-items: center; position: relative; }
+.popgrid__c i { display: block; border-radius: 50%; background: var(--pop-yellow); }
+.popgrid__c b { position: absolute; bottom: 3px; right: 6px; font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.readout-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
