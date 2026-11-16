@@ -7,7 +7,8 @@
    p.draw([{ type: 'line', x, y, color, width, dash, fill }, ...]);
 
    Layer types: line (non-finite points break the curve), stems, dots,
-   vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded).
+   vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded),
+   image (a canvas stretched over x0..x1, y0..y1) and text (a label at x, y).
 */
 (function () {
   'use strict';
@@ -143,6 +144,8 @@
         else if (L.type === 'vline') this._vline(L);
         else if (L.type === 'hline') this._hline(L);
         else if (L.type === 'vband' || L.type === 'hband') this._band(L);
+        else if (L.type === 'image') this._image(L);
+        else if (L.type === 'text') this._text(L);
       }
       c.restore();
     }
@@ -216,6 +219,22 @@
         const a = this.py(L.y0), b = this.py(L.y1);
         c.fillRect(this.m.l, Math.min(a, b), this.w - this.m.l - this.m.r, Math.abs(b - a));
       }
+    }
+
+    _image(L) {
+      const c = this.ctx, x0 = this.px(L.x0), x1 = this.px(L.x1), y0 = this.py(L.y0), y1 = this.py(L.y1);
+      c.save();
+      c.imageSmoothingEnabled = false;
+      c.drawImage(L.canvas, Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0));
+      c.restore();
+    }
+
+    _text(L) {
+      const c = this.ctx;
+      c.fillStyle = L.color || cssVar(this.canvas, '--plot-text', '#5f7382');
+      c.font = (L.weight || '600') + ' ' + (L.size || 11.5) + 'px Inter, system-ui, sans-serif';
+      c.textAlign = L.align || 'center'; c.textBaseline = 'top';
+      c.fillText(L.text, this.px(L.x), L.y === undefined ? this.m.t + 5 : this.py(L.y));
     }
 
     _vline(L) {
