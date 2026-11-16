@@ -237,6 +237,8 @@
   function labels() {
     for (const [id, key, f] of SLIDERS) $(id + '-out').textContent = f(p[key]);
     $('ky-out').textContent = FMT(ky) + ' nm⁻¹';
+    $('edc').value = p.dirac_channel_eV; $('edc-sweep').value = p.dirac_channel_eV;
+    $('edc-sweep-out').textContent = FMT(p.dirac_channel_eV) + ' eV';
     $('energy-out').textContent = FMT(E0) + ' eV';
     $('energy2-out').textContent = FMT(E0) + ' eV';
     document.querySelectorAll('.preset').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.preset === preset)));
@@ -266,6 +268,7 @@
     $(id).addEventListener('input', e => { stop(); p = { ...p, [key]: +e.target.value }; preset = null; labels(); schedule(); });
   }
   $('ky').addEventListener('input', e => { stop(); ky = +e.target.value; preset = null; labels(); schedule(); });
+  $('edc-sweep').addEventListener('input', e => { stop(); p = { ...p, dirac_channel_eV: +e.target.value }; preset = null; labels(); schedule(); });
   $('valley').addEventListener('change', e => { stop(); p = { ...p, valley: +e.target.value }; schedule(); });
   $('eta').addEventListener('change', e => { stop(); p = { ...p, eta_ldos_eV: +e.target.value }; schedule(); });
   $('log').addEventListener('change', () => { mapImage = null; drawAll(); });
@@ -287,13 +290,19 @@
     document.querySelector('.lab-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
-  // ---------- energy sweep ----------
+  // ---------- channel Dirac-point (gate) sweep ----------
   let timer = null;
   function stop() { if (timer) { clearInterval(timer); timer = null; } $('play').textContent = '▶ Sweep'; }
   $('play').addEventListener('click', () => {
     if (timer) { stop(); return; }
     $('play').textContent = '❚❚ Pause';
-    timer = setInterval(() => { const next = E0 + 0.006; setEnergy(next > 0.45 ? -0.45 : +next.toFixed(3)); }, 130);
+    preset = null;
+    timer = setInterval(() => {
+      let v = +(p.dirac_channel_eV + 0.005).toFixed(3);
+      if (v > 0.35 + 1e-9) v = -0.35;
+      p = { ...p, dirac_channel_eV: v };
+      labels(); recompute();
+    }, 140);
   });
   window.addEventListener('pagehide', stop);
 
