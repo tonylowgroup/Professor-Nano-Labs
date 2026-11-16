@@ -235,9 +235,9 @@
 
       // measurement axis with outcome poles sized by probability
       if (S.measure) {
-        const n = S.measure.n, p = S.measure.pPlus, col = S.measure.color;
-        this._poly([[-n[0], -n[1], -n[2]], [0, 0, 0], n], col, 3, { backAlpha: 0.45, backDash: [] });
-        [[n, p], [[-n[0], -n[1], -n[2]], 1 - p]].forEach(([v, q]) => {
+        const n = S.measure.n, p = S.measure.pPlus, line = S.measure.color;
+        this._poly([[-n[0], -n[1], -n[2]], [0, 0, 0], n], line, 3, { backAlpha: 0.45, backDash: [] });
+        [[n, p, S.measure.plusColor || line], [[-n[0], -n[1], -n[2]], 1 - p, S.measure.minusColor || line]].forEach(([v, q, col]) => {
           const P = this.project(v);
           c.save();
           c.globalAlpha = P.d < -0.05 ? 0.55 : 1;

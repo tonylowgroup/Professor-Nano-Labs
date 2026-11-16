@@ -228,7 +228,7 @@
   }
 
   function renderMeasure() {
-    const brand = css('--series-1'), amber = css('--series-amber'), im = css('--series-im'), ghost = css('--series-ghost');
+    const brand = css('--series-1'), amber = css('--series-amber'), minus = css('--series-re'), ghost = css('--series-ghost');
     const psi = measured(), r = Q.bloch(psi);
     syncShotKey(r);
     const b = state.basis, nvec = Q.AXES[b], c = shots[b];
@@ -241,7 +241,7 @@
     const est = ['x', 'y', 'z'].map(k => (shots[k].n ? (2 * shots[k].plus - shots[k].n) / shots[k].n : 0));
     const scene = {
       arrows: [{ v: r, color: brand, width: 3.2 }],
-      measure: { n: nvec, pPlus: p, color: css('--series-re') },
+      measure: { n: nvec, pPlus: p, color: css('--plot-text'), plusColor: brand, minusColor: minus },
     };
     if (all) scene.arrows.push({ v: est, color: amber, width: 2.4, dash: [6, 4], hollow: true });
     sphereA.draw(scene);
@@ -250,7 +250,7 @@
     $('out-title').textContent = `Outcomes along ${b}`;
     $('outcomes').innerHTML = bars([
       { label: `|${plusName}⟩`, count: c.plus, n: c.n, frac: c.n ? frac : 0, pred: p, color: brand },
-      { label: `|${minusName}⟩`, count: c.n - c.plus, n: c.n, frac: c.n ? 1 - frac : 0, pred: 1 - p, color: im },
+      { label: `|${minusName}⟩`, count: c.n - c.plus, n: c.n, frac: c.n ? 1 - frac : 0, pred: 1 - p, color: minus },
     ]);
     $('shot-strip').innerHTML = recent.map(v => `<span class="shot ${v ? 'shot--plus' : 'shot--minus'}"></span>`).join('');
 
@@ -328,7 +328,7 @@
   }
 
   function renderPair() {
-    const brand = css('--series-1'), ghost = css('--series-ghost'), amber = css('--series-amber'), re = css('--series-re'), im = css('--series-im');
+    const brand = css('--series-1'), ghost = css('--series-ghost'), amber = css('--series-amber'), re = css('--series-re');
     const gates = state.gates2, n = gates.length;
     const traj = trajectory2();
     const psi = Q.run2(Q.ZERO2(), gates, t2);
@@ -393,7 +393,7 @@
     const probs = Q.jointProbs(psi, state.basisA, state.basisB);
     const la = OUTCOME[state.basisA], lb = OUTCOME[state.basisB];
     const labels = [[0, 0], [0, 1], [1, 0], [1, 1]].map(([a, b2]) => `|${la[a]}⟩|${lb[b2]}⟩`);
-    const sameCol = brand, diffCol = im;
+    const sameCol = brand, diffCol = re;
     $('joint').innerHTML = bars(labels.map((l, i) => ({
       label: l, count: joint.counts[i], n: joint.n, frac: joint.n ? joint.counts[i] / joint.n : 0, pred: probs[i],
       color: i === 0 || i === 3 ? sameCol : diffCol,
@@ -411,7 +411,7 @@
     B.forEach((a, i) => {
       g += `<span class="corr__h">${a}</span>`;
       B.forEach((bb, j) => {
-        const v = T[i][j], col = v >= 0 ? brand : im;
+        const v = T[i][j], col = v >= 0 ? brand : re;
         const cur = a === state.basisA && bb === state.basisB;
         g += `<span class="corr__c${cur ? ' is-current' : ''}" style="background:${NanoPlot.alpha(col, Math.min(1, Math.abs(v)) * 0.55)}">${signed(v, 2)}</span>`;
       });
@@ -561,7 +561,7 @@
 
   const TEXT = {
     gates: ['Bloch sphere', 'Drag to turn the sphere. Solid trail: the path so far. Dashed trail: what is still to come. θ and φ are drawn at the input.', 'Bloch components along the circuit', 'The arrow\'s x, y and z components at every point of the replay. z = P(0) − P(1).'],
-    measure: ['The state being measured', 'The thick line is the measurement axis. The circles at its ends are sized by the two probabilities; the dashed arrow is rebuilt from your shots.', '', ''],
+    measure: ['The state being measured', 'The thick line is the measurement axis. The circles at its ends are sized by the two probabilities, coloured like the bars; the dashed arrow is rebuilt from your shots.', '', ''],
     pair: ['Qubit A on its own', 'Length 1: a definite direction. Length 0: completely random on its own.', 'Entanglement along the circuit', 'Concurrence, single-qubit arrow length and entropy at every point of the replay.'],
   };
 

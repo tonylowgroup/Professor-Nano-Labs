@@ -124,6 +124,7 @@ img, svg { display: block; }
    track rows (<li data-track>) and whole lab pages (<html data-track>).
    The site chrome (top bar, homepage banner, About) keeps the teal brand. */
 [data-track="quantum"]   { --brand: #5b45b0; --brand-strong: #46349a; --brand-soft: #eeebfb; --track-hero: #4a3a9c; --track-tint: #d3cbf7; }
+[data-track="computing"] { --brand: #a3326c; --brand-strong: #85285a; --brand-soft: #fbe9f2; --track-hero: #8c2b5d; --track-tint: #f5cde0; }
 [data-track="crystals"]  { --brand: #127a5e; --brand-strong: #0d5f49; --brand-soft: #e2f3ec; --track-hero: #0f6a50; --track-tint: #b4ead6; }
 [data-track="transport"] { --brand: #b0561b; --brand-strong: #8f4413; --brand-soft: #fbeee3; --track-hero: #9a4a16; --track-tint: #f7cfae; }
 /* The top bar and footer always use the site teal. */
