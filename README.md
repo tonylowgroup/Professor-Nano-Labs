@@ -32,6 +32,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Quantum computing | Trapped Ions and Phonon Sidebands | `labs/trapped-ion-qubit/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
+| Crystals & energy bands | Graphene Band Structure: From Tight Binding to Dirac Cones | `labs/graphene-bands/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
 | Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 

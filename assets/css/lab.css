@@ -450,6 +450,16 @@ mjx-container svg { display: inline; }
 .swatch-inline { display: inline-block; width: 28px; height: 10px; border-radius: 3px; vertical-align: -1px; }
 @media (max-width: 640px) { .orbital { height: 340px; } }
 
+/* Graphene bands: lattice and pseudospin pictures, the 3D bands */
+.lat { margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow: hidden; }
+.lat svg { display: block; width: 100%; height: auto; }
+.bands3d { position: relative; height: 440px; margin-top: 8px; border-radius: 12px; overflow: hidden; background: #090d17; }
+.bands3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.bands3d canvas:last-of-type { cursor: grab; touch-action: pan-y; }
+.bands3d canvas.dragging { cursor: grabbing; }
+.bands3d canvas:focus-visible { outline: 3px solid var(--brand-soft); outline-offset: -3px; }
+@media (max-width: 640px) { .bands3d { height: 340px; } }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en" data-track="crystals">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graphene Band Structure · Professor Nano Labs</title>
+<meta name="description" content="Build graphene's band structure from the tight-binding model, see why the bands touch at the corners of the Brillouin zone, explore the bands and Fermi surface in 3D, and zoom in on the Dirac cones: linear bands, pseudospin and a Berry phase of π. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Crystals &amp; energy bands</div>
+    <div class="eyebrow eyebrow--light">Crystals &amp; energy bands · Live lab</div>
+    <h1>Graphene Band Structure</h1>
+    <p>Graphene is a single sheet of carbon atoms in a honeycomb. Let each electron hop between neighbouring atoms and its band structure follows: two bands that touch at just six points, the corners of the Brillouin zone. Near those points the electrons behave like massless relativistic particles. Build the bands from tight binding, explore them in 3D, then zoom in on the Dirac cones.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="graphene_bands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The two episodes this lab is built on: the tight-binding model, then the Dirac model.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=3b34QM15JTM" target="_blank" rel="noopener" title="Calculating the band structure of graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/3b34QM15JTM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">1 · Calculating the band structure of graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=TuWvO8oig0E" target="_blank" rel="noopener" title="Deriving the Dirac Hamiltonian in Graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/TuWvO8oig0E/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">2 · Deriving the Dirac Hamiltonian in Graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=wBRvi_NRIog" target="_blank" rel="noopener" title="Calculating electron and hole densities in graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/wBRvi_NRIog/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Calculating electron and hole densities in graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=6xctcmwR8wo" target="_blank" rel="noopener" title="Deriving Berry phase, Berry connection &amp; Berry curvature">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/6xctcmwR8wo/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving Berry phase, Berry connection &amp; Berry curvature<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=QYUyAkz7DuA" target="_blank" rel="noopener" title="Discovering the relativistic Dirac equation with Paul Dirac and graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/QYUyAkz7DuA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Discovering the relativistic Dirac equation with Paul Dirac and graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Two atoms per cell, one hop at a time</h2>
+    <p>The honeycomb is a triangular lattice with two carbon atoms in each cell, A and B. Every A atom has three B neighbours, at \(\boldsymbol\delta_1,\boldsymbol\delta_2,\boldsymbol\delta_3\), a distance \(a=0.142\) nm away. In the tight-binding model an electron in a carbon \(p_z\) orbital hops to a neighbour with amplitude \(-t\), \(t\approx2.7\) eV. A Bloch wave \((c_A,c_B)\,e^{i\mathbf k\cdot\mathbf r}\) then obeys a 2×2 eigenvalue problem:</p>
+    <div class="equation">$$\begin{pmatrix}0&-t\,g(\mathbf k)\\-t\,g^*(\mathbf k)&0\end{pmatrix}\begin{pmatrix}c_A\\c_B\end{pmatrix}=E\begin{pmatrix}c_A\\c_B\end{pmatrix},\qquad g(\mathbf k)=\sum_{j=1}^{3}e^{i\mathbf k\cdot\boldsymbol\delta_j},\qquad E_\pm(\mathbf k)=\pm t\,|g(\mathbf k)|$$</div>
+    <div class="equation">$$|g(\mathbf k)|^2=3+2\cos\!\left(\sqrt3k_ya\right)+4\cos\!\left(\tfrac32k_xa\right)\cos\!\left(\tfrac{\sqrt3}{2}k_ya\right)$$</div>
+    <p>The bands touch where \(g(\mathbf k)=0\): at the two inequivalent corners of the Brillouin zone, \(\mathbf K\) and \(\mathbf K'\). Expanding \(g\) to first order in \(\mathbf q=\mathbf k-\mathbf K\) gives the Dirac Hamiltonian, with a velocity set by the hopping and the bond length:</p>
+    <div class="equation">$$H_{\mathbf K+\mathbf q}\approx\hbar v_F\begin{pmatrix}0&q_x\mp iq_y\\q_x\pm iq_y&0\end{pmatrix}\ \text{(up to a phase; the sign differs between }\mathbf K\text{ and }\mathbf K'),\qquad E=\pm\hbar v_F|\mathbf q|,\qquad v_F=\frac{3ta}{2\hbar}\approx0.87\times10^6\ \text{m/s}$$</div>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-tb" aria-controls="lab" aria-selected="true" data-mode="tb">1 · Tight binding</button>
+      <button class="tab" role="tab" id="tab-bz" aria-controls="lab" aria-selected="false" data-mode="bz" tabindex="-1">2 · The bands in 3D</button>
+      <button class="tab" role="tab" id="tab-dirac" aria-controls="lab" aria-selected="false" data-mode="dirac" tabindex="-1">3 · The Dirac cone</button>
+    </div>
+    <div class="mode-intro" data-for="tb">
+      <h2>Three hops, three phases.</h2>
+      <p>An electron on an A atom can hop to three B neighbours. In a Bloch wave each hop picks up a phase \(e^{i\mathbf k\cdot\boldsymbol\delta_j}\), and the energy is \(t\) times the length of their sum. At \(\Gamma\) the three phases agree and add up to 3. At the zone corner K they point 120° apart and cancel, so the two bands meet at zero energy. Move \(\mathbf k\) along the path and watch the arrows, and the colours of the atoms, which show the phase of the wavefunction on each site.</p>
+    </div>
+    <div class="mode-intro" data-for="bz" hidden>
+      <h2>Two bands, six cones.</h2>
+      <p>Across the whole Brillouin zone the lower band (π, filled in neutral graphene) and the upper band (π*, empty) meet only at the six corners. Two corners are inequivalent: K and K′, the two valleys. Raise the Fermi level and the Fermi surface grows from points into small circles around each corner, then distorts, and at \(E_F=t\) the pieces join at the M points, where the density of states diverges.</p>
+      <div class="equation">$$g(E)=\frac{g_sg_v\,|E|}{2\pi\hbar^2v_F^2}\ \ (\text{near }E=0),\qquad n=\frac{E_F^2}{\pi\hbar^2v_F^2},\qquad g_s=g_v=2$$</div>
+    </div>
+    <div class="mode-intro" data-for="dirac" hidden>
+      <h2>Massless electrons with a pseudospin.</h2>
+      <p>Near each corner the bands form a cone, \(E=\pm\hbar v_F|\mathbf q|\), with the same slope in every direction: electrons move at \(v_F\) whatever their energy, like photons. The two components \((c_A,c_B)\) behave like a spin, the pseudospin, which points along the direction of motion and turns once as \(\mathbf q\) goes around the corner. That winding gives a Berry phase of \(\pi\). Further from the corner the cone bends and turns triangular (trigonal warping). A difference \(2\Delta\) between the A and B sites opens a gap and gives the electrons a mass.</p>
+      <div class="equation">$$E=\pm\sqrt{\Delta^2+\hbar^2v_F^2q^2},\qquad m^*=\frac{\Delta}{v_F^2},\qquad \gamma_\text{Berry}=\pm\pi\left(1-\frac{\Delta}{E}\right)$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-tb">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="tb">
+        <div class="label-caps">Wavevector</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="kpos">Along the path Γ → K → M → Γ</label><output id="kpos-out" for="kpos"></output></div>
+          <input id="kpos" type="range" min="0" max="1" step="0.001" value="0.2">
+        </div>
+        <div class="chips" role="group" aria-label="Special points">
+          <button class="chip-btn" type="button" data-kpt="G">Γ</button><button class="chip-btn" type="button" data-kpt="K">K</button><button class="chip-btn" type="button" data-kpt="M">M</button>
+        </div>
+        <div class="seg" role="group" aria-label="Band">
+          <button type="button" data-band="lower" aria-pressed="true">Lower band (π)</button><button type="button" data-band="upper" aria-pressed="false">Upper band (π*)</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="bz">
+        <div class="label-caps">Fermi level</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="ef">E<sub>F</sub></label><output id="ef-out" for="ef"></output></div>
+          <input id="ef" type="range" min="-8" max="8" step="0.01" value="0.6"><div class="ctrl__hint">Positive: electrons added (n-type). Negative: holes (p-type).</div>
+        </div>
+        <div class="chips" role="group" aria-label="Fermi levels">
+          <button class="chip-btn" type="button" data-ef="0">0 · neutral</button><button class="chip-btn" type="button" data-ef="0.3">0.3 eV</button><button class="chip-btn" type="button" data-ef="t">E<sub>F</sub> = t</button><button class="chip-btn" type="button" data-ef="-1">−1 eV</button>
+        </div>
+        <div class="chips" role="group" aria-label="3D view">
+          <button class="chip-btn" type="button" id="spin" aria-pressed="true">Spin</button><button class="chip-btn" type="button" id="reset-view">Reset view</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="dirac">
+        <div class="label-caps">Energy</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="en">Energy above the Dirac point</label><output id="en-out" for="en"></output></div>
+          <input id="en" type="range" min="0.05" max="2.5" step="0.01" value="0.5">
+        </div>
+        <div class="chips" role="group" aria-label="Energies">
+          <button class="chip-btn" type="button" data-en="0.1">0.1 eV</button><button class="chip-btn" type="button" data-en="0.5">0.5 eV</button><button class="chip-btn" type="button" data-en="1">1 eV</button><button class="chip-btn" type="button" data-en="2">2 eV</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><span id="cut-lab">Cut through K</span></div>
+          <div class="seg" role="group" aria-labelledby="cut-lab">
+            <button type="button" data-cut="G" aria-pressed="true">towards Γ</button><button type="button" data-cut="M" aria-pressed="false">towards M</button>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">Tight-binding model</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="t">Hopping t</label><output id="t-out" for="t"></output></div>
+          <input id="t" type="range" min="2" max="3.2" step="0.05" value="2.7">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="tp">Second-neighbour hopping t′</label><output id="tp-out" for="tp"></output></div>
+          <input id="tp" type="range" min="-0.3" max="0.3" step="0.01" value="0"><div class="ctrl__hint">Hops to the six A–A (or B–B) neighbours. It breaks the symmetry between electrons and holes.</div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="gap">Sublattice energy Δ</label><output id="gap-out" for="gap"></output></div>
+          <input id="gap" type="range" min="0" max="0.8" step="0.01" value="0"><div class="ctrl__hint">+Δ on A, −Δ on B, as when graphene sits on boron nitride. It opens a gap of 2Δ.</div>
+        </div>
+        <button class="chip-btn" type="button" id="plain">Back to plain graphene</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Play" data-modes="tb">
+        <div class="transport transport--shots">
+          <button class="btn-play" id="play" type="button">▶ Move k along the path</button>
+          <div class="transport__time" id="play-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed">
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <span id="transport-note">Runs round the path Γ → K → M → Γ, over and over, until you pause.</span>
+        </div>
+      </section>
+
+      <div class="stats stats--4 stats--steady" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="lat" id="lat" data-modes="tb"></div>
+        <div class="bands3d" id="bands3d" data-modes="bz">
+          <canvas id="b3-gl" aria-hidden="true"></canvas>
+          <canvas id="b3-ov" tabindex="0" role="img" aria-label="Graphene's bands in 3D. Drag, or use the arrow keys, to rotate."></canvas>
+        </div>
+        <div class="lat" id="ps" data-modes="dirac"></div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Tight binding</span><button class="predict__load" type="button" data-q="q1">Load k at Γ</button></div>
+        <p>At the centre of the zone, \(\mathbf k=0\), what are the two energies, and how do the A and B atoms compare in each state?</p>
+        <details><summary>Show answer</summary>
+          <p>\(g(0)=3\), so \(E=\pm3t=\pm8.1\) eV, the bottom and top of the π bands. In the lower (bonding) state every atom has the same phase; in the upper (antibonding) state the A and B atoms are opposite. The band is \(6t\approx16\) eV wide.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Tight binding</span><button class="predict__load" type="button" data-q="q2">Load k at K</button></div>
+        <p>At the zone corner K, why is the energy exactly zero, whatever the value of \(t\)?</p>
+        <details><summary>Show answer</summary>
+          <p>The three phases \(e^{i\mathbf K\cdot\boldsymbol\delta_j}\) are \(1\), \(e^{2\pi i/3}\) and \(e^{-2\pi i/3}\): three arrows 120° apart that close into a triangle, so \(g(\mathbf K)=0\). The waves hopping in from the three neighbours interfere destructively. That is symmetry, not a coincidence of numbers, so it survives any change of \(t\) (and \(t'\)), but not a difference between the A and B sites.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Tight binding</span><button class="predict__load" type="button" data-q="q3">Load k at M</button></div>
+        <p>At M, halfway between two corners, what are the energies?</p>
+        <details><summary>Show answer</summary>
+          <p>\(|g(\mathbf M)|=1\), so \(E=\pm t=\pm2.7\) eV. M is a saddle point: the band rises towards Γ and falls towards K. Saddle points pile up states, so the density of states diverges there (a van Hove singularity); see the next tab.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · The bands</span><button class="predict__load" type="button" data-q="q4">Load E<sub>F</sub> = 0.3 eV</button></div>
+        <p>Dope graphene so the Fermi level sits 0.3 eV above the Dirac point. What does the Fermi surface look like, and how many electrons does that take?</p>
+        <details><summary>Show answer</summary>
+          <p>Six small circles at the corners, a third of each inside the zone: two whole circles, one per valley, of radius \(k_F=E_F/\hbar v_F=0.52\) nm⁻¹. The density is \(n=E_F^2/\pi\hbar^2v_F^2\approx8.7\times10^{12}\) cm⁻², about one extra electron for every 440 carbon atoms.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · The bands</span><button class="predict__load" type="button" data-q="q5">Load E<sub>F</sub> = t</button></div>
+        <p>Keep raising \(E_F\) until it reaches \(t=2.7\) eV. What happens to the Fermi surface?</p>
+        <details><summary>Show answer</summary>
+          <p>The circles grow into triangles, and at \(E_F=t\) they touch at the six M points, forming a hexagon. Above that, the Fermi surface closes around Γ instead of around the corners: a change of topology called a Lifshitz transition. The density of states diverges at that energy, and the electron density there is about \(9.5\times10^{14}\) cm⁻², a quarter of an extra electron per atom.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · The bands</span><button class="predict__load" type="button" data-q="q6">Load neutral graphene</button></div>
+        <p>In neutral graphene the Fermi level is at the Dirac point. How many states are there at that energy? Is graphene a metal or an insulator?</p>
+        <details><summary>Show answer</summary>
+          <p>None: the density of states vanishes linearly at \(E=0\), so there is no gap but no Fermi surface either. Graphene is a semimetal (a zero-gap semiconductor). This is why a gate can tune its carrier density, and its conductance, so easily.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · The Dirac cone</span><button class="predict__load" type="button" data-q="q7">Load the cone at 1 eV</button></div>
+        <p>How good is the Dirac model? Compare the true contour with the circle \(|\mathbf q|=E/\hbar v_F\) at 0.1 eV and at 1 eV.</p>
+        <details><summary>Show answer</summary>
+          <p>At 0.1 eV the contour is a circle to within 0.6%, and its average radius matches \(E/\hbar v_F\) to 0.01%. At 1 eV it has turned into a rounded triangle: the radius varies by about 14% between the directions of M and Γ, and its average is 1% above the Dirac value. The Dirac model is excellent for the energies reached in devices, which are well below 1 eV.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · The Dirac cone</span><button class="predict__load" type="button" data-q="q8">Load a gap, Δ = 0.3 eV</button></div>
+        <p>Put +0.3 eV on the A atoms and −0.3 eV on the B atoms. What happens to the cone, the velocity and the Berry phase?</p>
+        <details><summary>Show answer</summary>
+          <p>A gap of \(2\Delta=0.6\) eV opens, and the cone rounds off at the bottom: \(E=\sqrt{\Delta^2+\hbar^2v_F^2q^2}\), a particle with mass \(m^*=\Delta/v_F^2\approx0.069\,m_e\). Near the band edge the pseudospin tilts out of the plane (onto one sublattice), and the Berry phase drops from \(\pi\) to \(\pi(1-\Delta/E)\): \(\pi/2\) at \(E=0.6\) eV.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the tight-binding Hamiltonian, diagonalises it across the Brillouin zone, plots the bands along Γ–K–M–Γ and as a contour map, checks the density of states against its exact elliptic-integral formula, derives the Dirac velocity, and computes the Berry phase around each valley. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="graphene_bands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 15 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Lattice:</strong> carbon–carbon distance \(a=0.142\) nm, neighbour vectors \(\boldsymbol\delta_{1,2}=a(\tfrac12,\pm\tfrac{\sqrt3}{2})\), \(\boldsymbol\delta_3=a(-1,0)\), lattice vectors \(\mathbf a_{1,2}=a(\tfrac32,\pm\tfrac{\sqrt3}{2})\), and \(\mathbf K,\mathbf K'=\tfrac{2\pi}{3a}(1,\pm\tfrac{1}{\sqrt3})\). These are the values used in the graphene transport lab.</li>
+          <li><strong>Bands:</strong> the 2×2 Bloch Hamiltonian, with the optional second-neighbour hopping \(t'\) and sublattice energy \(\pm\Delta\): \(E_\pm=-t'|g|^2\pm\sqrt{\Delta^2+t^2|g|^2}\), measured from the Dirac point. The six second neighbours contribute \(-t'(|g|^2-3)\); the constant \(3t'\) is dropped.</li>
+          <li><strong>Wavefunctions:</strong> the eigenvector \((c_A,c_B)\), with the amplitude on an atom at \(\mathbf r\) equal to \(c_s e^{i\mathbf k\cdot\mathbf r}\). Its overall phase is arbitrary; only the differences between atoms matter.</li>
+          <li><strong>Density of states:</strong> a histogram of both bands over 360,000 points of the Brillouin zone, lightly smoothed. It agrees with the exact formula (an elliptic integral) to about 1% away from the van Hove peaks. The carrier density comes from the exact area inside the Fermi contours while they surround K and K′, and from the density of states beyond that.</li>
+          <li><strong>Dirac model:</strong> \(E=\pm\sqrt{\Delta^2+\hbar^2v_F^2q^2}\) with \(v_F=3ta/2\hbar\). Contours of the tight-binding bands are found along 180 directions from each corner.</li>
+          <li><strong>Pseudospin and Berry phase:</strong> the pseudospin is the direction of \(\mathbf d\) in \(H=\mathbf d\cdot\boldsymbol\sigma\); the Berry phase is \(-\arg\prod_i\langle u_i|u_{i+1}\rangle\) around the contour. Which valley turns which way depends on how A, B and the axes are labelled; that the two valleys turn opposite ways does not.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="bands3d.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
