@@ -109,7 +109,7 @@
     <div class="mode-intro" data-for="bus" hidden>
       <div class="from-video">In the video: Chapter 2, phonon-mediated coupling</div>
       <h2>The phonon bus lets qubit 2 talk to qubit 3.</h2>
-      <p>The shared motion acts as a bus qubit, \(|0_p\rangle\) or \(|1_p\rangle\). When the bus is in \(|0_p\rangle\), the red laser lowers a qubit and the blue laser raises it; when it is in \(|1_p\rangle\), their roles swap. Apply pulses to qubit 2 and qubit 3 and use that rule to pass a qubit along the chain, or to entangle two ions that never touch.</p>
+      <p>The shared motion acts as a bus qubit, \(|0_p\rangle\) or \(|1_p\rangle\). When the bus is in \(|0_p\rangle\), the red laser lowers a qubit and the blue laser raises it; when it is in \(|1_p\rangle\), their roles swap. (Each laser can also push the bus up to \(|2_p\rangle\), out of the computational space; a good recipe avoids that.) Apply pulses to qubit 2 and qubit 3 and use that rule to pass a qubit along the chain, or to entangle two ions that never touch.</p>
     </div>
     <div class="mode-intro" data-for="cooling" hidden>
       <div class="from-video">In the video: Chapter 3, sideband cooling of qubits</div>
@@ -163,7 +163,7 @@
       <div class="ctrl-group" data-modes="bus">
         <div class="label-caps">Recipes</div>
         <div class="chips chips--examples" role="group" aria-label="Pulse recipes">
-          <button class="chip-btn" type="button" data-recipe="swap">Red and blue swap roles</button>
+          <button class="chip-btn" type="button" data-recipe="swap">Red lowers, then raises</button>
           <button class="chip-btn" type="button" data-recipe="transfer">Move qubit 2 onto qubit 3</button>
           <button class="chip-btn" type="button" data-recipe="entangle">Entangle qubits 2 and 3</button>
         </div>

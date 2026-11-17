@@ -58,7 +58,7 @@
 
   // ---------- 2. two ions and the phonon bus ----------
   // Amplitudes [re, im] over |a2 a3, n_p>, a = 0 (g) or 1 (e), n_p = 0..NB.
-  const NB = 12;                 // bus phonons kept: far more than any pulse sequence here reaches
+  const NB = 12;                 // bus phonons kept: far more than the recipes need (the page warns beyond 2_p)
   const idx = (a2, a3, n) => (a2 * 2 + a3) * (NB + 1) + n;
   function busState(a2, a3, n) {
     const psi = Array.from({ length: 4 * (NB + 1) }, () => [0, 0]);

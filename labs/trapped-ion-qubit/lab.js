@@ -28,6 +28,7 @@
   // readout shots
   let shots = { key: '', counts: [] };
   let lastShot = null, readStage = 'read';
+  let lastRecipe = null;          // the bus recipe being shown, for its own explanation
 
   // ---------- formatting ----------
   const fixed = (x, d = 2) => (Math.abs(x) < 0.5 * Math.pow(10, -d) ? 0 : x).toFixed(d).replace('-', '−');
@@ -236,9 +237,12 @@
     $('pulse-seq').querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', () => { stopAll(); tNow.bus = +b.dataset.i + 1; render(); }));
     $('undo').disabled = !n; $('clear').disabled = !n;
 
-    if (C && C.C > 0.999) note('<b>Entangled:</b> qubits 2 and 3 now share one state that cannot be split into a state for each, and the bus is back to a single phonon number. The bus carried the link between them.');
+    const done = n && t >= n - 1e-9;
+    if (done && lastRecipe === 'swap') note('<b>Red lowers, then raises:</b> the first red π pulse lowered qubit 3 and put a phonon on the bus. With the bus now in |1<sub>p</sub>⟩, the same red pulse raised qubit 3 again and emptied the bus.');
+    else if (done && lastRecipe === 'transfer') note('<b>Moved:</b> qubit 3 now holds the superposition that qubit 2 started with, and qubit 2 and the bus are back in |g<sub>2</sub>⟩ and |0<sub>p</sub>⟩. The sign of the |e⟩ part flipped on the way: (|g⟩ − i|e⟩)/√2 arrived as (|g⟩ + i|e⟩)/√2, which a phase gate on qubit 3 undoes.');
+    else if (C && C.C > 0.999) note('<b>Entangled:</b> qubits 2 and 3 now share one state that cannot be split into a state for each, and the bus is back to a single phonon number. The bus carried the link between them.');
     else if (!C && n) note('<b>The bus is entangled with the qubits.</b> Its phonon number now depends on the qubits\' states. A good recipe returns it to |0<sub>p</sub>⟩ at the end.');
-    else note('<b>The rule from the video:</b> with the bus in |0<sub>p</sub>⟩, red lowers a qubit and blue raises it; with the bus in |1<sub>p</sub>⟩ they swap roles. Add pulses and watch the yellow dots move.');
+    else note('<b>The rule from the video:</b> with the bus in |0<sub>p</sub>⟩, red lowers a qubit and blue raises it; with the bus in |1<sub>p</sub>⟩ they swap roles, as long as the bus stays in |0<sub>p</sub>⟩ and |1<sub>p</sub>⟩. Add pulses and watch the yellow dots move.');
     const high = m.phon.slice(3).reduce((x, y) => x + y, 0);
     $('lab-status').textContent = (high > 1e-3 ? `${pct(high)} of the population now has 3 or more phonons, beyond the levels drawn and the grid, and outside the computational space. ` : '') +
       'Pulse areas: carrier as written, red calibrated on |g, 1ₚ⟩ ↔ |e, 0ₚ⟩, blue on |g, 0ₚ⟩ ↔ |e, 1ₚ⟩.';
@@ -268,8 +272,9 @@
       if (P[n] > 0.004 && tr > 0.05) emission.push(n - 1);
     }
     $('diagram').innerHTML = D.single({ cols, g: P, e: [], arrows, emission, more: true });
-    $('dg-title').textContent = 'The next cycle: red pulse, then a photon';
-    $('dg-cap').innerHTML = `The red sideband lifts |g, n<sub>p</sub>⟩ to |e, n<sub>p</sub> − 1⟩ (arrows, darker where the pulse moves more); the ion then emits a photon (green wave) and lands in |g, n<sub>p</sub> − 1⟩. This cycle's pulse is a π pulse for ${tuned}<sub>p</sub>.`;
+    const last = k >= S.cycles;
+    $('dg-title').textContent = last ? 'After the last cycle' : 'The next cycle: red pulse, then a photon';
+    $('dg-cap').innerHTML = `The red sideband lifts |g, n<sub>p</sub>⟩ to |e, n<sub>p</sub> − 1⟩ (arrows, darker where the pulse moves more); the ion then emits a photon (green wave) and lands in |g, n<sub>p</sub> − 1⟩. ${last ? 'Cooling has stopped; the arrows show what one more cycle would do.' : `This cycle's pulse is a π pulse for ${tuned}<sub>p</sub>.`}`;
     $('dg-legend').innerHTML = `<span style="color:${COL.red}">●</span> red sideband`;
 
     // plot A: distribution
@@ -354,7 +359,8 @@
     // plot A: count histogram
     const maxC = Math.max(12, Math.ceil(S.mub + S.mud + 4 * Math.sqrt(S.mub + S.mud)));
     const xs = Array.from({ length: maxC + 1 }, (_, c) => c);
-    const hcount = xs.map(c => shots.counts.reduce((a, v) => a + (v === c ? 1 : 0), 0) / Math.max(N, 1));
+    const hcount = new Array(maxC + 1).fill(0);
+    for (const c of shots.counts) if (c <= maxC) hcount[c] += 1 / N;
     const pois = (mu, c) => Math.exp(-mu + c * Math.log(Math.max(mu, 1e-12)) - lgamma(c + 1));
     const expect = xs.map(c => pr.p0 * pois(S.mub + S.mud, c) + pr.p1 * pois(S.mud, c));
     plotA.opts.xLabel = 'Detector clicks in one shot';
@@ -403,7 +409,9 @@
     ]);
     $('ket').innerHTML = `<b>Before readout:</b> P(1) = ${prob(pr.p1i)} left over from the last experiment after ${S.pumpCycles} optical-pumping cycle${S.pumpCycles === 1 ? '' : 's'}, then a ${S.theta}° pulse at 729 nm gives P(0) = ${prob(pr.p0)}.`;
     if (!S.pumpCycles) note('<b>Not initialized.</b> The ion still holds whatever the last experiment left: half |0⟩, half |1⟩. Every pulse you apply now starts from the wrong state. Run a few optical-pumping cycles.');
-    else if (er.brightAsDark + er.darkAsBright > 0.05) note('<b>The detector is too dim</b> for the bright and dark peaks to separate cleanly, so some shots are miscounted. Raise the photon count or move the threshold.');
+    else if (er.brightAsDark > 0.025 && er.darkAsBright > 0.025) note('<b>The bright and dark peaks overlap,</b> so no threshold separates them cleanly. More photons from a bright ion, or less background, would.');
+    else if (er.brightAsDark > 0.025) note(`<b>Bright shots are being missed:</b> ${pct(er.brightAsDark)} of them give fewer than ${S.thr} clicks. Lower the threshold or collect more photons.`);
+    else if (er.darkAsBright > 0.025) note(`<b>Background is fooling the threshold:</b> ${pct(er.darkAsBright)} of dark shots still reach ${S.thr} clicks. Raise the threshold or reduce the background.`);
     else note('<b>Bright or dark, nearly perfectly:</b> the two peaks barely overlap, so almost every shot is called correctly. The probability comes from repeating the shot.');
     $('lab-status').textContent = 'Shots use the browser\'s random number generator; counts reset when the state or detector changes.';
     $('time-out').textContent = `${N} shot${N === 1 ? '' : 's'}`;
@@ -503,6 +511,7 @@
   }
   function addPulse(p) {
     stopAll();
+    lastRecipe = null;
     const n = S.pulses.length;
     S.pulses.push(p);
     tNow.bus = n;
@@ -536,9 +545,9 @@
   // tab 2
   document.querySelectorAll('#target [data-target]').forEach(b => b.addEventListener('click', () => { S.target = +b.dataset.target; render(); }));
   document.querySelectorAll('[data-pulse]').forEach(b => b.addEventListener('click', () => addPulse({ ion: S.target, kind: b.dataset.pulse, area: Math.PI * +b.dataset.area })));
-  document.querySelectorAll('[data-bstart]').forEach(b => b.addEventListener('click', () => { stopAll(); S.bstart = b.dataset.bstart.split(',').map(Number); tNow.bus = S.pulses.length; render(); }));
-  $('undo').addEventListener('click', () => { stopAll(); S.pulses.pop(); tNow.bus = Math.min(tNow.bus, S.pulses.length); render(); });
-  $('clear').addEventListener('click', () => { stopAll(); S.pulses = []; tNow.bus = 0; render(); });
+  document.querySelectorAll('[data-bstart]').forEach(b => b.addEventListener('click', () => { stopAll(); S.bstart = b.dataset.bstart.split(',').map(Number); lastRecipe = null; tNow.bus = S.pulses.length; render(); }));
+  $('undo').addEventListener('click', () => { stopAll(); lastRecipe = null; S.pulses.pop(); tNow.bus = Math.min(tNow.bus, S.pulses.length); render(); });
+  $('clear').addEventListener('click', () => { stopAll(); lastRecipe = null; S.pulses = []; tNow.bus = 0; render(); });
   const P = Math.PI;
   const RECIPES = {
     swap: { start: [0, 1, 0], pulses: [{ ion: 3, kind: 'red', area: P }, { ion: 3, kind: 'red', area: P }] },
@@ -549,6 +558,7 @@
     stopAll();
     const r = RECIPES[b.dataset.recipe];
     S.bstart = r.start.slice(); S.pulses = r.pulses.map(p => ({ ...p }));
+    lastRecipe = b.dataset.recipe;
     tNow.bus = 0; play();
   }));
   // tab 3
@@ -588,6 +598,7 @@
   };
   document.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => {
     stopAll();
+    lastRecipe = null;
     QUESTIONS[b.dataset.q]();
     applyMode();
     document.querySelector('.lab-tabs').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
