@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en" data-track="crystals">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graphene Electrostatics and Quantum Capacitance · Professor Nano Labs</title>
+<meta name="description" content="Count the electrons in graphene state by state, see how temperature creates electrons and holes, then gate it: find where the gate voltage goes and why graphene adds a quantum capacitance in series with the oxide. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Crystals &amp; energy bands</div>
+    <div class="eyebrow eyebrow--light">Crystals &amp; energy bands · Live lab</div>
+    <h1>Graphene Electrostatics and Quantum Capacitance</h1>
+    <p>How many electrons does graphene hold, and how many can a gate put into it? Count the states in k-space one by one, see temperature create electrons and holes, then build a graphene capacitor. Because graphene has so few states near the Dirac point, part of every gate voltage goes into raising its Fermi level: a quantum capacitance in series with the oxide.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="graphene_electrostatics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The two episodes this lab is built on: carrier densities, then electrostatics.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=wBRvi_NRIog" target="_blank" rel="noopener" title="Calculating electron and hole densities in graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/wBRvi_NRIog/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">1 · Calculating electron and hole densities in graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=4bVyZTcIv3w" target="_blank" rel="noopener" title="Electrostatics of graphene and quantum capacitance">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4bVyZTcIv3w/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">2 · Electrostatics of graphene and quantum capacitance<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=3b34QM15JTM" target="_blank" rel="noopener" title="Calculating the band structure of graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/3b34QM15JTM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Calculating the band structure of graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=vNBttmWca_U" target="_blank" rel="noopener" title="Deriving the density-of-states for any dispersion and dimensionality">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/vNBttmWca_U/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the density-of-states for any dispersion and dimensionality<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=e9TQs-EDiUs" target="_blank" rel="noopener" title="Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/e9TQs-EDiUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Two cones, and a Fermi level to fill them</h2>
+    <p>Near the corners of its Brillouin zone graphene's bands are cones, \(E=\pm\hbar v_F|\mathbf k|\), with \(v_F\approx10^6\) m/s. Counting the states inside a circle of radius \(k_F\), with four states (two spins, two valleys) per allowed \(\mathbf k\), gives the density of states and the carrier densities:</p>
+    <div class="equation">$$D(E)=\frac{2|E|}{\pi\hbar^2v_F^2},\qquad n=\int_0^\infty f(E)D(E)\,dE,\qquad p=\int_{-\infty}^0\big[1-f(E)\big]D(E)\,dE,\qquad f(E)=\frac{1}{1+e^{(E-E_F)/k_BT}}$$</div>
+    <p>A gate at voltage \(V\), separated from the graphene by an oxide of capacitance \(C_{ox}\) per unit area, holds a charge \(e(n-p)\). Graphene is not a metal: to hold that charge its Fermi level must move, and that costs part of the gate voltage:</p>
+    <div class="equation">$$e(n-p)=C_{ox}\left(V-\frac{E_F}{e}\right),\qquad \frac{1}{C_{tot}}=\frac{1}{C_{ox}}+\frac{1}{C_{qm}},\qquad C_{qm}=e^2\frac{d(n-p)}{dE_F}$$</div>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-count" aria-controls="lab" aria-selected="true" data-mode="count">1 · Counting electrons</button>
+      <button class="tab" role="tab" id="tab-stat" aria-controls="lab" aria-selected="false" data-mode="stat" tabindex="-1">2 · Electrons, holes and heat</button>
+      <button class="tab" role="tab" id="tab-cap" aria-controls="lab" aria-selected="false" data-mode="cap" tabindex="-1">3 · Gating and quantum capacitance</button>
+    </div>
+    <div class="mode-intro" data-for="count">
+      <h2>One state per square of k-space.</h2>
+      <p>In a sheet of side \(L\) with periodic boundaries, the wavefunction \(e^{i(k_xx+k_yy)}\) must fit a whole number of times: \(k_{x,y}=2\pi m_{x,y}/L\). Each allowed \(\mathbf k\) owns a square of area \(4\pi^2/L^2\), and holds four electrons (two spins, two valleys). Filling every state inside the Fermi circle gives the electron density. Count the dots, and compare with the formula as the sheet grows.</p>
+      <div class="equation">$$N=g\,\frac{\pi k_F^2}{4\pi^2/L^2},\qquad n=\frac{N}{L^2}=\frac{k_F^2}{\pi}=\frac{E_F^2}{\pi\hbar^2v_F^2},\qquad g=4$$</div>
+    </div>
+    <div class="mode-intro" data-for="stat" hidden>
+      <h2>Heat makes electrons and holes in pairs.</h2>
+      <p>At zero temperature the cone is filled exactly up to \(E_F\): electrons above the Dirac point if \(E_F\gt0\), holes below it if \(E_F\lt0\). At a finite temperature the Fermi function smears the edge, and since there is no gap, electrons are lifted from the valence band into the conduction band even in neutral graphene. The Sommerfeld expansion gives a simple formula; it turns out to be exactly the total, \(n+p\).</p>
+      <div class="equation">$$n+p=\frac{E_F^2}{\pi\hbar^2v_F^2}+\frac{\pi(k_BT)^2}{3\hbar^2v_F^2}\quad\text{(exact)},\qquad n=p=\frac{\pi(k_BT)^2}{6\hbar^2v_F^2}\ \ \text{at }E_F=0$$</div>
+    </div>
+    <div class="mode-intro" data-for="cap" hidden>
+      <h2>Two capacitors in series.</h2>
+      <p>For a metal plate \(Q=C_{ox}V\). Graphene has few states near the Dirac point, so adding charge raises its Fermi level, and that potential is taken from the gate voltage. The graphene behaves as a second capacitor, the quantum capacitance \(C_{qm}=e^2D(E_F)\), in series with the oxide. It matters when it is not much larger than \(C_{ox}\): for thin oxides, and near the Dirac point, where it is smallest.</p>
+      <div class="equation">$$C_{qm}=e^2\frac{2k_BT}{\pi\hbar^2v_F^2}\ln\!\left[2+2\cosh\!\left(\frac{E_F}{k_BT}\right)\right]\ \xrightarrow{\ T\to0\ }\ \frac{2e^2|E_F|}{\pi\hbar^2v_F^2},\qquad C_{ox}=\frac{\varepsilon_0\varepsilon_r}{d}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-count">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="count">
+        <div class="label-caps">Sample and Fermi level</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="efc">Fermi energy E<sub>F</sub></label><output id="efc-out" for="efc"></output></div>
+          <input id="efc" type="range" min="0.02" max="0.4" step="0.005" value="0.1">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="len">Sample size L</label><output id="len-out" for="len"></output></div>
+          <input id="len" type="range" min="20" max="300" step="1" value="100"><div class="ctrl__hint">A square L × L sheet with periodic boundaries. Bigger samples have more, closer-spaced k-points.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Sample sizes">
+          <button class="chip-btn" type="button" data-len="40">40 nm</button><button class="chip-btn" type="button" data-len="100">100 nm</button><button class="chip-btn" type="button" data-len="300">300 nm</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="stat">
+        <div class="label-caps">Fermi level</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="ef">Fermi energy E<sub>F</sub></label><output id="ef-out" for="ef"></output></div>
+          <input id="ef" type="range" min="-0.5" max="0.5" step="0.005" value="0.15">
+        </div>
+        <div class="chips" role="group" aria-label="Fermi levels">
+          <button class="chip-btn" type="button" data-ef="0">0 · neutral</button><button class="chip-btn" type="button" data-ef="0.2">0.2 eV</button><button class="chip-btn" type="button" data-ef="-0.37">−0.37 eV</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="cap">
+        <div class="label-caps">Gate</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="volt">Gate voltage V</label><output id="volt-out" for="volt"></output></div>
+          <input id="volt" type="range" min="-60" max="60" step="0.5" value="20"><div class="ctrl__hint" id="volt-hint"></div>
+        </div>
+        <div class="chips" role="group" aria-label="Gate stacks">
+          <button class="chip-btn" type="button" data-ox="300,3.9">300 nm SiO<sub>2</sub></button><button class="chip-btn" type="button" data-ox="10,25">10 nm HfO<sub>2</sub></button><button class="chip-btn" type="button" data-ox="3,3.9">3 nm SiO<sub>2</sub></button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="thick">Oxide thickness d</label><output id="thick-out" for="thick"></output></div>
+          <input id="thick" type="range" min="0" max="2.48" step="0.01" value="2.48"><div class="ctrl__hint">Logarithmic slider, 1 nm to 300 nm.</div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="er">Dielectric constant ε<sub>r</sub></label><output id="er-out" for="er"></output></div>
+          <input id="er" type="range" min="1" max="30" step="0.1" value="3.9"><div class="ctrl__hint">SiO<sub>2</sub> 3.9, hBN about 3.5, Al<sub>2</sub>O<sub>3</sub> about 9, HfO<sub>2</sub> about 25.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="stat cap">
+        <div class="label-caps">Temperature</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="temp">T</label><output id="temp-out" for="temp"></output></div>
+          <input id="temp" type="range" min="0" max="1000" step="10" value="300">
+        </div>
+        <div class="chips" role="group" aria-label="Temperatures">
+          <button class="chip-btn" type="button" data-temp="0">0 K</button><button class="chip-btn" type="button" data-temp="300">300 K</button><button class="chip-btn" type="button" data-temp="1000">1000 K</button>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">Graphene</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="vf">Fermi velocity v<sub>F</sub></label><output id="vf-out" for="vf"></output></div>
+          <input id="vf" type="range" min="0.8" max="1.2" step="0.01" value="1"><div class="ctrl__hint">The video uses 10<sup>6</sup> m/s; tight binding with t = 2.7 eV gives 0.87 × 10<sup>6</sup> m/s.</div>
+        </div>
+        <button class="chip-btn" type="button" id="video-values">Back to the video's values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Play" data-modes="cap">
+        <div class="transport transport--shots">
+          <button class="btn-play" id="play" type="button">▶ Sweep the gate</button>
+          <div class="transport__time" id="play-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more"><span id="transport-note">Sweeps the gate voltage from one end of its range to the other and back, until you pause.</span></div>
+      </section>
+
+      <div class="stats stats--4 stats--steady" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="lat" id="diagram"></div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Counting electrons</span><button class="predict__load" type="button" data-q="q1">Load a 100 nm sheet at E<sub>F</sub> = 0.1 eV</button></div>
+        <p>A 100 nm × 100 nm sheet has its Fermi level 0.1 eV above the Dirac point. How many conduction electrons does it hold?</p>
+        <details><summary>Show answer</summary>
+          <p>About 74 by the formula: \(k_F=E_F/\hbar v_F=0.152\) nm⁻¹, so the circle holds \(\pi k_F^2/(2\pi/L)^2=18.4\) k-points, each with four states, giving \(k_F^2L^2/\pi=73.5\) electrons. Counting the grid points one by one gives 21 × 4 = 84: with so few points the circle\'s jagged edge matters. The density is \(n=k_F^2/\pi=7.3\times10^{11}\) cm⁻², about 2 electrons for every 10,000 carbon atoms.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Counting electrons</span><button class="predict__load" type="button" data-q="q2">Load E<sub>F</sub> = 0.2 eV</button></div>
+        <p>Double the Fermi energy, from 0.1 to 0.2 eV. What happens to the electron density?</p>
+        <details><summary>Show answer</summary>
+          <p>It goes up four times, to \(2.9\times10^{12}\) cm⁻². \(k_F\) doubles, and the area of the Fermi circle goes as \(k_F^2\). Put another way, the density of states grows linearly with energy, so \(n=\int_0^{E_F}D\,dE\propto E_F^2\). For an ordinary 2D metal with a parabolic band, \(D\) is constant and \(n\) would only double.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Electrons, holes and heat</span><button class="predict__load" type="button" data-q="q3">Load E<sub>F</sub> = −0.37 eV at 0 K</button></div>
+        <p>Lower the Fermi level to −0.37 eV at zero temperature. How many holes is that, per carbon atom?</p>
+        <details><summary>Show answer</summary>
+          <p>\(p=E_F^2/\pi\hbar^2v_F^2=1.0\times10^{13}\) cm⁻². Graphene has \(3.8\times10^{15}\) carbon atoms per cm², so that is about 2.6 holes per 1000 atoms (the video rounds it to 3). Even heavily doped graphene is changed only very slightly.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Electrons, holes and heat</span><button class="predict__load" type="button" data-q="q4">Load neutral graphene at 300 K</button></div>
+        <p>Neutral graphene, \(E_F=0\): how many electrons are in the conduction band at 0 K, at 300 K and at 1000 K?</p>
+        <details><summary>Show answer</summary>
+          <p>None at 0 K. At a finite temperature electrons are lifted across the Dirac point, leaving an equal number of holes behind: \(n=p=\pi(k_BT)^2/6\hbar^2v_F^2\), which is \(8.1\times10^{10}\) cm⁻² at 300 K and \(9.0\times10^{11}\) cm⁻² at 1000 K. It grows as \(T^2\) because there is no gap, unlike a semiconductor, where it grows as \(e^{-E_g/2k_BT}\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Electrons, holes and heat</span><button class="predict__load" type="button" data-q="q5">Load E<sub>F</sub> = 0 and show the Sommerfeld formula</button></div>
+        <p>The Sommerfeld expansion gives \(n\approx E_F^2/\pi\hbar^2v_F^2+\pi(k_BT)^2/3\hbar^2v_F^2\), derived for \(E_F\gg k_BT\). What does it give at \(E_F=0\), compared with the exact \(n\)?</p>
+        <details><summary>Show answer</summary>
+          <p>Twice the exact value: \(\pi(k_BT)^2/3\hbar^2v_F^2\) against \(\pi(k_BT)^2/6\hbar^2v_F^2\). In fact the formula is exactly \(n+p\) at every \(E_F\) and \(T\), because the Fermi–Dirac integral obeys \(F_1(x)+F_1(-x)=\pi^2/6+x^2/2\). When \(E_F\gg k_BT\), \(p\) is negligible and it becomes \(n\), as in the video.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Gating</span><button class="predict__load" type="button" data-q="q6">Load a 300 nm SiO<sub>2</sub> back gate at 10 V</button></div>
+        <p>A classic graphene device: 300 nm of SiO\(_2\) and 10 V on the back gate. How many electrons, and how much of the 10 V goes into the Fermi level?</p>
+        <details><summary>Show answer</summary>
+          <p>\(C_{ox}=\varepsilon_0\varepsilon_r/d=11.5\) nF/cm², so \(n\approx C_{ox}V/e=7.1\times10^{11}\) cm⁻², and \(E_F\approx0.09\) eV (0.087 eV at 300 K, where heat supplies part of the charge; 0.098 eV at 0 K). Only about 1% of the voltage moves the Fermi level; the other 99% drops across the oxide. With such a thick oxide graphene behaves like a metal plate, \(Q\approx C_{ox}V\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Gating</span><button class="predict__load" type="button" data-q="q7">Load a 3 nm SiO<sub>2</sub> gate at 1 V</button></div>
+        <p>Now a thin top gate: 3 nm of SiO\(_2\) at 1 V. If graphene were a metal it would hold \(7.2\times10^{12}\) electrons per cm². How many does it actually hold?</p>
+        <details><summary>Show answer</summary>
+          <p>About \(5.3\times10^{12}\) cm⁻² at 0 K, 73% of the metal value. To hold that charge the Fermi level must rise to 0.27 eV, and that 0.27 V is taken from the 1 V on the gate. The oxide capacitance (1.15 µF/cm²) is no longer small next to graphene\'s quantum capacitance (6.3 µF/cm² at this Fermi level, and much less nearer the Dirac point), so the two in series give 0.97 µF/cm², 85% of \(C_{ox}\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Gating</span><button class="predict__load" type="button" data-q="q8">Load the Dirac point, 3 nm gate, 300 K</button></div>
+        <p>Where is the quantum capacitance smallest, and how small? What does it do to the total capacitance of the 3 nm gate?</p>
+        <details><summary>Show answer</summary>
+          <p>At the Dirac point, where there are fewest states. At 0 K it vanishes there, and so does the total. At 300 K thermal smearing gives \(C_{qm}=e^2(2k_BT\ln4)/\pi\hbar^2v_F^2=0.84\) µF/cm², and in series with \(C_{ox}=1.15\) µF/cm² the total is 0.49 µF/cm², only 42% of \(C_{ox}\). The dip in measured capacitance at the Dirac point is how quantum capacitance was first seen.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook counts k-points to build the density of states, computes the electron and hole densities at any temperature (and shows that the Sommerfeld formula is exactly \(n+p\)), solves the gate equation for the Fermi level, and derives the quantum capacitance, checking each against the video's formulas. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="graphene_electrostatics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 14 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Bands:</strong> the Dirac cones only, \(E=\pm\hbar v_F|\mathbf k|\) with \(v_F=10^6\) m/s as in the video (adjustable), and four states per \(\mathbf k\) (spin and valley). This is accurate for \(|E_F|\) up to a few tenths of an eV; the graphene band-structure lab shows where the cones bend.</li>
+          <li><strong>Counting:</strong> every lattice point \(\mathbf k=\tfrac{2\pi}{L}(m_x,m_y)\) with \(|\mathbf k|\lt k_F\) is counted one by one, and compared with \(\pi k_F^2/(2\pi/L)^2\).</li>
+          <li><strong>Densities:</strong> exact at every temperature: \(n=\frac{2(k_BT)^2}{\pi\hbar^2v_F^2}F_1(E_F/k_BT)\) and \(p\) with \(-E_F\), where \(F_1(x)=-\mathrm{Li}_2(-e^x)\) is the complete Fermi–Dirac integral, computed from the dilogarithm. The identity \(F_1(x)+F_1(-x)=\pi^2/6+x^2/2\) is what makes the Sommerfeld formula exact for \(n+p\).</li>
+          <li><strong>Gate:</strong> \(e(n-p)=C_{ox}(V-E_F/e)\) is solved for \(E_F\) by bisection (its left side rises with \(E_F\), its right side falls, so there is exactly one solution). The voltage of the graphene itself is grounded; work-function differences and charged impurities, which shift the Dirac point in real devices, are left out.</li>
+          <li><strong>Capacitances</strong> are per unit area: 1 µF/cm² = 0.01 F/m². \(C_{ox}=\varepsilon_0\varepsilon_r/d\); \(C_{qm}=e^2\,d(n-p)/dE_F\) in closed form; and \(C_{tot}=e\,d(n-p)/dV\), which equals \(C_{ox}\) and \(C_{qm}\) in series.</li>
+          <li><strong>Checks:</strong> the dilogarithm, the densities and the capacitance agree with SciPy integration to better than \(10^{-9}\); see the notebook.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

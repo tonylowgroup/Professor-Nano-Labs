@@ -33,6 +33,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Crystals & energy bands | Graphene Band Structure: From Tight Binding to Dirac Cones | `labs/graphene-bands/` |
+| Crystals & energy bands | Graphene Electrostatics and Quantum Capacitance | `labs/graphene-electrostatics/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
 | Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 
