@@ -26,6 +26,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
 | Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
 | Quantum computing | Entanglement: Correlations No Coin Can Fake | `labs/entanglement-bell-test/` |
+| Quantum computing | Trapping an Ion: The Paul Trap | `labs/paul-trap/` |
 | Quantum computing | Trapped Ions and Phonon Sidebands | `labs/trapped-ion-qubit/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
