@@ -463,6 +463,12 @@ mjx-container svg { display: inline; }
 .bands3d canvas:focus-visible { outline: 3px solid var(--brand-soft); outline-offset: -3px; }
 @media (max-width: 640px) { .bands3d { height: 340px; } }
 
+/* Magnetization dynamics: the sphere beside the energy landscape or the MRAM array */
+.mag-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 8px; }
+.plot-box.plot-box--mag { height: 340px; }
+.mag-view .lat { margin-top: 0; }
+@container (max-width: 640px) { .mag-view { grid-template-columns: 1fr; } .plot-box.plot-box--mag { height: 300px; } }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
