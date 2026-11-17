@@ -10,6 +10,8 @@
    vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded),
    image (a canvas stretched over x0..x1, y0..y1), text (a label at x, y)
    and poly (a closed polygon through x, y, filled with fill).
+   opts.yFormat(v), if given, formats the y tick labels (for example 10^v on a log axis).
+   opts.narrowMargin overrides the tighter margins used below 420 px (for example { l: 60 } for 4-digit ticks).
 */
 (function () {
   'use strict';
@@ -75,7 +77,7 @@
       this.canvas.style.height = this.h + 'px';
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const narrow = this.w < 420;
-      this.m = Object.assign({}, this.opts.margin, narrow ? { l: 50, r: 8 } : {});
+      this.m = Object.assign({}, this.opts.margin, narrow ? Object.assign({ l: 50, r: 8 }, this.opts.narrowMargin) : {});
     }
 
     setRange(xr, yr) { this.xr = xr.slice(); this.yr = yr.slice(); }
@@ -107,7 +109,7 @@
       yt.forEach(v => {
         const Y = Math.round(this.py(v)) + .5;
         c.beginPath(); c.moveTo(m.l, Y); c.lineTo(this.w - m.r, Y); c.stroke();
-        c.fillText(fmt(v, ys), m.l - 7, Y);
+        c.fillText(this.opts.yFormat ? this.opts.yFormat(v) : fmt(v, ys), m.l - 7, Y);
       });
 
       c.strokeStyle = axis;

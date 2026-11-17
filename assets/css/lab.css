@@ -422,6 +422,14 @@ mjx-container svg { display: inline; }
 .swatch--area { width: 14px; height: 14px; border: 0; border-radius: 3px; background: currentColor; opacity: .55; }
 @media (max-width: 640px) { .plot-box.plot-box--well { height: 300px; } }
 
+/* Nanoscale transistor: the band diagram */
+.band { margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcfd; overflow: hidden; }
+.band__svg { display: block; width: 100%; height: auto; max-height: 440px; margin: 0 auto; }
+.band__svg .flow-line { stroke-dasharray: 7 11; animation: flow-dash 0.8s linear infinite; }
+@keyframes flow-dash { to { stroke-dashoffset: -18; } }
+@media (prefers-reduced-motion: reduce) { .band__svg .flow-line { animation: none; stroke-dasharray: none; } }
+.stats--steady .stat__sub { min-height: 2.7em; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {

@@ -32,6 +32,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
+| Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 
 Each lab folder holds its page, its JavaScript and its companion Jupyter
 notebook (saved without outputs).

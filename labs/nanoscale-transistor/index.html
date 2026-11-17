@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-track="transport">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics of the Nanoscale Transistor · Professor Nano Labs</title>
+<meta name="description" content="Operate a ballistic nanoscale transistor in the Landauer picture: watch electrons cross a gate-controlled barrier, see why the current saturates with drain bias, why the subthreshold slope cannot beat 60 mV per decade at room temperature, and what one channel of conductance is worth. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Nanoscale transport</div>
+    <div class="eyebrow eyebrow--light">Nanoscale transport · Live lab</div>
+    <h1>Physics of the Nanoscale Transistor</h1>
+    <p>In a transistor only tens of nanometres long, electrons fly from source to drain without scattering. The gate sets the height of an energy barrier, and the current is what crosses it from the source minus what crosses back from the drain. Operate one here: see why the current saturates, why 60 mV per decade is a hard limit at room temperature, and what a single channel conducts.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="nanoscale_transistor.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=WBf-SfYD0bI" target="_blank" rel="noopener" title="Physics of the nanoscale transistor">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/WBf-SfYD0bI/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Physics of the nanoscale transistor<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=2RoP7nZv474" target="_blank" rel="noopener" title="Ballistic electronic transport in graphene devices">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/2RoP7nZv474/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Ballistic electronic transport in graphene devices<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=e9TQs-EDiUs" target="_blank" rel="noopener" title="Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/e9TQs-EDiUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Fermi Dirac vs Bose Einstein vs Classical Maxwell Boltzmann distributions in 3 minutes!<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=z7dVABiYnTk" target="_blank" rel="noopener" title="How electricity actually works at the nanoscale?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/z7dVABiYnTk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How electricity actually works at the nanoscale?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Two seas of electrons and a barrier</h2>
+    <p>The source is grounded, \(V_S=0\): its band edge is \(E_c=0\) and it is filled with electrons up to \(E_F\). A drain voltage \(V_D\) lowers every energy in the drain by \(eV_D\), so its Fermi level is \(E_F'=E_F-eV_D\). The top gate sets the height \(U_0\) of the barrier in the channel. In the Landauer picture, electrons leave the source with occupation \(f_S\) and the drain with \(f_D\), and cross the channel with probability \(T(E_x)\), which depends only on the energy of motion along the channel:</p>
+    <div class="equation">$$I_D=\frac{g_se}{h}\sum_{k_y}\int dE_x\,T(E_x)\big[f_S(E)-f_D(E)\big],\qquad E=E_x+E_{k_y},\quad E_{k_y}=\frac{\hbar^2k_y^2}{2m_y}$$</div>
+    <p>Summing over the transverse momentum \(k_y\) turns each Fermi function into a Fermi–Dirac integral:</p>
+    <div class="equation">$$I_D=I_0\sqrt{k_BT}\int dE_x\,T(E_x)\left[F_{-1/2}\!\left(\frac{E_F-E_x}{k_BT}\right)-F_{-1/2}\!\left(\frac{E_F-eV_D-E_x}{k_BT}\right)\right],\qquad I_0=\frac{g_se}{h}\frac{W}{\sqrt{2\pi}}\frac{\sqrt{m_y}}{\hbar}$$</div>
+    <p>As in the video, \(E_F=0.2\) eV, \(L=50\) nm and \(g_s=2\). The effective mass is \(m=1.25\,m_e\), which reproduces the video's current values. Currents are per unit width, in µA/µm.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-window" aria-controls="lab" aria-selected="true" data-mode="window">1 · The Landauer picture</button>
+      <button class="tab" role="tab" id="tab-drain" aria-controls="lab" aria-selected="false" data-mode="drain" tabindex="-1">2 · Drain bias and saturation</button>
+      <button class="tab" role="tab" id="tab-gate" aria-controls="lab" aria-selected="false" data-mode="gate" tabindex="-1">3 · Gate and subthreshold slope</button>
+      <button class="tab" role="tab" id="tab-cond" aria-controls="lab" aria-selected="false" data-mode="cond" tabindex="-1">4 · Near equilibrium</button>
+    </div>
+    <div class="mode-intro" data-for="window">
+      <h2>The current is a difference of two flows.</h2>
+      <p>Electrons from the source reach the barrier with occupation \(f_S\), and electrons from the drain with \(f_D\). Below the barrier top they bounce back, unless the barrier is thin enough to tunnel through; above it they cross. With no drain bias the two flows cancel exactly. Lower the drain and a window opens between \(E_F'\) and \(E_F\), where the source has electrons the drain lacks.</p>
+      <div class="equation">$$f_S(E)=\frac{1}{e^{(E-E_F)/k_BT}+1},\qquad f_D(E)=\frac{1}{e^{(E-E_F+eV_D)/k_BT}+1},\qquad T(E_x)\approx\begin{cases}e^{-2L\sqrt{2m(U_0-E_x)}/\hbar}&E_x\lt U_0\\1&E_x\ge U_0\end{cases}$$</div>
+    </div>
+    <div class="mode-intro" data-for="drain" hidden>
+      <h2>Why the current stops growing.</h2>
+      <p>Raising \(V_D\) lowers the drain's Fermi level. At first that widens the window and the current grows in proportion to \(V_D\). Once \(E_F'\) drops below the barrier top, the drain's electrons can no longer get over it. The back-flow dies away, only the flow from the source is left, and the current saturates at a value set by the barrier, not by \(V_D\).</p>
+      <div class="equation">$$I_D=I_{S\to D}-I_{D\to S},\qquad \int_{U_0}^{\infty}F_{-1/2}\!\left(\frac{E_F-E_x}{k_BT}\right)dE_x=k_BT\,F_{1/2}\!\left(\frac{E_F-U_0}{k_BT}\right)\ \Rightarrow\ I_{S\to D}\approx I_0\,(k_BT)^{3/2}F_{1/2}\!\left(\frac{E_F-U_0}{k_BT}\right)$$</div>
+    </div>
+    <div class="mode-intro" data-for="gate" hidden>
+      <h2>Sixty millivolts per decade.</h2>
+      <p>The gate moves the barrier top. With the barrier above \(E_F\), only the Boltzmann tail of the source's electrons can get over it, so every \(\ln(10)\,k_BT\) of extra barrier cuts the current tenfold: about 60 mV per decade at 300 K and 40 mV per decade at 200 K. No gate can do better for electrons that go over a barrier, and a very short channel does worse, because electrons start to tunnel through it.</p>
+      <div class="equation">$$I_D\propto e^{-(U_0-E_F)/k_BT},\qquad S=\frac{dV_G}{d\log_{10}I_D}=\ln(10)\,\frac{k_BT}{e}\approx60\ \text{mV/dec at 300 K}$$</div>
+    </div>
+    <div class="mode-intro" data-for="cond" hidden>
+      <h2>Every channel conducts \(2e^2/h\).</h2>
+      <p>Take the barrier away and apply a tiny drain bias. At low temperature \(F_{-1/2}(x)\to2\sqrt{x/\pi}\), and the current becomes proportional to \(V_D\). The conductance counts the transverse modes below \(E_F\), each worth \(2e^2/h\approx77.5\ \mu\)S, however long the channel is.</p>
+      <div class="equation">$$G=\frac{dI_D}{dV_D}=\frac{e^2}{h}\frac{g_sW}{\pi}\frac{\sqrt{2m_yE_F}}{\hbar}=\frac{g_se^2}{h}M(E_F),\qquad M(E_F)=\frac{Wk_F}{\pi}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-window">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="window drain gate">
+        <div class="label-caps">Gate and drain</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="U0">Barrier height U<sub>0</sub></label><output id="U0-out" for="U0"></output></div>
+          <input id="U0" type="range" min="0" max="0.4" step="0.005" value="0.15"><div class="ctrl__hint">Set by the gate: a higher gate voltage lowers the barrier.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Barrier heights">
+          <button class="chip-btn" type="button" data-u0="0.1">0.10 eV · on</button><button class="chip-btn" type="button" data-u0="0.125">0.125 eV</button><button class="chip-btn" type="button" data-u0="0.2">0.20 eV = E<sub>F</sub></button><button class="chip-btn" type="button" data-u0="0.3">0.30 eV · off</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="VD">Drain voltage V<sub>D</sub></label><output id="VD-out" for="VD"></output></div>
+          <input id="VD" type="range" min="0" max="0.5" step="0.005" value="0.1">
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="cond">
+        <div class="label-caps">Source</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="EF">Fermi energy E<sub>F</sub></label><output id="EF-out" for="EF"></output></div>
+          <input id="EF" type="range" min="-0.1" max="0.4" step="0.005" value="0.2"><div class="ctrl__hint">Measured from the band edge. Below zero the source is nondegenerate.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="window drain gate cond">
+        <div class="label-caps">Temperature</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="temp">T</label><output id="temp-out" for="temp"></output></div>
+          <input id="temp" type="range" min="4" max="400" step="1" value="300">
+        </div>
+        <div class="chips" role="group" aria-label="Temperatures">
+          <button class="chip-btn" type="button" data-temp="300">300 K</button><button class="chip-btn" type="button" data-temp="200">200 K</button><button class="chip-btn" type="button" data-temp="77" data-modes="cond">77 K</button><button class="chip-btn" type="button" data-temp="4" data-modes="cond">4 K</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="window gate">
+        <div class="label-caps">Channel</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="len">Channel length L</label><output id="len-out" for="len"></output></div>
+          <input id="len" type="range" min="1" max="50" step="0.5" value="50"><div class="ctrl__hint">Below about 3 nm, electrons tunnel through the barrier.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="gate">
+        <div class="label-caps">Gate coupling</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="alpha">Barrier shift per gate volt, α</label><output id="alpha-out" for="alpha"></output></div>
+          <input id="alpha" type="range" min="0.5" max="1" step="0.01" value="1"><div class="ctrl__hint">α = 1 is a perfect gate. Real gates also charge the substrate, so α is less than 1.</div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the video's values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Sweep" data-modes="drain gate cond">
+        <div class="transport transport--shots">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <span class="chips chips--inline"><button class="chip-btn" type="button" id="restart">Start again</button></span>
+          <div class="transport__time" id="sweep-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed">
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <span id="transport-note"></span>
+        </div>
+      </section>
+
+      <div class="stats stats--4 stats--steady" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="band" id="band"></div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Landauer picture</span><button class="predict__load" type="button" data-q="q1">Load an open channel at V<sub>D</sub> = 0</button></div>
+        <p>The gate has pulled the barrier down to 0.10 eV, well below \(E_F\), but \(V_D=0\). How much current flows?</p>
+        <details><summary>Show answer</summary>
+          <p>None. With \(V_D=0\) the two Fermi functions are identical, so at every energy as many electrons cross from the drain as from the source. An open channel needs a difference in occupation, not just a low barrier, to carry current.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Landauer picture</span><button class="predict__load" type="button" data-q="q2">Load the off state, U<sub>0</sub> = 0.30 eV</button></div>
+        <p>The barrier is 0.1 eV above \(E_F\). At what energies do the electrons that carry the current travel?</p>
+        <details><summary>Show answer</summary>
+          <p>Just above the barrier top: 95% of the current flows within \(3k_BT\approx78\) meV of \(U_0\). Only the "hot" electrons in the Boltzmann tail of the source can get over, and their numbers fall off as \(e^{-E/k_BT}\). Electrons below the barrier bounce back.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Saturation</span><button class="predict__load" type="button" data-q="q3">Load U<sub>0</sub> = 0.125 eV</button></div>
+        <p>With the video's barrier, \(U_0=0.125\) eV, at about what drain voltage does the current stop growing? What value does it settle at?</p>
+        <details><summary>Show answer</summary>
+          <p>Around \(V_D=(E_F-U_0)/e=0.075\) V, when the drain's Fermi level drops to the barrier top. The current is already 82% of its final value there, 99% by 0.15 V, and settles at about 2240 µA/µm. The linear and saturation asymptotes cross a little earlier, at about 0.06 V, because the Fermi functions are smeared by temperature.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Saturation</span><button class="predict__load" type="button" data-q="q4">Load V<sub>D</sub> = 0.05 V</button></div>
+        <p>At \(V_D=0.05\) V, what fraction of the source's flow comes back from the drain? And at 0.2 V?</p>
+        <details><summary>Show answer</summary>
+          <p>About 36% at 0.05 V, but only 0.2% at 0.2 V. The flow from the source does not depend on \(V_D\) at all; saturation is just the back-flow from the drain disappearing. That is why the saturation current depends on the barrier and the temperature, but not on \(V_D\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Subthreshold</span><button class="predict__load" type="button" data-q="q5">Load the off state at 300 K</button></div>
+        <p>Raise the barrier from 0.30 to 0.36 eV. By what factor does the current drop at 300 K? At 200 K?</p>
+        <details><summary>Show answer</summary>
+          <p>About 10 times at 300 K (10.1) and 32 times at 200 K. Each \(\ln(10)\,k_BT\), 59.5 meV at 300 K and 39.7 meV at 200 K, costs one decade of current. That is the subthreshold slope: 60 and 40 mV/dec in the video.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Subthreshold</span><button class="predict__load" type="button" data-q="q6">Load a weak gate, α = 0.8</button></div>
+        <p>The gate only moves the barrier by 0.8 eV per volt. Can a better barrier shape bring the slope back below 60 mV/dec at room temperature?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The barrier still needs 59.5 meV per decade, and now each 59.5 meV costs \(59.5/0.8\approx74\) mV of gate voltage. At 300 K, 60 mV/dec is the best any transistor can do when electrons are thermally excited over a barrier. Beating it needs a different mechanism, such as tunnelling transistors or negative-capacitance gates, or cooling the device.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Subthreshold</span><button class="predict__load" type="button" data-q="q7">Load a 1.5 nm channel</button></div>
+        <p>Shrink the channel to 1.5 nm. What happens to the off current at \(U_0=0.4\) eV, and to the slope?</p>
+        <details><summary>Show answer</summary>
+          <p>The off current rises about 6.5 times, from 0.23 to 1.5 µA/µm, because 85% of it now tunnels straight through the barrier. The slope at 0.4 eV degrades from 59.5 to about 100 mV/dec: the gate loses control. This source-to-drain tunnelling is one of the limits on how short a transistor can be.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Near equilibrium</span><button class="predict__load" type="button" data-q="q8">Load a ballistic channel at 4 K</button></div>
+        <p>No barrier, low temperature, tiny drain bias. What is the conductance per micrometre of width, and how many channels carry it?</p>
+        <details><summary>Show answer</summary>
+          <p>\(G\approx63\) mS/µm, carried by \(Wk_F/\pi\approx815\) transverse modes per µm, each worth \(2e^2/h=77.5\ \mu\)S. That is a resistance of about 16 Ω·µm even with no scattering at all: the contact resistance of a perfect ballistic channel. At 300 K the conductance is only 0.8% lower, because the source is degenerate.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the Fermi–Dirac integrals, computes the Landauer current and checks it against the direct sum over transverse modes, then reproduces the video's output curves, the 60 and 40 mV/dec subthreshold slopes, short-channel tunnelling, and the 0 K conductance. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="nanoscale_transistor.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 18 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Device:</strong> the source is grounded with its band edge at 0 and filled to \(E_F\); the drain's levels are lowered by \(eV_D\). The barrier top \(U_0\) is set directly, as on the video's slides; it does not depend on \(V_D\). The effective mass is \(m_x=m_y=1.25\,m_e\), which reproduces the video's plotted currents; \(g_s=2\).</li>
+          <li><strong>Current:</strong> the Landauer formula integrated over the transverse momentum, as in the video. Above the barrier \(T=1\) and the energy integral is done exactly, \(\int F_{-1/2}=k_BT\,F_{1/2}\). Below the barrier, the WKB transmission \(e^{-2L\sqrt{2m(U_0-E_x)}/\hbar}\) of a square barrier is integrated numerically. Reflection above the barrier is neglected.</li>
+          <li><strong>Fermi–Dirac integrals:</strong> \(F_{-1/2}\) and \(F_{1/2}\) are tabulated in your browser when the page opens, with the exact exponential tail below \(x=-40\) and the Sommerfeld expansion above \(x=80\). They agree with direct numerical integration to better than \(10^{-7}\).</li>
+          <li><strong>Diagram:</strong> the electron "balls" fade with the Fermi function; the moving band over the barrier shows the share of the current carried at each energy, \(T(E_x)[F_{-1/2}(\eta_S)-F_{-1/2}(\eta_D)]\). The occupation plots use \(E=E_x\) (\(k_y=0\)), as on the slides.</li>
+          <li><strong>Subthreshold slope:</strong> \(S=-dU_0/d\log_{10}I_D\) from the computed current, divided by the gate coupling α to convert barrier energy into gate voltage.</li>
+          <li><strong>Conductance:</strong> with no barrier, \(G=I_0\sqrt{k_BT}\,e\,F_{-1/2}(E_F/k_BT)\) exactly; it tends to the video's 0 K formula as \(T\to0\).</li>
+          <li><strong>Checks:</strong> every current agrees with a direct numerical integration over both \(E_x\) and \(k_y\), the formula on the video's slide 41, to about \(10^{-5}\) or better.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
