@@ -159,7 +159,7 @@
         </div>
         <div class="ctrl">
           <div class="ctrl__row"><label for="thick">Oxide thickness d</label><output id="thick-out" for="thick"></output></div>
-          <input id="thick" type="range" min="0" max="2.48" step="0.01" value="2.48"><div class="ctrl__hint">Logarithmic slider, 1 nm to 300 nm.</div>
+          <input id="thick" type="range" min="0" max="250" step="1" value="250"><div class="ctrl__hint">Logarithmic slider, 1 nm to 300 nm.</div>
         </div>
         <div class="ctrl">
           <div class="ctrl__row"><label for="er">Dielectric constant ε<sub>r</sub></label><output id="er-out" for="er"></output></div>
@@ -169,7 +169,7 @@
       <div class="ctrl-group" data-modes="stat cap">
         <div class="label-caps">Temperature</div>
         <div class="ctrl">
-          <div class="ctrl__row"><label for="temp">T</label><output id="temp-out" for="temp"></output></div>
+          <div class="ctrl__row"><label for="temp">Temperature T</label><output id="temp-out" for="temp"></output></div>
           <input id="temp" type="range" min="0" max="1000" step="10" value="300">
         </div>
         <div class="chips" role="group" aria-label="Temperatures">
@@ -182,7 +182,7 @@
           <div class="ctrl__row"><label for="vf">Fermi velocity v<sub>F</sub></label><output id="vf-out" for="vf"></output></div>
           <input id="vf" type="range" min="0.8" max="1.2" step="0.01" value="1"><div class="ctrl__hint">The video uses 10<sup>6</sup> m/s; tight binding with t = 2.7 eV gives 0.87 × 10<sup>6</sup> m/s.</div>
         </div>
-        <button class="chip-btn" type="button" id="video-values">Back to the video's values</button>
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
       </div>
     </aside>
 
@@ -241,7 +241,7 @@
         <div class="predict__head"><span class="predict__tag">Question 2 · Counting electrons</span><button class="predict__load" type="button" data-q="q2">Load E<sub>F</sub> = 0.2 eV</button></div>
         <p>Double the Fermi energy, from 0.1 to 0.2 eV. What happens to the electron density?</p>
         <details><summary>Show answer</summary>
-          <p>It goes up four times, to \(2.9\times10^{12}\) cm⁻². \(k_F\) doubles, and the area of the Fermi circle goes as \(k_F^2\). Put another way, the density of states grows linearly with energy, so \(n=\int_0^{E_F}D\,dE\propto E_F^2\). For an ordinary 2D metal with a parabolic band, \(D\) is constant and \(n\) would only double.</p>
+          <p>By the formula it goes up four times, to \(2.9\times10^{12}\) cm⁻²: \(k_F\) doubles, and the area of the Fermi circle goes as \(k_F^2\). In the 100 nm sheet the count goes from 84 to 276 electrons, a factor of 3.3, because the grid of k-points is still coarse; make the sheet larger and the factor approaches 4. Put another way, the density of states grows linearly with energy, so \(n=\int_0^{E_F}D\,dE\propto E_F^2\). For an ordinary 2D metal with a parabolic band, \(D\) is constant and \(n\) would only double.</p>
         </details>
       </div>
       <div class="predict">
@@ -269,7 +269,7 @@
         <div class="predict__head"><span class="predict__tag">Question 6 · Gating</span><button class="predict__load" type="button" data-q="q6">Load a 300 nm SiO<sub>2</sub> back gate at 10 V</button></div>
         <p>A classic graphene device: 300 nm of SiO\(_2\) and 10 V on the back gate. How many electrons, and how much of the 10 V goes into the Fermi level?</p>
         <details><summary>Show answer</summary>
-          <p>\(C_{ox}=\varepsilon_0\varepsilon_r/d=11.5\) nF/cm², so \(n\approx C_{ox}V/e=7.1\times10^{11}\) cm⁻², and \(E_F\approx0.09\) eV (0.087 eV at 300 K, where heat supplies part of the charge; 0.098 eV at 0 K). Only about 1% of the voltage moves the Fermi level; the other 99% drops across the oxide. With such a thick oxide graphene behaves like a metal plate, \(Q\approx C_{ox}V\).</p>
+          <p>\(C_{ox}=\varepsilon_0\varepsilon_r/d=11.5\) nF/cm², so a metal plate would hold \(C_{ox}V/e=7.2\times10^{11}\) cm⁻²; graphene holds \(7.1\times10^{11}\) cm⁻², and \(E_F\approx0.09\) eV (0.087 eV at 300 K, where heat supplies part of the charge; 0.098 eV at 0 K). Only about 1% of the voltage moves the Fermi level; the other 99% drops across the oxide. With such a thick oxide graphene behaves like a metal plate, \(Q\approx C_{ox}V\).</p>
         </details>
       </div>
       <div class="predict">
@@ -283,7 +283,7 @@
         <div class="predict__head"><span class="predict__tag">Question 8 · Gating</span><button class="predict__load" type="button" data-q="q8">Load the Dirac point, 3 nm gate, 300 K</button></div>
         <p>Where is the quantum capacitance smallest, and how small? What does it do to the total capacitance of the 3 nm gate?</p>
         <details><summary>Show answer</summary>
-          <p>At the Dirac point, where there are fewest states. At 0 K it vanishes there, and so does the total. At 300 K thermal smearing gives \(C_{qm}=e^2(2k_BT\ln4)/\pi\hbar^2v_F^2=0.84\) µF/cm², and in series with \(C_{ox}=1.15\) µF/cm² the total is 0.49 µF/cm², only 42% of \(C_{ox}\). The dip in measured capacitance at the Dirac point is how quantum capacitance was first seen.</p>
+          <p>At the Dirac point, where there are fewest states. At 0 K it vanishes there, and so does the total. At 300 K thermal smearing gives \(C_{qm}=e^2(2k_BT\ln4)/\pi\hbar^2v_F^2=0.84\) µF/cm², and in series with \(C_{ox}=1.15\) µF/cm² the total is 0.49 µF/cm², only 42% of \(C_{ox}\). This dip in the measured capacitance near the Dirac point is how graphene's quantum capacitance is seen in experiments.</p>
         </details>
       </div>
     </div>
@@ -295,7 +295,7 @@
       <h2 id="nb-title">Run the same calculation in Python</h2>
       <p>The companion Jupyter notebook counts k-points to build the density of states, computes the electron and hole densities at any temperature (and shows that the Sommerfeld formula is exactly \(n+p\)), solves the gate equation for the Fermi level, and derives the quantum capacitance, checking each against the video's formulas. It needs NumPy, SciPy and Matplotlib.</p>
     </div>
-    <a class="btn btn--brand" href="graphene_electrostatics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 14 KB</span></a>
+    <a class="btn btn--brand" href="graphene_electrostatics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 15 KB</span></a>
   </section>
 
   <!-- What is computed -->
@@ -307,9 +307,9 @@
           <li><strong>Bands:</strong> the Dirac cones only, \(E=\pm\hbar v_F|\mathbf k|\) with \(v_F=10^6\) m/s as in the video (adjustable), and four states per \(\mathbf k\) (spin and valley). This is accurate for \(|E_F|\) up to a few tenths of an eV; the graphene band-structure lab shows where the cones bend.</li>
           <li><strong>Counting:</strong> every lattice point \(\mathbf k=\tfrac{2\pi}{L}(m_x,m_y)\) with \(|\mathbf k|\lt k_F\) is counted one by one, and compared with \(\pi k_F^2/(2\pi/L)^2\).</li>
           <li><strong>Densities:</strong> exact at every temperature: \(n=\frac{2(k_BT)^2}{\pi\hbar^2v_F^2}F_1(E_F/k_BT)\) and \(p\) with \(-E_F\), where \(F_1(x)=-\mathrm{Li}_2(-e^x)\) is the complete Fermi–Dirac integral, computed from the dilogarithm. The identity \(F_1(x)+F_1(-x)=\pi^2/6+x^2/2\) is what makes the Sommerfeld formula exact for \(n+p\).</li>
-          <li><strong>Gate:</strong> \(e(n-p)=C_{ox}(V-E_F/e)\) is solved for \(E_F\) by bisection (its left side rises with \(E_F\), its right side falls, so there is exactly one solution). The voltage of the graphene itself is grounded; work-function differences and charged impurities, which shift the Dirac point in real devices, are left out.</li>
+          <li><strong>Gate:</strong> \(e(n-p)=C_{ox}(V-E_F/e)\) is solved for \(E_F\) by bisection (its left side rises with \(E_F\), its right side falls, so there is exactly one solution). The graphene is grounded (held at 0 V); work-function differences and charged impurities, which shift the Dirac point in real devices, are left out.</li>
           <li><strong>Capacitances</strong> are per unit area: 1 µF/cm² = 0.01 F/m². \(C_{ox}=\varepsilon_0\varepsilon_r/d\); \(C_{qm}=e^2\,d(n-p)/dE_F\) in closed form; and \(C_{tot}=e\,d(n-p)/dV\), which equals \(C_{ox}\) and \(C_{qm}\) in series.</li>
-          <li><strong>Checks:</strong> the dilogarithm, the densities and the capacitance agree with SciPy integration to better than \(10^{-9}\); see the notebook.</li>
+          <li><strong>Checks:</strong> the lab's dilogarithm, densities and quantum capacitance were checked against direct numerical integration with SciPy, to better than \(10^{-9}\). The notebook repeats the whole calculation independently in Python and asserts every number quoted in the answers.</li>
         </ul>
       </div>
     </details>

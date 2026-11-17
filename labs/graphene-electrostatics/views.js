@@ -33,7 +33,7 @@
     }
     s += `<path d="M${cx - w / 2},${y0} L${cx + w / 2},${y0 + h} M${cx + w / 2},${y0} L${cx - w / 2},${y0 + h}" stroke="${LINE}" stroke-width="2" fill="none"/>`;
     s += arrow(x0 - 6, cy, x0 + w + 12, cy, '#e07b1f', 1.6) + arrow(cx, y0 + h + 6, cx, y0 - 10, '#c0392b', 1.6);
-    s += txt(cx + 6, y0 - 4, 'E', { italic: true, size: 13 }) + txt(x0 + w + 4, cy - 6, 'k', { italic: true, size: 13 });
+    s += txt(cx + 6, y0 - 4, 'E', { italic: true, size: 13 }) + txt(x0 + w + 4, cy + 18, 'k', { italic: true, size: 13 });
     if (Math.abs(Ef) <= Emax) {
       s += `<line x1="${x0 - 4}" y1="${Y(Ef)}" x2="${x0 + w + 4}" y2="${Y(Ef)}" stroke="${OK}" stroke-width="1.6" stroke-dasharray="6 4"/>`;
       s += txt(x0 + w + 8, Y(Ef) + 4, sub('E', 'F'), { fill: OK, italic: true, size: 13 });
@@ -59,7 +59,7 @@
     s += `<circle cx="${ox}" cy="${oy}" r="${(kF * sc).toFixed(1)}" fill="none" stroke="${OK}" stroke-width="2" stroke-dasharray="6 4"/>`;
     s += arrow(ox - px / 2, oy, ox + px / 2 + 6, oy, '#c0392b', 1.4) + arrow(ox, oy + px / 2, ox, oy - px / 2 - 6, '#c0392b', 1.4);
     s += txt(ox + px / 2 - 2, oy - 6, sub('k', 'x'), { italic: true, anchor: 'end' }) + txt(ox + 6, oy - px / 2 + 12, sub('k', 'y'), { italic: true });
-    s += `<line x1="${ox}" y1="${oy}" x2="${(ox + kF * sc * 0.707).toFixed(1)}" y2="${(oy + kF * sc * 0.707).toFixed(1)}" stroke="${OK}" stroke-width="1.6"/>` + txt((ox + kF * sc * 0.42).toFixed(1), (oy + kF * sc * 0.42 + 16).toFixed(1), sub('k', 'F'), { fill: OK, italic: true });
+    if (kF * sc > 24) s += `<line x1="${ox}" y1="${oy}" x2="${(ox + kF * sc * 0.707).toFixed(1)}" y2="${(oy + kF * sc * 0.707).toFixed(1)}" stroke="${OK}" stroke-width="1.6"/>` + txt((ox + kF * sc * 0.42).toFixed(1), (oy + kF * sc * 0.42 + 16).toFixed(1), sub('k', 'F'), { fill: OK, italic: true });
     const N = G.count(st.L, kF);
     const cbox = narrow ? [W / 2 - 90, oy + px / 2 + 50, 180, 150] : [ox + px / 2 + 120, oy - 130, 230, 220];
     s += coneBalls(cbox, st.Ef, 0, Math.max(0.12, 1.6 * st.Ef), { dE: Math.max(0.12, 1.6 * st.Ef) / 6 });
@@ -85,10 +85,10 @@
     for (let i = 0; i <= 200; i++) { const E = -Emax + 2 * Emax * i / 200; d += `${i ? 'L' : 'M'}${fX(fermi(E, st.Ef, st.T)).toFixed(1)},${Y(E).toFixed(1)}`; }
     s += `<path d="${d}" fill="none" stroke="#1f4ea8" stroke-width="2.2"/>`;
     if (Math.abs(st.Ef) <= Emax) s += `<line x1="${fx - 4}" y1="${Y(st.Ef)}" x2="${fx + fw}" y2="${Y(st.Ef)}" stroke="${OK}" stroke-width="1.4" stroke-dasharray="6 4"/>`;
-    s += txt(fx + fw / 2, top + h + 30, 'Fermi–Dirac occupation f(E)', { anchor: 'middle', size: 12, fill: MUTED });
+    s += txt(fx + fw / 2, top + h + 30, narrow ? 'occupation f(E)' : 'Fermi–Dirac occupation f(E)', { anchor: 'middle', size: 12, fill: MUTED });
     // the cone
     s += coneBalls([x0 + fw + gap, top, cw, h], st.Ef, st.T, Emax, { dE: Emax / 7.5 });
-    s += txt(x0 + fw + gap + cw / 2, top + h + 30, 'Blue: electrons. White: holes (empty states).', { anchor: 'middle', size: 12, fill: MUTED });
+    s += txt(x0 + fw + gap + cw / 2, top + h + 30, narrow ? 'blue: electrons, white: holes' : 'Blue: electrons. White: holes (empty states).', { anchor: 'middle', size: 12, fill: MUTED });
     return `<svg class="ge__svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="The Dirac cone filled up to the Fermi level at ${st.T} K">${s}</svg>`;
   }
 
@@ -97,7 +97,7 @@
     const narrow = !!st.narrow, W = narrow ? 440 : 760;
     let H = 360;
     const sx = narrow ? 30 : 40, sw = narrow ? 230 : 330, top = 44;
-    const tOx = Math.max(26, Math.min(110, 26 + 28 * Math.log10(st.d)));        // oxide drawn on a log scale of thickness
+    const tOx = Math.max(46, Math.min(110, 26 + 28 * Math.log10(st.d)));        // oxide drawn on a log scale of thickness, at least 46 px so its label fits
     const gy = top, oy = gy + 46, cy = oy + tOx, ly = cy + 18;
     let s = '';
     s += `<rect x="${sx}" y="${gy}" width="${sw}" height="44" rx="4" fill="#9aa7b4"/>` + txt(sx + 12, gy + 27, 'Metal gate', { fill: '#fff', weight: 700 });
@@ -110,24 +110,26 @@
     s += `<line x1="${sx + sw / 2}" y1="${gy}" x2="${sx + sw / 2}" y2="${gy - 22}" stroke="${LINE}" stroke-width="1.6"/><circle cx="${sx + sw / 2}" cy="${gy - 24}" r="3.5" fill="${EF}"/>` + txt(sx + sw / 2 + 10, gy - 18, `V = ${st.V >= 0 ? '+' : '−'}${Math.abs(st.V) >= 10 ? Math.abs(st.V).toFixed(1) : Math.abs(st.V).toFixed(2)} V`, { fill: EF, weight: 800 });
     s += `<line x1="${sx + sw / 2}" y1="${cy + 14}" x2="${sx + sw / 2}" y2="${ly + 26}" stroke="${LINE}" stroke-width="1.6"/><path d="M${sx + sw / 2 - 14},${ly + 26} h28 M${sx + sw / 2 - 9},${ly + 31} h18 M${sx + sw / 2 - 4},${ly + 36} h8" stroke="${LINE}" stroke-width="1.6"/>`;
     // charges: one symbol per unit of |Q|, the same count on both plates
-    const nq = Math.min(16, Math.round(Math.abs(st.net) / 0.004));        // one symbol per 4e11 cm^-2, at most 16
+    const nq = st.net === 0 ? 0 : Math.max(1, Math.min(16, Math.round(Math.abs(st.net) / 0.004)));   // about one per 4e11 cm^-2, 1 to 16
     const plus = st.V >= 0;
     for (let i = 0; i < nq; i++) {
       const x = sx + 14 + (sw - 28) * (i + 0.5) / nq;
       s += txt(x, oy + 12, plus ? '+' : '−', { anchor: 'middle', weight: 800, size: 14, fill: plus ? '#c0392b' : '#1f4ea8' });
       s += plus ? `<circle cx="${x.toFixed(1)}" cy="${cy - 6}" r="4" fill="${BALL}"/>` : `<circle cx="${x.toFixed(1)}" cy="${cy - 6}" r="4" fill="#fff" stroke="${EDGE}" stroke-width="1.2"/>`;
     }
-    s += txt(sx, ly + 58, nq ? `${plus ? 'Electrons' : 'Holes'} in graphene, ${(100 * Math.abs(st.net)).toFixed(2)} × 10¹² cm⁻² (one symbol ≈ 4 × 10¹¹ cm⁻²)` : 'Neutral: no net charge', { size: 12, fill: MUTED });
+    const sci = x => { const k = Math.floor(Math.log10(x)), m = x / Math.pow(10, k); return `${m.toFixed(1)} × 10${String(k).split('').map(c => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]).join('')}`; };
+    s += txt(sx, ly + 58, nq ? `${plus ? 'Electrons' : 'Holes'} in graphene: ${sci(1e14 * Math.abs(st.net))} cm⁻² (each symbol ≈ ${sci(1e14 * Math.abs(st.net) / nq)} cm⁻²)` : 'Neutral: no net charge', { size: 12, fill: MUTED });
     // where the voltage goes: a bar split into the drop across the oxide and E_F / e
-    const bx = narrow ? sx + 40 : sx + sw + 110, bTop = narrow ? ly + 90 : top, bH = narrow ? 200 : 250, bw = 46;
+    const bx = narrow ? sx + 40 : sx + sw + 110, bTop = narrow ? top + 46 + 110 + 18 + 90 : top, bH = narrow ? 200 : 250, bw = 46;
     if (narrow) H = bTop + bH + 24;
     const Vabs = Math.abs(st.V) || 1e-9, efFrac = Math.min(1, Math.abs(st.Ef) / Vabs), hEf = bH * efFrac;
     s += `<rect x="${bx}" y="${bTop}" width="${bw}" height="${bH - hEf}" fill="#f2c59a" stroke="#c88a4d"/>`;
     s += `<rect x="${bx}" y="${bTop + bH - hEf}" width="${bw}" height="${hEf}" fill="#b9e3c9" stroke="${OK}"/>`;
     s += txt(bx + bw / 2, bTop - 10, 'Where V goes', { anchor: 'middle', weight: 800 });
     const vox = st.V - st.Ef, fmtV = v => `${v < 0 ? '−' : ''}${Math.abs(v) >= 10 ? Math.abs(v).toFixed(1) : Math.abs(v).toFixed(3)} V`;
-    s += txt(bx + bw + 10, bTop + (bH - hEf) / 2 - 4, 'across the oxide', { size: 12.5 }) + txt(bx + bw + 10, bTop + (bH - hEf) / 2 + 12, fmtV(vox), { size: 12.5, weight: 800 });
-    const ly2 = Math.min(bTop + bH - Math.max(hEf, 14) / 2, bTop + bH - 4);
+    const lyo = Math.max(bTop + 14, bTop + (bH - hEf) / 2 - 4);
+    s += txt(bx + bw + 10, lyo, 'across the oxide', { size: 12.5 }) + txt(bx + bw + 10, lyo + 16, fmtV(vox), { size: 12.5, weight: 800 });
+    const ly2 = Math.min(Math.max(bTop + bH - Math.max(hEf, 14) / 2, lyo + 40), bTop + bH + 6);
     s += txt(bx + bw + 10, ly2 - 4, `Fermi level, E<tspan font-size="9" dy="3">F</tspan><tspan dy="-3">/e</tspan>`, { size: 12.5, fill: OK, weight: 700 }) + txt(bx + bw + 10, ly2 + 12, `${fmtV(st.Ef)} (${(100 * efFrac).toFixed(1)}%)`, { size: 12.5, fill: OK, weight: 800 });
     return `<svg class="ge__svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Gate capacitor at ${st.V.toFixed(2)} V: ${(100 * efFrac).toFixed(1)} percent of the voltage goes into the Fermi level">${s}</svg>`;
   }

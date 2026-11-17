@@ -7,8 +7,12 @@
   const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const START = { Efc: 0.1, L: 100, Ef: 0.15, T: 300, V: 20, d: 300, er: 3.9, vF: 1 };
   const VIDEO = { vF: 1, T: 300 };
-  const S = { Efc: 0.1, L: 100, Ef: 0.15, T: 300, V: 20, d: 300, er: 3.9, vF: 1 };
+  const S = Object.assign({}, START);
+  // the thickness slider is an index 0..250 on a log scale from 1 nm to 300 nm: each step is 2.3%
+  const NSTEP = 250, LOGMAX = Math.log10(300), dOf = i => Math.pow(10, LOGMAX * i / NSTEP), iOf = d => Math.round(NSTEP * Math.log10(d) / LOGMAX);
+  const fmtD = d => (d >= 100 ? d.toFixed(0) : d >= 10 ? d.toFixed(1) : d.toFixed(2));
   let mode = 'count';
   const vF = () => S.vF * 1e6;
   const RED = '#c0392b', BLUE = '#1f4ea8', GREEN = '#2e8b57', ORANGE = '#c47a12', INK = '#14232c';
@@ -52,11 +56,12 @@
     setHTML($('dg-title'), `Allowed states in a ${S.L} nm × ${S.L} nm sheet`);
     put('dg-cap', 'Each dot is an allowed wavevector k = (2π/L)(m_x, m_y). Blue: inside the Fermi circle (dashed), so filled. The shaded square is the area of k-space each state owns. Right: the same electrons in the cone.');
     const ratio = 4 * N / (4 * formula);
-    setHTML($('info'), `<b>${4 * N} electrons</b> (${N} k-points × 4) against ${fixed(4 * formula, 1)} from the formula: ${ratio >= 1 ? '+' : ''}${fixed(100 * (ratio - 1), 1)}%. ${Math.abs(ratio - 1) > 0.05 ? 'With so few points the jagged edge of the circle matters; make the sheet larger.' : 'With this many points the count and the area agree closely.'}`);
+    setHTML($('info'), `<b>${4 * N} electrons</b> (${N} k-points × 4) against ${fixed(4 * formula, 1)} from the formula: ${ratio >= 1 ? '+' : ''}${fixed(100 * (ratio - 1), 1)}%. ${Math.abs(ratio - 1) > 0.05 ? (S.L < 300 ? 'With so few points the jagged edge of the circle matters; make the sheet larger.' : 'Even at 300 nm, so few points fill the circle at this Fermi level that its jagged edge still matters.') : 'With this many points the count and the area agree closely.'}`);
     // plot A: electrons counted as E_F rises (a staircase), against the smooth formula
     reset(plotA);
     const Es = range(0.005, 0.4, 320), stair = Es.map(e => 4 * G.count(S.L, G.kF(e, vF()))), smooth = Es.map(e => G.kF(e, vF()) ** 2 * S.L * S.L / Math.PI);
-    plotA.opts.xLabel = 'Fermi energy E_F (eV)'.replace('E_F', 'EF'); plotA.opts.yLabel = 'Electrons in the sheet'; plotA.opts.xTicks = 5;
+    plotA.opts.xLabel = 'Fermi energy EF (eV)'; plotA.opts.yLabel = 'Electrons in the sheet'; plotA.opts.xTicks = 5;
+    plotA.opts.yFormat = v => (Math.abs(v) >= 1e4 ? `${+(v / 1000).toPrecision(3)}k` : String(+v.toPrecision(4)));
     plotA.setRange([0, 0.4], [0, Math.max(...smooth, ...stair) * 1.05]);
     plotA.draw([
       { type: 'line', x: Es, y: smooth, color: GREEN, width: 2, dash: [6, 4] },
@@ -65,7 +70,7 @@
       { type: 'dots', x: [S.Efc], y: [4 * N], color: INK, r: 4.5 },
     ]);
     setHTML($('pa-title'), 'Filling the sheet, one k-point at a time');
-    put('pa-cap', `Electrons counted in the ${S.L} nm sheet as E_F rises: a staircase, one step (of 4 electrons or more) each time the Fermi circle swallows new k-points. Dashed: the formula k_F²L²/π.`);
+    put('pa-cap', `Electrons counted in the ${S.L} nm sheet as E_F rises: a staircase that rises each time the Fermi circle reaches new k-points: 4 electrons for the point at k = 0, then 16 or more at a time, since the square grid's symmetry adds k-points in sets of four or eight. Dashed: the formula k_F²L²/π.`);
     legend('pa-legend', [[BLUE, '', 'counted'], [GREEN, 'swatch--dash', 'formula k_F²L²/π']]);
     // plot B: the ratio as the sample grows
     reset(plotB);
@@ -92,7 +97,7 @@
     stats([
       ['Electrons n, per cm²', `${sci(cm2(n))}`, 'in the conduction band'],
       ['Holes p, per cm²', `${sci(cm2(p))}`, 'empty states in the valence band'],
-      ['n − p, per cm²', `${n - p < 0 ? '−' : ''}${sci(cm2(Math.abs(n - p)))}`, `the net charge; ${fixed((n - p) / G.ATOMS * 1000, 2)} per 1000 atoms`],
+      ['n − p, per cm²', `${n - p < 0 ? '−' : ''}${sci(cm2(Math.abs(n - p)))}`, `the net electron density; ${fixed((n - p) / G.ATOMS * 1000, 2)} per 1000 atoms`],
       ['n + p, per cm²', `${sci(cm2(n + p))}`, `Sommerfeld formula: ${sci(cm2(somm))}`],
     ]);
     setHTML($('dg-title'), `The cone at ${S.T} K, E<sub>F</sub> = ${fixed(S.Ef, 3)} eV`);
@@ -120,20 +125,23 @@
     // plot B: where in energy the carriers are
     reset(plotB);
     const W = Math.max(0.15, Math.abs(S.Ef) + 8 * kTe), Ee = range(-W, W, 400), c = G.cdos(vF());
-    const el = Ee.map(e => (e > 0 ? c * e / (1 + Math.exp(S.T > 0 ? (e - S.Ef) / kTe : (e > S.Ef ? 700 : -700))) : NaN));
-    const ho = Ee.map(e => (e < 0 ? c * -e * (1 - 1 / (1 + Math.exp(S.T > 0 ? (e - S.Ef) / kTe : (e > S.Ef ? 700 : -700)))) : NaN));
+    // electrons live at E > 0 and holes at E < 0: give each its own x range, so each shaded area is exactly n or p
+    const occ = e => (S.T > 0 ? 1 / (1 + Math.exp((e - S.Ef) / kTe)) : e < S.Ef ? 1 : 0);
+    const Eel = Ee.filter(e => e >= 0), Eho = Ee.filter(e => e <= 0);
+    const el = Eel.map(e => c * e * occ(e)), ho = Eho.map(e => c * -e * (1 - occ(e)));
     const dos = Ee.map(e => c * Math.abs(e));
-    const ymax = Math.max(...el.filter(Number.isFinite), ...ho.filter(Number.isFinite), 1e-6) * 1.25;
+    // with no carriers at all (0 K at the Dirac point) keep a scale on which the density of states shows
+    const ymax = Math.max(...el, ...ho, 0.3 * c * W) * 1.25;
     plotB.opts.xLabel = 'Energy E (eV)'; plotB.opts.yLabel = 'Carriers per eV per nm²'; plotB.opts.xTicks = 6;
     plotB.setRange([-W, W], [0, ymax]);
     plotB.draw([
       { type: 'line', x: Ee, y: dos.map(v => (v > ymax ? NaN : v)), color: '#9fb1ba', width: 1.2, dash: [4, 4] },
-      { type: 'line', x: Ee, y: el, color: RED, width: 2.2, fill: 'rgba(192, 57, 43, 0.18)' },
-      { type: 'line', x: Ee, y: ho, color: BLUE, width: 2.2, fill: 'rgba(31, 78, 168, 0.18)' },
+      { type: 'line', x: Eel, y: el, color: RED, width: 2.2, fill: 'rgba(192, 57, 43, 0.18)' },
+      { type: 'line', x: Eho, y: ho, color: BLUE, width: 2.2, fill: 'rgba(31, 78, 168, 0.18)' },
       { type: 'vline', x: S.Ef, color: GREEN, width: 1.4, dash: [6, 4], label: 'EF' },
     ]);
     setHTML($('pb-title'), 'Where in energy the carriers are');
-    put('pb-cap', 'Red: D(E)f(E), the electrons at each energy; blue: D(E)[1 − f(E)], the holes. Their areas are n and p. Dashed grey: the density of states 2|E|/πħ²v_F².');
+    put('pb-cap', `Red: D(E)f(E), the electrons at each energy; blue: D(E)[1 − f(E)], the holes. Their areas are n and p.${S.T === 0 && S.Ef === 0 ? ' At 0 K with E_F at the Dirac point both are zero.' : ''} Dashed grey: the density of states 2|E|/πħ²v_F².`);
     legend('pb-legend', [[RED, 'swatch--area', 'electrons'], [BLUE, 'swatch--area', 'holes'], ['#9fb1ba', 'swatch--dash', 'D(E)']]);
     setHTML($('takeaway'), '<b>No gap, no freeze-out:</b> in a semiconductor the carriers die away as e<sup>−E<sub>g</sub>/2k<sub>B</sub>T</sup> on cooling. In graphene they fall only as T², and at the Dirac point electrons and holes are always both present at any finite temperature.');
   }
@@ -155,8 +163,10 @@
     put('dg-cap', 'The gate charge +Q (or −Q) is matched by electrons (or holes) in the graphene. The bar on the right splits the gate voltage into the drop across the oxide, Q/C_{ox}, and the rise of graphene\'s Fermi level, E_F/e.');
     const frac = Math.abs(Ef / (S.V || 1e-9));
     setHTML($('info'), Math.abs(S.V) < 1e-9 ? '<b>No gate voltage:</b> the graphene is neutral and the Fermi level sits at the Dirac point. Here the quantum capacitance is at its smallest.'
-      : frac < 0.05 ? `<b>Like a metal:</b> only ${fixed(100 * frac, 1)}% of the gate voltage goes into the Fermi level. The quantum capacitance (${fmtC(uF(Cq))}) is far larger than the oxide's (${fmtC(uF(C))}), so the oxide decides everything.`
-      : `<b>Quantum capacitance matters:</b> ${fixed(100 * frac, 1)}% of the gate voltage goes into raising graphene's Fermi level, so it holds only ${fixed(100 * Math.abs(net / metal), 0)}% of the charge a metal would. C<sub>qm</sub> (${fmtC(uF(Cq))}) is not much larger than C<sub>ox</sub> (${fmtC(uF(C))}).`);
+      : (frac < 0.05 ? `<b>Like a metal:</b> only ${fixed(100 * frac, 1)}% of the gate voltage goes into the Fermi level, and graphene holds ${fixed(100 * Math.abs(net / metal), 0)}% of the charge a metal would. `
+        : `<b>Quantum capacitance matters:</b> ${fixed(100 * frac, 1)}% of the gate voltage goes into raising graphene's Fermi level, so it holds only ${fixed(100 * Math.abs(net / metal), 0)}% of the charge a metal would. `)
+        + (Cq >= C ? `Here C<sub>qm</sub> (${fmtC(uF(Cq))}) is ${fixed(Cq / C, 1)} times C<sub>ox</sub> (${fmtC(uF(C))})${Cq > 20 * C ? ', so the oxide decides almost everything.' : ', so graphene takes a noticeable share of the voltage.'}`
+          : `Here C<sub>qm</sub> (${fmtC(uF(Cq))}) is ${fixed(C / Cq, 1)} times smaller than C<sub>ox</sub> (${fmtC(uF(C))}), so graphene's own capacitance, not the oxide, limits the charge.`));
     // plot A: where the gate voltage goes
     reset(plotA);
     const vm = vmax(), Vs = range(-vm, vm, 240), efs = Vs.map(v => G.solve(v, S.T, C, vF()));
@@ -170,7 +180,8 @@
       { type: 'dots', x: [S.V, S.V], y: [S.V - Ef, Ef], colors: [ORANGE, GREEN], r: 4.5 },
     ]);
     setHTML($('pa-title'), 'Where the gate voltage goes');
-    put('pa-cap', `Orange: the drop across the oxide, Q/C_{ox}; green: the Fermi level, E_F/e. They add up to V (dotted). ${S.d >= 50 ? 'With a thick oxide nearly all of V is across the oxide.' : 'With a thin oxide the Fermi level takes a large share, growing as √V.'}`);
+    const endShare = Math.abs(efs[efs.length - 1] / vm);
+    put('pa-cap', `Orange: the drop across the oxide, Q/C_{ox}; green: the Fermi level, E_F/e. They add up to V (dotted). For this gate E_F takes ${fixed(100 * endShare, 1)}% of V at the ends of the range. Where the oxide dominates (C_{ox} ≪ C_{qm}), E_F grows only as √V, since n ∝ E_F²; where graphene's capacitance dominates, E_F follows V almost one for one.`);
     legend('pa-legend', [[ORANGE, '', 'across the oxide'], [GREEN, '', 'E_F/e']]);
     // plot B: capacitances
     reset(plotB);
@@ -199,20 +210,24 @@
     set('efc', S.Efc, `${fixed(S.Efc, 3)} eV`); set('len', S.L, `${S.L} nm`);
     set('ef', S.Ef, `${S.Ef > 0 ? '+' : ''}${fixed(S.Ef, 3)} eV`);
     set('temp', S.T, `${S.T} K`); set('vf', S.vF, `${fixed(S.vF, 2)} × 10⁶ m/s`);
-    const vm = vmax(); $('volt').min = -vm; $('volt').max = vm; $('volt').step = vm >= 20 ? 0.5 : vm >= 4 ? 0.05 : 0.01;
-    S.V = Math.max(-vm, Math.min(vm, S.V));
-    set('volt', S.V, fmtV(S.V)); $('volt-hint').textContent = `Range ±${vm} V for this gate (about 10¹³ carriers per cm² at the ends).`;
-    set('thick', Math.log10(S.d), `${S.d >= 10 ? S.d.toFixed(0) : S.d.toFixed(1)} nm`); set('er', S.er, fixed(S.er, 1));
+    const vm = vmax(), vstep = vm >= 20 ? 0.5 : vm >= 4 ? 0.05 : 0.01;
+    $('volt').min = -vm; $('volt').max = vm; $('volt').step = vstep;
+    S.V = Math.max(-vm, Math.min(vm, Math.round(S.V / vstep) * vstep));      // on the slider's own steps, so thumb and readout agree
+    if (Math.abs(S.V) < vstep / 2) S.V = 0;
+    set('volt', S.V, fmtV(S.V));
+    if (mode === 'cap') { const nEnd = G.net(G.solve(vm, S.T, Cox(), vF()), S.T, vF()); $('volt-hint').textContent = `Range ±${vm} V for this gate: about ${sci(cm2(nEnd))} carriers per cm² at the ends.`; }
+    set('thick', iOf(S.d), `${fmtD(S.d)} nm`); set('er', S.er, fixed(S.er, 1));
     document.querySelectorAll('[data-len]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.len === S.L)));
     document.querySelectorAll('[data-temp]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.temp === S.T)));
     document.querySelectorAll('[data-ef]').forEach(b => b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.ef - S.Ef) < 1e-9)));
-    document.querySelectorAll('[data-ox]').forEach(b => { const [d, er] = b.dataset.ox.split(',').map(Number); b.setAttribute('aria-pressed', String(Math.abs(d - S.d) < 1e-6 && Math.abs(er - S.er) < 1e-9)); });
+    document.querySelectorAll('[data-ox]').forEach(b => { const [d, er] = b.dataset.ox.split(',').map(Number); b.setAttribute('aria-pressed', String(Math.abs(S.d / d - 1) < 0.005 && Math.abs(er - S.er) < 1e-9)); });
   }
   function render() {
     syncControls();
     if (mode === 'count') renderCount(); else if (mode === 'stat') renderStat(); else renderCap();
     $('plot-a').setAttribute('aria-label', $('pa-title').textContent); $('plot-b').setAttribute('aria-label', $('pb-title').textContent);
     $('play').textContent = playing ? '❚❚ Pause' : '▶ Sweep the gate';
+    $('info').setAttribute('aria-live', playing ? 'off' : 'polite');      // do not read every frame of the sweep aloud
     $('play-out').textContent = mode === 'cap' ? fmtV(S.V) : '';
   }
   function applyMode() {
@@ -225,7 +240,8 @@
   let pending = false;
   const later = () => { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; render(); }); };
   [['efc', 'Efc'], ['len', 'L'], ['ef', 'Ef'], ['temp', 'T'], ['volt', 'V'], ['er', 'er'], ['vf', 'vF']].forEach(([id, key]) => $(id).addEventListener('input', e => { if (id === 'volt') stop(); S[key] = +e.target.value; later(); }));
-  $('thick').addEventListener('input', e => { const d = Math.pow(10, +e.target.value); S.d = d >= 10 ? Math.round(d) : Math.round(d * 10) / 10; later(); });
+  // keep the exact thickness: rounding it here would snap the slider back and trap keyboard users
+  $('thick').addEventListener('input', e => { S.d = dOf(+e.target.value); later(); });
   document.querySelector('.controls').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
@@ -234,7 +250,7 @@
     else if (d.temp !== undefined && d.temp !== '') S.T = +d.temp;
     else if (d.ef !== undefined && d.ef !== '') S.Ef = +d.ef;
     else if (d.ox) { stop(); const [t, er] = d.ox.split(',').map(Number); S.d = t; S.er = er; S.V = 0.5 * vmax(); }
-    else if (b.id === 'video-values') Object.assign(S, VIDEO);
+    else if (b.id === 'video-values') { stop(); Object.assign(S, START); }
     else return;
     render();
   });
@@ -272,14 +288,14 @@
 
   // ---------- predict-first loaders ----------
   const QUESTIONS = {
-    q1: () => { mode = 'count'; Object.assign(S, VIDEO, { Efc: 0.1, L: 100 }); },
-    q2: () => { mode = 'count'; Object.assign(S, VIDEO, { Efc: 0.2, L: 100 }); },
-    q3: () => { mode = 'stat'; Object.assign(S, VIDEO, { Ef: -0.37, T: 0 }); },
-    q4: () => { mode = 'stat'; Object.assign(S, VIDEO, { Ef: 0, T: 300 }); },
-    q5: () => { mode = 'stat'; Object.assign(S, VIDEO, { Ef: 0, T: 1000 }); },
-    q6: () => { mode = 'cap'; Object.assign(S, VIDEO, { d: 300, er: 3.9, V: 10, T: 300 }); },
-    q7: () => { mode = 'cap'; Object.assign(S, VIDEO, { d: 3, er: 3.9, V: 1, T: 0 }); },
-    q8: () => { mode = 'cap'; Object.assign(S, VIDEO, { d: 3, er: 3.9, V: 0, T: 300 }); },
+    q1: () => { mode = 'count'; Object.assign(S, START, { Efc: 0.1, L: 100 }); },
+    q2: () => { mode = 'count'; Object.assign(S, START, { Efc: 0.2, L: 100 }); },
+    q3: () => { mode = 'stat'; Object.assign(S, START, { Ef: -0.37, T: 0 }); },
+    q4: () => { mode = 'stat'; Object.assign(S, START, { Ef: 0, T: 300 }); },
+    q5: () => { mode = 'stat'; Object.assign(S, START, { Ef: 0, T: 1000 }); },
+    q6: () => { mode = 'cap'; Object.assign(S, START, { d: 300, er: 3.9, V: 10, T: 300 }); },
+    q7: () => { mode = 'cap'; Object.assign(S, START, { d: 3, er: 3.9, V: 1, T: 0 }); },
+    q8: () => { mode = 'cap'; Object.assign(S, START, { d: 3, er: 3.9, V: 0, T: 300 }); },
   };
   document.querySelectorAll('.predict__load[data-q]').forEach(b => b.addEventListener('click', () => {
     stop();
