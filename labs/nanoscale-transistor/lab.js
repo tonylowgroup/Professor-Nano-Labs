@@ -313,21 +313,21 @@
 
   // ---------- sweeps ----------
   const SWEEP = {
-    drain: { label: 'Sweep V_D', key: 'VD', from: 0, to: 0.5, secs: 5, show: () => `V_D = ${fixed(S.VD, 3)} V`, note: 'Sweeps the drain voltage from 0 to 0.5 V.' },
-    gate: { label: 'Sweep the gate', key: 'U0', from: 0.4, to: 0.1, secs: 6, show: () => `U₀ = ${fixed(S.U0, 3)} eV`, note: 'Lowers the barrier from 0.4 to 0.1 eV: the transistor turns on.' },
-    cond: { label: 'Cool down', key: 'T', from: 400, to: 4, secs: 6, show: () => `T = ${S.T} K`, note: 'Cools the device from 400 K to 4 K.' },
+    drain: { label: 'Sweep V_D', key: 'VD', from: 0, to: 0.5, secs: 5, show: () => `V_D = ${fixed(S.VD, 3)} V`, note: 'Sweeps the drain voltage from 0 to 0.5 V and back, until you pause.' },
+    gate: { label: 'Sweep the gate', key: 'U0', from: 0.4, to: 0.1, secs: 6, show: () => `U₀ = ${fixed(S.U0, 3)} eV`, note: 'Lowers the barrier from 0.4 to 0.1 eV and back: the transistor turns on and off, until you pause.' },
+    cond: { label: 'Cool down', key: 'T', from: 400, to: 4, secs: 6, show: () => `T = ${S.T} K`, note: 'Cools the device from 400 K to 4 K and warms it again, until you pause.' },
   };
   let playing = false, raf = 0, lastT = 0, speed = 1, resumable = false;   // resumable: paused mid-sweep, nothing touched since
-  let pos = 0;   // the sweep's exact position; only the value shown is rounded, so small steps on fast displays still add up
+  let pos = 0, dir = 1;   // the sweep's exact position (only the value shown is rounded) and direction: +1 from -> to, -1 back
   function frame(now) {
     if (!playing) return;
     const sw = SWEEP[mode], dt = Math.max(0, Math.min(0.1, (now - lastT) / 1000)); lastT = now;
-    pos += (sw.to - sw.from) * dt * speed / sw.secs;
-    const done = sw.to > sw.from ? pos >= sw.to : pos <= sw.to;
-    if (done) pos = sw.to;
+    // back and forth between the two ends until paused
+    const lo = Math.min(sw.from, sw.to), hi = Math.max(sw.from, sw.to);
+    pos += dir * (sw.to - sw.from) * dt * speed / sw.secs;
+    if (pos > hi || pos < lo) { pos = pos > hi ? 2 * hi - pos : 2 * lo - pos; dir = -dir; }
     S[sw.key] = sw.key === 'T' ? Math.round(pos) : Math.round(pos * 1000) / 1000;
     render();
-    if (done) { stop(); render(); return; }
     raf = requestAnimationFrame(frame);
   }
   function stop() { playing = false; resumable = false; cancelAnimationFrame(raf); }
@@ -335,8 +335,7 @@
     const sw = SWEEP[mode];
     if (!sw) return;
     if (playing) { stop(); resumable = true; render(); return; }
-    const atEnd = sw.to > sw.from ? S[sw.key] >= sw.to - 1e-9 : S[sw.key] <= sw.to + 1e-9;
-    if (atEnd || !resumable) S[sw.key] = sw.from;
+    if (!resumable) { S[sw.key] = sw.from; dir = 1; }
     resumable = false;
     pos = S[sw.key];
     if (reduceMotion) { S[sw.key] = sw.to; render(); return; }
