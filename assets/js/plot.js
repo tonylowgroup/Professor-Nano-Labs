@@ -8,8 +8,7 @@
 
    Layer types: line (non-finite points break the curve), stems, dots,
    vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded),
-   image (a canvas stretched over x0..x1, y0..y1), text (a label at x, y)
-   and poly (a closed polygon through x, y, filled with fill).
+   image (a canvas stretched over x0..x1, y0..y1) and text (a label at x, y).
 */
 (function () {
   'use strict';
@@ -147,7 +146,6 @@
         else if (L.type === 'vband' || L.type === 'hband') this._band(L);
         else if (L.type === 'image') this._image(L);
         else if (L.type === 'text') this._text(L);
-        else if (L.type === 'poly') this._poly(L);
       }
       c.restore();
     }
@@ -237,15 +235,6 @@
       c.font = (L.weight || '600') + ' ' + (L.size || 11.5) + 'px Inter, system-ui, sans-serif';
       c.textAlign = L.align || 'center'; c.textBaseline = 'top';
       c.fillText(L.text, this.px(L.x), L.y === undefined ? this.m.t + 5 : this.py(L.y));
-    }
-
-    _poly(L) {
-      const c = this.ctx;
-      if (!L.x.length) return;
-      this._trace(L);
-      c.closePath();
-      if (L.fill) { c.fillStyle = L.fill; c.fill(); }
-      if (L.color) { c.strokeStyle = L.color; c.lineWidth = L.width || 1; c.setLineDash(L.dash || []); c.stroke(); c.setLineDash([]); }
     }
 
     _vline(L) {

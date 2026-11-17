@@ -389,30 +389,6 @@ mjx-container svg { display: inline; }
   .transport.transport--shots { grid-template-columns: 1fr; }
 }
 
-/* Paul trap: 3D surface, stability chart, crystal view, curvature bars */
-.plot-box.plot-box--surface { height: 380px; margin-top: 8px; }
-.surface { cursor: grab; touch-action: pan-y; border-radius: 10px; }
-.surface.is-dragging { cursor: grabbing; }
-.surface:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.plot-box.plot-box--chart { height: 380px; }
-.chart-canvas { cursor: crosshair; }
-.plot-box.plot-box--crystal { height: 250px; margin-top: 10px; }
-.swatch--area { width: 14px; height: 14px; border: 0; border-radius: 3px; background: currentColor; opacity: .55; }
-.kbars { display: grid; gap: 7px; }
-.kbar { display: grid; grid-template-columns: 30px minmax(0, 1fr) 50px; gap: 8px; align-items: center; font-size: 13.5px; }
-.kbar__name { font-weight: 700; color: var(--ink); }
-.kbar__track { position: relative; height: 14px; background: var(--tint); border-radius: 5px; }
-.kbar__track::after { content: ''; position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1.5px solid var(--plot-axis); }
-.kbar__fill { position: absolute; top: 0; bottom: 0; border-radius: 5px; transition: width .12s ease, left .12s ease; }
-.kbar__val { text-align: right; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.seg button:disabled { opacity: .45; cursor: not-allowed; }
-.stats--steady .stat__sub { min-height: 2.7em; }
-@media (max-width: 640px) {
-  .plot-box.plot-box--surface { height: 300px; }
-  .plot-box.plot-box--chart { height: 320px; }
-  .plot-box.plot-box--crystal { height: 210px; }
-}
-
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
