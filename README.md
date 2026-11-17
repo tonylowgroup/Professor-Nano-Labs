@@ -12,6 +12,8 @@ assets/css/site.css   Shared styles: top bar, footer, buttons, cards, colour tok
 assets/css/lab.css    Shared lab components: controls, stat tiles, plots, questions
 assets/js/hero.js     Homepage wave-packet animation
 assets/js/plot.js     Small canvas plotting helper used by the labs
+assets/js/bloch-sphere.js
+                      Bloch-sphere drawing shared by the quantum computing labs
 assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 ```
@@ -22,6 +24,8 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 |---|---|---|
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
+| Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
+| Quantum computing | Trapped Ions and Phonon Sidebands | `labs/trapped-ion-qubit/` |
 | Crystals & energy bands | 14 Bravais Lattices in 3D | `labs/bravais-lattices/` |
 | Crystals & energy bands | From Atoms to a Band | `labs/atoms-to-a-band/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
@@ -32,9 +36,9 @@ notebook (saved without outputs).
 ## Track colours
 
 Each track has its own accent colour, set in `assets/css/site.css`:
-quantum foundations (violet), crystals and energy bands (emerald) and
-nanoscale transport (copper). A lab page picks its colour with
-`<html data-track="quantum">` (or `crystals`, `transport`); on the homepage
+quantum foundations (violet), quantum computing (berry), crystals and
+energy bands (emerald) and nanoscale transport (copper). A lab page picks its colour with
+`<html data-track="quantum">` (or `computing`, `crystals`, `transport`); on the homepage
 each track row carries the same attribute. Everything inside follows the
 `--brand` tokens, so new labs need no extra colour work.
 

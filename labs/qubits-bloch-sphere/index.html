@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en" data-track="computing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qubits on the Bloch Sphere · Professor Nano Labs</title>
+<meta name="description" content="Turn a qubit with quantum gates on the Bloch sphere, measure it shot by shot, then entangle two qubits and watch their arrows shrink. A live, in-browser lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum computing</div>
+    <div class="eyebrow eyebrow--light">Quantum computing · Live lab</div>
+    <h1>Qubits on the Bloch Sphere</h1>
+    <p>Every pure qubit state is a point on a sphere, and every single-qubit gate turns that sphere. Build a short circuit, measure the result one shot at a time, then entangle two qubits and watch their arrows shrink.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="qubits_bloch_sphere.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=rD_fH7O-D5Y" target="_blank" rel="noopener" title="Single qubit and its logic gates">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/rD_fH7O-D5Y/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Single qubit and its logic gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=4BRQsrh4oGw" target="_blank" rel="noopener" title="Two qubit state: Separable vs Entangled vs Bell states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4BRQsrh4oGw/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two qubit state: Separable vs Entangled vs Bell states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=iMjpZwISIlA" target="_blank" rel="noopener" title="Two and three qubits quantum gates">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/iMjpZwISIlA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two and three qubits quantum gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=9vDyS2_Hufk" target="_blank" rel="noopener" title="Quantum entanglement; exposing its key features">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/9vDyS2_Hufk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quantum entanglement; exposing its key features<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A qubit is a point on a sphere</h2>
+    <p>A qubit has two basis states, \(|0\rangle\) and \(|1\rangle\), and its state is a superposition of them with two complex amplitudes. Normalization and an overall phase, which no measurement can detect, leave two real numbers: the angles \(\theta\) and \(\varphi\). So every pure state is a point on a unit sphere:</p>
+    <div class="equation">$$|\psi\rangle=\cos\frac{\theta}{2}\,|0\rangle+e^{i\varphi}\sin\frac{\theta}{2}\,|1\rangle\quad\longleftrightarrow\quad\vec r=\begin{pmatrix}\sin\theta\cos\varphi\\ \sin\theta\sin\varphi\\ \cos\theta\end{pmatrix}=\langle\psi|\vec\sigma|\psi\rangle$$</div>
+    <p>Opposite points are orthogonal states: \(|0\rangle\) and \(|1\rangle\) at the poles, \(|\pm\rangle=(|0\rangle\pm|1\rangle)/\sqrt2\) on the x axis and \(|\pm i\rangle=(|0\rangle\pm i|1\rangle)/\sqrt2\) on the y axis. The angle \(\theta\) sets the measurement probabilities; \(\varphi\) is the relative phase between the two amplitudes.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-gates" aria-controls="lab" aria-selected="true" data-mode="gates">1 · Gates are rotations</button>
+      <button class="tab" role="tab" id="tab-measure" aria-controls="lab" aria-selected="false" data-mode="measure" tabindex="-1">2 · Measure it</button>
+      <button class="tab" role="tab" id="tab-pair" aria-controls="lab" aria-selected="false" data-mode="pair" tabindex="-1">3 · Two qubits</button>
+    </div>
+    <div class="mode-intro" data-for="gates">
+      <h2>Every single-qubit gate turns the sphere.</h2>
+      <p>Pick a starting state, then add gates. Each one rotates the arrow about its own axis, and the replay shows the path. The phasor plot shows the two amplitudes themselves, including the overall phase that the sphere hides.</p>
+      <div class="equation">$$R_{\hat n}(\alpha)=e^{-i\alpha\,\hat n\cdot\vec\sigma/2}=\cos\frac{\alpha}{2}\,I-i\sin\frac{\alpha}{2}\,\hat n\cdot\vec\sigma,\qquad X=iR_x(\pi),\quad H=iR_{(\hat x+\hat z)/\sqrt2}(\pi),\quad S=e^{i\pi/4}R_z\!\left(\tfrac{\pi}{2}\right)$$</div>
+    </div>
+    <div class="mode-intro" data-for="measure" hidden>
+      <h2>You never see the arrow. You only get shots.</h2>
+      <p>A measurement along an axis \(\hat n\) gives +1 or −1, nothing in between, and each shot uses a fresh copy of the state. The probabilities come from the arrow; counting shots in three directions rebuilds it.</p>
+      <div class="equation">$$P(\pm\hat n)=\frac{1\pm\vec r\cdot\hat n}{2},\qquad \hat r_n=\frac{N_+-N_-}{N},\qquad \delta\hat r_n\approx\sqrt{\frac{1-\hat r_n^{\,2}}{N}}$$</div>
+    </div>
+    <div class="mode-intro" data-for="pair" hidden>
+      <h2>Entangle two qubits. Their arrows shrink.</h2>
+      <p>Each sphere shows one qubit on its own. For a product state both arrows reach the surface. Entanglement pulls them inside: a qubit that is part of a Bell pair has no direction of its own at all.</p>
+      <div class="equation">$$|\psi\rangle=\sum_{a,b}c_{ab}|ab\rangle,\qquad \rho_A=\mathrm{Tr}_B|\psi\rangle\langle\psi|=\frac{I+\vec r_A\cdot\vec\sigma}{2},\qquad C=2\,|c_{00}c_{11}-c_{01}c_{10}|,\qquad |\vec r_A|=|\vec r_B|=\sqrt{1-C^2}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-gates">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="gates measure">
+        <div class="label-caps">Input state</div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="start-label">Start from</span>
+          <div class="chips" role="group" aria-labelledby="start-label">
+            <button class="chip-btn ket-chip" type="button" data-start="0">|0⟩</button><button class="chip-btn ket-chip" type="button" data-start="1">|1⟩</button><button class="chip-btn ket-chip" type="button" data-start="+">|+⟩</button><button class="chip-btn ket-chip" type="button" data-start="-">|−⟩</button><button class="chip-btn ket-chip" type="button" data-start="+i">|+i⟩</button><button class="chip-btn ket-chip" type="button" data-start="-i">|−i⟩</button>
+          </div>
+        </div>
+        <div class="ctrl-duo">
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="theta">Polar angle θ</label><output id="theta-out" for="theta"></output></div>
+            <input id="theta" type="range" min="0" max="180" step="1" value="0">
+            <div class="ctrl__hint">Down from |0⟩; 90° is the equator.</div>
+          </div>
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="phi">Azimuth φ</label><output id="phi-out" for="phi"></output></div>
+            <input id="phi" type="range" min="0" max="360" step="1" value="0">
+            <div class="ctrl__hint">Around the equator from |+⟩ toward |+i⟩.</div>
+          </div>
+        </div>
+        <div class="ctrl__hint" id="input-note"></div>
+      </div>
+
+      <div class="ctrl-group" data-modes="pair">
+        <div class="label-caps">Examples</div>
+        <div class="ctrl">
+          <div class="chips chips--examples" role="group" aria-label="Example circuits">
+            <button class="chip-btn" type="button" data-example="bell">Bell pair Φ⁺: H, then CNOT</button>
+            <button class="chip-btn" type="button" data-example="singlet">Singlet Ψ⁻</button>
+            <button class="chip-btn" type="button" data-example="partial">Partly entangled: R<sub>y</sub>(60°), CNOT</button>
+            <button class="chip-btn" type="button" data-example="plusplus">|+⟩|+⟩, then CNOT</button>
+            <button class="chip-btn" type="button" data-example="swap">SWAP |0⟩|1⟩</button>
+          </div>
+          <div class="ctrl__hint">Both qubits start in |0⟩. Replay a circuit to watch the arrows change.</div>
+        </div>
+      </div>
+
+      <div class="ctrl-group" data-modes="measure">
+        <div class="label-caps">Measurement</div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="basis-label">Measure along</span>
+          <div class="seg" role="group" aria-labelledby="basis-label" id="basis">
+            <button type="button" data-basis="z" aria-pressed="true">z: |0⟩ or |1⟩</button>
+            <button type="button" data-basis="x" aria-pressed="false">x: |±⟩</button>
+            <button type="button" data-basis="y" aria-pressed="false">y: |±i⟩</button>
+          </div>
+        </div>
+        <div class="ctrl">
+          <span class="ctrl__name" id="shots-label">Take shots</span>
+          <div class="chips" role="group" aria-labelledby="shots-label">
+            <button class="chip-btn" type="button" data-shots="1">+1</button><button class="chip-btn" type="button" data-shots="10">+10</button><button class="chip-btn" type="button" data-shots="100">+100</button><button class="chip-btn" type="button" data-shots="1000">+1000</button>
+          </div>
+        </div>
+        <div class="ctrl">
+          <button class="btn-quiet" id="tomo" type="button">+1000 along x, y and z</button>
+          <div class="ctrl__hint">Counts along all three axes rebuild the arrow: state tomography.</div>
+        </div>
+        <button class="btn-quiet" id="clear-shots" type="button">Clear all counts</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel circuit-card" aria-label="Circuit and replay">
+        <div data-modes="gates pair">
+          <div class="plot-card__head"><h3>Circuit</h3><span class="circuit__tools"><button class="btn-quiet btn-small" id="undo" type="button">Undo</button><button class="btn-quiet btn-small" id="clear" type="button">Clear</button></span></div>
+          <div class="builder">
+            <div class="builder__row">
+              <div class="seg seg--inline" role="group" aria-label="Single-qubit gates act on" id="target" data-modes="pair">
+                <button type="button" data-target="A" aria-pressed="true">On A</button>
+                <button type="button" data-target="B" aria-pressed="false">On B</button>
+              </div>
+              <div class="gate-row" role="group" aria-label="Single-qubit gates">
+                <button class="gate-btn" type="button" data-gate="X" title="X: half turn about x (bit flip)">X</button>
+                <button class="gate-btn" type="button" data-gate="Y" title="Y: half turn about y">Y</button>
+                <button class="gate-btn" type="button" data-gate="Z" title="Z: half turn about z (phase flip)">Z</button>
+                <button class="gate-btn" type="button" data-gate="H" title="H: half turn about the x–z diagonal">H</button>
+                <button class="gate-btn" type="button" data-gate="S" title="S: quarter turn about z">S</button>
+                <button class="gate-btn" type="button" data-gate="Sdg" title="S†: quarter turn about z, backwards">S†</button>
+                <button class="gate-btn" type="button" data-gate="T" title="T: eighth turn about z">T</button>
+                <button class="gate-btn" type="button" data-gate="Tdg" title="T†: eighth turn about z, backwards">T†</button>
+              </div>
+              <div class="gate-row gate-row--two" role="group" aria-label="Two-qubit gates" data-modes="pair">
+                <button class="gate-btn" type="button" data-gate2="CNOT-A" title="Flip B when A is 1">CNOT A→B</button>
+                <button class="gate-btn" type="button" data-gate2="CNOT-B" title="Flip A when B is 1">CNOT B→A</button>
+                <button class="gate-btn" type="button" data-gate2="CZ" title="Phase −1 on |11⟩">CZ</button>
+                <button class="gate-btn" type="button" data-gate2="SWAP" title="Exchange the two qubits">SWAP</button>
+              </div>
+            </div>
+            <div class="builder__row builder__rot">
+              <span class="builder__label" id="axis-label">Rotate about</span>
+              <div class="seg seg--inline" role="group" aria-labelledby="axis-label" id="axis">
+                <button type="button" data-axis="x" aria-pressed="false">x</button>
+                <button type="button" data-axis="y" aria-pressed="true">y</button>
+                <button type="button" data-axis="z" aria-pressed="false">z</button>
+                <button type="button" data-axis="h" aria-pressed="false" title="The Hadamard axis, halfway between x and z">x+z</button>
+              </div>
+              <span class="builder__angle">
+                <label class="builder__label" for="alpha">by</label>
+                <input id="alpha" type="range" min="-360" max="360" step="5" value="90">
+                <output id="alpha-out" for="alpha"></output>
+              </span>
+              <button class="btn-play btn-add" id="add-r" type="button" title="The amber dashed path on the sphere previews where this gate takes the arrow">Add R<sub>y</sub>(90°)</button>
+            </div>
+          </div>
+          <div class="circuit" id="circuit"></div>
+        </div>
+        <div class="transport">
+          <button class="btn-play" id="play" type="button">▶ Replay</button>
+          <button class="btn-quiet" id="rewind" type="button" data-modes="gates pair">⏮ Start</button>
+          <input id="time" type="range" min="0" max="120" step="1" value="0" aria-label="Position in the circuit" data-modes="gates pair">
+          <div class="transport__time" id="time-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed">
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+              <option value="4">4×</option>
+            </select>
+          </label>
+          <span id="transport-note"></span>
+        </div>
+      </section>
+
+      <div class="stats stats--4" id="stats"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="sa-title">Bloch sphere</h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
+          <p class="plot-card__cap" id="sa-cap"></p>
+          <div class="plot-box plot-box--sphere"><canvas id="sphere-a" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere"></canvas></div>
+        </section>
+        <section class="panel plot-card" data-modes="gates">
+          <div class="plot-card__head"><h3>The two amplitudes</h3></div>
+          <p class="plot-card__cap">α multiplies |0⟩ and β multiplies |1⟩. Their lengths set P(0) and P(1); the angle between them is φ.</p>
+          <div class="plot-box plot-box--sphere"><canvas id="phasor" role="img" aria-label="Amplitudes in the complex plane"></canvas></div>
+          <p class="phasor-read" id="phasor-read"></p>
+        </section>
+        <section class="panel plot-card" data-modes="measure">
+          <div class="plot-card__head"><h3 id="out-title">Outcomes</h3></div>
+          <p class="plot-card__cap">Bars are counted shots. The tick on each bar is the Born-rule prediction.</p>
+          <div class="outcomes" id="outcomes"></div>
+          <div class="label-caps label-caps--muted shot-strip__label">Latest shots, newest last</div>
+          <div class="shot-strip" id="shot-strip" aria-hidden="true"></div>
+          <h3 class="tomo__title">Rebuilding the arrow</h3>
+          <p class="plot-card__cap">Each axis gives one component of the Bloch vector, (N₊ − N₋)/N, ± one standard deviation.</p>
+          <div class="centering tomo"><table id="tomo-table"></table></div>
+        </section>
+        <section class="panel plot-card" data-modes="pair">
+          <div class="plot-card__head"><h3>Qubit B on its own</h3></div>
+          <p class="plot-card__cap">Drag either sphere; both turn together.</p>
+          <div class="plot-box plot-box--sphere"><canvas id="sphere-b" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere of qubit B"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note ket" id="ket" role="status"></div>
+
+      <section class="panel plot-card" data-modes="gates pair">
+        <div class="plot-card__head"><h3 id="pt-title"></h3></div>
+        <p class="plot-card__cap" id="pt-cap"></p>
+        <ul class="legend" id="pt-legend"></ul>
+        <div class="plot-box"><canvas id="plot-t" role="img" aria-label="Quantities along the circuit"></canvas></div>
+      </section>
+
+      <section class="panel plot-card" data-modes="measure">
+        <div class="plot-card__head"><h3>Running estimate</h3></div>
+        <p class="plot-card__cap" id="conv-cap"></p>
+        <ul class="legend" id="conv-legend"></ul>
+        <div class="plot-box"><canvas id="plot-conv" role="img" aria-label="Running estimate of the probability against the number of shots"></canvas></div>
+      </section>
+
+      <section class="panel plot-card" data-modes="pair">
+        <div class="plot-card__head"><h3>Measure both qubits</h3></div>
+        <p class="plot-card__cap">Choose an axis for each qubit and take shots. Each shot measures a fresh copy of the pair.</p>
+        <div class="joint-controls">
+          <div class="ctrl">
+            <span class="ctrl__name" id="ba-label">Qubit A along</span>
+            <div class="seg" role="group" aria-labelledby="ba-label" id="basis-a">
+              <button type="button" data-basis="z" aria-pressed="true">z</button>
+              <button type="button" data-basis="x" aria-pressed="false">x</button>
+              <button type="button" data-basis="y" aria-pressed="false">y</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <span class="ctrl__name" id="bb-label">Qubit B along</span>
+            <div class="seg" role="group" aria-labelledby="bb-label" id="basis-b">
+              <button type="button" data-basis="z" aria-pressed="true">z</button>
+              <button type="button" data-basis="x" aria-pressed="false">x</button>
+              <button type="button" data-basis="y" aria-pressed="false">y</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <span class="ctrl__name" id="js-label">Take shots</span>
+            <div class="chips" role="group" aria-labelledby="js-label">
+              <button class="chip-btn" type="button" data-jshots="1">+1</button><button class="chip-btn" type="button" data-jshots="100">+100</button><button class="chip-btn" type="button" data-jshots="1000">+1000</button><button class="chip-btn" type="button" id="jclear">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div class="outcomes" id="joint"></div>
+        <p class="joint-read" id="joint-read"></p>
+        <div class="label-caps label-caps--muted" style="margin-top:14px">All nine correlations, exact</div>
+        <div class="corr" id="corr"></div>
+      </section>
+
+      <div class="note" id="takeaway" role="status"></div>
+      <p class="lab-status" id="lab-status"></p>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then add the gate, replay the circuit or take shots to check it.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Gates</span><button class="predict__load" type="button" data-q="q1">Load |0⟩, then H</button></div>
+        <p>One H has taken |0⟩ to |+⟩. Where does a second H take the arrow, and which way does it go around?</p>
+        <details><summary>Show answer</summary>
+          <p>Back to |0⟩. H is a half turn about the diagonal axis halfway between x and z, so two of them make one full turn: \(H^2=I\). The trail is a single tilted circle around that axis, through |0⟩ and |+⟩; the first H passes the −y side and the second the +y side.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Gates</span><button class="predict__load" type="button" data-q="q2">Load |+⟩</button></div>
+        <p>H and \(R_y(90°)\) both take |0⟩ to |+⟩. Are they the same gate? Predict what each one does to |+⟩, then add them one at a time (Undo in between).</p>
+        <details><summary>Show answer</summary>
+          <p>No. H sends |+⟩ back up to |0⟩, but \(R_y(90°)\) carries it on down to |1⟩. Two gates can agree on one input and differ on others. On the sphere the difference is plain: H is a half turn about the x–z diagonal, \(R_y(90°)\) a quarter turn about y.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Gates</span><button class="predict__load" type="button" data-q="q3">Load |0⟩ and R<sub>x</sub>(360°)</button></div>
+        <p>Rotate |0⟩ a full 360° about x. The arrow comes back to where it started. Is the state the same?</p>
+        <details><summary>Show answer</summary>
+          <p>The arrow is, the amplitudes are not: watch the phasor plot. \(R_x(2\pi)=-I\), so α ends at −1 instead of +1. An overall sign never changes a probability, so for one qubit the two are the same physical state. It takes 720° for the amplitudes to return too. That sign matters once the qubit is part of something bigger, for example as the target of a controlled rotation.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Measure</span><button class="predict__load" type="button" data-q="q4">Load θ = 60°, φ = 0</button></div>
+        <p>The arrow is tilted 60° from |0⟩ toward |+⟩. What fraction of shots along z will give |0⟩? Along x, |+⟩? If you take 100 shots along z, how far from your prediction might the count land?</p>
+        <details><summary>Show answer</summary>
+          <p>\(\vec r=(\sin 60°,0,\cos 60°)=(0.866,0,0.5)\). Along z, \(P(0)=(1+0.5)/2=0.75\); along x, \(P(+)=(1+0.866)/2=0.933\); along y, 0.5. With 100 shots along z expect 75, give or take \(\sqrt{100\times0.75\times0.25}\approx4.3\), so counts from about 66 to 84 are normal.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Measure</span><button class="predict__load" type="button" data-q="q5">Load |+i⟩, along z</button></div>
+        <p>|+⟩ and |+i⟩ both give 50/50 along z. If someone hands you one of them, how can you tell which?</p>
+        <details><summary>Show answer</summary>
+          <p>Measure along y: |+i⟩ gives +i every time, while |+⟩ gives 50/50. Along x it is the other way round. Shots along one axis reveal only the arrow's component on that axis, so rebuilding an unknown state takes all three: state tomography.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Two qubits</span><button class="predict__load" type="button" data-q="q6">Load H on A</button></div>
+        <p>Qubit A is in |+⟩ and B in |0⟩. Add a CNOT from A to B. What happens to each arrow? Then measure both along z, and both along x. Could two classical coins that always land the same way do the same?</p>
+        <details><summary>Show answer</summary>
+          <p>Both arrows shrink to the centre: this is the Bell state \((|00\rangle+|11\rangle)/\sqrt2\), with C = 1 and one bit of entanglement entropy. Each qubit alone is a fair coin, yet along z the two outcomes always agree. Classical coins could do that much. But along x they also always agree, and along y they always disagree (\(\langle YY\rangle=-1\)). A classical mix of 00 and 11 would give random, uncorrelated results along x.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Two qubits</span><button class="predict__load" type="button" data-q="q7">Load |+⟩|+⟩</button></div>
+        <p>Both qubits are in |+⟩. Will a CNOT from A to B entangle them?</p>
+        <details><summary>Show answer</summary>
+          <p>No: nothing changes at all. The CNOT applies X to B when A is 1, and \(X|+\rangle=|+\rangle\). Both arrows stay on the surface and C stays 0. The same gate fully entangles |+⟩|0⟩, so whether a CNOT entangles depends on its input.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Two qubits</span><button class="predict__load" type="button" data-q="q8">Load |0⟩|1⟩, halfway through SWAP</button></div>
+        <p>A SWAP exchanges |0⟩|1⟩ into |1⟩|0⟩, and neither the start nor the end is entangled. Halfway through the gate, are the qubits entangled?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes, completely. Halfway, \(\sqrt{\mathrm{SWAP}}\,|01\rangle=\tfrac{1+i}{2}|01\rangle+\tfrac{1-i}{2}|10\rangle\), which has C = 1. Both arrows shrink to zero mid-gate and grow back with A and B exchanged. That is why \(\sqrt{\mathrm{SWAP}}\), produced by switching on the exchange interaction between two electron spins, can serve as the entangling gate for spin qubits.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the states and gates as NumPy arrays, checks that each gate is a rotation, draws the Bloch sphere, simulates shots and tomography, and builds Bell states with a partial trace and the concurrence. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="qubits_bloch_sphere.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 23 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>States:</strong> exact complex vectors, two amplitudes for one qubit and four for two. Nothing is approximated, and every state is pure: there is no noise or decoherence in this lab, so arrows shrink only through entanglement.</li>
+          <li><strong>Gates:</strong> each named gate is written as a phase times a rotation, \(U=e^{i\gamma}R_{\hat n}(\alpha)\); for example \(X=iR_x(\pi)\), \(H=iR_{(\hat x+\hat z)/\sqrt2}(\pi)\) and \(T=e^{i\pi/8}R_z(\pi/4)\). The replay follows \(U(s)=e^{i\gamma s}R_{\hat n}(\alpha s)\) for \(0\le s\le1\), which is the principal fractional power \(U^s\): the state partway through a gate pulse. A rotation gate \(R_{\hat n}(\alpha)\) is swept from 0 to α.</li>
+          <li><strong>Two-qubit gates:</strong> CNOT and CZ are controlled X and Z, replayed as controlled \(X^s\) and \(Z^s\). SWAP is replayed as \(\mathrm{SWAP}^s\), which multiplies the singlet part \((|01\rangle-|10\rangle)/\sqrt2\) of the state by \(e^{i\pi s}\).</li>
+          <li><strong>Bloch vectors:</strong> \(\vec r=\langle\psi|\vec\sigma|\psi\rangle\) for one qubit. For two qubits each sphere shows the reduced state \(\rho_A=\mathrm{Tr}_B|\psi\rangle\langle\psi|=(I+\vec r_A\cdot\vec\sigma)/2\). The concurrence is \(C=2|c_{00}c_{11}-c_{01}c_{10}|\); for a pure pair \(|\vec r_A|=|\vec r_B|=\sqrt{1-C^2}\), and the entanglement entropy is the binary entropy of \((1\pm|\vec r_A|)/2\).</li>
+          <li><strong>Shots:</strong> ideal projective measurements on fresh copies, drawn with the browser's random number generator from the Born-rule probabilities \((1\pm\vec r\cdot\hat n)/2\). Joint outcomes rotate each qubit into the chosen basis first (H for x, then S† and H for y). Error bars are one binomial standard deviation from the measured fraction. With few shots the tomography estimate can land outside the sphere.</li>
+          <li><strong>Checks:</strong> the notebook builds the same gates as matrices, takes fractional powers by diagonalization and computes partial traces with NumPy. It agrees with this page to about \(10^{-15}\).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
