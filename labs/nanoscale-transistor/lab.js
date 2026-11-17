@@ -318,14 +318,14 @@
     cond: { label: 'Cool down', key: 'T', from: 400, to: 4, secs: 6, show: () => `T = ${S.T} K`, note: 'Cools the device from 400 K to 4 K.' },
   };
   let playing = false, raf = 0, lastT = 0, speed = 1, resumable = false;   // resumable: paused mid-sweep, nothing touched since
+  let pos = 0;   // the sweep's exact position; only the value shown is rounded, so small steps on fast displays still add up
   function frame(now) {
     if (!playing) return;
-    const sw = SWEEP[mode], dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
-    const step = (sw.to - sw.from) * dt * speed / sw.secs;
-    let v = S[sw.key] + step;
-    const done = sw.to > sw.from ? v >= sw.to : v <= sw.to;
-    if (done) v = sw.to;
-    S[sw.key] = sw.key === 'T' ? Math.round(v) : Math.round(v * 1000) / 1000;
+    const sw = SWEEP[mode], dt = Math.max(0, Math.min(0.1, (now - lastT) / 1000)); lastT = now;
+    pos += (sw.to - sw.from) * dt * speed / sw.secs;
+    const done = sw.to > sw.from ? pos >= sw.to : pos <= sw.to;
+    if (done) pos = sw.to;
+    S[sw.key] = sw.key === 'T' ? Math.round(pos) : Math.round(pos * 1000) / 1000;
     render();
     if (done) { stop(); render(); return; }
     raf = requestAnimationFrame(frame);
@@ -338,6 +338,7 @@
     const atEnd = sw.to > sw.from ? S[sw.key] >= sw.to - 1e-9 : S[sw.key] <= sw.to + 1e-9;
     if (atEnd || !resumable) S[sw.key] = sw.from;
     resumable = false;
+    pos = S[sw.key];
     if (reduceMotion) { S[sw.key] = sw.to; render(); return; }
     playing = true; lastT = performance.now(); raf = requestAnimationFrame(frame); render();
   });
