@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en" data-track="quantum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hydrogen Atom · Professor Nano Labs</title>
+<meta name="description" content="Explore the exact solutions of the hydrogen atom: rotate s, p, d and f orbitals in 3D and cut them open to find their nodes, see how the centrifugal barrier shapes the radial wavefunctions, and trace every spectral line back to a jump between energy levels. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>The Hydrogen Atom</h1>
+    <p>One electron bound to one proton is the only atom whose Schrödinger equation can be solved exactly. Choose the three quantum numbers and see the orbital in 3D, cut it open to find its nodes, watch the centrifugal barrier push the electron away from the nucleus, and trace each line of hydrogen's spectrum back to a jump between two energy levels.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="hydrogen_atom.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=ag8tfER8-2g" target="_blank" rel="noopener" title="Schrodinger equation solutions to the hydrogen atom">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/ag8tfER8-2g/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Schrodinger equation solutions to the hydrogen atom<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=yRJ2Xf2oH5w" target="_blank" rel="noopener" title="Spherical harmonics for Schrodinger equation">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/yRJ2Xf2oH5w/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Spherical harmonics for Schrodinger equation<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=9t0j4IQAJLA" target="_blank" rel="noopener" title="Quantum orbital angular momentum">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/9t0j4IQAJLA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quantum orbital angular momentum<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=4i9YHKyNS9g" target="_blank" rel="noopener" title="How an electron binds two protons, the hydrogen molecule ion">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4i9YHKyNS9g/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How an electron binds two protons, the hydrogen molecule ion<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">One electron, one proton</h2>
+    <p>The electron feels the Coulomb attraction of the proton, \(V(r)=-e^2/4\pi\varepsilon_0r\). Because \(V\) depends only on the distance \(r\), the wavefunction separates into a radial part and a spherical harmonic, and three whole numbers label every solution:</p>
+    <div class="equation">$$\psi_{nlm}(r,\theta,\varphi)=R_{nl}(r)\,Y_l^m(\theta,\varphi),\qquad n=1,2,3,\dots,\quad l=0,1,\dots,n-1,\quad m=-l,\dots,l$$</div>
+    <div class="equation">$$R_{nl}(r)=\sqrt{\left(\frac{2}{na}\right)^3\frac{(n-l-1)!}{2n\,(n+l)!}}\;e^{-r/na}\left(\frac{2r}{na}\right)^lL_{n-l-1}^{2l+1}\!\left(\frac{2r}{na}\right),\qquad E_n=-\frac{\hbar^2}{2m_ea^2}\frac{1}{n^2}=-\frac{13.6\ \text{eV}}{n^2}$$</div>
+    <p>Here \(a=4\pi\varepsilon_0\hbar^2/m_ee^2=0.529\) Å is the Bohr radius and \(L_q^p\) are the associated Laguerre polynomials. The energy depends on \(n\) alone, so each shell holds \(n^2\) orbitals with the same energy. As in the video, the proton is held still.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-orb" aria-controls="lab" aria-selected="true" data-mode="orb">1 · Orbitals in 3D</button>
+      <button class="tab" role="tab" id="tab-rad" aria-controls="lab" aria-selected="false" data-mode="rad" tabindex="-1">2 · The radial equation</button>
+      <button class="tab" role="tab" id="tab-spec" aria-controls="lab" aria-selected="false" data-mode="spec" tabindex="-1">3 · Spectral lines</button>
+    </div>
+    <div class="mode-intro" data-for="orb">
+      <h2>Three numbers fix an orbital.</h2>
+      <p>\(n\) sets the energy and the size, \(l\) the shape (s, p, d, f, g for \(l=0,1,2,3,4\)), and \(m\) the orientation. An orbital has \(n-1\) nodes, surfaces where \(\psi=0\): \(n-l-1\) of them are spheres from the radial part, and \(l\) are planes or cones from the angular part. Real orbitals, the ones chemists draw, are red where \(\psi\gt0\) and pale where \(\psi\lt0\). The complex ones, \(Y_l^m\propto e^{im\varphi}\), are coloured by their phase.</p>
+      <div class="equation">$$\tilde Y_l^{m}\propto\begin{cases}\cos(m\varphi)\,P_l^{m}(\cos\theta)&m\gt0\\ P_l^0(\cos\theta)&m=0\\ \sin(|m|\varphi)\,P_l^{|m|}(\cos\theta)&m\lt0\end{cases}\qquad\text{e.g. } p_x=\frac{\psi_{n1,-1}-\psi_{n1,1}}{\sqrt2}$$</div>
+    </div>
+    <div class="mode-intro" data-for="rad" hidden>
+      <h2>A one-dimensional problem with a centrifugal barrier.</h2>
+      <p>With \(u(r)=rR(r)\), the radial equation is an ordinary Schrödinger equation in one dimension, in an effective potential: the Coulomb well plus a centrifugal barrier \(\hbar^2l(l+1)/2m_er^2\) that keeps electrons with angular momentum away from the nucleus. The chance of finding the electron between \(r\) and \(r+dr\) is \(P(r)\,dr\), with \(P=r^2R^2=u^2\).</p>
+      <div class="equation">$$-\frac{\hbar^2}{2m_e}\frac{d^2u}{dr^2}+\left[-\frac{e^2}{4\pi\varepsilon_0r}+\frac{\hbar^2}{2m_e}\frac{l(l+1)}{r^2}\right]u=E\,u,\qquad \int_0^\infty P(r)\,dr=1$$</div>
+    </div>
+    <div class="mode-intro" data-for="spec" hidden>
+      <h2>Every line is a jump between two levels.</h2>
+      <p>When the electron drops from level \(n_i\) to \(n_f\), it emits a photon that carries away the energy difference. The Bohr energies give the Rydberg formula. Lines ending on the same level form a series: Lyman (\(n_f=1\)) in the ultraviolet, Balmer (\(n_f=2\)) with four lines in the visible, then Paschen and Brackett in the infrared.</p>
+      <div class="equation">$$\frac{hc}{\lambda}=E_{n_i}-E_{n_f}\quad\Rightarrow\quad\frac1\lambda=R\left(\frac{1}{n_f^2}-\frac{1}{n_i^2}\right),\qquad R=\frac{m_ee^4}{8c\,\varepsilon_0^2h^3}=1.097\times10^7\ \text{m}^{-1}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-orb">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="orb rad">
+        <div class="label-caps">Quantum numbers</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><span id="n-lab">Shell n</span><output id="n-out"></output></div>
+          <div class="seg" role="group" aria-labelledby="n-lab" id="n-seg"></div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><span id="l-lab">Shape l</span><output id="l-out"></output></div>
+          <div class="seg" role="group" aria-labelledby="l-lab" id="l-seg"></div>
+        </div>
+        <div class="ctrl" data-modes="orb">
+          <div class="ctrl__row"><span id="m-lab">Orientation m</span><output id="m-out"></output></div>
+          <div class="seg" role="group" aria-labelledby="m-lab" id="m-seg"></div>
+          <div class="ctrl__hint" id="m-hint"></div>
+        </div>
+        <div class="chips" role="group" aria-label="Orbitals" data-modes="orb">
+          <button class="chip-btn" type="button" data-orb="1,0,0">1s</button><button class="chip-btn" type="button" data-orb="2,0,0">2s</button><button class="chip-btn" type="button" data-orb="2,1,0">2p<sub>z</sub></button><button class="chip-btn" type="button" data-orb="3,0,0">3s</button><button class="chip-btn" type="button" data-orb="3,2,0">3d<sub>z²</sub></button><button class="chip-btn" type="button" data-orb="3,2,-2">3d<sub>xy</sub></button><button class="chip-btn" type="button" data-orb="4,3,0">4f<sub>z³</sub></button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="orb">
+        <div class="label-caps">Orbital type</div>
+        <div class="seg" role="group" aria-label="Orbital type">
+          <button type="button" data-basis="real" aria-pressed="true">Real (p<sub>x</sub>, d<sub>xy</sub> …)</button><button type="button" data-basis="complex" aria-pressed="false">Complex (Y<sub>l</sub><sup>m</sup>)</button>
+        </div>
+        <div class="ctrl__hint" id="basis-hint"></div>
+      </div>
+      <div class="ctrl-group" data-modes="orb">
+        <div class="label-caps">3D view</div>
+        <div class="seg" role="group" aria-label="3D view">
+          <button type="button" data-view="surface" aria-pressed="true">Surface</button><button type="button" data-view="cloud" aria-pressed="false">Cloud of positions</button>
+        </div>
+        <div class="ctrl" data-view-only="surface">
+          <div class="ctrl__row"><label for="prob">Probability inside the surface</label><output id="prob-out" for="prob"></output></div>
+          <input id="prob" type="range" min="50" max="95" step="5" value="90">
+        </div>
+        <div class="chips" role="group" aria-label="View options">
+          <button class="chip-btn" type="button" id="cut" aria-pressed="false">Cut away a quarter</button><button class="chip-btn" type="button" id="spin" aria-pressed="true">Spin</button><button class="chip-btn" type="button" id="reset-view">Reset view</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="orb">
+        <div class="label-caps">Slice</div>
+        <div class="seg" role="group" aria-label="Slice plane">
+          <button type="button" data-plane="xz" aria-pressed="true">xz plane</button><button type="button" data-plane="xy" aria-pressed="false">xy plane</button>
+        </div>
+        <div class="seg" role="group" aria-label="Slice shows">
+          <button type="button" data-show="dens" aria-pressed="true">|ψ|²</button><button type="button" data-show="psi" aria-pressed="false">ψ (sign or phase)</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="rad">
+        <div class="label-caps">Right-hand plot</div>
+        <div class="seg" role="group" aria-label="Radial plot">
+          <button type="button" data-radial="P" aria-pressed="true">P(r) = r²R²</button><button type="button" data-radial="R" aria-pressed="false">R(r)</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="spec">
+        <div class="label-caps">Transition</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><span id="ni-lab">From level n<sub>i</sub></span><output id="ni-out"></output></div>
+          <div class="seg" role="group" aria-labelledby="ni-lab" id="ni-seg"></div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><span id="nf-lab">Down to level n<sub>f</sub></span><output id="nf-out"></output></div>
+          <div class="seg" role="group" aria-labelledby="nf-lab" id="nf-seg"></div>
+          <div class="ctrl__hint">Or click an arrow in the level diagram.</div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Play" data-modes="spec">
+        <div class="transport transport--shots">
+          <button class="btn-play" id="play" type="button">▶ Cycle through the series</button>
+          <div class="transport__time" id="play-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more"><span id="transport-note">Steps through every line of the series, then starts again, until you pause.</span></div>
+      </section>
+
+      <div class="stats stats--4 stats--steady" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="orbital" id="orbital" data-modes="orb rad">
+          <canvas id="orb-gl" aria-hidden="true"></canvas>
+          <canvas id="orb-ov" tabindex="0" role="img" aria-label="Orbital in 3D. Drag, or use the arrow keys, to rotate."></canvas>
+          <ul class="orbital__legend" id="orb-legend"></ul>
+          <div class="orbital__note" id="orb-note" hidden></div>
+        </div>
+        <div class="levels" id="levels" data-modes="spec"></div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Orbitals</span><button class="predict__load" type="button" data-q="q1">Load the 2s orbital, cut open</button></div>
+        <p>The 2s orbital is spherical, like 1s. Where is its node, and what is on either side of it?</p>
+        <details><summary>Show answer</summary>
+          <p>A sphere of radius \(2a=1.06\) Å, where \(R_{20}\propto(1-r/2a)\) changes sign. Inside it the wavefunction is positive (red), outside negative (pale). The electron is never found exactly on the node, yet it is found on both sides of it: a node is not a wall.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Orbitals</span><button class="predict__load" type="button" data-q="q2">Load 3d<sub>z²</sub></button></div>
+        <p>How many nodes does \(3d_{z^2}\) have, and what shape are they?</p>
+        <details><summary>Show answer</summary>
+          <p>Two, as for every \(n=3\) orbital (\(n-1=2\)). Both are angular, since \(n-l-1=0\): \(3\cos^2\theta-1=0\) on two cones at \(\theta=54.7^\circ\) and \(125.3^\circ\). They separate the two red lobes along \(z\) from the pale ring around the middle. Not every angular node is a plane.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Orbitals</span><button class="predict__load" type="button" data-q="q3">Load the complex 2p, m = +1</button></div>
+        <p>The complex orbital \(\psi_{2,1,+1}\propto\sin\theta\,e^{i\varphi}\). What shape is \(|\psi|^2\)? Is it the \(2p_x\) orbital?</p>
+        <details><summary>Show answer</summary>
+          <p>A doughnut around the \(z\) axis, the same for \(m=-1\): \(|e^{\pm i\varphi}|=1\), so nothing depends on \(\varphi\). Its phase winds once around \(z\), which is what gives it angular momentum \(L_z=+\hbar\). The two-lobed \(2p_x\) is a different state, the superposition \((\psi_{2,1,-1}-\psi_{2,1,1})/\sqrt2\), with the same energy but no definite \(L_z\). Switch between Real and Complex to compare.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Orbitals</span><button class="predict__load" type="button" data-q="q4">Load the 1s cloud</button></div>
+        <p>In the ground state, where is the electron most likely to be: at the nucleus, or somewhere else?</p>
+        <details><summary>Show answer</summary>
+          <p>Both answers are right, for different questions. The probability density \(|\psi|^2\propto e^{-2r/a}\) is largest at the nucleus. But the most likely distance is \(r=a\): a shell of radius \(r\) has volume \(4\pi r^2dr\), and \(P(r)=4r^2e^{-2r/a}/a^3\) peaks at \(r=a\), Bohr's radius. The average distance is \(1.5a\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Radial equation</span><button class="predict__load" type="button" data-q="q5">Load 1s in the effective potential</button></div>
+        <p>A classical electron with the 1s energy, \(-13.6\) eV, could never get further than \(r=2a\), where \(V(r)=E\). How much of the time is the quantum electron beyond that point?</p>
+        <details><summary>Show answer</summary>
+          <p>About 24% of the time: \(\int_{2a}^\infty P\,dr=13e^{-4}=0.238\). The wavefunction leaks into the classically forbidden region, where it decays exponentially rather than stopping. This is the same physics as tunnelling.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Radial equation</span><button class="predict__load" type="button" data-q="q6">Load n = 3</button></div>
+        <p>Of 3s, 3p and 3d, which gets closest to the nucleus? Which is smallest on average?</p>
+        <details><summary>Show answer</summary>
+          <p>Only 3s reaches the nucleus: near \(r=0\), \(P\propto r^{2l+2}\), so the centrifugal barrier keeps 3p and 3d out. Yet on average 3d is the most compact: \(\langle r\rangle=\tfrac12[3n^2-l(l+1)]a\) gives 13.5\(a\), 12.5\(a\) and 10.5\(a\). The 3s spends some time near the nucleus but has a long tail; 3d has no nodes and sits at \(r\approx9a\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Spectral lines</span><button class="predict__load" type="button" data-q="q7">Load the Balmer series</button></div>
+        <p>Hydrogen glows red. Which jump makes that red line, and what is its wavelength?</p>
+        <details><summary>Show answer</summary>
+          <p>\(n=3\to2\), the first Balmer line, H\(\alpha\): \(1/\lambda=R(1/4-1/9)=5R/36\), so \(\lambda=656.1\) nm. The measured line is at 656.5 nm in vacuum (656.3 nm in air); most of the 0.05% difference comes from the proton recoiling, which the video's model leaves out.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Spectral lines</span><button class="predict__load" type="button" data-q="q8">Load the Lyman series</button></div>
+        <p>How short can a Lyman wavelength be? And what happens to a photon with even more energy?</p>
+        <details><summary>Show answer</summary>
+          <p>The lines crowd towards the series limit, \(n_i\to\infty\): \(\lambda=1/R=91.1\) nm, a photon of 13.6 eV, exactly the ionisation energy. A photon with more energy than that cannot land on a bound level. It is absorbed by knocking the electron free, and the spare energy goes into the electron's motion, giving a continuum instead of a line.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds \(R_{nl}\) from the Laguerre polynomials and checks it against the video's formulas, verifies normalisation and orthogonality, plots radial functions and probability slices of the s, p and d orbitals, solves the radial equation numerically to recover the Bohr energies, and computes the spectral series. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="hydrogen_atom.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 15 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Wavefunctions:</strong> \(R_{nl}\) exactly as in the video, from the associated Laguerre polynomials, and \(Y_l^m\) with the Condon–Shortley phase. The real orbitals are \(\sqrt2(-1)^m\,\mathrm{Re}\,Y_l^m\) for \(m\gt0\) and \(\sqrt2(-1)^m\,\mathrm{Im}\,Y_l^{|m|}\) for \(m\lt0\), labelled as in the video's table of orbitals: \(m=1\) is \(p_x\) and \(d_{xz}\), \(m=-1\) is \(p_y\) and \(d_{yz}\). All are evaluated in your browser.</li>
+          <li><strong>Surface:</strong> \(|\psi|^2\) is computed on a grid of 60³ to 92³ points around the atom. The surface is the level \(|\psi|^2=c\) where the region of higher density holds the chosen share of the probability. It is a choice of display, not the edge of the electron. Real orbitals get two surfaces, \(\psi=\pm\sqrt c\); complex ones get \(|\psi|^2=c\), coloured by the phase of \(\psi\).</li>
+          <li><strong>Cloud:</strong> 20,000 positions drawn at random from \(|\psi|^2\): the distance from \(P(r)\), the direction from \(|Y|^2\). Where the cloud is dense the electron is likely to be found.</li>
+          <li><strong>Slice:</strong> \(|\psi|^2\) or \(\psi\) on the plane \(y=0\) or \(z=0\). The brightness is \((|\psi|^2/|\psi|^2_{\max})^{0.4}\), to bring out the fainter outer lobes; it is not a projection through the atom.</li>
+          <li><strong>Radial quantities:</strong> nodes are the zeros of \(L_{n-l-1}^{2l+1}\); \(\langle r\rangle=\tfrac12[3n^2-l(l+1)]a\); the turning points solve \(V_\text{eff}(r)=E_n\); the probabilities are integrated numerically.</li>
+          <li><strong>Spectrum:</strong> the Bohr energies with \(13.606\) eV and the Rydberg constant \(R_\infty=1.0974\times10^7\) m⁻¹, with the proton held still as in the video. A moving proton (the reduced mass) shifts every line by 0.05%. Wavelengths are in vacuum. The level diagram places level \(n\) at a height proportional to \(1/n\), so that the upper levels do not overlap; the energies are written beside them.</li>
+          <li><strong>Checks:</strong> every \(R_{nl}\), \(Y_l^m\), node position and probability agrees with SciPy to about \(10^{-13}\) or better; see the notebook.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="viewer.js"></script>
+<script src="levels.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

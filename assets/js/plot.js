@@ -8,8 +8,11 @@
 
    Layer types: line (non-finite points break the curve), stems, dots,
    vline, hline, vband (x0..x1 shaded), hband (y0..y1 shaded),
-   image (a canvas stretched over x0..x1, y0..y1), text (a label at x, y)
+   image (a canvas stretched over x0..x1, y0..y1; smooth: true to interpolate), text (a label at x, y)
    and poly (a closed polygon through x, y, filled with fill).
+   opts.yFormat(v), if given, formats the y tick labels (for example 10^v on a log axis).
+   opts.xTickValues and opts.xFormat(v) set the x ticks and their labels (for example on a log axis).
+   opts.narrowMargin overrides the tighter margins used below 420 px (for example { l: 60 } for 4-digit ticks).
 */
 (function () {
   'use strict';
@@ -75,7 +78,7 @@
       this.canvas.style.height = this.h + 'px';
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const narrow = this.w < 420;
-      this.m = Object.assign({}, this.opts.margin, narrow ? { l: 50, r: 8 } : {});
+      this.m = Object.assign({}, this.opts.margin, narrow ? Object.assign({ l: 50, r: 8 }, this.opts.narrowMargin) : {});
     }
 
     setRange(xr, yr) { this.xr = xr.slice(); this.yr = yr.slice(); }
@@ -93,7 +96,7 @@
       c.strokeStyle = grid;
       c.lineWidth = 1;
 
-      const xt = ticks(this.xr[0], this.xr[1], this.w < 420 ? 4 : this.opts.xTicks);
+      const xt = this.opts.xTickValues ? this.opts.xTickValues.filter(v => v >= this.xr[0] && v <= this.xr[1]) : ticks(this.xr[0], this.xr[1], this.w < 420 ? 4 : this.opts.xTicks);
       const yt = ticks(this.yr[0], this.yr[1], this.opts.yTicks);
       const xs = xt.length > 1 ? xt[1] - xt[0] : 1, ys = yt.length > 1 ? yt[1] - yt[0] : 1;
 
@@ -101,13 +104,13 @@
       xt.forEach(v => {
         const X = Math.round(this.px(v)) + .5;
         c.beginPath(); c.moveTo(X, m.t); c.lineTo(X, this.h - m.b); c.stroke();
-        c.fillText(fmt(v, xs), X, this.h - m.b + 7);
+        c.fillText(this.opts.xFormat ? this.opts.xFormat(v) : fmt(v, xs), X, this.h - m.b + 7);
       });
       c.textAlign = 'right'; c.textBaseline = 'middle';
       yt.forEach(v => {
         const Y = Math.round(this.py(v)) + .5;
         c.beginPath(); c.moveTo(m.l, Y); c.lineTo(this.w - m.r, Y); c.stroke();
-        c.fillText(fmt(v, ys), m.l - 7, Y);
+        c.fillText(this.opts.yFormat ? this.opts.yFormat(v) : fmt(v, ys), m.l - 7, Y);
       });
 
       c.strokeStyle = axis;
@@ -226,7 +229,7 @@
     _image(L) {
       const c = this.ctx, x0 = this.px(L.x0), x1 = this.px(L.x1), y0 = this.py(L.y0), y1 = this.py(L.y1);
       c.save();
-      c.imageSmoothingEnabled = false;
+      c.imageSmoothingEnabled = !!L.smooth;
       c.drawImage(L.canvas, Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0));
       c.restore();
     }
