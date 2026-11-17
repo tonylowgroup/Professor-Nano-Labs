@@ -38,7 +38,7 @@
         c.globalAlpha = P.d < -0.2 ? 0.6 : 1;
         const O = this.project([0, 0, 0]), dx = P.x - O.x, dy = P.y - O.y, l = Math.hypot(dx, dy) || 1;
         // beside the tip, pushed sideways so it clears the axis labels
-        const lx = P.x + 13 * (-dy / l) * (a.side || 1), ly = P.y + 13 * (dx / l) * (a.side || 1);
+        const lx = P.x + 16 * (-dy / l) * (a.side || 1), ly = P.y + 16 * (dx / l) * (a.side || 1) - 4;
         c.fillText(a.label, Math.max(14, Math.min(this.w - 14, lx)), Math.max(10, Math.min(this.h - 10, ly)));
         c.restore();
       });
@@ -49,7 +49,8 @@
      o = { ku, kd, kw, narrow } (Å⁻¹) */
   function fermi(o) {
     const W = 460, H = 300, cx = 230, cy = 150, km = Math.max(o.ku, 0.3) * 1.18, s = 125 / km;
-    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cross-section of the majority and minority Fermi spheres, with the narrow band of transverse wavevectors that tunnels">`;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cross-section of the Fermi spheres: majority radius ${o.ku.toFixed(2)} per ångström, minority ${o.kd > 0 ? `radius ${o.kd.toFixed(2)}` : 'absent'}; electrons with transverse wavevector below about ${o.kw.toFixed(2)} tunnel">`;
+    svg += '<style>text{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}</style>';
     const band = Math.min(o.kw, km) * s;
     svg += `<rect x="${cx - 140}" y="${cy - band}" width="${W - 8 - (cx - 140)}" height="${2 * band}" fill="#2e8b57" fill-opacity=".12"/>`;
     svg += `<line x1="${cx - 140}" y1="${cy - band}" x2="${cx + 140}" y2="${cy - band}" stroke="#2e8b57" stroke-dasharray="4 3"/><line x1="${cx - 140}" y1="${cy + band}" x2="${cx + 140}" y2="${cy + band}" stroke="#2e8b57" stroke-dasharray="4 3"/>`;
@@ -78,7 +79,9 @@
   function channels(o) {
     const W = 460, H = 300, x0 = 120, x1 = 340, y = [95, 205], tot = o.ch[0][0] + o.ch[0][1] + o.ch[1][0] + o.ch[1][1];
     const col = [MAJ, MIN], nm = ['majority', 'minority'];
-    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="The four spin channels through the barrier and their shares of the conductance">`;
+    const share = (t, s) => (tot > 0 ? (100 * o.ch[t][s] / tot).toFixed(1) : '0');
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Shares of the conductance at θ = ${o.th.toFixed(0)}°: majority to majority ${share(0, 0)}%, minority to minority ${share(1, 1)}%, majority to minority ${share(1, 0)}%, minority to majority ${share(0, 1)}%">`;
+    svg += '<style>text{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}</style>';
     svg += `<text x="${x0}" y="26" font-size="13" font-weight="700" fill="${INK}" text-anchor="middle">fixed layer</text><text x="${x1}" y="26" font-size="13" font-weight="700" fill="${INK}" text-anchor="middle">free layer</text>`;
     svg += `<text x="${x0}" y="42" font-size="11.5" fill="${MUTED}" text-anchor="middle">spins along m₁</text><text x="${x1}" y="42" font-size="11.5" fill="${MUTED}" text-anchor="middle">spins along m₂</text>`;
     const maxw = 60;
@@ -87,15 +90,16 @@
       if (f < 0.002) continue;
       const w = Math.max(1.5, maxw * Math.sqrt(f)), ya = y[s], yb = y[t];
       svg += `<path d="M${x0 + 18} ${ya}C${(x0 + x1) / 2} ${ya} ${(x0 + x1) / 2} ${yb} ${x1 - 18} ${yb}" fill="none" stroke="${col[s]}" stroke-opacity="${s === t ? 0.45 : 0.3}" stroke-width="${w.toFixed(1)}"/>`;
-      // straight channels: label above (majority) or below (minority); crossing ones: a quarter of the way along
-      const mx = s === t ? (x0 + x1) / 2 : x0 + (x1 - x0) * 0.27, my = s === t ? ya + (s ? 1 : -1) * (w / 2 + 9) + (s ? 4 : 0) : ya + (yb - ya) * 0.16 + (s ? 14 : -6);
-      svg += `<text x="${mx}" y="${my}" font-size="12.5" font-weight="700" fill="${col[s]}" text-anchor="middle">${(100 * f).toFixed(f < 0.1 ? 1 : 0)}%</text>`;
+      // straight channels are labelled above (majority) or below (minority) their ribbon; the crossed ones in a line underneath
+      if (s === t) svg += `<text x="${(x0 + x1) / 2}" y="${ya + (s ? 1 : -1) * (w / 2 + 9) + (s ? 4 : 0)}" font-size="12.5" font-weight="700" fill="${col[s]}" text-anchor="middle">${(100 * f).toFixed(f < 0.1 ? 1 : 0)}%</text>`;
     }
     for (let s = 0; s < 2; s++) {
       svg += `<circle cx="${x0}" cy="${y[s]}" r="16" fill="#fff" stroke="${col[s]}" stroke-width="2.6"/><text x="${x0 - 24}" y="${y[s] + 4}" font-size="12.5" font-weight="700" fill="${col[s]}" text-anchor="end">${nm[s]}</text>`;
       svg += `<circle cx="${x1}" cy="${y[s]}" r="16" fill="#fff" stroke="${col[s]}" stroke-width="2.6"/><text x="${x1 + 24}" y="${y[s] + 4}" font-size="12.5" font-weight="700" fill="${col[s]}">${nm[s]}</text>`;
     }
-    svg += `<text x="${(x0 + x1) / 2}" y="${H - 18}" font-size="12" fill="${MUTED}" text-anchor="middle">ribbon width: share of the conductance at θ = ${o.th.toFixed(0)}°</text>`;
+    const fx = (t, s) => { const f = tot > 0 ? o.ch[t][s] / tot : 0; return `${(100 * f).toFixed(f < 0.1 ? 1 : 0)}%`; };
+    svg += `<text x="${(x0 + x1) / 2}" y="${H - 34}" font-size="12.5" font-weight="700" text-anchor="middle"><tspan fill="${MAJ}">majority → minority ${fx(1, 0)}</tspan><tspan fill="${MUTED}"> · </tspan><tspan fill="${MIN}">minority → majority ${fx(0, 1)}</tspan></text>`;
+    svg += `<text x="${(x0 + x1) / 2}" y="${H - 14}" font-size="12" fill="${MUTED}" text-anchor="middle">ribbon width: share of the conductance at θ = ${o.th.toFixed(0)}°</text>`;
     svg += '</svg>';
     return svg;
   }

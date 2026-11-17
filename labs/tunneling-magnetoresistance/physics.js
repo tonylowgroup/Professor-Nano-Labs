@@ -29,7 +29,9 @@
 
   // spinors along n(θ, φ) in the z basis: R = [|+⟩ |−⟩], as complex 2×2 [re, im] arrays (row-major)
   function rot(th, ph) {
-    const c = Math.cos(th / 2), s = Math.sin(th / 2), cp = Math.cos(ph), sp = Math.sin(ph);
+    // snap the rounding of cos(π/2) etc., so θ = 180° is exactly antiparallel
+    const snap = v => (Math.abs(v) < 1e-12 ? 0 : v);
+    const c = snap(Math.cos(th / 2)), s = snap(Math.sin(th / 2)), cp = snap(Math.cos(ph)), sp = snap(Math.sin(ph));
     return { re: [c, -cp * s, cp * s, c], im: [0, sp * s, sp * s, 0] };
   }
   // small complex 2×2 helpers (row-major arrays of 4)
@@ -116,18 +118,24 @@
   }
 
   /* Quadrature nodes for ∫ dE_x from the lowest open band edge up to E_F, split at band edges, at E_F − eV,
-     and on a geometric ladder below E_F, where tunnelling is concentrated (the transmission falls e-fold every ħ²κ/2md). */
+     and on a geometric ladder below E_F, where tunnelling is concentrated (the transmission falls e-fold every ħ²κ/2md).
+     Above a band edge a channel opens as √(E − edge); there the substitution E = edge + (b − a)t² makes the integrand smooth. */
   function nodes(p) {
     const V = p.V || 0, lo = Math.max(0, -V), hi = p.EF;
     if (!(hi > lo)) return [];
     const kap = Math.sqrt(Math.max(0.05, p.phiB) / C), de = C * kap / Math.max(p.d, 1);
+    const edges = [lo, p.D, p.D - V].filter(x => x >= lo && x < hi);
     const br = [lo, hi, p.D, p.D - V, p.EF - V];
     for (let j = -1; j < 9; j++) br.push(hi - de * Math.pow(2, j));
+    // a short segment just above each edge, so the substitution covers the square-root onset
+    edges.forEach(e => br.push(e + Math.min(0.05, (hi - e) / 4)));
     const pts = Array.from(new Set(br.filter(x => x > lo && x < hi).concat([lo, hi]).map(x => +x.toFixed(12)))).sort((a, b) => a - b);
+    const isEdge = x => edges.some(e => Math.abs(e - x) < 1e-9);
     const out = [];
     for (let i = 0; i + 1 < pts.length; i++) {
       const a = pts[i], b = pts[i + 1], h = (b - a) / 2;
-      for (let k = 0; k < 10; k++) out.push([a + h * (1 + GLX[k]), h * GLW[k]]);
+      if (isEdge(a)) for (let k = 0; k < 10; k++) { const t = (1 + GLX[k]) / 2; out.push([a + (b - a) * t * t, GLW[k] / 2 * 2 * (b - a) * t]); }
+      else for (let k = 0; k < 10; k++) out.push([a + h * (1 + GLX[k]), h * GLW[k]]);
     }
     return out;
   }
