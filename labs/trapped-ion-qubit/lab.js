@@ -26,13 +26,13 @@
   const tNow = { sidebands: Infinity, bus: 0, cooling: 0 };
 
   // readout shots
-  let shots = { key: '', counts: [], bright: 0, hist: [] };
+  let shots = { key: '', counts: [] };
   let lastShot = null, readStage = 'read';
 
   // ---------- formatting ----------
   const fixed = (x, d = 2) => (Math.abs(x) < 0.5 * Math.pow(10, -d) ? 0 : x).toFixed(d).replace('-', '−');
   const prob = x => Math.max(0, Math.min(1, x)).toFixed(3);
-  const pct = x => (100 * x).toFixed(x < 0.1 ? 1 : 0) + '%';
+  const pct = x => (x > 0 && x < 0.0005 ? '<0.1%' : (100 * x).toFixed(x < 0.1 ? 1 : 0) + '%');
   const ketHTML = (a2, a3, n) => `|${a2}<sub>2</sub> ${a3}<sub>3</sub>, ${n}<sub>p</sub>⟩`;
   const PULSE_NAME = { carrier: 'carrier', red: 'red', blue: 'blue' };
   const areaText = a => (Math.abs(a - Math.PI) < 1e-9 ? 'π' : Math.abs(a - Math.PI / 2) < 1e-9 ? 'π/2' : fixed(a / Math.PI, 2) + 'π');
@@ -117,7 +117,11 @@
     if (S.pstart === 'fock') {
       const n = S.np, m = I.partner(S.laser, n), th = (w || 0) * t / 2;
       if (m < 0 || !w) $('ket').innerHTML = `<b>State:</b> |g, ${n}<sub>p</sub>⟩ stays put: the red sideband would need |e, −1<sub>p</sub>⟩, and there is no such state.`;
-      else $('ket').innerHTML = `<b>State:</b> ${fixed(Math.cos(th), 3)} |g, ${n}<sub>p</sub>⟩ ${S.laser === 'carrier' ? '− ' + fixed(Math.abs(Math.sin(th)), 3) + 'i' : (Math.sin(th) < 0 ? '− ' : '+ ') + fixed(Math.abs(Math.sin(th)), 3)} |e, ${m}<sub>p</sub>⟩`;
+      else {
+        // carrier: cos|g> - i sin|e>; sidebands: cos|g> + sin|e>
+        const sn = Math.sin(th), amp = S.laser === 'carrier' ? -sn : sn;
+        $('ket').innerHTML = `<b>State:</b> ${fixed(Math.cos(th), 3)} |g, ${n}<sub>p</sub>⟩ ${amp < -5e-4 ? '−' : '+'} ${Math.abs(sn).toFixed(3)}${S.laser === 'carrier' ? 'i' : ''} |e, ${m}<sub>p</sub>⟩`;
+      }
     } else $('ket').innerHTML = '<b>State:</b> a thermal mixture. Each phonon number flops at its own rate, so the curves wash out instead of reaching 1.';
 
     if (S.laser === 'red' && S.pstart === 'fock' && S.np === 0) note('<b>Nothing happens.</b> The red sideband takes a phonon away, and |g, 0<sub>p</sub>⟩ has none. Try the carrier or the blue sideband, or start with a phonon.');
@@ -235,7 +239,9 @@
     if (C && C.C > 0.999) note('<b>Entangled:</b> qubits 2 and 3 now share one state that cannot be split into a state for each, and the bus is back to a single phonon number. The bus carried the link between them.');
     else if (!C && n) note('<b>The bus is entangled with the qubits.</b> Its phonon number now depends on the qubits\' states. A good recipe returns it to |0<sub>p</sub>⟩ at the end.');
     else note('<b>The rule from the video:</b> with the bus in |0<sub>p</sub>⟩, red lowers a qubit and blue raises it; with the bus in |1<sub>p</sub>⟩ they swap roles. Add pulses and watch the yellow dots move.');
-    $('lab-status').textContent = 'Pulse areas: carrier as written, red calibrated on |g, 1ₚ⟩ ↔ |e, 0ₚ⟩, blue on |g, 0ₚ⟩ ↔ |e, 1ₚ⟩.';
+    const high = m.phon.slice(3).reduce((x, y) => x + y, 0);
+    $('lab-status').textContent = (high > 1e-3 ? `${pct(high)} of the population now has 3 or more phonons, beyond the levels drawn and the grid, and outside the computational space. ` : '') +
+      'Pulse areas: carrier as written, red calibrated on |g, 1ₚ⟩ ↔ |e, 0ₚ⟩, blue on |g, 0ₚ⟩ ↔ |e, 1ₚ⟩.';
     const label = !n ? 'No pulses' : t < 1e-9 ? 'Start' : inPulse ? `Pulse ${k + 1} · ${Math.round((t - k) * 100)}%` : `After pulse ${k}`;
     syncTime(n ? t / n : 0, label);
   }
@@ -320,7 +326,7 @@
   }
   function syncShots() {
     const key = JSON.stringify([S.theta, S.pumpCycles, S.mub, S.mud]);
-    if (key !== shots.key) { shots = { key, counts: [], bright: 0, hist: [] }; lastShot = null; }
+    if (key !== shots.key) { shots = { key, counts: [] }; lastShot = null; }
   }
   function takeShots(n) {
     syncShots();
@@ -329,8 +335,6 @@
       const isBright = Math.random() < p0;
       const c = I.poisson(isBright ? S.mub + S.mud : S.mud, Math.random());
       shots.counts.push(c);
-      if (c >= S.thr) shots.bright++;
-      if (shots.hist.length < 20000) shots.hist.push(shots.bright);
       lastShot = { counts: c, bright: isBright };
     }
     readStage = 'read';
@@ -376,10 +380,12 @@
     plotB.setRange([0, xmax], [0, 1.04]);
     B.push({ type: 'hline', y: pr.p0, color: COL.carrier, dash: [6, 4], width: 1.6 });
     B.push({ type: 'hline', y: expectBright, color: css('--series-amber'), dash: [2, 3], width: 1.6 });
+    let bright = 0;
     if (N) {
-      const step = Math.max(1, Math.ceil(shots.hist.length / 2000));
+      // bright/dark is decided with the threshold as it is now, so moving it re-sorts every shot
+      const step = Math.max(1, Math.ceil(N / 2000));
       const x = [], y = [];
-      for (let i = 0; i < shots.hist.length; i += step) { x.push(i + 1); y.push(shots.hist[i] / (i + 1)); }
+      shots.counts.forEach((c, i) => { if (c >= S.thr) bright++; if (i % step === 0 || i === N - 1) { x.push(i + 1); y.push(bright / (i + 1)); } });
       B.push({ type: 'line', x, y, color: '#6b4bd1', width: 2 });
     }
     plotB.draw(B);
@@ -388,7 +394,7 @@
     legend('pb-legend', [['#6b4bd1', '', 'measured'], [COL.carrier, 'swatch--dash', 'true P(0)'], [css('--series-amber'), 'swatch--dot', 'expected with errors']]);
     $('popgrid').hidden = true;
 
-    const frac = N ? shots.bright / N : NaN;
+    const frac = N ? bright / N : NaN;
     stats([
       ['Prepared P(0)', prob(pr.p0), S.pumpCycles ? `after ${S.pumpCycles} pumping cycle${S.pumpCycles === 1 ? '' : 's'}` : 'not initialized!'],
       ['Called bright', N ? prob(frac) : '—', N ? `± ${Math.sqrt(Math.max(frac * (1 - frac), 0) / N).toFixed(3)} from ${N} shots` : 'take some shots'],
