@@ -450,6 +450,9 @@ mjx-container svg { display: inline; }
 .swatch-inline { display: inline-block; width: 28px; height: 10px; border-radius: 3px; vertical-align: -1px; }
 @media (max-width: 640px) { .orbital { height: 340px; } }
 
+/* The predict-first loaders scroll the tabs into view: keep them clear of the sticky top bar */
+.lab-tabs { scroll-margin-top: 80px; }
+
 /* Graphene bands: lattice and pseudospin pictures, the 3D bands */
 .lat { margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow: hidden; }
 .lat svg { display: block; width: 100%; height: auto; }

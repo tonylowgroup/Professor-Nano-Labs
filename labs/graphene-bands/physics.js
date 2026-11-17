@@ -54,7 +54,7 @@
   // ---------- density of states: a histogram over the Brillouin zone ----------
   /* returns { E: centres, rho: states per eV per unit cell (spin included) }, normalised so the two bands hold 4 states */
   function dos(p, opts) {
-    const N = (opts && opts.N) || 600, dE = (opts && opts.dE) || 0.03;
+    const N = (opts && opts.N) || 440, dE = (opts && opts.dE) || 0.03;
     const emax = 3 * p.t + 9 * Math.abs(p.tp) + Math.abs(p.D) + 0.3, nb = Math.ceil(2 * emax / dE);
     const h = new Float64Array(nb);
     for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
@@ -73,7 +73,7 @@
      integrates the DOS table instead. */
   function carriers(Ef, p, tab) {
     if (Ef === 0) return 0;
-    const lower = Ef < 0, n = 360;
+    const lower = Ef < 0, n = 240;
     let area = 0;
     for (const v of ['K', 'Kp']) {
       const f0 = lower ? Ef - bands(...PTS[v], p)[0] : bands(...PTS[v], p)[1] - Ef;
@@ -112,7 +112,7 @@
       let a = 0, b = NaN;
       if (f(0) <= 0) for (let k = 1; k <= 400; k++) { const q = qmax * k / 400; if (f(q) > 0) { b = q; a = qmax * (k - 1) / 400; break; } }
       if (!Number.isFinite(b)) { out.push(NaN); continue; }
-      for (let it = 0; it < 60; it++) { const c = (a + b) / 2; if (f(c) < 0) a = c; else b = c; }
+      for (let it = 0; it < 44; it++) { const c = (a + b) / 2; if (f(c) < 0) a = c; else b = c; }
       out.push((a + b) / 2);
     }
     return out;
@@ -145,5 +145,17 @@
     return Math.round(tot / (2 * Math.PI));
   }
 
-  window.Gr = { A, HBAR, DEL, A1, A2, B1, B2, KK, PTS, CELL, DEFAULTS, g, bands, dvec, eigvec, LEGS, LEN, PATH_LEN, TICKS, pathPoint, dos, density, vF, hv, dirac, diracDos, diracDensity, contour, berry, carriers, winding };
+  // the bottom of the lower band and the top of the upper band (both bands depend on k only through |g|, 0..3)
+  function edges(p) {
+    let lo = Infinity, hi = -Infinity;
+    for (let i = 0; i <= 600; i++) {
+      const x = 3 * i / 600, c = -p.tp * x * x, s = Math.sqrt(p.D * p.D + p.t * p.t * x * x);
+      lo = Math.min(lo, c - s); hi = Math.max(hi, c + s);
+    }
+    return [lo, hi];
+  }
+  // the van Hove energies: both bands at M, where |g| = 1
+  const vanHove = p => [-p.tp - Math.sqrt(p.D * p.D + p.t * p.t), -p.tp + Math.sqrt(p.D * p.D + p.t * p.t)];
+
+  window.Gr = { A, HBAR, DEL, A1, A2, B1, B2, KK, PTS, CELL, DEFAULTS, g, bands, dvec, eigvec, LEGS, LEN, PATH_LEN, TICKS, pathPoint, dos, density, vF, hv, dirac, diracDos, diracDensity, contour, berry, carriers, winding, edges, vanHove };
 })();

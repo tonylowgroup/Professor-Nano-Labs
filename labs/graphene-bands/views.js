@@ -53,7 +53,7 @@
     s += `<text x="${X(G.A2[0]) + 6}" y="${Y(G.A2[1]) + 14}" font-family="${FONT}" font-size="13" font-weight="800" font-style="italic" fill="#127a5e" paint-order="stroke" stroke="#fff" stroke-width="4">${sub('a', 2, 10)}</text>`;
     // key: sublattices
     s += `<g font-family="${FONT}" font-size="12" font-weight="600" fill="#14232c"><circle cx="18" cy="18" r="7" fill="#e8edf1" stroke="#14232c" stroke-width="0.8"/><text x="31" y="22">A atoms</text><circle cx="104" cy="18" r="7" fill="#e8edf1" stroke="#14232c" stroke-width="1.6" stroke-dasharray="2.5 2"/><text x="117" y="22">B atoms</text></g>`;
-    s += `<text x="${W - 12}" y="${H - 10}" text-anchor="end" font-family="${FONT}" font-size="12" fill="#5f7382">a = 0.142 nm</text>`;
+    s += `<text x="${W - 12}" y="${H - 10}" text-anchor="end" font-family="${FONT}" font-size="12" fill="#5f7382" paint-order="stroke" stroke="#fff" stroke-width="5">a = 0.142 nm</text>`;
     // the colour wheel: phase of the wavefunction
     const wx = W - 30, wy = 30, wr = 15;
     for (let i = 0; i < 24; i++) { const a0 = 2 * Math.PI * i / 24, a1 = 2 * Math.PI * (i + 1) / 24; s += `<path d="M${wx},${wy} L${(wx + wr * Math.cos(a0)).toFixed(1)},${(wy - wr * Math.sin(a0)).toFixed(1)} A${wr},${wr} 0 0 0 ${(wx + wr * Math.cos(a1)).toFixed(1)},${(wy - wr * Math.sin(a1)).toFixed(1)} z" fill="${hue(a0 + Math.PI / 24)}"/>`; }
@@ -66,8 +66,9 @@
     const narrow = !!st.narrow, W = narrow ? 440 : 760, H = narrow ? 610 : 330;
     const panels = narrow ? [[W / 2, 150], [W / 2, 455]] : [[W * 0.27, H / 2 + 8], [W * 0.73, H / 2 + 8]];
     const R = narrow ? 118 : 128;
-    const qE = st.E / G.hv(st.p), Q = Math.max(0.12, 1.7 * qE);           // nm^-1 shown from the centre to the edge
+    const qE = Math.sqrt(Math.max(0, st.E * st.E - st.p.D * st.p.D)) / G.hv(st.p), Q = Math.max(0.12, 1.7 * qE);   // nm^-1 from the centre to the edge
     let s = '';
+    const said = [];
     ['K', 'Kp'].forEach((v, idx) => {
       const [px, py] = panels[idx], [Kx, Ky] = G.PTS[v], sc = R / Q;
       s += `<circle cx="${px}" cy="${py}" r="${R + 4}" fill="#f7f9fb" stroke="#d9e2e8"/>`;
@@ -101,8 +102,9 @@
       const w = G.winding(v, st.p, Math.min(Q, 0.5 * Q + 0.05));
       const wind = w === 1 ? 'turns once anticlockwise' : w === -1 ? 'turns once clockwise' : `turns ${w} times`;
       s += `<text x="${px}" y="${py + R + 22}" text-anchor="middle" font-family="${FONT}" font-size="12" fill="#14232c">Loop anticlockwise: the pseudospin ${wind}</text>`;
+      said.push(`round ${v === 'K' ? 'K' : 'K′'} the pseudospin ${wind}`);
     });
-    return `<svg class="ps__svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Pseudospin direction around the two Dirac points">${s}</svg>`;
+    return `<svg class="ps__svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Pseudospin direction around the two Dirac points. For an anticlockwise loop, ${said.join('; ')}.">${s}</svg>`;
   }
 
   window.GrViews = { lattice, pseudospin, hue };

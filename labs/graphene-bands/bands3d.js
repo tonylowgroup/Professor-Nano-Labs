@@ -61,17 +61,13 @@
     _mesh(p) {
       /* a polar mesh: circles of radius r_i = R i / NR and NA spokes. NA is a multiple of 12 and |GK| = R 82 / NR,
          so every K and K' point is a vertex and the cone tips stay sharp; the rim of the disc is smooth. */
-      const NR = 100, NA = 360, R = this.Rk, gl = this.gl, zs = this.zs, eps = 0.01;
+      const NR = 100, NA = 360, R = this.Rk, gl = this.gl, zs = this.zs;
       const nv = 1 + NR * NA, at = (i, j) => (i === 0 ? 0 : 1 + (i - 1) * NA + (j % NA));
       const make = band => {
         const P = new Float32Array(3 * nv), Nn = new Float32Array(3 * nv), E = new Float32Array(nv);
         const put = (k, kx, ky) => {
           const e = G.bands(kx, ky, p)[band];
           P[3 * k] = kx / R; P[3 * k + 1] = ky / R; P[3 * k + 2] = e * zs; E[k] = e;
-          const ex = (G.bands(kx + eps, ky, p)[band] - G.bands(kx - eps, ky, p)[band]) / (2 * eps) * zs * R;
-          const ey = (G.bands(kx, ky + eps, p)[band] - G.bands(kx, ky - eps, p)[band]) / (2 * eps) * zs * R;
-          const n = Math.hypot(ex, ey, 1);
-          Nn[3 * k] = -ex / n; Nn[3 * k + 1] = -ey / n; Nn[3 * k + 2] = 1 / n;
         };
         put(0, 0, 0);
         for (let i = 1; i <= NR; i++) for (let j = 0; j < NA; j++) { const r = R * i / NR, a = 2 * Math.PI * j / NA; put(at(i, j), r * Math.cos(a), r * Math.sin(a)); }
@@ -81,6 +77,15 @@
           const a = at(i, j), b = at(i + 1, j), c = at(i + 1, j + 1), d = at(i, j + 1);
           I.push(a, b, c, a, c, d);
         }
+        // vertex normals: the area-weighted sum of the normals of the triangles that meet there
+        for (let q = 0; q < I.length; q += 3) {
+          const a = 3 * I[q], b = 3 * I[q + 1], c = 3 * I[q + 2];
+          const ux = P[b] - P[a], uy = P[b + 1] - P[a + 1], uz = P[b + 2] - P[a + 2], vx = P[c] - P[a], vy = P[c + 1] - P[a + 1], vz = P[c + 2] - P[a + 2];
+          let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+          if (nz < 0) { nx = -nx; ny = -ny; nz = -nz; }          // all facing up
+          for (const v of [a, b, c]) { Nn[v] += nx; Nn[v + 1] += ny; Nn[v + 2] += nz; }
+        }
+        for (let v = 0; v < Nn.length; v += 3) { const n = Math.hypot(Nn[v], Nn[v + 1], Nn[v + 2]) || 1; Nn[v] /= n; Nn[v + 1] /= n; Nn[v + 2] /= n; }
         return { P, Nn, E, I: new Uint32Array(I) };
       };
       for (const old of this.meshes || []) ['p', 'n', 'e', 'i'].forEach(k => old[k] && gl.deleteBuffer(old[k]));
@@ -176,7 +181,7 @@
       c.font = '600 12px Inter, system-ui, sans-serif';
       lab('kx', [1.18 * this.Rk, 0], zf, 'rgba(190, 204, 220, 0.9)'); lab('ky', [0, 1.18 * this.Rk], zf, 'rgba(190, 204, 220, 0.9)');
       c.textAlign = 'left'; c.fillStyle = 'rgba(220, 228, 236, 0.92)';
-      c.fillText(`Fermi level ${this.Ef >= 0 ? '+' : '−'}${Math.abs(this.Ef).toFixed(2)} eV`, 14, this.H - 16);
+      c.fillText(`Fermi level ${Math.abs(this.Ef) < 0.005 ? '' : this.Ef > 0 ? '+' : '−'}${Math.abs(this.Ef).toFixed(2)} eV`, 14, this.H - 16);
     }
     _bind() {
       const cv = this.overlay;

@@ -96,7 +96,7 @@
     <div class="equation">$$\begin{pmatrix}0&-t\,g(\mathbf k)\\-t\,g^*(\mathbf k)&0\end{pmatrix}\begin{pmatrix}c_A\\c_B\end{pmatrix}=E\begin{pmatrix}c_A\\c_B\end{pmatrix},\qquad g(\mathbf k)=\sum_{j=1}^{3}e^{i\mathbf k\cdot\boldsymbol\delta_j},\qquad E_\pm(\mathbf k)=\pm t\,|g(\mathbf k)|$$</div>
     <div class="equation">$$|g(\mathbf k)|^2=3+2\cos\!\left(\sqrt3k_ya\right)+4\cos\!\left(\tfrac32k_xa\right)\cos\!\left(\tfrac{\sqrt3}{2}k_ya\right)$$</div>
     <p>The bands touch where \(g(\mathbf k)=0\): at the two inequivalent corners of the Brillouin zone, \(\mathbf K\) and \(\mathbf K'\). Expanding \(g\) to first order in \(\mathbf q=\mathbf k-\mathbf K\) gives the Dirac Hamiltonian, with a velocity set by the hopping and the bond length:</p>
-    <div class="equation">$$H_{\mathbf K+\mathbf q}\approx\hbar v_F\begin{pmatrix}0&q_x\mp iq_y\\q_x\pm iq_y&0\end{pmatrix}\ \text{(up to a phase; the sign differs between }\mathbf K\text{ and }\mathbf K'),\qquad E=\pm\hbar v_F|\mathbf q|,\qquad v_F=\frac{3ta}{2\hbar}\approx0.87\times10^6\ \text{m/s}$$</div>
+    <div class="equation">$$H_{\mathbf K+\mathbf q}\approx\hbar v_F\begin{pmatrix}0&e^{-i\pi/6}(q_x\pm iq_y)\\e^{i\pi/6}(q_x\mp iq_y)&0\end{pmatrix}\ \text{(upper signs at }\mathbf K\text{, lower at }\mathbf K'\text{; the phase depends on the axes)},\qquad E=\pm\hbar v_F|\mathbf q|,\qquad v_F=\frac{3ta}{2\hbar}\approx0.87\times10^6\ \text{m/s}$$</div>
   </section>
 
   <!-- The lab -->
@@ -113,11 +113,11 @@
     <div class="mode-intro" data-for="bz" hidden>
       <h2>Two bands, six cones.</h2>
       <p>Across the whole Brillouin zone the lower band (π, filled in neutral graphene) and the upper band (π*, empty) meet only at the six corners. Two corners are inequivalent: K and K′, the two valleys. Raise the Fermi level and the Fermi surface grows from points into small circles around each corner, then distorts, and at \(E_F=t\) the pieces join at the M points, where the density of states diverges.</p>
-      <div class="equation">$$g(E)=\frac{g_sg_v\,|E|}{2\pi\hbar^2v_F^2}\ \ (\text{near }E=0),\qquad n=\frac{E_F^2}{\pi\hbar^2v_F^2},\qquad g_s=g_v=2$$</div>
+      <div class="equation">$$\rho(E)=\frac{g_sg_v\,|E|}{2\pi\hbar^2v_F^2}\ \ (\text{near }E=0),\qquad n=\frac{E_F^2}{\pi\hbar^2v_F^2},\qquad g_s=g_v=2$$</div>
     </div>
     <div class="mode-intro" data-for="dirac" hidden>
       <h2>Massless electrons with a pseudospin.</h2>
-      <p>Near each corner the bands form a cone, \(E=\pm\hbar v_F|\mathbf q|\), with the same slope in every direction: electrons move at \(v_F\) whatever their energy, like photons. The two components \((c_A,c_B)\) behave like a spin, the pseudospin, which points along the direction of motion and turns once as \(\mathbf q\) goes around the corner. That winding gives a Berry phase of \(\pi\). Further from the corner the cone bends and turns triangular (trigonal warping). A difference \(2\Delta\) between the A and B sites opens a gap and gives the electrons a mass.</p>
+      <p>Near each corner the bands form a cone, \(E=\pm\hbar v_F|\mathbf q|\), with the same slope in every direction: electrons move at \(v_F\) whatever their energy, like photons. The two components \((c_A,c_B)\) behave like a spin, the pseudospin, which is locked to the direction of motion: as \(\mathbf q\) goes once round the corner, the pseudospin turns once too, in opposite senses at K and K′. That winding gives a Berry phase of \(\pi\). Further from the corner the cone bends and turns triangular (trigonal warping). A difference \(2\Delta\) between the A and B sites opens a gap and gives the electrons a mass.</p>
       <div class="equation">$$E=\pm\sqrt{\Delta^2+\hbar^2v_F^2q^2},\qquad m^*=\frac{\Delta}{v_F^2},\qquad \gamma_\text{Berry}=\pm\pi\left(1-\frac{\Delta}{E}\right)$$</div>
     </div>
   </section>
@@ -144,7 +144,7 @@
           <input id="ef" type="range" min="-8" max="8" step="0.01" value="0.6"><div class="ctrl__hint">Positive: electrons added (n-type). Negative: holes (p-type).</div>
         </div>
         <div class="chips" role="group" aria-label="Fermi levels">
-          <button class="chip-btn" type="button" data-ef="0">0 · neutral</button><button class="chip-btn" type="button" data-ef="0.3">0.3 eV</button><button class="chip-btn" type="button" data-ef="t">E<sub>F</sub> = t</button><button class="chip-btn" type="button" data-ef="-1">−1 eV</button>
+          <button class="chip-btn" type="button" data-ef="0">0 · neutral</button><button class="chip-btn" type="button" data-ef="0.3">0.3 eV</button><button class="chip-btn" type="button" data-ef="t">van Hove (at M)</button><button class="chip-btn" type="button" data-ef="-1">−1 eV</button>
         </div>
         <div class="chips" role="group" aria-label="3D view">
           <button class="chip-btn" type="button" id="spin" aria-pressed="true">Spin</button><button class="chip-btn" type="button" id="reset-view">Reset view</button>
@@ -288,7 +288,7 @@
         <div class="predict__head"><span class="predict__tag">Question 7 · The Dirac cone</span><button class="predict__load" type="button" data-q="q7">Load the cone at 1 eV</button></div>
         <p>How good is the Dirac model? Compare the true contour with the circle \(|\mathbf q|=E/\hbar v_F\) at 0.1 eV and at 1 eV.</p>
         <details><summary>Show answer</summary>
-          <p>At 0.1 eV the contour is a circle to within 0.6%, and its average radius matches \(E/\hbar v_F\) to 0.01%. At 1 eV it has turned into a rounded triangle: the radius varies by about 14% between the directions of M and Γ, and its average is 1% above the Dirac value. The Dirac model is excellent for the energies reached in devices, which are well below 1 eV.</p>
+          <p>At 0.1 eV the contour is very nearly a circle: its largest and smallest radii differ by 1.2% (the lab's "trigonal warping"), and its average radius matches \(E/\hbar v_F\) to 0.01%. At 1 eV it has turned into a rounded triangle: the radii differ by about 14%, and the average is 1% above the Dirac value. The Dirac model is excellent for the energies reached in devices, which are well below 1 eV.</p>
         </details>
       </div>
       <div class="predict">
@@ -307,7 +307,7 @@
       <h2 id="nb-title">Run the same calculation in Python</h2>
       <p>The companion Jupyter notebook builds the tight-binding Hamiltonian, diagonalises it across the Brillouin zone, plots the bands along Γ–K–M–Γ and as a contour map, checks the density of states against its exact elliptic-integral formula, derives the Dirac velocity, and computes the Berry phase around each valley. It needs NumPy, SciPy and Matplotlib.</p>
     </div>
-    <a class="btn btn--brand" href="graphene_bands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 15 KB</span></a>
+    <a class="btn btn--brand" href="graphene_bands.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 16 KB</span></a>
   </section>
 
   <!-- What is computed -->
@@ -319,9 +319,9 @@
           <li><strong>Lattice:</strong> carbon–carbon distance \(a=0.142\) nm, neighbour vectors \(\boldsymbol\delta_{1,2}=a(\tfrac12,\pm\tfrac{\sqrt3}{2})\), \(\boldsymbol\delta_3=a(-1,0)\), lattice vectors \(\mathbf a_{1,2}=a(\tfrac32,\pm\tfrac{\sqrt3}{2})\), and \(\mathbf K,\mathbf K'=\tfrac{2\pi}{3a}(1,\pm\tfrac{1}{\sqrt3})\). These are the values used in the graphene transport lab.</li>
           <li><strong>Bands:</strong> the 2×2 Bloch Hamiltonian, with the optional second-neighbour hopping \(t'\) and sublattice energy \(\pm\Delta\): \(E_\pm=-t'|g|^2\pm\sqrt{\Delta^2+t^2|g|^2}\), measured from the Dirac point. The six second neighbours contribute \(-t'(|g|^2-3)\); the constant \(3t'\) is dropped.</li>
           <li><strong>Wavefunctions:</strong> the eigenvector \((c_A,c_B)\), with the amplitude on an atom at \(\mathbf r\) equal to \(c_s e^{i\mathbf k\cdot\mathbf r}\). Its overall phase is arbitrary; only the differences between atoms matter.</li>
-          <li><strong>Density of states:</strong> a histogram of both bands over 360,000 points of the Brillouin zone, lightly smoothed. It agrees with the exact formula (an elliptic integral) to about 1% away from the van Hove peaks. The carrier density comes from the exact area inside the Fermi contours while they surround K and K′, and from the density of states beyond that.</li>
-          <li><strong>Dirac model:</strong> \(E=\pm\sqrt{\Delta^2+\hbar^2v_F^2q^2}\) with \(v_F=3ta/2\hbar\). Contours of the tight-binding bands are found along 180 directions from each corner.</li>
-          <li><strong>Pseudospin and Berry phase:</strong> the pseudospin is the direction of \(\mathbf d\) in \(H=\mathbf d\cdot\boldsymbol\sigma\); the Berry phase is \(-\arg\prod_i\langle u_i|u_{i+1}\rangle\) around the contour. Which valley turns which way depends on how A, B and the axes are labelled; that the two valleys turn opposite ways does not.</li>
+          <li><strong>Density of states:</strong> a histogram of both bands over about 190,000 points of the Brillouin zone, lightly smoothed. It agrees with the exact formula (an elliptic integral) to about 1% over most of the band, and within a few percent below 0.5 eV, where the density of states is small; the value at E<sub>F</sub> quoted near the Dirac point is computed exactly instead. The carrier density comes from the exact area inside the Fermi contours while they surround K and K′, and from the density of states beyond that.</li>
+          <li><strong>Dirac model:</strong> \(E=\pm\sqrt{\Delta^2+\hbar^2v_F^2q^2}\) with \(v_F=3ta/2\hbar\). Contours of the tight-binding bands are found by following rays out from each corner to the first crossing (360 directions for the numbers shown, fewer for the drawings).</li>
+          <li><strong>Pseudospin and Berry phase:</strong> the pseudospin is the direction of \(\mathbf d\) in \(H=\mathbf d\cdot\boldsymbol\sigma\); the Berry phase is \(-\arg\prod_i\langle u_i|u_{i+1}\rangle\) around the contour. Which valley turns which way depends on how A, B and the axes are labelled; that the two valleys turn opposite ways does not. With no gap the Berry phase is π in both valleys (+π and −π are the same phase); with Δ &gt; 0 it is \(\pm\pi(1-\Delta/E)\), with opposite signs at K and K′.</li>
         </ul>
       </div>
     </details>
