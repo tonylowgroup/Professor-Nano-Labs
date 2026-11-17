@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en" data-track="computing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three Qubits: Toffoli Gates and Teleportation · Professor Nano Labs</title>
+<meta name="description" content="See a three-qubit gate as a rewiring of an eight-row truth table, build reversible logic from Toffoli and Fredkin gates, then teleport a qubit step by step with one shared pair and two classical bits. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum computing</div>
+    <div class="eyebrow eyebrow--light">Quantum computing · Live lab</div>
+    <h1>Three Qubits: Toffoli Gates and Teleportation</h1>
+    <p>With three qubits, a gate is a rewiring of an eight-row truth table. Build reversible logic from Toffoli and Fredkin gates and watch the rows move, then send a qubit's state from Alice to Bob, one step at a time, with a shared entangled pair and two ordinary bits.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="three_qubits_teleportation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=iMjpZwISIlA" target="_blank" rel="noopener" title="Two and three qubits quantum gates">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/iMjpZwISIlA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two and three qubits quantum gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=rD_fH7O-D5Y" target="_blank" rel="noopener" title="Single qubit and its logic gates">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/rD_fH7O-D5Y/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Single qubit and its logic gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=4BRQsrh4oGw" target="_blank" rel="noopener" title="Two qubit state: Separable vs Entangled vs Bell states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4BRQsrh4oGw/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Two qubit state: Separable vs Entangled vs Bell states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=9vDyS2_Hufk" target="_blank" rel="noopener" title="Quantum entanglement; exposing its key features">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/9vDyS2_Hufk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quantum entanglement; exposing its key features<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Three qubits, eight rows</h2>
+    <p>Three qubits have eight basis states, from \(|000\rangle\) to \(|111\rangle\), with qubit 1 written first. A state is a list of eight complex amplitudes, one per row of a truth table. The size of each amplitude gives the chance of reading that row's three bits; its phase is drawn here as a colour. A gate is an \(8\times8\) unitary matrix: it moves amplitude between rows and can change signs, but it never loses anything, so every gate can be undone.</p>
+    <div class="equation">$$|\psi\rangle=\sum_{a,b,c\,\in\,\{0,1\}}c_{abc}\,|abc\rangle,\qquad \sum_{abc}|c_{abc}|^2=1,\qquad |\psi\rangle\to U|\psi\rangle,\quad U^\dagger U=I$$</div>
+    <p>The <a href="../qubits-bloch-sphere/index.html">Bloch sphere lab</a> covers one and two qubits; this lab adds the third.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-gates" aria-controls="lab" aria-selected="true" data-mode="gates">1 · Gates as truth tables</button>
+      <button class="tab" role="tab" id="tab-teleport" aria-controls="lab" aria-selected="false" data-mode="teleport" tabindex="-1">2 · Teleportation</button>
+    </div>
+    <div class="mode-intro" data-for="gates">
+      <h2>A gate rewires the truth table.</h2>
+      <p>CNOT, Toffoli and Fredkin only reorder rows. On plain bit strings they act exactly like classical logic, but they keep their inputs, so nothing is thrown away. H splits each row in two and gives one branch a minus sign; Z and CCZ change only signs. Every gate here undoes itself. Build a circuit, step through it, and watch the rows move.</p>
+      <div class="equation">$$\text{CNOT}:\ |a,b\rangle\to|a,\,b\oplus a\rangle,\qquad \text{Toffoli}:\ |a,b,c\rangle\to|a,\,b,\,c\oplus ab\rangle,\qquad \text{Fredkin}:\ |1,b,c\rangle\to|1,c,b\rangle$$</div>
+    </div>
+    <div class="mode-intro" data-for="teleport" hidden>
+      <h2>Move a qubit with one shared pair and two bits.</h2>
+      <p>Alice has an unknown state \(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\) on qubit 1. She and Bob share an entangled pair: qubit 2 stays with Alice, qubit 3 is Bob's. After two gates, the state splits into four groups, one for each result Alice can get when she measures her two qubits. In every group, Bob's qubit already holds \(|\psi\rangle\), flipped in a known way. Alice's two-bit result tells Bob which flip to undo; until it arrives, his qubit is a fair coin.</p>
+      <div class="equation">$$\big(H_1\,\mathrm{CNOT}_{1\to2}\big)\,|\psi\rangle_1|\Phi^+\rangle_{23}=\frac12\sum_{m_1,m_2}|m_1m_2\rangle\otimes X^{m_2}Z^{m_1}|\psi\rangle,\qquad |\Phi^+\rangle=\frac{|00\rangle+|11\rangle}{\sqrt2}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-gates">
+    <aside class="panel controls" aria-label="Lab controls">
+      <!-- tab 1 -->
+      <div class="ctrl-group" data-modes="gates">
+        <div class="label-caps">Input bits</div>
+        <div class="bits" role="group" aria-label="Input bits">
+          <button type="button" class="bit-btn" data-bit="1"><small>Qubit 1</small><b>0</b></button>
+          <button type="button" class="bit-btn" data-bit="2"><small>Qubit 2</small><b>0</b></button>
+          <button type="button" class="bit-btn" data-bit="3"><small>Qubit 3</small><b>0</b></button>
+        </div>
+        <div class="ctrl__hint">Click a bit to flip it. The circuit stays the same.</div>
+      </div>
+      <div class="ctrl-group" data-modes="gates">
+        <div class="label-caps">Add a gate</div>
+        <div class="wire-pick">
+          <span class="builder__label">Target</span>
+          <div class="seg seg--inline" role="group" aria-label="Target qubit" id="target">
+            <button type="button" data-wire="1" aria-pressed="false">1</button><button type="button" data-wire="2" aria-pressed="false">2</button><button type="button" data-wire="3" aria-pressed="true">3</button>
+          </div>
+          <span class="builder__label">Control</span>
+          <div class="seg seg--inline" role="group" aria-label="Control qubit" id="control">
+            <button type="button" data-wire="1" aria-pressed="true">1</button><button type="button" data-wire="2" aria-pressed="false">2</button><button type="button" data-wire="3" aria-pressed="false">3</button>
+          </div>
+        </div>
+        <div class="gate-row gate-row--one">
+          <button class="gate-btn" type="button" data-add="X">X</button><button class="gate-btn" type="button" data-add="H">H</button><button class="gate-btn" type="button" data-add="Z">Z</button>
+        </div>
+        <div class="gate-row gate-row--wide">
+          <button class="gate-btn" type="button" data-add="CNOT" id="add-cnot">CNOT</button>
+          <button class="gate-btn" type="button" data-add="TOF" id="add-tof">Toffoli</button>
+          <button class="gate-btn" type="button" data-add="FRED" id="add-fred">Fredkin</button>
+          <button class="gate-btn" type="button" data-add="CCZ" id="add-ccz">CCZ</button>
+        </div>
+        <div class="ctrl__hint" id="gate-hint"></div>
+      </div>
+      <div class="ctrl-group" data-modes="gates">
+        <div class="label-caps">Examples</div>
+        <div class="chips" role="group" aria-label="Example circuits">
+          <button class="chip-btn" type="button" data-preset="and">AND</button>
+          <button class="chip-btn" type="button" data-preset="nand">NAND</button>
+          <button class="chip-btn" type="button" data-preset="adder">Half adder</button>
+          <button class="chip-btn" type="button" data-preset="cswap">Controlled swap</button>
+          <button class="chip-btn" type="button" data-preset="undo">Undo it</button>
+          <button class="chip-btn" type="button" data-preset="copy">Copy a bit</button>
+          <button class="chip-btn" type="button" data-preset="clone">Copy a superposition</button>
+          <button class="chip-btn" type="button" data-preset="parallel">Every input at once</button>
+          <button class="chip-btn" type="button" data-preset="kickback">Phase kickback</button>
+        </div>
+      </div>
+
+      <!-- tab 2 -->
+      <div class="ctrl-group" data-modes="teleport">
+        <div class="label-caps">Alice's message |ψ⟩</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="theta">Polar angle θ</label><output id="theta-out" for="theta"></output></div>
+          <input id="theta" type="range" min="0" max="180" step="5" value="60">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="phi">Phase φ</label><output id="phi-out" for="phi"></output></div>
+          <input id="phi" type="range" min="0" max="355" step="5" value="45">
+        </div>
+        <div class="chips" role="group" aria-label="Message states">
+          <button class="chip-btn" type="button" data-msg="0,0">|0⟩</button><button class="chip-btn" type="button" data-msg="180,0">|1⟩</button><button class="chip-btn" type="button" data-msg="90,0">|+⟩</button><button class="chip-btn" type="button" data-msg="90,90">|+i⟩</button><button class="chip-btn" type="button" data-msg="random">Surprise me</button>
+        </div>
+        <div class="ctrl__hint" id="msg-hint"></div>
+      </div>
+      <div class="ctrl-group" data-modes="teleport">
+        <div class="label-caps">Shared pair</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="purity">Pair quality v</label><output id="purity-out" for="purity"></output></div>
+          <input id="purity" type="range" min="0" max="1" step="0.01" value="1">
+          <div class="ctrl__hint">v = 1 is a perfect Bell pair, v = 0 pure noise. The pair is entangled for v above 1/3, as in the <a href="../entanglement-bell-test/index.html">entanglement lab</a>.</div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Step through">
+        <div class="transport transport--shots">
+          <span class="step-btns"><button class="btn-quiet" id="back" type="button" aria-label="Back one step">◀ Back</button><button class="btn-play" id="next" type="button">Next ▶</button></span>
+          <span class="chips chips--inline" role="group" aria-label="More">
+            <button class="chip-btn" type="button" data-shots="1" data-modes="gates">+1 shot</button><button class="chip-btn" type="button" data-shots="100" data-modes="gates">+100</button><button class="chip-btn" type="button" data-shots="1000" data-modes="gates">+1000</button>
+            <button class="chip-btn" type="button" id="to-end" data-modes="teleport">Run to the end</button><button class="chip-btn" type="button" id="restart" data-modes="teleport">Start again</button>
+            <button class="chip-btn" type="button" id="runs" data-modes="teleport">Teleport 1000 times</button>
+            <button class="chip-btn" type="button" id="clear-counts">Clear counts</button>
+          </span>
+          <div class="transport__time" id="step-out" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <div class="stats stats--4" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><span class="circuit__tools" data-modes="gates"><button class="btn-quiet btn-small" id="undo" type="button">Undo</button><button class="btn-quiet btn-small" id="clear" type="button">Clear</button></span></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <div class="circuit" id="circuit"></div>
+        <div class="wiring" id="wiring" data-modes="gates"></div>
+        <div class="sphere-trio" id="spheres" data-modes="teleport">
+          <div><div class="sphere-pair__label">Qubit 1 · Alice's message</div><div class="plot-box plot-box--trio"><canvas id="sphere-1" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere of qubit 1"></canvas></div></div>
+          <div><div class="sphere-pair__label">Qubit 2 · Alice's half of the pair</div><div class="plot-box plot-box--trio"><canvas id="sphere-2" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere of qubit 2"></canvas></div></div>
+          <div><div class="sphere-pair__label">Qubit 3 · Bob's half</div><div class="plot-box plot-box--trio"><canvas id="sphere-3" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere of qubit 3"></canvas></div></div>
+        </div>
+      </section>
+
+      <div class="note ket" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="outcomes" id="rows-a"></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="outcomes" id="rows-b"></div>
+          <div class="plot-box plot-box--tall" id="pb-box"><canvas id="plot-b" role="img" aria-label="Fidelity against pair quality"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+      <p class="lab-status" id="lab-status"></p>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then step through it to check.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Truth tables</span><button class="predict__load" type="button" data-q="q1">Load a Toffoli on |110⟩</button></div>
+        <p>A Toffoli gate with qubit 3 as its target acts on \(|110\rangle\). What comes out? Which of the eight rows does this gate ever change?</p>
+        <details><summary>Show answer</summary>
+          <p>\(|111\rangle\). The Toffoli flips qubit 3 only when qubits 1 and 2 are both 1, so it swaps rows \(|110\rangle\) and \(|111\rangle\) and leaves the other six alone. With qubit 3 starting at 0 it computes AND, but, unlike a classical AND gate, it keeps both inputs.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Truth tables</span><button class="predict__load" type="button" data-q="q2">Load the half adder</button></div>
+        <p>A Toffoli onto qubit 3, then CNOT 1→2, acting on \(|a\,b\,0\rangle\). What do the three output bits hold? Try \(a=b=1\).</p>
+        <details><summary>Show answer</summary>
+          <p>\(|a,\ a\oplus b,\ ab\rangle\): qubit 2 holds the sum bit and qubit 3 the carry. For \(1+1\) the output is \(|101\rangle\): sum 0, carry 1, which is 10 in binary. This is a half adder, built only from reversible gates.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Truth tables</span><button class="predict__load" type="button" data-q="q3">Load two Toffolis in a row</button></div>
+        <p>Apply the same Toffoli twice. What is the result, for every input? Why can a classical AND gate not do this?</p>
+        <details><summary>Show answer</summary>
+          <p>Every input comes back unchanged: the second Toffoli swaps the two rows back. Each row of a reversible gate goes to exactly one row and comes from exactly one, so the input can always be recovered. A classical AND has two inputs and one output: from an output of 0 you cannot tell whether the inputs were 00, 01 or 10, so it cannot be undone. Quantum gates are unitary and must be reversible.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Truth tables</span><button class="predict__load" type="button" data-q="q4">Load H, H, then Toffoli</button></div>
+        <p>Put qubits 1 and 2 into superposition with H, then apply the Toffoli. How many rows carry weight? If you measure, do you get the whole AND truth table?</p>
+        <details><summary>Show answer</summary>
+          <p>Four rows, each with amplitude ½: \(|000\rangle,|010\rangle,|100\rangle,|111\rangle\). The gate acted on all four inputs at once. But one measurement gives just one row, chosen at random with chance ¼ each, so you read one line of the table, not all of it. Qubit 3 is now entangled with the others: on its own its arrow has length ½.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Truth tables</span><button class="predict__load" type="button" data-q="q5">Load H, then CNOT 1→2</button></div>
+        <p>A CNOT copies a bit: \(|a\,0\rangle\to|a\,a\rangle\). Put qubit 1 in \(|+\rangle\) first. Do you get two copies of \(|+\rangle\)?</p>
+        <details><summary>Show answer</summary>
+          <p>No. You get \((|000\rangle+|110\rangle)/\sqrt2\), a Bell pair on qubits 1 and 2, and both of their arrows shrink to zero. Two copies, \(|{+}{+}\rangle\), would spread over four rows, \(|000\rangle,|010\rangle,|100\rangle,|110\rangle\). A CNOT copies 0 and 1 but not their superposition, and no gate can: this is the no-cloning theorem.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Teleportation</span><button class="predict__load" type="button" data-q="q6">Load step 4</button></div>
+        <p>Just before Alice measures, what is the chance of each of her four results? Does it depend on \(|\psi\rangle\)?</p>
+        <details><summary>Show answer</summary>
+          <p>Exactly ¼ each, for every message. Her two bits carry no information about \(\alpha\) or \(\beta\), so she can send them over an open line, and an eavesdropper learns nothing about \(|\psi\rangle\). Teleport 1000 times with different messages: the four bars stay level.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Teleportation</span><button class="predict__load" type="button" data-q="q7">Load step 5</button></div>
+        <p>Alice has measured, but her two bits have not reached Bob. How often would his qubit pass a check against \(|\psi\rangle\)? And what is left on Alice's side?</p>
+        <details><summary>Show answer</summary>
+          <p>Half the time, the same as a random guess: Bob holds one of four flipped versions of \(|\psi\rangle\), with equal chances, and on average his arrow sits at the centre. So nothing reaches Bob faster than the two classical bits. Alice is left with plain bits, \(|m_1m_2\rangle\), and no trace of \(|\psi\rangle\): the state was moved, not copied, as the no-cloning theorem requires.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Teleportation</span><button class="predict__load" type="button" data-q="q8">Load a noisy pair, v = 0.5</button></div>
+        <p>Mix the shared pair with noise, \(v=0.5\). How faithful is Bob's qubit after the correction? Below what \(v\) could Alice do as well by just measuring her qubit and phoning Bob the result?</p>
+        <details><summary>Show answer</summary>
+          <p>The fidelity is \((1+v)/2=75\%\) for any message, and Bob's arrow shrinks to length \(v\). The best that measuring and phoning can do, averaged over all messages, is \(2/3\). Teleportation beats it only when \(v>1/3\), exactly where the noisy pair stops being entangled.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the three-qubit gates as \(8\times8\) matrices, prints their truth tables, checks that each one undoes itself, runs the half adder and the no-cloning example, and then follows teleportation step by step with density matrices, including a noisy pair. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="three_qubits_teleportation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 13 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>States and gates:</strong> eight complex amplitudes, row \(4q_1+2q_2+q_3\), with qubit 1 written first. Gates are applied exactly: X, H and Z on one qubit; CNOT, Toffoli and Fredkin as reorderings of the rows; CCZ as a sign on \(|111\rangle\).</li>
+          <li><strong>The wiring picture:</strong> each line joins an input row to an output row where the gate's matrix element is not zero. Its colour is the element's phase, and dashed lines carry a minus sign. Dots show the state before and after the gate: size for probability, colour for phase.</li>
+          <li><strong>Arrows of single qubits:</strong> the Bloch vector of each qubit's reduced density matrix. Length 1 means that qubit has a definite state on its own; shorter means it is entangled with the others.</li>
+          <li><strong>Shots:</strong> outcomes are drawn from \(|c_{abc}|^2\) with the browser's random number generator.</li>
+          <li><strong>Teleportation:</strong> the standard circuit (H and CNOT make the pair, then CNOT 1→2, H on 1, measure 1 and 2, then Bob applies \(X^{m_2}\) and \(Z^{m_1}\)). A noisy pair is \(v|\Phi^+\rangle\langle\Phi^+|+(1-v)I/4\), handled exactly as a mixture of \(|\Phi^+\rangle\) and the pair with X, Y or Z applied to Bob's half. Bob's check measures his qubit along the direction of \(|\psi\rangle\); it passes with probability equal to the fidelity.</li>
+          <li><strong>Checks:</strong> every gate matrix, the reduced arrows and every teleportation step agree with an independent NumPy calculation (Kronecker products and full density matrices) to about \(10^{-15}\).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
