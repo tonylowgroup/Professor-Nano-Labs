@@ -36,7 +36,10 @@
     $('stats').innerHTML = items.map(([label, value, sub]) =>
       `<div class="stat"><div class="stat__label">${label}</div><div class="stat__value">${value}</div><div class="stat__sub">${sub}</div></div>`).join('');
   }
-  const note = html => { $('takeaway').innerHTML = html; };
+  // Write a live region only when its text changes, so screen readers are not flooded during playback.
+  function setHTML(el, html) { if (el.dataset.html === html) return false; el.dataset.html = html; el.innerHTML = html; typeset(el); return true; }
+  const note = html => { setHTML($('takeaway'), html); };
+  const info = html => { setHTML($('info'), html); };
   const rangeLine = (f, x0, x1, n) => { const x = [], y = []; for (let i = 0; i <= n; i++) { const t = x0 + (x1 - x0) * i / n; x.push(t); y.push(f(t)); } return { x, y }; };
   // ranges with equal scales on both axes, so a circle looks round
   function squareRange(plot, half) {
@@ -68,6 +71,7 @@
       tagColor: lost ? '#b23a48' : null,
     });
     $('dg-title').textContent = `Potential energy over the ${ua}–${va} plane`;
+    $('surface').setAttribute('aria-label', `Potential energy over the ${ua}–${va} plane, with the ion ${lost ? `lost along ${esc.ax}` : 'on it'}`);
     $('dg-cap').textContent = `Orange is uphill, blue downhill. The ion starts at rest, slightly off centre, and rolls. Drag the surface to turn it.${k[ua] >= 0 && k[va] >= 0 && esc.ax && !PLANES[S.plane].includes(esc.ax) ? ` This plane looks like a bowl, but the ion escapes along ${esc.ax}, out of the picture.` : ''}`;
     const hold = AXES.filter(a => k[a] > 0), push = AXES.filter(a => k[a] < 0);
     stats([
@@ -76,10 +80,9 @@
       ['Directions that push out', `${push.length} of 3`, push.length ? `sloping down along ${push.join(' and ')}` : 'none'],
       ['The ion', push.length ? `Lost along ${esc.ax}` : 'Never pushed', push.length ? `reaches the electrodes at t = ${esc.t.toFixed(2)}/ω₀` : 'every curvature is zero: no force at all'],
     ]);
-    $('info').innerHTML = push.length
+    info(push.length
       ? `<b>Downhill along ${push.join(' and ')}:</b> the ion is pushed out as \\(\\cosh(\\sqrt{${fixed(-k[esc.ax])}}\\,\\omega_0 t)\\) and reaches the electrodes at \\(t=${esc.t.toFixed(2)}/\\omega_0\\). ${hold.length ? `Along ${hold.join(' and ')} it only swings back and forth.` : ''}`
-      : '<b>Flat in every direction:</b> with all three curvatures zero there is no force at all, so nothing holds the ion either.';
-    typeset($('info'));
+      : '<b>Flat in every direction:</b> with all three curvatures zero there is no force at all, so nothing holds the ion either.');
     // plot A: potential along each axis
     const col = { x: css('--series-1'), y: css('--series-re'), z: css('--series-amber') };
     const L = AXES.map(a => { const r = rangeLine(u => k[a] * u * u / 2, -1, 1, 80); return { type: 'line', x: r.x, y: r.y, color: col[a], width: a === esc.ax && push.length ? 3 : 2.2, dash: a === 'z' ? [6, 4] : [] }; });
@@ -103,7 +106,9 @@
     $('pb-title').textContent = 'Where the ion goes';
     $('pb-cap').textContent = 'Released from rest at 0.12 r₀ along every axis. The shaded bands are the electrodes; the vertical line is now.';
     legend('pb-legend', AXES.map(a => [col[a], a === 'z' ? 'swatch--dash' : '', a]));
-    note(push.length && hold.length === 2
+    note(!push.length
+      ? '<b>No force, no trap.</b> The only way to avoid a downhill direction is to make every curvature zero, and then nothing holds the ion either.'
+      : push.length && hold.length === 2
       ? '<b>Two out of three is the best you can do.</b> Make a bowl in any two directions and Laplace\'s equation turns the third into a hill. Try the "End caps" example: that is half of a linear Paul trap, holding along z and pushing out across it.'
       : '<b>Try to hold the ion in all three directions.</b> Whatever you choose for k<sub>x</sub> and k<sub>y</sub>, k<sub>z</sub> moves the other way, so at least one direction slopes downhill.');
     return t;
@@ -116,10 +121,19 @@
     const key = S.V + '|' + S.f;
     if (flipCache && flipCache.key === key) return flipCache;
     const q = P.qOf(S.V, S.f * 1e6), b = P.beta(0, q);
-    const cycles = b.stable ? Math.min(150, Math.max(12, 6 / b.beta)) : 40;
+    const stable = q < Q_EDGE && b.stable;      // q above 0.908 has further stable bands, but no practical trap
+    const cycles = stable ? Math.min(150, Math.max(12, 6 / b.beta)) : 40;
     const per = q > 2 ? 240 : 120;
-    const tr = P.trajectory(0, q, X0, Y0, cycles, per);
-    flipCache = { key, q, b, cycles, tr, end: tr.lost !== null ? tr.lost : cycles };
+    let x0 = X0, y0 = Y0, tr;
+    if (stable) {
+      // the motion is linear, so scale the start down if the swing and its jiggle would reach the electrodes
+      const free = P.trajectory(0, q, X0, Y0, cycles, per, Infinity);
+      let rmax = 0; free.x.forEach((v, i) => { rmax = Math.max(rmax, Math.hypot(v, free.y[i])); });
+      const k = Math.min(1, 0.8 / rmax);
+      x0 = X0 * k; y0 = Y0 * k;
+      tr = { ...free, x: free.x.map(v => v * k), y: free.y.map(v => v * k), lost: null };
+    } else tr = P.trajectory(0, q, X0, Y0, cycles, per);
+    flipCache = { key, q, b, stable, x0, y0, cycles, tr, end: tr.lost !== null ? tr.lost : cycles };
     return flipCache;
   }
   function at(tr, t) {
@@ -129,7 +143,7 @@
 
   function renderFlip() {
     const d = flipData(), { q, b, tr } = d, t = Math.min(T.flip, d.end), lost = tr.lost !== null && T.flip >= tr.lost - 1e-9;
-    const stable = b.stable, sgn = -Math.cos(2 * Math.PI * t);
+    const stable = d.stable, sgn = -Math.cos(2 * Math.PI * t);
     const [x, y] = at(tr, t);
     const trailLen = stable ? Math.min(0.75 * 2 / b.beta, 12) : 2, trail = [];
     for (let i = 0; i <= 120; i++) { const s = Math.max(0, t - trailLen) + (t - Math.max(0, t - trailLen)) * i / 120; trail.push(at(tr, s)); }
@@ -142,8 +156,9 @@
       tagColor: lost ? '#b23a48' : null,
     });
     $('dg-title').textContent = saddle ? 'The saddle, flipping with the RF' : 'The bowl the ion feels on average';
+    $('surface').setAttribute('aria-label', saddle ? `The saddle potential over the x–y plane at q = ${fixed(q, 2)}, with the ion${lost ? ' lost' : ''}` : 'The average bowl over the x–y plane, with the ion');
     $('dg-cap').textContent = saddle
-      ? 'Rods marked + push the ion away and − pull it in; they swap every half period. The ball is the ion, computed exactly; drag the surface to turn it.'
+      ? 'A rod marked + repels the ion, back toward the axis; a rod marked − attracts it, outward. They swap every half period. The ball is the ion, computed exactly; drag the surface, or use the arrow keys, to turn it.'
       : 'The same motion drawn on the averaged potential, the pseudopotential. The slow swing follows this bowl; the fast jiggle is what averaging leaves out.';
     const fsec = stable ? b.beta * S.f / 2 : NaN, fapp = q * S.f / (2 * Math.SQRT2), depth = P.depthEV(q, S.V);
     stats([
@@ -154,20 +169,21 @@
     ]);
     $('drive-hint').textContent = `q = 2eV/(m r₀² Ω²) = ${fixed(q, 3)} for a ⁴⁰Ca⁺ ion with r₀ = 0.5 mm.`;
     const slow = q >= 1.5, when = tr.lost !== null ? ` It reaches the electrodes after ${tr.lost.toFixed(2)} RF periods.` : ' Give it time and the ion is lost.';
-    if (!stable) $('info').innerHTML = slow
+    const nearer = d.x0 < X0 - 1e-9 ? ` It starts ${fixed(d.x0, 2)} r₀ from the centre, closer than usual, so that its swing fits inside the trap.` : '';
+    if (!stable) info(slow
       ? `<b>Too slow:</b> at q = ${fixed(q, 2)} each half period lasts long enough for the ion to roll off the saddle before it flips.${when}`
-      : `<b>Just past the edge:</b> at q = ${fixed(q, 3)} each push back overshoots, so the swing grows every RF period instead of settling.${when}`;
-    else $('info').innerHTML = saddle
-      ? `<b>Right now the saddle holds along ${sgn >= 0 ? 'x' : 'y'} and pushes out along ${sgn >= 0 ? 'y' : 'x'}.</b> Half an RF period later it is the other way round. The jiggle keeps the ion a little closer to the centre while it is pushed out, and a little further out while it is held, where the force is stronger. So on average the push back wins.`
-      : '<b>The average bowl:</b> the push back wins because the ion is further out, where the force is stronger, during the half period that holds it. The result is a bowl with curvature set by q²/2.';
+      : `<b>Just past the edge:</b> at q = ${fixed(q, 3)} each push back overshoots, so the swing grows every RF period instead of settling.${when}`);
+    else if (!saddle) info(`<b>The average bowl:</b> the push back wins because the ion is further out, where the force is stronger, during the half period that holds it. The result is a bowl with curvature set by q²/2.${nearer}`);
+    else if (playing) info(`<b>The saddle flips twice every RF period.</b> The jiggle keeps the ion a little closer to the centre while it is pushed out, and a little further out while it is held, where the force is stronger. So on average the push back wins.${nearer}`);
+    else info(`<b>Right now the saddle holds along ${sgn >= 0 ? 'x' : 'y'} and pushes out along ${sgn >= 0 ? 'y' : 'x'}.</b> Half an RF period later it is the other way round. The jiggle keeps the ion a little closer to the centre while it is pushed out, and a little further out while it is held, where the force is stronger. So on average the push back wins.${nearer}`);
     // plot A: x(t), exact and the slow swing alone
-    const x1 = X0 / (1 - q / 2), ba = q / Math.SQRT2;
+    const x1 = d.x0 / (1 - q / 2), ba = q / Math.SQRT2;
     const shown = Math.min(d.cycles, Math.max(d.end, 1));
     const step = Math.max(1, Math.floor(tr.t.length / 2400)), tx = [], xx = [];
     for (let i = 0; i < tr.t.length; i += step) { tx.push(tr.t[i]); xx.push(tr.x[i]); }
     const amp = Math.max(0.4, Math.min(1.05, 1.15 * Math.max(...tr.x.map(Math.abs))));
     const LA = [{ type: 'hline', y: 0, color: css('--plot-axis'), dash: [] }];
-    if (q < Q_EDGE) { const g = rangeLine(s => x1 * Math.cos(ba * Math.PI * s), 0, shown, 600); LA.push({ type: 'line', x: g.x, y: g.y, color: css('--series-amber'), width: 2, dash: [6, 4] }); }
+    if (stable) { const g = rangeLine(s => x1 * Math.cos(ba * Math.PI * s), 0, shown, 600); LA.push({ type: 'line', x: g.x, y: g.y, color: css('--series-amber'), width: 2, dash: [6, 4] }); }
     LA.push({ type: 'line', x: tx, y: xx, color: css('--series-1'), width: 1.8 });
     LA.push({ type: 'vline', x: t, color: css('--plot-text'), width: 1.4, dash: [] });
     plotA.opts.xLabel = 'Time (RF periods)'; plotA.opts.yLabel = 'x / r₀'; plotA.opts.xTicks = 6;
@@ -175,7 +191,7 @@
     plotA.draw(LA);
     $('pa-title').textContent = 'Slow swing, fast jiggle';
     $('pa-cap').textContent = stable ? `Solid: the exact motion along x. Dashed: the slow swing alone, at the bowl-picture frequency. One swing takes about ${fixed(2 / b.beta, 1)} RF periods.` : 'The exact motion along x. Without a stable bowl, nothing brings the ion back.';
-    legend('pa-legend', [[css('--series-1'), '', 'exact (Mathieu)'], ...(q < Q_EDGE ? [[css('--series-amber'), 'swatch--dash', 'slow swing, bowl picture']] : [])]);
+    legend('pa-legend', [[css('--series-1'), '', 'exact (Mathieu)'], ...(stable ? [[css('--series-amber'), 'swatch--dash', 'slow swing, bowl picture']] : [])]);
     // plot B: path in the x-y plane
     const ix = Math.min(tr.t.length - 1, Math.round(t * tr.perCycle)), px = [], py = [];
     for (let i = 0; i <= ix; i += Math.max(1, Math.floor(ix / 2400))) { px.push(tr.x[i]); py.push(tr.y[i]); }
@@ -194,7 +210,7 @@
     $('pb-cap').textContent = 'Grey: the whole computed path. Coloured: up to now. The dashed circle is the electrodes, r = r₀.';
     legend('pb-legend', []);
     note(stable
-      ? `<b>Fast flipping makes a bowl.</b> Here the RF flips ${fixed(2 / b.beta, 1)} times per slow swing. Raise the frequency and q falls as 1/Ω²: the motion gets smoother, but the bowl gets shallower too.`
+      ? `<b>Fast flipping makes a bowl.</b> Here one slow swing lasts ${fixed(2 / b.beta, 1)} RF periods, so the saddle flips ${fixed(4 / b.beta, 0)} times per swing. Raise the frequency and q falls as 1/Ω²: the motion gets smoother, but the bowl gets shallower too.`
       : q >= 1.5 ? '<b>The flip is too slow for the push-out to be undone.</b> Raise the frequency, or lower the voltage, until q drops below 0.908.'
       : '<b>The drive is a little too strong.</b> Lower the voltage, or raise the frequency, until q drops below 0.908.');
     return t;
@@ -235,7 +251,7 @@
       { type: 'poly', x: g.both.x, y: g.both.y, fill: NanoPlot.alpha(brand, 0.42), color: brand, width: 1.6 },
       { type: 'hline', y: 0, color: css('--plot-axis'), dash: [] },
       { type: 'vline', x: Q_EDGE, color: css('--plot-text'), width: 1, dash: [3, 4] },
-      { type: 'text', x: 0.5, y: 0.05, text: 'trapped', color: '#fff', weight: 800, size: 13 },
+      { type: 'text', x: 0.5, y: 0.05, text: 'trapped', color: '#4a0f2e', weight: 800, size: 13 },
       { type: 'text', x: 1.06, y: 0.37, text: 'only y stable', color: blue },
       { type: 'text', x: 1.06, y: -0.2, text: 'only x stable', color: amber },
       { type: 'dots', x: [S.q], y: [S.a], color: '#14232c', r: 7.5 },
@@ -252,13 +268,16 @@
       ['Along y', by.stable ? `β = ${fixed(by.beta, 3)}` : 'Unstable', by.stable ? fs(by.beta) : `transfer-matrix trace ${fixed(by.tr, 2)}, beyond ±2`],
       ['Verdict', verdict, ok ? 'both directions stable' : 'the motion grows every RF period'],
     ]);
-    let info;
-    if (ok) info = `<b>Trapped.</b> The ion swings at β<sub>x</sub>Ω/2 along x and β<sub>y</sub>Ω/2 along y${Math.abs(S.a) > 0.0025 ? `; the steady part makes ${S.a > 0 ? 'x' : 'y'} the stiffer direction` : ''}. The bowl formula √(a + q²/2) gives ${fixed(P.betaApprox(S.a, S.q) || 0, 3)} for x${S.q > 0.5 ? ', already off at this q' : ''}.`;
-    else if (S.q >= Q_EDGE && Math.abs(S.a) < 0.05) info = '<b>The RF is too strong.</b> Past q = 0.908 each RF kick overshoots, so the swing grows instead of settling.';
-    else if (!by.stable && bx.stable) info = `<b>Lost along y.</b> The steady voltage adds a static saddle: a hill of curvature −a along y. Here it beats the RF bowl q²/2 = ${fixed(S.q * S.q / 2, 3)}.`;
-    else if (!bx.stable && by.stable) info = `<b>Lost along x.</b> With a negative steady part the static hill is along x, and the RF bowl q²/2 = ${fixed(S.q * S.q / 2, 3)} cannot hold it.`;
-    else info = '<b>Lost in both directions.</b>';
-    $('info').innerHTML = info;
+    let msg;
+    if (ok) msg = `<b>Trapped.</b> The ion swings at β<sub>x</sub>Ω/2 along x and β<sub>y</sub>Ω/2 along y${Math.abs(S.a) > 0.0025 ? `; the steady part makes ${S.a > 0 ? 'x' : 'y'} the stiffer direction` : ''}. The bowl formula √(a + q²/2) gives ${fixed(P.betaApprox(S.a, S.q) || 0, 3)} for x${S.q > 0.5 ? ', already off at this q' : ''}.`;
+    else {
+      // for each lost direction, say which edge of the stable band it crossed, using the exact edges
+      const e = P.edges(S.q, 1e-7, 120), why = (dir, ad) => ad <= e.a0
+        ? `<b>Lost along ${dir}.</b> The steady part adds a static hill of curvature ${fixed(-ad, 3)} along ${dir}, steeper than the RF bowl can hold at this q: the limit is ${fixed(-e.a0, 3)} (the bowl formula q²/2 would say ${fixed(S.q * S.q / 2, 3)}).`
+        : `<b>Lost along ${dir}.</b> The RF overshoots: the motion along ${dir} reaches half the drive frequency and locks to it, so every kick adds to the swing.`;
+      msg = [!bx.stable ? why('x', S.a) : '', !by.stable ? why('y', -S.a) : ''].filter(Boolean).join(' ');
+    }
+    info(msg);
     // plot A: the motion at this operating point
     const tr = P.trajectory(S.a, S.q, 0.05, 0.05, 30, 120);
     const amp = Math.max(0.08, Math.min(1.05, 1.15 * Math.max(...tr.x.map(Math.abs), ...tr.y.map(Math.abs))));
@@ -290,29 +309,43 @@
     $('pb-title').textContent = `Secular frequency along a = ${fixed(S.a, 3)}`;
     $('pb-cap').textContent = 'Thick: exact β from the transfer matrix, where the motion is stable. Dotted: the bowl formula √(±a + q²/2), good only for small q.';
     legend('pb-legend', [[brand, '', 'x, exact'], [blue, 'swatch--dash', 'y, exact'], [css('--plot-text'), 'swatch--dot', 'bowl formula']]);
-    note('<b>A mass filter uses the same chart.</b> Fix the ratio of steady to RF voltage and every ion mass lands on one straight line through the origin, at a different distance along it. Set the line just below the tip and only one mass is stable in both directions.');
+    note('<b>A mass filter uses the same chart.</b> Fix the ratio of steady to RF voltage and every ion mass lands on one straight line through the origin, at a different distance along it. Set the line just below the tip and only a narrow band of masses is stable in both directions.');
     return 0;
   }
 
   // ---------- 4. Ion crystals ----------
   const CRYS_HZ = 0.6;            // the axial frequency is shown at 0.6 cycles per second at 1x
-  let crysCache = null, mirror = 1, hot = null;
-  const zigCache = {};
-  function crystalSet() {
-    const b = S.fr / S.fz, key = b.toFixed(6);
-    if (crysCache && crysCache.key === key) return crysCache;
-    const all = [];
-    for (let N = 1; N <= 10; N++) {
+  let mirror = 1, hot = null, fillTimer = 0;
+  const zigCache = {}, crysCache = new Map();
+  const bNow = () => S.fr / S.fz;
+  function crystalOf(N, b) {
+    const key = N + '|' + b.toFixed(6);
+    if (!crysCache.has(key)) {
+      if (crysCache.size > 600) crysCache.clear();
       const c = P.crystal(N, b), md = P.modes(c.z, c.x, b);
       md.forEach(m => { m.dir = m.axial >= 0.5 ? 'axial' : 'radial'; });
-      all.push({ c, md });
+      crysCache.set(key, { c, md });
     }
-    crysCache = { key, b, all };
-    return crysCache;
+    return crysCache.get(key);
+  }
+  const cached = (N, b) => crysCache.get(N + '|' + b.toFixed(6));
+  // the plots need every N; compute the missing ones just after the current render
+  function fillLater() {
+    clearTimeout(fillTimer);
+    const b = bNow();
+    if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].every(N => cached(N, b))) return;
+    fillTimer = setTimeout(() => {
+      if (bNow() !== b) return;
+      for (let N = 1; N <= 10; N++) crystalOf(N, b);
+      if (mode === 'crystal' && !playing) render();
+    }, 90);
   }
   const zigRatio = N => (N in zigCache ? zigCache[N] : (zigCache[N] = P.zigzagRatio(N)));
   function modeList(md, dir) { return md.filter(m => m.dir === dir); }
-  function modeName(list, k, dir, zig, N) {
+  function modeName(list, k, dir, zig, N, b) {
+    const w = list[k].w;
+    if (Math.abs(w - 1) < 1e-6 && dir === 'axial') return { long: 'centre of mass', short: 'COM' };   // exact in any crystal
+    if (Math.abs(w - b) < 1e-6 && dir === 'radial') return { long: 'centre of mass', short: 'COM' };
     if (zig) return { long: `mode ${k + 1}`, short: `${k + 1}` };
     if (dir === 'axial') return k === 0 ? { long: 'centre of mass', short: 'COM' } : k === 1 ? { long: 'breathing', short: 'breathing' } : { long: `mode ${k + 1}`, short: `${k + 1}` };
     if (k === list.length - 1) return { long: 'centre of mass', short: 'COM' };
@@ -332,7 +365,7 @@
   }
 
   function startHot() {
-    const cur = crystalSet().all[S.N - 1], fr = frameOf(cur.c), N = S.N, z = [], x = [];
+    const cur = crystalOf(S.N, bNow()), fr = frameOf(cur.c), N = S.N, z = [], x = [];
     for (let i = 0; i < N; i++) {
       for (let tries = 0; tries < 200; tries++) {
         const zz = (Math.random() * 2 - 1) * fr.z * 0.85, xx = (Math.random() * 2 - 1) * Math.min(fr.x, 1.6) * 0.6;
@@ -366,19 +399,21 @@
   }
   function settle() {
     // keep the zigzag the way the cooled ions chose it
-    const cur = crystalSet().all[S.N - 1].c, order = hot.z.map((v, i) => i).sort((i, j) => hot.z[i] - hot.z[j]);
+    const cur = crystalOf(S.N, bNow()).c, order = hot.z.map((v, i) => i).sort((i, j) => hot.z[i] - hot.z[j]);
     let dot = 0; order.forEach((i, k) => { dot += hot.x[i] * cur.x[k]; });
     mirror = dot < 0 ? -1 : 1;
     hot = null;
   }
 
   function renderCrystal() {
-    const set = crystalSet(), cur = set.all[S.N - 1], { c, md } = cur, N = S.N;
+    const b = bNow(), cur = crystalOf(S.N, b), { c, md } = cur, N = S.N;
+    const all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => cached(n, b));
+    fillLater();
     const ell = P.lengthScale(S.fz * 1e6) * 1e6, crit = zigRatio(N);
     const { list, m } = selected(cur);
-    const nm = modeName(list, S.pick, S.dir, c.zigzag, N);
+    const nm = modeName(list, S.pick, S.dir, c.zigzag, N, b);
     // mode chips
-    const chipHtml = list.map((mm, k) => { const n2 = modeName(list, k, S.dir, c.zigzag, N); return `<button class="chip-btn" type="button" data-pick="${k}" aria-pressed="${k === S.pick}">${n2.short} · ${fixed(mm.w * S.fz, 2)} MHz</button>`; }).join('');
+    const chipHtml = list.map((mm, k) => { const n2 = modeName(list, k, S.dir, c.zigzag, N, b); return `<button class="chip-btn" type="button" data-pick="${k}" aria-pressed="${k === S.pick}">${n2.short} · ${fixed(mm.w * S.fz, 2)} MHz</button>`; }).join('');
     if ($('mode-chips').dataset.html !== chipHtml) { $('mode-chips').innerHTML = chipHtml; $('mode-chips').dataset.html = chipHtml; }
     document.querySelectorAll('#mdir [data-dir]').forEach(bt => { bt.setAttribute('aria-pressed', String(bt.dataset.dir === S.dir)); bt.disabled = !modeList(md, bt.dataset.dir).length; });
     // positions to draw
@@ -404,17 +439,18 @@
       ['Selected mode', `${fixed(m.w * S.fz, 2)} MHz`, `${nm.long}, ${fixed(m.w, 3)} × ω<sub>z</sub>`],
     ]);
     const what = c.zigzag ? '' : S.dir === 'axial'
-      ? (S.pick === 0 ? 'All ions move together, like one heavy particle: this is the bus mode of the trapped-ion lab.' : S.pick === 1 ? 'The string stretches and squeezes; each ion moves in proportion to its distance from the centre.' : 'Higher modes bend the string into more and more nodes.')
+      ? (S.pick === 0 ? 'All ions move together, like one heavy particle: this is the bus mode of the trapped-ion lab.' : S.pick === 1 ? 'The string stretches and squeezes; each ion moves in proportion to its distance from the centre.' : 'Higher modes split the string into more and more groups of ions moving in opposite directions.')
       : (nm.short === 'COM' ? 'All ions move together across the axis, at exactly ω<sub>r</sub>.' : nm.short === 'zigzag' || nm.short === 'rocking' ? `Neighbours move in opposite directions. This mode softens toward zero as ω<sub>r</sub>/2π approaches ${fixed(crit * S.fz, 2)} MHz, and then the string buckles.` : 'Ions move across the axis with different amplitudes.');
-    $('info').innerHTML = hot ? '<b>Cooling:</b> the ions lose energy every swing until the bowl and their repulsion balance.'
-      : c.zigzag ? `<b>Zigzag:</b> the radial grip, ω<sub>r</sub>/ω<sub>z</sub> = ${fixed(set.b, 2)}, is below the ${fixed(crit, 2)} that ${N} ions need, so the crowded middle ions escape sideways. The modes now mix both directions.`
-      : `<b>${nm.long[0].toUpperCase() + nm.long.slice(1)} mode, ${fixed(m.w, 3)} ω<sub>z</sub>:</b> ${what}`;
+    info(hot ? '<b>Cooling:</b> the ions lose energy every swing until the bowl and their repulsion balance.'
+      : c.zigzag ? `<b>Zigzag:</b> the radial grip, ω<sub>r</sub>/ω<sub>z</sub> = ${fixed(b, 2)}, is below the ${fixed(crit, 2)} that ${N} ions need, so the crowded middle ions escape sideways. The modes now mix both directions.`
+      : `<b>${nm.long[0].toUpperCase() + nm.long.slice(1)} mode, ${fixed(m.w, 3)} ω<sub>z</sub>:</b> ${what}`);
     // plot A: mode frequencies for 1 to 10 ions
     const brand = css('--series-1'), blue = css('--series-re'), amber = css('--series-amber');
     const axN = [], axF = [], raN = [], raF = [];
     let fmax = 0;
-    set.all.forEach((s, k) => s.md.forEach(mm => { const fq = mm.w * S.fz; fmax = Math.max(fmax, fq); if (mm.dir === 'axial') { axN.push(k + 1); axF.push(fq); } else { raN.push(k + 1); raF.push(fq); } }));
+    all.forEach((s, k) => s && s.md.forEach(mm => { const fq = mm.w * S.fz; fmax = Math.max(fmax, fq); if (mm.dir === 'axial') { axN.push(k + 1); axF.push(fq); } else { raN.push(k + 1); raF.push(fq); } }));
     plotA.opts.xLabel = 'Number of ions N'; plotA.opts.yLabel = 'Mode frequency (MHz)'; plotA.opts.xTicks = 10;
+    fmax = Math.max(fmax, ...md.map(mm => mm.w * S.fz));
     plotA.setRange([0.5, 10.5], [0, fmax * 1.06]);
     plotA.draw([
       { type: 'vband', x0: N - 0.4, x1: N + 0.4, color: NanoPlot.alpha(brand, 0.08) },
@@ -425,12 +461,12 @@
       { type: 'dots', x: [N], y: [m.w * S.fz], color: amber, r: 6.5 },
     ]);
     $('pa-title').textContent = 'Mode frequencies for 1 to 10 ions';
-    $('pa-cap').innerHTML = 'Each dot is one normal mode. Dashed: ω<sub>z</sub> and √3 ω<sub>z</sub>, where the centre-of-mass and breathing modes stay for any N. Orange: the selected mode.';
+    $('pa-cap').innerHTML = 'Each dot is one normal mode. Dashed: ω<sub>z</sub> and √3 ω<sub>z</sub>, where the centre-of-mass and breathing modes along the axis stay, whatever N, as long as the string is straight. Orange: the selected mode.';
     legend('pa-legend', [[brand, 'swatch--stem', 'mostly along the axis'], [blue, 'swatch--stem', 'mostly across it'], [amber, 'swatch--stem', 'selected']]);
     // plot B: positions along the axis for 1 to 10 ions
     const pz = [], pn = [], cz = [], cn = [];
     let zmax = 0;
-    set.all.forEach((s, k) => s.c.z.forEach(z => { zmax = Math.max(zmax, Math.abs(z) * ell); if (k + 1 === N) { cz.push(z * ell); cn.push(k + 1); } else { pz.push(z * ell); pn.push(k + 1); } }));
+    all.forEach((s, k) => s && s.c.z.forEach(z => { zmax = Math.max(zmax, Math.abs(z) * ell); if (k + 1 === N) { cz.push(z * ell); cn.push(k + 1); } else { pz.push(z * ell); pn.push(k + 1); } }));
     plotB.opts.xLabel = 'Position along the axis (µm)'; plotB.opts.yLabel = 'Number of ions N'; plotB.opts.xTicks = 7;
     plotB.setRange([-zmax * 1.08, zmax * 1.08], [0.4, 10.6]);
     plotB.draw([
@@ -443,10 +479,9 @@
     $('pb-cap').innerHTML = `Equilibrium positions along the axis at ω<sub>z</sub>/2π = ${fixed(S.fz, 2)} MHz. The string is densest in the middle, where the push from both sides is largest.`;
     legend('pb-legend', []);
     note(N > 1 && !c.zigzag
-      ? '<b>From crystal to quantum bus:</b> each of these modes is a quantum harmonic oscillator. The centre-of-mass mode, shared by every ion, is the phonon \\(|n_p\\rangle\\) that the trapped-ion lab uses to link qubits.'
+      ? '<b>From crystal to quantum bus:</b> each of these modes is a quantum harmonic oscillator. The centre-of-mass mode, shared by every ion, is the oscillator whose phonons \\(|n_p\\rangle\\) the trapped-ion lab uses to link qubits.'
       : N === 1 ? '<b>Add ions</b> and watch them line up: the end caps push them together and their charges push them apart.'
       : '<b>Raise ω<sub>r</sub></b> (a stronger RF) or lower ω<sub>z</sub> to pull the zigzag back into a straight string. Quantum computers keep their ions in a line.');
-    typeset($('takeaway'));
     return 0;
   }
 
@@ -472,7 +507,7 @@
     $('aa').value = S.a; $('aa-out').textContent = fixed(S.a, 3);
     $('nions').value = S.N; $('nions-out').textContent = S.N;
     $('fz').value = S.fz; $('fz-out').textContent = `${fixed(S.fz, 2)} MHz`;
-    $('fr').value = S.fr; $('fr-out').textContent = `${fixed(S.fr, 1)} MHz`;
+    $('fr').min = frMin(); $('fr').value = S.fr; $('fr-out').textContent = `${fixed(S.fr, 1)} MHz`;
   }
 
   function render() {
@@ -564,7 +599,9 @@
   });
   const crystalChange = () => { hot = null; mirror = 1; S.pick = Math.min(S.pick, 2 * S.N); render(); };
   $('nions').addEventListener('input', e => { S.N = +e.target.value; S.pick = 0; crystalChange(); });
-  $('fz').addEventListener('input', e => { S.fz = +e.target.value; crystalChange(); });
+  // a linear trap needs the radial grip stiffer than the axial one; keep wr at least 1.2 wz
+  const frMin = () => Math.ceil(12 * S.fz - 1e-9) / 10;
+  $('fz').addEventListener('input', e => { S.fz = +e.target.value; S.fr = Math.max(S.fr, frMin()); crystalChange(); });
   $('fr').addEventListener('input', e => { S.fr = +e.target.value; crystalChange(); });
   document.querySelectorAll('#mdir [data-dir]').forEach(bt => bt.addEventListener('click', () => { S.dir = bt.dataset.dir; S.pick = 0; render(); }));
   $('mode-chips').addEventListener('click', e => { const bt = e.target.closest('[data-pick]'); if (!bt) return; S.pick = +bt.dataset.pick; T.crystal = 0; render(); });
@@ -583,8 +620,8 @@
   const QUESTIONS = {
     q1: () => { mode = 'earnshaw'; S.kx = 0.5; S.ky = 0.5; S.plane = 'xy'; T.earnshaw = 0; },
     q2: () => { mode = 'flip'; S.V = 300; S.f = 5; S.view = 'saddle'; T.flip = 0; },
-    q3: () => { mode = 'flip'; S.V = 300; S.f = 20; T.flip = 0; },
-    q4: () => { mode = 'flip'; S.V = 300; S.f = 40; T.flip = 0; },
+    q3: () => { mode = 'flip'; S.V = 300; S.f = 20; S.view = 'saddle'; T.flip = 0; },
+    q4: () => { mode = 'flip'; S.V = 300; S.f = 40; S.view = 'saddle'; T.flip = 0; },
     q5: () => { mode = 'chart'; S.q = 0.9; S.a = 0; },
     q6: () => { mode = 'chart'; S.q = 0.4; S.a = 0.1; },
     q7: () => { mode = 'crystal'; S.N = 2; S.fz = 1; S.fr = 4; S.dir = 'axial'; S.pick = 1; hot = null; mirror = 1; },

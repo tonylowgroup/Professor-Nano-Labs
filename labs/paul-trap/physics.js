@@ -60,9 +60,10 @@
     const b1 = bisect(a => trace(a, q, n) + 2, a0, 1, tol);
     return { a0, b1 };
   }
-  // Ion released from rest at (x0, y0) when the RF is at its peak. Lost when it reaches the electrodes, r = 1.
-  function trajectory(a, q, x0, y0, cycles, perCycle) {
+  // Ion released from rest at (x0, y0) when the RF is at its peak. Lost when it reaches r = limit (the electrodes, by default).
+  function trajectory(a, q, x0, y0, cycles, perCycle, limit) {
     perCycle = perCycle || 120;
+    const lim2 = (limit === undefined ? 1 : limit) ** 2;
     const h = Math.PI / perCycle, n = Math.round(cycles * perCycle);
     const t = [0], x = [x0], y = [y0];
     let sx = [x0, 0], sy = [y0, 0], lost = null;
@@ -71,7 +72,7 @@
       sx = rk4(a, q, sx[0], sx[1], xi, h);
       sy = rk4(-a, -q, sy[0], sy[1], xi, h);
       t.push((i + 1) / perCycle); x.push(sx[0]); y.push(sy[0]);
-      if (sx[0] * sx[0] + sy[0] * sy[0] >= 1) { lost = (i + 1) / perCycle; break; }
+      if (sx[0] * sx[0] + sy[0] * sy[0] >= lim2) { lost = (i + 1) / perCycle; break; }
     }
     return { t, x, y, lost, perCycle };
   }
@@ -140,6 +141,19 @@
     const idx = Array.from({ length: n }, (_, i) => i).sort((i, j) => a[i][i] - a[j][j]);
     return { values: idx.map(i => a[i][i]), vectors: idx.map(i => V.map(row => row[i])) };
   }
+  // Solve H d = g by Cholesky factorisation; null if H is not positive definite.
+  function cholSolve(H, g) {
+    const n = g.length, L = Array.from({ length: n }, () => new Array(n).fill(0));
+    for (let i = 0; i < n; i++) for (let j = 0; j <= i; j++) {
+      let sum = H[i][j];
+      for (let k = 0; k < j; k++) sum -= L[i][k] * L[j][k];
+      if (i === j) { if (sum <= 1e-10) return null; L[i][i] = Math.sqrt(sum); } else L[i][j] = sum / L[j][j];
+    }
+    const y = new Array(n), d = new Array(n);
+    for (let i = 0; i < n; i++) { let sum = g[i]; for (let k = 0; k < i; k++) sum -= L[i][k] * y[k]; y[i] = sum / L[i][i]; }
+    for (let i = n - 1; i >= 0; i--) { let sum = y[i]; for (let k = i + 1; k < n; k++) sum -= L[k][i] * d[k]; d[i] = sum / L[i][i]; }
+    return d;
+  }
   // Minimise the energy with saddle-free Newton steps (they walk away from saddles such as an unstable straight string).
   function relax(P, N, b, onlyAxial) {
     const dim = onlyAxial ? N : 2 * N;
@@ -148,9 +162,12 @@
       const gn = Math.hypot(...g);
       if (gn < 1e-12) break;
       const H = hessian(P, N, b).slice(0, dim).map(r => r.slice(0, dim));
-      const { values, vectors } = eigSym(H);
-      const d = new Array(dim).fill(0);
-      values.forEach((lam, k) => { const v = vectors[k]; let vg = 0; for (let i = 0; i < dim; i++) vg += v[i] * g[i]; const c = vg / Math.max(Math.abs(lam), 1e-6); for (let i = 0; i < dim; i++) d[i] -= c * v[i]; });
+      let d = cholSolve(H, g);                // plain Newton step where the Hessian is positive definite
+      if (!d) {                               // otherwise a saddle-free step: divide by |eigenvalue|
+        const { values, vectors } = eigSym(H);
+        d = new Array(dim).fill(0);
+        values.forEach((lam, k) => { const v = vectors[k]; let vg = 0; for (let i = 0; i < dim; i++) vg += v[i] * g[i]; const c = vg / Math.max(Math.abs(lam), 1e-6); for (let i = 0; i < dim; i++) d[i] -= c * v[i]; });
+      } else d = d.map(v => -v);
       const E0 = energy(P, N, b);
       let s = 1, moved = false;
       for (let k = 0; k < 40; k++) {
@@ -170,11 +187,48 @@
   }
   // The straight string along the axis (the radial confinement is assumed strong enough).
   function chain(N) { return relax(startGuess(N), N, 1, true).slice(0, N); }
-  // The 2D crystal in the x-z plane: starts from a slightly zigzagged string and relaxes.
-  function crystal(N, b) {
-    const P = startGuess(N);
-    for (let i = 0; i < N; i++) P[N + i] = 0.02 * (i % 2 ? 1 : -1);
+  // Relax, then make sure the result is a minimum: while the Hessian has a negative eigenvalue
+  // (a saddle, such as a string that wants to buckle), step off along it both ways and keep the lower energy.
+  function relaxToMinimum(P, N, b) {
     relax(P, N, b, false);
+    for (let k = 0; k < 12; k++) {
+      const { values, vectors } = eigSym(hessian(P, N, b));
+      if (values[0] > -1e-9) break;
+      let best = null;
+      for (const s of [0.15, -0.15]) {
+        const T = P.map((p, i) => p + s * vectors[0][i]);
+        relax(T, N, b, false);
+        const E = energy(T, N, b);
+        if (!best || E < best.E) best = { T, E };
+      }
+      for (let i = 0; i < 2 * N; i++) P[i] = best.T[i];
+    }
+    return P;
+  }
+  // The 2D crystal in the x-z plane with the lowest energy. A straight string is the answer while the radial
+  // grip is above the zigzag threshold; below it, several deterministic starts are tried and the lowest kept.
+  const STARTS = 3;
+  function crystal(N, b) {
+    let P = startGuess(N);
+    for (let i = 0; i < N; i++) P[N + i] = 0.02 * (i % 2 ? 1 : -1);
+    relaxToMinimum(P, N, b);
+    if (N > 2 && b < zigzagRatio(N)) {
+      let seed = 12345 + 977 * N;
+      const rand = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+      let bestE = energy(P, N, b);
+      for (let k = 0; k < STARTS; k++) {
+        const T = startGuess(N);
+        for (let i = 0; i < N; i++) { T[i] *= 0.8 + 0.4 * rand(); T[N + i] = (rand() - 0.5) * (k % 2 ? 1.6 : 0.6) / b; }
+        relaxToMinimum(T, N, b);
+        const E = energy(T, N, b);
+        if (E < bestE - 1e-9) { bestE = E; P = T; }
+      }
+    }
+    // a tidy orientation: sorted along the axis, and the leftmost ion on the lower side
+    const idx = Array.from({ length: N }, (_, i) => i).sort((i, j) => P[i] - P[j]);
+    const zs = idx.map(i => P[i]), xs = idx.map(i => P[N + i]);
+    const flip = xs.length && xs[0] > 1e-6 ? -1 : 1;
+    P = zs.concat(xs.map(v => flip * v));
     const z = P.slice(0, N), x = P.slice(N);
     const zigzag = Math.max(...x.map(Math.abs)) > 1e-4;
     if (!zigzag) for (let i = 0; i < N; i++) x[i] = 0;
@@ -191,12 +245,14 @@
     });
   }
   // A straight string turns into a zigzag when wr / wz falls below this.
+  const zigCache = {};
   function zigzagRatio(N) {
     if (N < 2) return 0;
+    if (N in zigCache) return zigCache[N];
     const z = chain(N), x = new Array(N).fill(0);
     const A = hessian(z.concat(x), N, 0).slice(0, N).map(r => r.slice(0, N));
     const mu = eigSym(A).values[N - 1];
-    return Math.sqrt((mu - 1) / 2);
+    return (zigCache[N] = Math.sqrt((mu - 1) / 2));
   }
 
   window.Paul = {

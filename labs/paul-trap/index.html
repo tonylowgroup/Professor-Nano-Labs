@@ -88,8 +88,8 @@
   <!-- The model -->
   <section class="panel" aria-labelledby="idea-title">
     <h2 id="idea-title">One ion, four rods and two end caps</h2>
-    <p>The ion is \(^{40}\mathrm{Ca}^+\), the same ion as in the <a href="../trapped-ion-qubit/index.html">trapped-ion lab</a>. In a linear Paul trap, four rods run parallel to the trap axis \(z\), each a distance \(r_0=0.5\) mm from it. A voltage \(U-V\cos\Omega_{\rm RF}t\) is applied between the two pairs of opposite rods: a radio-frequency part \(V\), and perhaps a steady part \(U\). Near the axis, the ion's potential energy in the \(x\)–\(y\) plane is a saddle whose sign follows the voltage:</p>
-    <div class="equation">$$U(x,y,t)=\frac{e}{2r_0^2}\big(U-V\cos\Omega_{\rm RF}t\big)\,(x^2-y^2)$$</div>
+    <p>The ion is \(^{40}\mathrm{Ca}^+\), the same ion as in the <a href="../trapped-ion-qubit/index.html">trapped-ion lab</a>. In a linear Paul trap, four rods run parallel to the trap axis \(z\), each a distance \(r_0=0.5\) mm from it. A voltage \(U_{\rm DC}-V\cos\Omega_{\rm RF}t\) is applied between the two pairs of opposite rods: a radio-frequency part \(V\), and perhaps a steady part \(U_{\rm DC}\). Near the axis, the ion's potential energy in the \(x\)–\(y\) plane is a saddle whose sign follows the voltage:</p>
+    <div class="equation">$$U(x,y,t)=\frac{e}{2r_0^2}\big(U_{\rm DC}-V\cos\Omega_{\rm RF}t\big)\,(x^2-y^2)$$</div>
     <p>Two electrodes at the ends of the rods, the end caps, hold the ion along \(z\). The four tabs follow the video: why a fixed field cannot trap, how the oscillating field does, which voltages work, and what happens when many ions share the trap.</p>
   </section>
 
@@ -109,17 +109,17 @@
     <div class="mode-intro" data-for="flip" hidden>
       <h2>Flip the saddle before the ion can roll off.</h2>
       <p>With the radio-frequency voltage on, the saddle turns inside out twice every RF period: the direction that was downhill becomes uphill. If it flips fast enough, the ion is pushed back each time before it gets away. It moves in a slow swing, the secular motion, with a small fast jiggle on top, the micromotion. On average it behaves as if it sat in a bowl.</p>
-      <div class="equation">$$\ddot x-\frac{eV}{m r_0^2}\cos(\Omega_{\rm RF}t)\,x=0,\qquad x(t)\approx x_1\cos(\omega t)\Big[1-\frac q2\cos\Omega_{\rm RF}t\Big],\qquad \omega\approx\frac{q\,\Omega_{\rm RF}}{2\sqrt2},\qquad q=\frac{2eV}{m r_0^2\Omega_{\rm RF}^2}$$</div>
+      <div class="equation">$$\begin{gathered}\ddot x-\frac{eV}{m r_0^2}\cos(\Omega_{\rm RF}t)\,x=0,\qquad q=\frac{2eV}{m r_0^2\Omega_{\rm RF}^2}\\ x(t)\approx x_1\cos(\omega t)\Big[1-\frac q2\cos\Omega_{\rm RF}t\Big],\qquad \omega\approx\frac{q\,\Omega_{\rm RF}}{2\sqrt2}\end{gathered}$$</div>
     </div>
     <div class="mode-intro" data-for="chart" hidden>
       <h2>Every trap you could build, on one map.</h2>
-      <p>Measure time in RF half-periods and the motion along each direction becomes the Mathieu equation, with two numbers: \(q\) from the RF voltage and \(a\) from the steady voltage. Along \(x\) the ion feels \((a,q)\), along \(y\) it feels \((-a,-q)\). The ion is trapped only where both are stable. Click anywhere on the chart to build that trap.</p>
-      <div class="equation">$$\frac{d^2u}{d\xi^2}+\big(a-2q\cos2\xi\big)u=0,\qquad \xi=\frac{\Omega_{\rm RF}t}2,\qquad a=\frac{4eU}{m r_0^2\Omega_{\rm RF}^2},\qquad \omega=\beta\,\frac{\Omega_{\rm RF}}2,\quad \beta\approx\sqrt{a+q^2/2}$$</div>
+      <p>Rescale time as \(\xi=\Omega_{\rm RF}t/2\), so that one RF period is \(\xi=\pi\), and the motion along each direction becomes the Mathieu equation, with two numbers: \(q\) from the RF voltage and \(a\) from the steady voltage. Along \(x\) the ion feels \((a,q)\), along \(y\) it feels \((-a,-q)\). The ion is trapped only where both are stable. Click anywhere on the chart to build that trap.</p>
+      <div class="equation">$$\frac{d^2u}{d\xi^2}+\big(a-2q\cos2\xi\big)u=0,\qquad \xi=\frac{\Omega_{\rm RF}t}2,\qquad a=\frac{4eU_{\rm DC}}{m r_0^2\Omega_{\rm RF}^2},\qquad \omega=\beta\,\frac{\Omega_{\rm RF}}2,\quad \beta\approx\sqrt{a+q^2/2}$$</div>
     </div>
     <div class="mode-intro" data-for="crystal" hidden>
       <h2>Many ions: a string held apart by its own repulsion.</h2>
       <p>The end caps make a bowl along the axis at frequency \(\omega_z\); the RF makes a stiffer one across it at \(\omega_r\). Load several ions and they push each other apart until the bowl and the repulsion balance. Cooled, they freeze into a string, or a zigzag if the radial grip is too weak. The string vibrates in normal modes, and those are the phonons that the <a href="../trapped-ion-qubit/index.html">trapped-ion lab</a> uses as its bus.</p>
-      <div class="equation">$$U=\sum_i\tfrac12 m\left(\omega_z^2z_i^2+\omega_r^2x_i^2\right)+\sum_{i<j}\frac{e^2}{4\pi\varepsilon_0 r_{ij}},\qquad \ell=\left(\frac{e^2}{4\pi\varepsilon_0 m\omega_z^2}\right)^{1/3},\qquad \omega_{\rm COM}=\omega_z,\quad \omega_{\rm breathing}=\sqrt3\,\omega_z$$</div>
+      <div class="equation">$$U=\sum_i\tfrac12 m\left(\omega_z^2z_i^2+\omega_r^2x_i^2\right)+\sum_{i\lt j}\frac{e^2}{4\pi\varepsilon_0 r_{ij}},\qquad \ell=\left(\frac{e^2}{4\pi\varepsilon_0 m\omega_z^2}\right)^{1/3},\qquad \omega_{\rm COM}=\omega_z,\quad \omega_{\rm breathing}=\sqrt3\,\omega_z$$</div>
     </div>
   </section>
 
@@ -213,7 +213,8 @@
         </div>
         <div class="ctrl">
           <div class="ctrl__row"><label for="fr">Radial ω<sub>r</sub>/2π</label><output id="fr-out" for="fr"></output></div>
-          <input id="fr" type="range" min="0.5" max="6" step="0.1" value="4">
+          <input id="fr" type="range" min="1.2" max="6" step="0.1" value="4">
+          <div class="ctrl__hint">In a linear trap the radial grip is the stiffer one, so ω<sub>r</sub> stays at least 1.2 ω<sub>z</sub>.</div>
         </div>
       </div>
       <div class="ctrl-group" data-modes="crystal">
@@ -249,12 +250,13 @@
         </div>
       </section>
 
-      <div class="stats stats--4" id="stats"></div>
+      <div class="stats stats--4 stats--steady" id="stats"></div>
 
       <section class="panel plot-card diagram-card">
         <div class="plot-card__head"><h3 id="dg-title"></h3></div>
         <p class="plot-card__cap" id="dg-cap"></p>
-        <div class="plot-box plot-box--surface" id="surface-box"><canvas id="surface" class="surface" tabindex="0" role="img" aria-label="Potential energy surface with the ion"></canvas></div>
+        <div class="plot-box plot-box--surface" id="surface-box"><canvas id="surface" class="surface" tabindex="0" role="img" aria-label="Potential energy surface with the ion" aria-describedby="surface-hint"></canvas></div>
+        <p class="visually-hidden" id="surface-hint">Use the arrow keys to turn the surface.</p>
         <ul class="legend" id="chart-legend" hidden></ul>
         <div class="plot-box plot-box--chart" id="chart-box" hidden><canvas id="chart" class="chart-canvas" role="img" aria-label="Stability chart in the a–q plane"></canvas></div>
         <div class="plot-box plot-box--crystal" id="crystal-box" hidden><canvas id="crystal" role="img" aria-label="The ions in the trap"></canvas></div>
@@ -327,14 +329,14 @@
         <div class="predict__head"><span class="predict__tag">Question 6 · Stability chart</span><button class="predict__load" type="button" data-q="q6">Load q = 0.4, a = 0.1</button></div>
         <p>Add a steady voltage, \(a=0.1\), at \(q=0.4\). Is the ion still trapped?</p>
         <details><summary>Show answer</summary>
-          <p>No. The steady voltage adds a static saddle. Along x it stiffens the trap, \(\beta_x=0.44\). Along y it adds a hill, \(-a\), that beats the RF bowl, \(q^2/2=0.08\), so y is lost. At \(q=0.4\) the steady part must stay within \(|a|<0.079\). A quadrupole mass filter works on the edge of this region: only ions of one mass have both directions stable.</p>
+          <p>No. The steady voltage adds a static saddle. Along x it stiffens the trap, \(\beta_x=0.44\). Along y it adds a hill, \(-a\), that beats the RF bowl, \(q^2/2=0.08\), so y is lost. At \(q=0.4\) the steady part must stay within \(|a|<0.079\). A quadrupole mass filter works near the tip of this region: only a narrow band of masses has both directions stable.</p>
         </details>
       </div>
       <div class="predict">
         <div class="predict__head"><span class="predict__tag">Question 7 · Ion crystals</span><button class="predict__load" type="button" data-q="q7">Load two ions</button></div>
         <p>Two ions with \(\omega_z=2\pi\times1\) MHz. How far apart do they sit, and at what frequencies do they vibrate along the axis? Then add more ions: what happens to the two lowest modes?</p>
         <details><summary>Show answer</summary>
-          <p>They sit \(2^{1/3}\ell\approx5.6\ \mu\)m apart, with \(\ell=4.45\ \mu\)m. Together they swing at \(\omega_z\) (the centre-of-mass mode, 1 MHz) and against each other at \(\sqrt3\,\omega_z\) (the breathing mode, 1.73 MHz). For any number of ions, these two modes stay at exactly 1 and \(\sqrt3\) times \(\omega_z\); the new modes all lie above them.</p>
+          <p>They sit \(2^{1/3}\ell\approx5.6\ \mu\)m apart, with \(\ell=4.45\ \mu\)m. Together they swing at \(\omega_z\) (the centre-of-mass mode, 1 MHz) and against each other at \(\sqrt3\,\omega_z\) (the breathing mode, 1.73 MHz). As long as the ions stay in a straight string, these two modes along the axis stay at exactly 1 and \(\sqrt3\) times \(\omega_z\) for any number of ions, and every new axial mode lies above them. (At this radial grip, 9 or more ions buckle into a zigzag, and then the breathing mode is gone.)</p>
         </details>
       </div>
       <div class="predict">
@@ -364,7 +366,7 @@
       <div class="prose">
         <ul>
           <li><strong>No static trap:</strong> the ion starts at rest, 0.12 of the way to the electrodes along each axis. Along each axis it moves as \(\cos(\sqrt k\,\omega_0t)\) when \(k>0\) and as \(\cosh(\sqrt{-k}\,\omega_0t)\) when \(k<0\). It is lost when it reaches the electrodes.</li>
-          <li><strong>Flip the saddle:</strong> the exact equation of motion, the Mathieu equation, is integrated with fourth-order Runge–Kutta, 120 steps per RF period. The ion starts at rest at \(x=0.3\,r_0,\ y=0.2\,r_0\) at the peak of the RF and is lost if it reaches \(r=r_0\). The dashed curve is the slow swing alone, \(x_1\cos\omega t\), with the bowl-picture frequency \(\omega=\sqrt{a+q^2/2}\,\Omega_{\rm RF}/2\).</li>
+          <li><strong>Flip the saddle:</strong> the exact equation of motion, the Mathieu equation, is integrated with fourth-order Runge–Kutta, 120 steps per RF period (240 when \(q>2\)). The ion starts at rest at \(x=0.3\,r_0,\ y=0.2\,r_0\) at the peak of the RF and is lost if it reaches \(r=r_0\). Near the edge of stability the swing and its jiggle would reach the electrodes from there, so the start is scaled down until the largest excursion is \(0.8\,r_0\). Only the first stability region, \(q<0.908\), counts as a trap. The dashed curve is the slow swing alone, \(x_1\cos\omega t\), with the bowl-picture frequency \(\omega=\sqrt{a+q^2/2}\,\Omega_{\rm RF}/2\).</li>
           <li><strong>Ion and trap:</strong> \(^{40}\)Ca\(^+\), mass 39.96 u, \(r_0=0.5\) mm. The trap depth is the bowl picture's \(qV/8\) (in eV, for a singly charged ion, at \(a=0\)).</li>
           <li><strong>Stability chart:</strong> for each \((a,q)\) the one-period transfer matrix of the Mathieu equation is integrated; the motion is bounded when its trace lies between −2 and 2, and then \(\cos\pi\beta\) is half the trace. The edges of the region are found by bisection and agree with SciPy's Mathieu characteristic values \(a_0(q)\) and \(b_1(q)\) to about \(10^{-7}\).</li>
           <li><strong>Ion crystals:</strong> the ions move in the x–z plane, with the RF averaged into a radial bowl at \(\omega_r\). The equilibrium is found by minimising the energy (Newton's method, which steps away from a straight string when it is unstable), and the normal modes are the eigenvectors of the energy's second derivatives. "Load hot ions" integrates the motion with a friction term standing in for laser cooling.</li>

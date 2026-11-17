@@ -406,6 +406,7 @@ mjx-container svg { display: inline; }
 .kbar__fill { position: absolute; top: 0; bottom: 0; border-radius: 5px; transition: width .12s ease, left .12s ease; }
 .kbar__val { text-align: right; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .seg button:disabled { opacity: .45; cursor: not-allowed; }
+.stats--steady .stat__sub { min-height: 2.7em; }
 @media (max-width: 640px) {
   .plot-box.plot-box--surface { height: 300px; }
   .plot-box.plot-box--chart { height: 320px; }
