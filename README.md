@@ -24,6 +24,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 |---|---|---|
 | Quantum foundations | Gaussian Wave Packet | `labs/gaussian-wave-packet/` |
 | Quantum foundations | Quantum Harmonic Oscillator: Ladders and Coherent States | `labs/harmonic-oscillator/` |
+| Quantum foundations | The Hydrogen Atom: Orbitals and Spectral Lines | `labs/hydrogen-atom/` |
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
 | Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
 | Quantum computing | Entanglement: Correlations No Coin Can Fake | `labs/entanglement-bell-test/` |
