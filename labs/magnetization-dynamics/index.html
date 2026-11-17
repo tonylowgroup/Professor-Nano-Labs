@@ -113,7 +113,7 @@
     </div>
     <div class="mode-intro" data-for="switch" hidden>
       <h2>Two wells, and a field to tip them.</h2>
-      <p>A memory bit needs two stable directions. Uniaxial anisotropy provides them: \(E=K_{\rm eff}\sin^2\theta\) has minima at \(\theta=0\) and \(\pi\), up and down the easy axis, with a barrier between. A field up the axis tilts the landscape. The bit starts pointing down, a few degrees off the axis, and flips only when the field is strong enough to remove the down state's well: when \(H\) exceeds the anisotropy field \(H_K\).</p>
+      <p>A memory bit needs two stable directions. Uniaxial anisotropy provides them: \(E=K_{\rm eff}\sin^2\theta\) has minima at \(\theta=0\) and \(\pi\), up and down the easy axis, with a barrier between. A field up the axis tilts the landscape. The bit starts pointing down, a few degrees off the axis, and flips only when the field is strong enough to remove the down state's well, when \(H\) exceeds the anisotropy field \(H_K\), or at least to bring the top of the barrier past its starting angle, which for a start \(\theta_t\) off the axis takes \(H_K\cos\theta_t\).</p>
       <div class="equation">$$E=K_{\rm eff}\sin^2\theta-\mu_0M_SH\cos\theta,\qquad \mathbf H_{\rm eff}=\big(H+H_Km_z\big)\hat{\mathbf z},\qquad H_K=\frac{2K_{\rm eff}}{\mu_0M_S},\qquad \Delta E=K_{\rm eff}\Big(1-\frac{H}{H_K}\Big)^2$$</div>
     </div>
     <div class="mode-intro" data-for="write" hidden>
@@ -209,7 +209,7 @@
         <div class="transport__more"><span id="transport-note"></span></div>
       </section>
 
-      <div class="stats stats--4 stats--steady" id="stats"></div>
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
 
       <section class="panel plot-card diagram-card">
         <div class="plot-card__head"><h3 id="dg-title"></h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
@@ -304,7 +304,7 @@
         <div class="predict__head"><span class="predict__tag">Question 8 · Writing MRAM</span><button class="predict__load" type="button" data-q="q8">Load 0.6 H<sub>K</sub> on both lines</button></div>
         <p>Both lines carry enough current for 0.6 \(H_K\). Which bits flip: the selected one, the ones sharing its word line, the ones sharing its bit line?</p>
         <details><summary>Show answer</summary>
-          <p>Only the selected bit. It feels both fields, and \(0.6^{2/3}+0.6^{2/3}=1.42\gt1\) puts it outside the astroid. Its neighbours feel 0.6 \(H_K\) along one axis only, inside the astroid, so they keep their state. With equal fields the window is from \(2^{-3/2}=0.35\) to 1 \(H_K\). The catch is the current: \(H\approx I/2w\) for a line of width \(w\), so 0.6 \(H_K\) needs 60 mA in a 100 nm line. That is why newer MRAMs switch the bit with a spin current instead (the extra torque \(\mathbf N\) on the video's last slide).</p>
+          <p>Only the selected bit. It feels both fields, and \(0.6^{2/3}+0.6^{2/3}=1.42\gt1\) puts it outside the astroid. Its neighbours feel 0.6 \(H_K\) along one axis only, inside the astroid, so they keep their state. With equal fields the window is from \(2^{-3/2}=0.35\) to 1 \(H_K\). The catch is the current: \(H\approx I/2w\) for a line of width \(w\), so for this stiff bit (\(\mu_0H_K=0.63\) T) 0.6 \(H_K\) needs 60 mA in a 100 nm line. Field-written MRAMs used much softer bits, with \(H_K\) of a few millitesla and a few milliamps of current, but soft bits lose their stability as they shrink. That is why newer MRAMs switch the bit with a spin current instead (the extra torque \(\mathbf N\) on the video's last slide).</p>
         </details>
       </div>
     </div>
@@ -325,12 +325,12 @@
       <summary>What is being computed?</summary>
       <div class="prose">
         <ul>
-          <li><strong>The magnet:</strong> a single domain (a macrospin): one unit vector \(\mathbf m\) for the whole bit, with \(\mu_0M_S=1.6\) T (\(M_S=1.27\times10^6\) A/m, typical of CoFeB; the video does not give a value) and \(\gamma=\mu_0\gamma_e=2.213\times10^5\) m A⁻¹ s⁻¹. With the video's \(K_{\rm eff}=4\times10^5\) J/m³ this gives \(H_K=5\times10^5\) A/m (0.63 T), so its two fields, \(10^5\) and \(6\times10^5\) A/m, fall on either side of it. The energy curves on the video's slides are sketches and are not all drawn to the same scale.</li>
+          <li><strong>The magnet:</strong> a single domain (a macrospin): one unit vector \(\mathbf m\) for the whole bit, with \(\mu_0M_S=1.6\) T (\(M_S=1.27\times10^6\) A/m, typical of CoFeB; the video does not give a value) and \(\gamma=\mu_0\gamma_e=2.213\times10^5\) m A⁻¹ s⁻¹. With the video's \(K_{\rm eff}=4\times10^5\) J/m³ this gives \(H_K=5\times10^5\) A/m (0.63 T), so its two fields, \(10^5\) and \(6\times10^5\) A/m, fall on either side of it. The energy curves on the video's slides are sketches: the one for \(10^5\) A/m matches \(h\approx0.25\), while the one for \(6\times10^5\) A/m sits exactly at the threshold, \(h\approx1\), so no single \(M_S\) fits both; 1.6 T puts the two fields at \(h=0.2\) and 1.2.</li>
           <li><strong>The equation:</strong> the Gilbert form is rewritten in the explicit Landau–Lifshitz form \(d\mathbf m/dt=-\gamma'[\mathbf m\times\mathbf H_{\rm eff}+\alpha\,\mathbf m\times(\mathbf m\times\mathbf H_{\rm eff})]\), \(\gamma'=\gamma/(1+\alpha^2)\), which is the same equation. It is integrated with fourth-order Runge–Kutta, with steps of at most 0.04 rad of precession, renormalizing \(|\mathbf m|=1\) after each; steps are split where a field switches off. The two arrows at the tip of \(\mathbf m\) are the two parts of \(d\mathbf m/dt\): around the field and toward it.</li>
           <li><strong>Fields:</strong> \(\mathbf H_{\rm eff}=\mathbf H_{\rm ext}+H_Km_z\hat{\mathbf z}\). Only the applied field and uniaxial anisotropy are included: no demagnetizing field beyond what \(K_{\rm eff}\) absorbs, no exchange (the whole bit turns together) and no thermal noise, so a bit is started a chosen angle off its axis instead.</li>
           <li><strong>Closed forms:</strong> with the field along the easy axis the motion is symmetric about it, and \(dm_z/dt=\alpha\gamma'(H+H_Km_z)(1-m_z^2)\) integrates exactly by partial fractions. The lab uses this for the switching times and to choose how long to run; the relaxation in tab 2 is \(m_z=\tanh(t/\tau+\tanh^{-1}\cos\theta_0)\).</li>
-          <li><strong>Writing MRAM:</strong> the bits are independent macrospins (no stray fields between them). The fields ramp linearly over 0.5 ns, hold for 2 ns and ramp down over 0.5 ns. The astroid is the static Stoner–Wohlfarth boundary; the simulation follows it to within about 1% at \(\alpha=0.1\), but near its edge a bit can take longer than the pulse to escape, and with little damping it can overshoot and switch just inside it. Line currents use \(H\approx I/2w\), the field next to a wide flat strip.</li>
-          <li><strong>Checks:</strong> the lab's integrator was checked against SciPy's DOP853 solver for precession, damping, switching, pulses and the write ramps, to better than \(10^{-7}\), and the switching-time formula against direct numerical integration. The notebook repeats the calculation independently and asserts every number quoted in the answers.</li>
+          <li><strong>Writing MRAM:</strong> the bits are independent macrospins (no stray fields between them). The fields ramp linearly over 0.5 ns, hold for 2 ns and ramp down over 0.5 ns. The astroid is the static Stoner–Wohlfarth boundary. Away from the axes the simulation follows it to about 1%; the ringing of the field ramp can carry a bit over just inside it (down to an astroid sum of about 0.99 at \(\alpha=0.1\)). Along the easy axis a bit pointing straight down feels almost no torque, so a field along that axis alone flips nothing within the pulse, even 20% outside the astroid: the lab marks such bits as at risk, since a longer pulse or a thermal kick would flip them. Line currents use \(H\approx I/2w\), the field next to a wide flat strip.</li>
+          <li><strong>Checks:</strong> the lab's integrator was checked against SciPy's DOP853 solver for precession, damping, switching, pulses and the write ramps, to better than \(10^{-5}\) over the sliders' whole range and \(10^{-7}\) at the video's values, and the switching-time formula against direct numerical integration. The notebook repeats the calculation independently and asserts every number quoted in the answers.</li>
         </ul>
       </div>
     </details>

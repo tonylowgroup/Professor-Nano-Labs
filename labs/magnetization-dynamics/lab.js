@@ -12,7 +12,7 @@
   let mode = 'prec';
   const INK = '#14232c', RED = '#d23b2e', GREEN = '#2e8b57', ORANGE = '#e07b1a', BLUE = '#1f6fb4', BERRY = '#a3326c', AMBER = '#c47a12';
   const CLS = { sel: '#1f4ea8', row: '#0f8b8d', col: '#8a3fc7' };
-  const TR = 0.5e-9, HOLD = 2e-9, TW = 4e-9;                      // the write pulse: ramp, hold, ramp, then 1 ns to settle
+  const TR = 0.5e-9, HOLD = 2e-9;                                  // the write pulse: ramp, hold, ramp, then time to settle
   const PLAY = { prec: 7, damp: 8, switch: 10, write: 10 };       // seconds of playback per run
 
   // ---------- formatting ----------
@@ -20,7 +20,9 @@
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   function sci(x, d = 1) { if (!(x > 0)) return '0'; let k = Math.floor(Math.log10(x)), m = x / Math.pow(10, k); if (m >= 10 - 0.5 * Math.pow(10, -d)) { m /= 10; k++; } return `${m.toFixed(d)} × 10${String(k).split('').map(c => SUP[c]).join('')}`; }
   const fmtH = H => (H > 0 ? `${sci(H)} A/m` : '0 A/m');
-  const fmtT = s => (!isFinite(s) ? '∞' : s < 1e-9 ? `${(s * 1e12).toFixed(s < 1e-11 ? 1 : 0)} ps` : `${(s * 1e9).toFixed(s < 1e-8 ? 2 : 1)} ns`);
+  const fmtT = s => (!isFinite(s) ? '∞' : s < 1e-9 ? `${(s * 1e12).toFixed(s < 1e-11 ? 1 : 0)} ps` : s < 1e-6 ? `${(s * 1e9).toFixed(s < 1e-8 ? 2 : 1)} ns` : `${(s * 1e6).toFixed(2)} µs`);
+  const fmtF = g => (g >= 1 ? `${fixed(g, 2)} GHz` : `${fixed(g * 1000, g * 1000 >= 10 ? 0 : 1)} MHz`);   // from GHz
+  const pct = x => fixed(100 * x, 100 * x < 1 ? 2 : 100 * x < 10 ? 1 : 0);
   const fmtA = a => (a >= 10 ? a.toFixed(0) : a >= 1 ? a.toFixed(1) : a.toPrecision(2));
   const aOf = i => Math.pow(10, -2 + i / 100), iOfA = a => Math.round(100 * (Math.log10(a) + 2));
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -28,9 +30,18 @@
 
   // ---------- helpers ----------
   const rich = t => String(t).replace(/_\{([^}]*)\}|_([A-Za-z0-9])/g, (m, a, b) => `<sub>${a || b}</sub>`);
+  const sym = t => `<span class="sym">${t}</span>`;       // keeps symbols such as μ, τ and h out of the uppercase labels
   function stats(items) {
     $('stats').innerHTML = items.map(([label, value, sub2]) =>
-      `<div class="stat"><div class="stat__label">${rich(label)}</div><div class="stat__value">${value}</div><div class="stat__sub">${rich(sub2)}</div></div>`).join('');
+      `<div class="stat"><div class="stat__label">${rich(label)}</div><div class="stat__value">${veil ? '?' : value}</div><div class="stat__sub">${veil ? 'Press Play to find out' : rich(sub2)}</div></div>`).join('');
+  }
+  // a loaded question hides its outcome until Play is pressed
+  let veil = false;
+  function veilPlotB() {
+    reset(plotB); plotB.opts.xLabel = ''; plotB.opts.yLabel = ''; plotB.opts.xTickValues = []; plotB.opts.yFormat = () => '';
+    plotB.setRange([0, 1], [0, 1]);
+    plotB.draw([{ type: 'text', x: 0.5, y: 0.56, text: 'Shown after you press Play', color: '#5f7382', size: 13 }]);
+    setHTML($('pb-title'), 'Make your prediction first'); setHTML($('pb-cap'), ''); setHTML($('pb-legend'), '');
   }
   function legend(id, items) { setHTML($(id), items.map(([color, kind, label]) => `<li style="color:${color}"><span class="swatch ${kind}"></span><span>${rich(label)}</span></li>`).join('')); }
   function typeset(el) { if (window.MathJax && MathJax.typesetPromise && /\\\(/.test(el.innerHTML)) MathJax.typesetPromise([el]).catch(() => {}); }
@@ -58,8 +69,9 @@
     let r;
     if (mode === 'prec' || mode === 'damp') {
       const a = mode === 'prec' ? 0 : S.a2, H = S.H, th0 = S.th0 * DEG, m0 = L.fromAngles(th0, 0);
-      let T = 1e-9, tset = Infinity;
-      if (mode === 'damp') { tset = L.tau(H, a) * Math.log(Math.tan(th0 / 2) / Math.tan(0.5 * DEG)); T = clamp(1.15 * tset, 0.03e-9, 30e-9); }
+      let T = Math.max(1e-9, 1.25 / (L.fGHz(H) * 1e9)), tset = Infinity;
+      // the cost is set by the number of turns, at most (1 + a^2)/a ln(...) radians, so no cap is needed
+      if (mode === 'damp') { tset = L.tau(H, a) * Math.log(Math.tan(th0 / 2) / Math.tan(0.5 * DEG)); T = Math.max(0.03e-9, 1.15 * tset); }
       const field = () => [0, 0, H];
       const sim = L.simulate({ m0: [m0], fields: [field], K: 0, alpha: a, T, Hmax: H, nOut: 2000 });
       r = { T, t: sim.t, mags: sim.m, a, m0, field, K: 0, Href: H, tset };
@@ -71,7 +83,8 @@
       let T, uOff = null;
       if (t1 <= tp) T = Math.max(t1, isFinite(tp) ? tp + 0.15e-9 : 0);
       else { uOff = L.uAfter(H, S.K, a, u0, tp); T = tp + settle(0, uOff); }
-      T = isFinite(T) ? clamp(T * 1.12 + 0.05e-9, 0.3e-9, 25e-9) : 25e-9;
+      const Tmax = Math.min(200e-9, 3e5 * 0.04 / (L.GAMMA * (H + hk)));          // at most about 3e5 integration steps
+      T = isFinite(T) ? clamp(T * 1.12 + 0.05e-9, 0.3e-9, Tmax) : Tmax;
       const tc = H + hk * u0 > 0 ? L.tAxis(H, S.K, a, u0, 0) : Infinity;       // time to reach the equator with the field on
       const field = t => [0, 0, t < tp ? H : 0];
       const m0 = L.fromAngles(Math.PI - S.tilt * DEG, 0);
@@ -80,8 +93,10 @@
     } else {
       const hk = L.HK(S.K), a = S.a3, m0 = L.fromAngles(Math.PI - 1 * DEG, 30 * DEG);
       const fields = [t => [S.hx * hk * env(t), 0, S.he * hk * env(t)], t => [0, 0, S.he * hk * env(t)], t => [S.hx * hk * env(t), 0, 0]];
-      const sim = L.simulate({ m0: [m0, m0, m0], fields, K: S.K, alpha: a, T: TW, Hmax: hk * Math.hypot(S.hx, S.he), nOut: 3200 });
-      r = { T: TW, t: sim.t, mags: sim.m, a, m0, field: fields[0], fields, K: S.K, Href: hk * (1 + Math.hypot(S.hx, S.he)), hk };
+      // after the pulse, time to settle: four relaxation times in the anisotropy field (at least the 1 ns used at the video's values)
+      const T = 2 * TR + HOLD + clamp(4 * (1 + a * a) / (a * L.GAMMA * hk), 1e-9, 40e-9);
+      const sim = L.simulate({ m0: [m0, m0, m0], fields, K: S.K, alpha: a, T, Hmax: hk * Math.hypot(S.hx, S.he), nOut: 3200 });
+      r = { T, t: sim.t, mags: sim.m, a, m0, field: fields[0], fields, K: S.K, Href: hk * (1 + Math.hypot(S.hx, S.he)), hk };
     }
     r.key = key; r.n = r.t.length - 1;
     r.final = r.mags.map(m => m.z[r.n]);
@@ -107,7 +122,7 @@
   let pos = 1, playing = false, raf = 0, last = 0;
   function frame(now) {
     if (!playing) return;
-    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const dt = Math.max(0, Math.min(0.1, (now - last) / 1000)); last = now;
     pos += dt / PLAY[mode];
     if (pos >= 1) { pos = 1; playing = false; }
     draw();
@@ -115,14 +130,17 @@
   }
   function stop() { playing = false; cancelAnimationFrame(raf); }
   function play() {
+    if (veil) { veil = false; statics(); }
     if (reduceMotion) { pos = pos >= 0.999 ? 0.125 : Math.min(1, pos + 0.125); draw(); return; }
     if (pos >= 0.999) pos = 0;
     playing = true; last = performance.now(); raf = requestAnimationFrame(frame); draw();
   }
   $('play').addEventListener('click', () => { if (playing) { stop(); draw(); } else play(); });
   $('restart').addEventListener('click', () => { stop(); pos = 0; draw(); });
-  $('time').addEventListener('input', e => { stop(); pos = +e.target.value / 1000; draw(); });
-  $('reset-view').addEventListener('click', () => sphere.setView(28 * DEG, 14 * DEG));
+  $('time').addEventListener('input', e => { stop(); pos = +e.target.value / 1000; if (veil) { veil = false; statics(); } draw(); });
+  // the MRAM tab looks along y, so the hard axis (x) points right, as in the array picture
+  const VIEW = m => (m === 'write' ? [-70 * DEG, 14 * DEG] : [28 * DEG, 14 * DEG]);
+  $('reset-view').addEventListener('click', () => sphere.setView(...VIEW(mode)));
 
   // ---------- the pictures for one moment ----------
   function sphereScene(f, t) {
@@ -136,7 +154,8 @@
       scene.mags.push({ v: m, color: INK, trail: path(0, f), trailColor: RED, start: run.m0 });
       if (mode === 'switch') scene.easy = ORANGE;
     }
-    if (Hn > 0) scene.field = { n: H.map(v => v / Hn), size: mode === 'write' ? Math.max(0.35, Math.hypot(S.hx, S.he) / 1.2) : clamp(0.4 + 0.6 * Hn / 1e6, 0.4, 1), color: GREEN };
+    if (Hn > 0) scene.field = { n: H.map(v => v / Hn), size: mode === 'write' ? clamp(Hn / run.hk / 1.2, 0.15, 1) : clamp(0.4 + 0.6 * Hn / 1e6, 0.4, 1), color: GREEN };
+    if (mode === 'write') return scene;
     // the two parts of dm/dt at the tip, on one scale for the whole run, so their lengths show how fast m moves
     const P = L.parts(m, L.heff(m, H, run.K), run.a), k = 0.75 / (L.GAMMA * run.Href);
     scene.torques.push({ from: m, d: P.prec.map(v => v * k), color: BLUE });
@@ -184,7 +203,9 @@
     $('time').value = Math.round(pos * 1000);
     const txt = `t = ${(t * u.s).toFixed(t * u.s >= 100 ? 0 : t * u.s >= 10 ? 1 : 2)} ${u.name}`;
     $('time-out').textContent = txt; $('time').setAttribute('aria-valuetext', `${txt} of ${(run.T * u.s).toFixed(run.T * u.s >= 100 ? 0 : 2)} ${u.name}`);
-    $('play').textContent = playing ? '❚❚ Pause' : pos >= 0.999 ? '▶ Play again' : '▶ Play';
+    $('play').textContent = playing ? '❚❚ Pause' : '▶ Play';
+    const m = at(0, f);
+    $('sphere').setAttribute('aria-label', `Sphere of directions: ${mode === 'write' ? 'the selected bit' : 'the magnetization'} points ${fixed(Math.acos(clamp(m[2], -1, 1)) / DEG, 0)}° from the +z axis`);
     $('info').setAttribute('aria-live', playing ? 'off' : 'polite');
   }
 
@@ -192,15 +213,15 @@
   function staticPrec() {
     const f = L.fGHz(S.H), mu0H = L.MU0 * S.H, c = Math.cos(S.th0 * DEG);
     stats([
-      ['Precession frequency', `${fixed(f, 2)} GHz`, `γH/2π: 28.0 GHz per tesla × μ_0H = ${fixed(mu0H, 3)} T`],
+      ['Precession frequency', fmtF(f), `γH/2π: 28.0 GHz per tesla × μ_0H = ${fixed(mu0H, 3)} T`],
       ['One turn takes', fmtT(1e-9 / f), 'the Larmor period'],
-      ['Cone angle θ', `${S.th0}°`, 'fixed: nothing pulls m toward H'],
-      ['Energy E/μ_0M_SH', fixed(-c, 3), 'constant: the torque does no work'],
+      [`Cone angle ${sym('θ')}`, `${S.th0}°`, 'fixed: nothing pulls m toward H'],
+      [`Energy ${sym('E/μ_0M_SH')}`, fixed(-c, 3), 'constant: the torque does no work'],
     ]);
     setHTML($('dg-title'), 'The magnetization, and its energy');
-    put('dg-cap', 'Left: every direction of m is a point on a sphere (drag to turn it). The green arrow is the field; red is the path of the tip of m; the blue arrow at the tip is dm/dt, all of it around the field. Right: the energy E = −μ_0M_SH cos θ against the angle from the field, as in the video; the ball is the magnetization, the open circle where it started.');
+    put('dg-cap', 'On the sphere, every direction of m is a point (drag to turn it). The green arrow is the field; red is the path of the tip of m; the blue arrow at the tip is dm/dt, all of it around the field. The energy plot shows E = −μ_0M_SH cos θ against the angle from the field, as in the video; the ball is the magnetization, the open circle where it started.');
     legend('dg-legend', [[INK, '', 'm'], [RED, '', 'path of m'], [GREEN, '', 'field H'], [BLUE, '', 'dm/dt: around H']]);
-    setHTML($('info'), `<b>The magnetization circles the field ${fixed(f, 2)} times per nanosecond</b>, on a cone of ${S.th0}°. ${S.th0 > 90 ? 'Even pointing mostly against the field, it never turns toward it: without damping the ball cannot roll down.' : 'Its angle to the field never changes, so neither does its energy: the ball sits still on the curve.'}`);
+    setHTML($('info'), veil ? PROMPT : `<b>The magnetization circles the field ${f >= 1 ? `${fixed(f, 2)} times per nanosecond` : `once every ${fmtT(1e-9 / f)}`}</b>, on a cone of ${S.th0}°. ${S.th0 > 90 ? 'Even pointing mostly against the field, it never turns toward it: without damping the ball cannot roll down.' : 'Its angle to the field never changes, so neither does its energy: the ball sits still on the curve.'}`);
     setHTML($('takeaway'), '<b>Precession is how a spin answers a torque.</b> The magnetization is angular momentum, so a torque turns it sideways, the way gravity makes a tilted top precess instead of falling over. The 28 GHz per tesla of this motion sets the gigahertz clock of all magnetization dynamics.');
   }
   function plotsPrec(f, t, u) {
@@ -215,6 +236,7 @@
     setHTML($('pa-title'), 'The three components of m');
     put('pa-cap', 'm_x and m_y swing back and forth a quarter turn apart as m goes round; m_z, its projection on the field, stays put.');
     legend('pa-legend', [[BLUE, '', 'm_x'], [AMBER, '', 'm_y'], [INK, '', 'm_z']]);
+    if (veil) return veilPlotB();
     reset(plotB);
     const Hs = range(0, 10, 50), fs = Hs.map(h => L.fGHz(h * 1e5));
     plotB.opts.xLabel = 'Field H (10⁵ A/m)'; plotB.opts.yLabel = 'Frequency (GHz)';
@@ -229,18 +251,18 @@
   function staticDamp() {
     const a = S.a2, f = L.fGHz(S.H), fd = f / (1 + a * a), tau = L.tau(S.H, a), turns = fd * 1e9 * run.tset;
     stats([
-      ['Precession frequency', `${fixed(fd, fd < 1 ? 3 : 2)} GHz`, `γH/2π(1 + α²): ${fixed(100 / (1 + a * a), 1)}% of the undamped ${fixed(f, 2)} GHz`],
-      ['Relaxation time τ', fmtT(tau), '(1 + α²)/αγH: tan(θ/2) falls e-fold each τ'],
-      ['Turns per τ', fixed(1 / (2 * Math.PI * a), 1 / (2 * Math.PI * a) < 1 ? 3 : 2), '1/2πα, whatever the field'],
+      ['Precession frequency', fmtF(fd), `γH/2π(1 + α²): ${fixed(100 / (1 + a * a), 1)}% of the undamped ${fmtF(f)}`],
+      [`Relaxation time ${sym('τ')}`, fmtT(tau), '(1 + α²)/αγH: tan(θ/2) falls e-fold each τ'],
+      [`Turns per ${sym('τ')}`, fixed(1 / (2 * Math.PI * a), 1 / (2 * Math.PI * a) < 1 ? 3 : 2), '1/2πα, whatever the field'],
       ['Within 1° of H after', fmtT(run.tset), `${fixed(turns, turns < 1 ? 2 : 1)} turns from θ_0 = ${S.th0}°`],
     ]);
     setHTML($('dg-title'), 'The magnetization spirals in');
-    put('dg-cap', 'Left: the blue arrow is the part of dm/dt that goes around the field, the berry one the part that points toward it, drawn on the same scale; their ratio is α. Right: the damping lets the ball roll down the energy curve to the bottom, θ = 0.');
+    put('dg-cap', 'On the sphere, the blue arrow is the part of dm/dt that goes around the field, the berry one the part that points toward it, drawn on the same scale; their ratio is α. In the energy plot, the damping lets the ball roll down the curve to the bottom, θ = 0.');
     legend('dg-legend', [[INK, '', 'm'], [RED, '', 'path of m'], [GREEN, '', 'field H'], [BLUE, '', 'dm/dt: around H'], [BERRY, '', 'dm/dt: toward H']]);
     const regime = a < 0.3 ? `<b>Lightly damped:</b> each relaxation time lasts ${fixed(1 / (2 * Math.PI * a), 1)} turns, so the magnetization spirals in slowly, many turns at almost the undamped frequency.`
       : a <= 3 ? `<b>Near the fastest damping:</b> at α = 1 the two parts of the motion are equal and the cone closes in the least time, τ = 2/γH.`
       : `<b>Overdamped:</b> the precession has almost stopped, ${fixed(100 / (1 + a * a), 1)}% of its undamped rate, and the magnetization creeps straight toward the field. More damping makes it slower, not faster.`;
-    setHTML($('info'), regime);
+    setHTML($('info'), veil ? PROMPT : regime);
     setHTML($('takeaway'), '<b>Damping is where the energy goes.</b> The Gilbert term stands for every way a precessing magnetization loses energy, to lattice vibrations and conduction electrons through spin–orbit coupling. It is what lets a magnet settle at all, and it sets how fast a bit can be switched.');
   }
   function plotsDamp(f, t, u) {
@@ -258,6 +280,7 @@
     setHTML($('pa-title'), 'm_z climbs to 1, m_x rings down'.replace('m_z', 'm<sub>z</sub>').replace('m_x', 'm<sub>x</sub>'));
     put('pa-cap', 'Black: m_z from the simulation. Green dashed: the exact solution m_z = tanh(t/τ + tanh⁻¹cos θ_0); they lie on top of each other. Blue: m_x, the precession dying away.');
     legend('pa-legend', [[INK, '', 'm_z (simulated)'], [GREEN, 'swatch--dash', 'm_z (formula)'], [BLUE, '', 'm_x']]);
+    if (veil) return veilPlotB();
     reset(plotB);
     const ls = range(-2, 1, 120), taus = ls.map(l => Math.log10(L.tau(S.H, Math.pow(10, l)) * 1e12));
     plotB.opts.xLabel = 'Damping constant α'; plotB.opts.yLabel = 'Relaxation time τ (ps)';
@@ -277,24 +300,28 @@
 
   // ---------- 3. Switching a bit ----------
   function staticSwitch() {
-    const hk = run.hk, h = S.H3 / hk, dE = L.barrier(S.H3, S.K), up = run.final[0] > 0, tp = run.tp;
-    const swOK = isFinite(run.tc) && run.tc <= tp;
+    const hk = run.hk, h = S.H3 / hk, dE = L.barrier(S.H3, S.K), up = run.final[0] > 0, tp = run.tp, ct = Math.cos(S.tilt * DEG);
+    const swOK = isFinite(run.tc) && run.tc <= tp, past = dE > 0 && S.H3 > hk * ct;           // past: it starts beyond the top of the barrier
+    const slow = !up && swOK && run.tc > run.T;                                                // it will switch, after the end of this run
+    const thb = 180 - Math.acos(Math.min(1, h)) / DEG;                                         // the top of the barrier, degrees from up
     stats([
-      ['Anisotropy field H_K', fmtH(hk), `2K_{eff}/μ_0M_S; μ_0H_K = ${fixed(L.MU0 * hk, 2)} T`],
-      ['Field ratio h = H/H_K', fixed(h, 2), h >= 1 ? 'above 1: the down well is gone' : 'below 1: the down well survives'],
-      ['Barrier holding it down', dE > 0 ? `${sci(dE)} J/m³` : '0', dE > 0 ? `(1 − h)² K_{eff}, ${fixed(100 * (1 - h) * (1 - h), 0)}% of K_{eff}` : 'nothing holds it down'],
+      [`Anisotropy field ${sym('H_K')}`, fmtH(hk), `2K_{eff}/μ_0M_S; μ_0H_K = ${fixed(L.MU0 * hk, 2)} T`],
+      [`Field ratio ${sym('h = H/H_K')}`, fixed(h, 2), h >= 1 ? 'above 1: the down well is gone' : 'below 1: the down well survives'],
+      ['Barrier holding it down', past ? 'passed' : dE > 0 ? `${sci(dE)} J/m³` : '0', past ? `it starts ${S.tilt}° off, beyond the top at ${fixed(thb, 0)}°` : dE > 0 ? `(1 − h)² K_{eff}, ${pct((1 - h) * (1 - h))}% of K_{eff}` : 'nothing holds it down'],
       ['Time to the equator', isFinite(run.tc) ? fmtT(run.tc) : 'never', isFinite(run.tc) ? (swOK ? `from a ${S.tilt}° tilt, with the field on` : `but the pulse ends at ${fmtT(tp)}`) : 'with this field it never gets there'],
     ]);
-    setHTML($('dg-title'), up ? 'The bit flips from down to up' : 'The bit stays down');
-    put('dg-cap', 'Left: the orange arrow is the easy axis, the green one the field (it disappears when the pulse ends). Right: the energy E = K_{eff} sin²θ − μ_0M_SH cos θ in units of K_{eff}, as on the video\'s slides; θ = π is the down state the bit starts in. The dashed curve is the landscape while the field was on.');
+    setHTML($('dg-title'), veil ? 'Will the bit flip?' : up ? 'The bit flips from down to up' : slow ? 'The bit is slowly leaving the down state' : 'The bit stays down');
+    put('dg-cap', 'On the sphere, the orange arrow is the easy axis and the green one the field (it disappears when the pulse ends). The energy plot shows E = K_{eff} sin²θ − μ_0M_SH cos θ in units of K_{eff}, as on the video\'s slides; θ = π is the down state the bit starts in. The dashed curve is the landscape while the field was on.');
     legend('dg-legend', [[INK, '', 'm'], [RED, '', 'path of m'], [GREEN, '', 'field H'], [ORANGE, '', 'easy axis'], [BLUE, '', 'dm/dt: around H_{eff}'], [BERRY, '', 'dm/dt: toward H_{eff}']]);
+    const need = `${fmtH(hk * ct)}${S.tilt >= 8 ? ` (H<sub>K</sub> cos ${S.tilt}°, since it starts ${S.tilt}° off the axis)` : ''}`;
     let msg;
     if (isFinite(tp) && isFinite(run.tc) && run.tc > tp) msg = `<b>Back to 0.</b> The pulse ended after ${fmtT(tp)} with m<sub>z</sub> = ${fixed(run.uOff, 2)}, still below the equator. With the field off the two wells are equal and the barrier is the equator, so the bit fell back into the down well. It needed ${fmtT(run.tc)}.`;
+    else if (slow) msg = `<b>On its way, slowly.</b> The field is above the ${need} it needs, so the bit will flip, but it reaches the equator only after ${fmtT(run.tc)}, and this run stops at ${fmtT(run.T)}. Just above the threshold the net field on the down state, H − H<sub>K</sub> cos θ, is tiny, so the tilt grows very slowly${S.a3 < 0.05 ? ', and with so little damping slower still' : ''}.`;
     else if (up && isFinite(tp)) msg = `<b>Switched, and it stays.</b> The magnetization crossed the equator at ${fmtT(run.tc)}, before the pulse ended at ${fmtT(tp)}; with the field off it settles in the up well and keeps it with no power at all.`;
-    else if (up) msg = `<b>Switched.</b> ${h >= 1 ? `The field exceeds H<sub>K</sub>, so the down state is no longer a well: the magnetization spirals away from it, slowly at first, crosses the equator at ${fmtT(run.tc)} and settles up the axis.` : `The field is below H<sub>K</sub>, but the bit started ${S.tilt}° off the axis, already past the top of the barrier (at θ = ${fixed(180 - Math.acos(h) / DEG, 0)}° from up), so it rolled the other way.`}`;
+    else if (up) msg = `<b>Switched.</b> ${!past ? `The field exceeds H<sub>K</sub>, so the down state is no longer a well: the magnetization spirals away from it, slowly at first, crosses the equator at ${fmtT(run.tc)} and settles up the axis.` : `The field is below H<sub>K</sub>, but the bit started ${S.tilt}° off the axis, already past the top of the barrier (at θ = ${fixed(thb, 0)}° from up), so it rolled the other way.`}`;
     else if (S.H3 === 0) msg = '<b>No field, no switching.</b> The bit rings and settles back to the bottom of its own well: this is the stable 0 of the memory.';
-    else msg = `<b>The barrier holds.</b> h = ${fixed(h, 2)} is below 1, so the down state is still a well, ${fixed(100 * (1 - h) * (1 - h), 0)}% as deep as with no field. The magnetization wobbles and settles back down. It needs more than ${fmtH(hk)}.`;
-    setHTML($('info'), msg);
+    else msg = `<b>The barrier holds.</b> h = ${fixed(h, 2)} is below 1, so the down state is still a well, ${pct((1 - h) * (1 - h))}% as deep as with no field. The magnetization wobbles and settles back down. It needs more than ${need}.`;
+    setHTML($('info'), veil ? PROMPT : msg);
     setHTML($('takeaway'), '<b>A bit is a double well, and writing it means tilting the wells.</b> The barrier that keeps a bit stable for years, many times k<sub>B</sub>T, is the same barrier the write field has to remove. Stability and easy writing pull in opposite directions: the central trade-off of magnetic memory.');
   }
   function plotsSwitch(f, t, u) {
@@ -307,8 +334,9 @@
     LA.push({ type: 'line', x: Z.x, y: Z.y, color: INK, width: 2.6 }, cursor(t, u));
     plotA.draw(LA);
     setHTML($('pa-title'), 'From 0 (down) to 1 (up)?');
-    put('pa-cap', `m_z against time. Green band: the field is on${isFinite(run.tp) ? ` (a ${fmtT(run.tp)} pulse)` : ''}. The faster wiggles are the precession, which speeds up and slows down as the effective field H + H_Km_z changes.`);
+    put('pa-cap', `m_z against time. Green band: the field is on${isFinite(run.tp) ? `, for a pulse of ${fmtT(run.tp)}` : ''}. The faster wiggles are the precession, which speeds up and slows down as the effective field H + H_Km_z changes.`);
     legend('pa-legend', [[INK, '', 'm_z'], ['rgba(46, 139, 87, 0.45)', 'swatch--area', 'field on']]);
+    if (veil) return veilPlotB();
     reset(plotB);
     const hk = run.hk, u0 = -Math.cos(S.tilt * DEG), Hs = range(0, 10, 400);
     const ts = Hs.map(h => { const H = h * 1e5; return H + hk * u0 > 0 ? L.tAxis(H, S.K, S.a3, u0, 0) * 1e9 : NaN; });
@@ -317,13 +345,14 @@
     if (isFinite(run.tc)) ymax = Math.min(30, Math.max(ymax, run.tc * 1e9 * 1.15));
     plotB.opts.xLabel = 'Field H (10⁵ A/m)'; plotB.opts.yLabel = 'Time to switch (ns)';
     plotB.setRange([0, 10], [0, ymax]);
-    const LB = [{ type: 'vline', x: hk / 1e5, color: ORANGE, width: 1.4, dash: [5, 4], label: 'HK' }];
+    const ct = Math.cos(S.tilt * DEG), LB = [{ type: 'vline', x: hk / 1e5, color: ORANGE, width: 1.4, dash: [5, 4], label: 'HK' }];
+    if (S.tilt >= 8) LB.push({ type: 'vline', x: hk * ct / 1e5, color: '#5f7382', width: 1.2, dash: [3, 3] });
     LB.push({ type: 'line', x: Hs, y: ts.map(v => (v > ymax * 1.5 ? NaN : v)), color: BLUE, width: 2.4 });
     if (isFinite(run.tc)) LB.push({ type: 'dots', x: [S.H3 / 1e5], y: [run.tc * 1e9], color: INK, r: 5 });
     plotB.draw(LB);
-    setHTML($('pb-title'), 'Just above H<sub>K</sub>, switching is slow');
-    put('pb-cap', `Time to reach the equator against the field, from a ${S.tilt}° tilt, with this K_{eff} and α. Below H_K (orange) it never switches; just above, the time diverges, because the torque on a bit near its axis is tiny.`);
-    legend('pb-legend', [[BLUE, '', 'time to the equator'], [ORANGE, 'swatch--dash', 'H_K'], [INK, 'swatch--stem', 'this field']]);
+    setHTML($('pb-title'), 'Just above the threshold, switching is slow');
+    put('pb-cap', `Time to reach the equator against the field, from a ${S.tilt}° tilt, with this K_{eff} and α. Below ${S.tilt >= 8 ? `H_K cos ${S.tilt}° (grey), where the top of the barrier reaches the starting angle,` : 'about H_K (orange)'} it never switches. Just above, the time diverges, because the net field on the down state, H − H_K cos θ, goes to zero.`);
+    legend('pb-legend', [[BLUE, '', 'time to the equator'], [ORANGE, 'swatch--dash', 'H_K'], ...(S.tilt >= 8 ? [['#5f7382', 'swatch--dash', `H_K cos ${S.tilt}°`]] : []), [INK, 'swatch--stem', 'this field']]);
   }
 
   // ---------- 4. Writing MRAM ----------
@@ -332,26 +361,35 @@
   function staticWrite() {
     const hk = run.hk, as = L.astroid(S.hx, S.he), sel = outcome(0), row = outcome(1), col = outcome(2);
     const mA = h => fixed(2 * 100e-9 * h * hk * 1e3, 0);
-    const colHard = S.hx >= 1;
+    const rowOut = S.he >= 1, colOut = S.hx >= 1;          // a neighbour whose one field already reaches the astroid
     stats([
-      ['Selected bit', sel ? 'Switched to 1' : 'Still 0', `fields (${fixed(S.hx, 2)}, ${fixed(S.he, 2)}) H_K: ${as > 1 ? 'outside' : 'inside'} the astroid`],
-      ['Bits on its word line', row ? 'Flipped: error' : 'Kept 0', `H_e = ${fixed(S.he, 2)} H_K on its own`],
-      ['Bits on its bit line', colHard ? (col ? 'Flipped: error' : 'Kept 0, by luck') : col ? 'Flipped: error' : 'Kept 0', colHard ? 'pulled onto the hard axis; could fall either way' : `H_x = ${fixed(S.hx, 2)} H_K on its own`],
-      ['Current per line', `${mA(S.he)} mA, ${mA(S.hx)} mA`, 'word line, bit line, if 100 nm wide (H ≈ I/2w)'],
+      ['Selected bit', sel ? 'Switched to 1' : 'Still 0', `fields (${fixed(S.hx, 2)}, ${fixed(S.he, 2)}) H_K: ${as > 1 ? 'outside' : sel ? 'just inside' : 'inside'} the astroid`],
+      ['Bits on its word line', row ? 'Flipped' : rowOut ? 'At risk' : 'Kept 0', row ? 'a write error' : rowOut ? 'H_e ≥ H_K alone: saved only by the short pulse' : `H_e = ${fixed(S.he, 2)} H_K on its own`],
+      ['Bits on its bit line', col ? 'Flipped' : colOut ? 'At risk' : 'Kept 0', col ? 'a write error' : colOut ? 'H_x ≥ H_K drags them onto the hard axis' : `H_x = ${fixed(S.hx, 2)} H_K on its own`],
+      ['Current per line', `${mA(S.he)} / ${mA(S.hx)} mA`, `word / bit line, 100 nm wide, for this bit's H_K (H ≈ I/2w)`],
     ]);
     setHTML($('dg-title'), 'Writing the middle bit of a 3 × 3 array');
-    put('dg-cap', 'Left: the selected bit (blue), one on the same word line (teal) and one on the same bit line (purple), all starting down, with the field the selected bit feels (green). Right: the array from above; each bit\'s arrow shows its magnetization, with the easy axis drawn vertical.');
+    put('dg-cap', 'On the sphere: the selected bit (blue), one on the same word line (teal) and one on the same bit line (purple), all starting down, with the field the selected bit feels (green). In the array, seen from above, each bit\'s arrow shows its magnetization, with the easy axis drawn vertical.');
     legend('dg-legend', [[CLS.sel, '', 'selected bit'], [CLS.row, '', 'same word line'], [CLS.col, '', 'same bit line'], [GREEN, '', 'field on the selected bit'], [ORANGE, '', 'easy axis']]);
+    const astr = as > 1 ? `outside the astroid (${fixed(as, 2)} &gt; 1)` : `just inside the astroid (${fixed(as, 3)}), carried over the barrier by the ringing of the field ramp`;
+    const risk = [rowOut && !row ? 'The bits on its word line feel H<sub>e</sub> ≥ H<sub>K</sub> on their own, so they are outside the astroid too: they survived only because a bit pointing straight down escapes slowly and the pulse ended first. A longer pulse, or a thermal kick, would flip them.' : '',
+      colOut && !col ? 'The bits on its bit line were dragged onto the hard axis by H<sub>x</sub> ≥ H<sub>K</sub>; released, they fell back to 0 here, but they could as easily have fallen to 1.' : ''].filter(Boolean).join(' ');
     let msg;
-    const ok = sel && !row && !col;
-    if (ok) msg = `<b>Written.</b> Only the selected bit flipped: together the two fields put it outside the astroid (${fixed(as, 2)} &gt; 1), while each neighbour feels one field only, inside it.`;
-    else if (!sel && !row && !col) msg = as > 1 ? `<b>Nothing written.</b> The fields put the selected bit just outside the astroid (${fixed(as, 2)}), but so close to its edge that the old state hardly moves, and it did not escape before the pulse ended.${S.hx === 0 ? ' With no hard-axis field the torque on a bit pointing straight down is almost zero.' : ''}` : `<b>Nothing written.</b> The selected bit is inside the astroid (${fixed(as, 2)} &lt; 1): its down state survives, so it tilts and comes back.${as > 0.96 ? ' It is close to the edge: with less damping the ringing can carry it over even here.' : ''}`;
-    else {
+    if (sel && !row && !col) msg = risk ? `<b>Written, but only just.</b> The selected bit flipped: its two fields put it ${astr}. ${risk}` : `<b>Written.</b> Only the selected bit flipped: together the two fields put it ${astr}, while each neighbour feels one field only, below H<sub>K</sub> and inside it.`;
+    else if (!sel && !row && !col) {
+      if (S.he === 0 && S.hx === 0) msg = '<b>No currents, nothing happens.</b> Every bit keeps its 0.';
+      else if (S.he === 0) msg = `<b>Nothing written.</b> With no word-line current there is no field along the easy axis to choose a direction: the bit-line field only tilts the bits ${colOut ? 'onto' : 'toward'} the hard axis, and they come back${colOut ? ' (here; from the hard axis they could fall either way)' : ''}.`;
+      else if (as <= 1) msg = `<b>Nothing written.</b> The selected bit is inside the astroid (${fixed(as, 2)} &lt; 1): its down state survives, so it tilts and comes back.${as > 0.985 ? ' It is very close to the edge, where the ringing of the field ramp can carry a bit over.' : ''}`;
+      else if (S.hx === 0) msg = `<b>Nothing written.</b> The selected bit is outside the astroid (${fixed(as, 2)}), but with no hard-axis field the field lies along its axis, and a bit pointing straight down feels almost no torque: it escapes too slowly to get past the equator before the currents ramp down.`;
+      else if (as < 1.05) msg = `<b>Nothing written.</b> The selected bit is just outside the astroid (${fixed(as, 2)}), so close to its edge that its old state is barely unstable, and it did not escape before the currents ramped down.`;
+      else msg = `<b>Nothing written.</b> The selected bit is outside the astroid (${fixed(as, 2)}), but this bit is slow: with α = ${fixed(S.a3, 2)} and H<sub>K</sub> = ${fmtH(hk)} it did not get past the equator during the 2 ns the currents are on. A longer pulse would write it.`;
+      if (risk) msg += ' ' + risk;
+    } else {
       const bad = [row ? 'the bits on its word line' : '', col ? 'the bits on its bit line' : ''].filter(Boolean).join(' and ');
-      msg = `<b>Write error:</b> ${bad} flipped too. ${row ? `H<sub>e</sub> on its own exceeds H<sub>K</sub>, so every bit on that word line is outside the astroid.` : ''} ${col ? (colHard ? 'H<sub>x</sub> on its own exceeds H<sub>K</sub>: it drags those bits onto the hard axis, and when it is removed they fall either way.' : 'The ringing of the field ramp carried them over the barrier.') : ''}${sel ? '' : ' And the selected bit did not switch.'}`;
+      msg = `<b>Write error:</b> ${bad} flipped too. ${row ? `H<sub>e</sub> on its own is ${rowOut ? 'above H<sub>K</sub>, so every bit on that word line is outside the astroid' : 'below H<sub>K</sub>, but the ringing of the field ramp carried them over'}.` : ''} ${col ? (colOut ? 'H<sub>x</sub> on its own exceeds H<sub>K</sub>: it drags those bits onto the hard axis, and when it is removed they fall either way.' : 'The ringing of the field ramp carried them over the barrier.') : ''}${sel ? '' : ' And the selected bit did not switch.'}`;
     }
-    setHTML($('info'), msg);
-    setHTML($('takeaway'), '<b>A cross-point array writes by coincidence:</b> one line\'s field must be too weak on its own, both together strong enough. The window is narrow, and the spread of H<sub>K</sub> from bit to bit narrows it further. Worse, a nanoscale bit needs tens of milliamps of line current. That is why newer MRAMs pass a current through the bit itself and switch it with a spin torque, the extra term N in the generalized LLG equation at the end of the video.');
+    setHTML($('info'), veil ? PROMPT : msg);
+    setHTML($('takeaway'), `<b>A cross-point array writes by coincidence:</b> one line\'s field must be too weak on its own, both together strong enough. The window is narrow, and the spread of H<sub>K</sub> from bit to bit narrows it further. For a bit as stiff as this one (μ<sub>0</sub>H<sub>K</sub> = ${fixed(L.MU0 * hk, 2)} T) the lines would need tens of milliamps. Field-written MRAMs used much softer bits, with H<sub>K</sub> of a few millitesla and currents of a few milliamps, but soft bits lose their stability as they shrink. That is why newer MRAMs pass a current through the bit itself and switch it with a spin torque, the extra term N in the generalized LLG equation at the end of the video.`);
   }
   function drawArray(f, t) {
     const ms = [0, 1, 2].map(j => at(j, f)), bits = [];
@@ -370,12 +408,12 @@
     reset(plotA);
     plotA.opts.xLabel = 'Hard-axis field Hx / HK'; plotA.opts.yLabel = 'Easy-axis field He / HK';
     plotA.opts.xTicks = 5;
-    plotA.setRange([0, 1.25], [0, 1.25]);
+    plotA.setRange([-0.04, 1.25], [-0.04, 1.25]);
     const ps = range(0, Math.PI / 2, 120), ax = ps.map(p => Math.cos(p) ** 3), ay = ps.map(p => Math.sin(p) ** 3);
     const e = env(t), LA = [];
     LA.push({ type: 'poly', x: [...ax, 0, 1.25, 1.25], y: [...ay, 1.25, 1.25, 0], fill: 'rgba(31, 78, 168, 0.07)' });
     LA.push({ type: 'line', x: ax, y: ay, color: INK, width: 2.2 });
-    LA.push({ type: 'text', x: 0.24, y: 0.2, text: 'keeps its state', color: '#5f7382', align: 'center' });
+    LA.push({ type: 'text', x: 0.3, y: 0.11, text: 'keeps its state', color: '#5f7382', align: 'center' });
     LA.push({ type: 'text', x: 0.92, y: 1.17, text: 'one well: switches', color: CLS.sel, align: 'center' });
     const pts = [[S.hx, S.he, CLS.sel], [0, S.he, CLS.row], [S.hx, 0, CLS.col]];
     pts.forEach(([x, y, c]) => LA.push({ type: 'line', x: [0, x], y: [0, y], color: c, width: 1, dash: [3, 3] }));
@@ -395,7 +433,7 @@
     LB.push(cursor(t, u));
     plotB.draw(LB);
     setHTML($('pb-title'), 'Who flips?');
-    put('pb-cap', 'm_z of each kind of bit against time. Green: the currents ramp up over 0.5 ns, hold for 2 ns and ramp down. Bits not on either line feel nothing and stay put.');
+    put('pb-cap', 'm_z of each kind of bit against time. Green: the currents ramp up over 0.5 ns, hold for 2 ns and ramp down; then the bits settle. Bits not on either line feel nothing and stay put.');
     legend('pb-legend', [[CLS.sel, '', 'selected'], [CLS.row, '', 'same word line'], [CLS.col, '', 'same bit line'], ['rgba(46, 139, 87, 0.45)', 'swatch--area', 'currents on']]);
   }
 
@@ -421,10 +459,10 @@
   function render() {
     syncControls();
     const fresh = compute();
-    if (fresh) { if (playing) pos = 0; else if (!keepPos) pos = 1; }
+    if (fresh) { if (playing) pos = 0; else if (!keepPos && pos > 0) pos = 1; }
     keepPos = false;
     $('land-box').hidden = mode === 'write'; $('array').hidden = mode !== 'write';
-    if (mode === 'prec') staticPrec(); else if (mode === 'damp') staticDamp(); else if (mode === 'switch') staticSwitch(); else staticWrite();
+    statics();
     const sec = PLAY[mode], perNs = sec / (run.T * 1e9);
     $('transport-note').textContent = reduceMotion ? 'Reduced motion is on: each press of Play steps an eighth of the way through the run. Drag the time slider to see any moment.'
       : `Slow motion: ${perNs >= 1 ? `one nanosecond of the magnet's time plays in ${fixed(perNs, perNs >= 10 ? 0 : 1)} s` : `${fixed(1 / perNs, 1)} ns of the magnet's time play each second`}. Drag the time slider to see any moment.`;
@@ -432,7 +470,15 @@
     draw();
   }
   let keepPos = false;
+  const PROMPT = '<b>Make your prediction,</b> then press ▶ Play to see what happens.';
+  function statics() {
+    if (mode === 'prec') staticPrec(); else if (mode === 'damp') staticDamp(); else if (mode === 'switch') staticSwitch(); else staticWrite();
+    $('stats').classList.toggle('stats--veiled', veil);
+  }
+  let lastMode = null;
   function applyMode() {
+    if ((mode === 'write') !== (lastMode === 'write')) sphere.setView(...VIEW(mode), true);
+    lastMode = mode;
     document.querySelectorAll('.tab').forEach(b => { const on = b.dataset.mode === mode; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
     $('lab').setAttribute('aria-labelledby', 'tab-' + mode);
     document.querySelectorAll('.mode-intro').forEach(el => { el.hidden = el.dataset.for !== mode; });
@@ -459,7 +505,7 @@
   });
   const tabs = Array.from(document.querySelectorAll('.tab'));
   tabs.forEach((b, i) => {
-    b.addEventListener('click', () => { stop(); mode = b.dataset.mode; applyMode(); });
+    b.addEventListener('click', () => { stop(); veil = false; mode = b.dataset.mode; applyMode(); });
     b.addEventListener('keydown', e => {
       const to = { ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i + tabs.length - 1) % tabs.length, Home: 0, End: tabs.length - 1 }[e.key];
       if (to === undefined) return;
@@ -481,7 +527,7 @@
   document.querySelectorAll('.predict__load[data-q]').forEach(b => b.addEventListener('click', () => {
     stop();
     QUESTIONS[b.dataset.q]();
-    run = null; pos = 0; keepPos = true;
+    run = null; pos = 0; keepPos = true; veil = true;
     applyMode();
     document.querySelector('.lab-tabs').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   }));

@@ -468,6 +468,10 @@ mjx-container svg { display: inline; }
 .plot-box.plot-box--mag { height: 340px; }
 .mag-view .lat { margin-top: 0; }
 @container (max-width: 640px) { .mag-view { grid-template-columns: 1fr; } .plot-box.plot-box--mag { height: 300px; } }
+/* stat values that can be long (fields, currents) may wrap; symbols in the uppercase labels keep their case */
+.stats--wrap .stat__value { white-space: normal; overflow-wrap: anywhere; }
+.stat__label .sym { text-transform: none; letter-spacing: .02em; }
+.stats--veiled .stat__value { color: var(--muted); }
 
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }

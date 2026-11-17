@@ -71,11 +71,12 @@
         for (let s = 0; s < per; s++) {
           const t1 = tt + dt;
           while (nb < breaks.length && breaks[nb] <= tt) nb++;
-          if (nb < breaks.length && breaks[nb] < t1) {
-            // a field that jumps mid-step: split the step at the jump
+          if (nb < breaks.length && breaks[nb] <= t1) {
+            // a field that jumps within this step, or exactly at its end: split the step there,
+            // reading the field just before the jump at the end of the first part
             const b = breaks[nb], h = b - tt;
             if (h > 0) rk4(h, tt, b - 1e-6 * h);
-            rk4(t1 - b, b, t1);
+            if (t1 > b) rk4(t1 - b, b, t1);
             nb++;
           } else rk4(dt, tt, t1);
           tt = t1;

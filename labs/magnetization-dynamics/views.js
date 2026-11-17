@@ -91,7 +91,9 @@
     const [sr, sc] = o.sel, C = o.colors;
     const ink = '#14232c', muted = '#5f7382', copper = '#b0561b';
     const kind = (r, c) => (r === sr && c === sc ? 'sel' : r === sr ? 'row' : c === sc ? 'col' : 'none');
-    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="A three by three MRAM array seen from above, with the selected bit in the middle">`;
+    const ones = [];
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) if (o.bits[r][c].mz > 0) ones.push(r === sr && c === sc ? 'the selected bit' : `row ${r + 1}, column ${c + 1}`);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="A three by three MRAM array seen from above, with the selected bit in the middle. ${ones.length ? `Bits now 1: ${ones.join(', ')}.` : 'Every bit is 0.'}">`;
     s += '<defs><marker id="mr-cur" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#fff"/></marker><marker id="mr-fld" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2e8b57"/></marker></defs>';
     // word lines: rows, under the bits
     for (let r = 0; r < 3; r++) {
@@ -109,7 +111,7 @@
       const hx = ex / len, hz = ez / len;
       s += `<line x1="${(x - ex * 0.85).toFixed(1)}" y1="${(y - ez * 0.85).toFixed(1)}" x2="${(x + ex - hx * 6).toFixed(1)}" y2="${(y + ez - hz * 6).toFixed(1)}" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`;
       s += `<path d="M${(x + ex).toFixed(1)} ${(y + ez).toFixed(1)}L${(x + ex - hx * 8 - hz * 5).toFixed(1)} ${(y + ez - hz * 8 + hx * 5).toFixed(1)}L${(x + ex - hx * 8 + hz * 5).toFixed(1)} ${(y + ez - hz * 8 - hx * 5).toFixed(1)}z" fill="${ink}"/>`;
-      s += `<text x="${x + 25}" y="${y + 24}" font-size="13" font-weight="800" fill="${one ? '#1f4ea8' : muted}">${one ? '1' : '0'}</text>`;
+      s += `<text x="${x + 24}" y="${y + 25}" font-size="15" font-weight="800" fill="${one ? '#1f4ea8' : muted}">${one ? '1' : '0'}</text>`;
     }
     // bit lines: columns, over the bits (drawn translucent so the bits show through)
     for (let c = 0; c < 3; c++) {
@@ -118,13 +120,13 @@
       if (on) s += `<path d="M${x} ${y0 - 46}V${y0 - 30}" stroke="#fff" stroke-width="2.2" marker-end="url(#mr-cur)"/>`;
     }
     // labels
-    const t = (x, y, txt, anchor, color, w) => `<text x="${x}" y="${y}" font-size="12" font-weight="${w || 600}" fill="${color || muted}" text-anchor="${anchor || 'start'}">${txt}</text>`;
+    const t = (x, y, txt, anchor, color, w) => `<text x="${x}" y="${y}" font-size="13.5" font-weight="${w || 600}" fill="${color || muted}" text-anchor="${anchor || 'start'}">${txt}</text>`;
     s += t(8, y0 + sr * dy - 14, 'word line', 'start', o.he > 0 ? copper : muted, 700);
     s += t(8, y0 + sr * dy + 26, o.he > 0 ? `H<tspan font-size="9" dy="3">e</tspan><tspan dy="-3"> = ${o.he.toFixed(2)} H</tspan><tspan font-size="9" dy="3">K</tspan>` : 'no current', 'start', o.he > 0 ? copper : muted);
     s += t(x0 + sc * dx, H - 8, o.hx > 0 ? `bit line · H<tspan font-size="9" dy="3">x</tspan><tspan dy="-3"> = ${o.hx.toFixed(2)} H</tspan><tspan font-size="9" dy="3">K</tspan>` : 'bit line · no current', 'middle', o.hx > 0 ? copper : muted, 700);
     // field directions at the selected bit
-    s += `<g transform="translate(${W - 40} ${y0 - 22})"><path d="M0 34V4" stroke="#2e8b57" stroke-width="3" marker-end="url(#mr-fld)"/><text x="7" y="16" font-size="11" font-weight="700" fill="#2e8b57">easy</text>`;
-    s += `<path d="M-16 50H12" stroke="#2e8b57" stroke-width="3" marker-end="url(#mr-fld)"/><text x="-20" y="66" font-size="11" font-weight="700" fill="#2e8b57">hard</text></g>`;
+    s += `<g transform="translate(${W - 40} ${y0 - 22})"><path d="M0 34V4" stroke="#2e8b57" stroke-width="3" marker-end="url(#mr-fld)"/><text x="7" y="16" font-size="12.5" font-weight="700" fill="#2e8b57">easy</text>`;
+    s += `<path d="M-16 50H12" stroke="#2e8b57" stroke-width="3" marker-end="url(#mr-fld)"/><text x="-22" y="67" font-size="12.5" font-weight="700" fill="#2e8b57">hard</text></g>`;
     s += '</svg>';
     return s;
   }
