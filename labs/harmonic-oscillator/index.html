@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" data-track="quantum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Harmonic Oscillator: Ladders and Coherent States · Professor Nano Labs</title>
+<meta name="description" content="Climb the quantum harmonic oscillator's energy ladder with raising and lowering operators, see why one rung never moves but two together do, and build the coherent state that swings like a classical pendulum. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>Quantum Harmonic Oscillator: Ladders and Coherent States</h1>
+    <p>A mass on a spring, quantum style. Climb the energy ladder one rung at a time with the raising and lowering operators, see why a single rung never moves but two together do, then build the coherent state that swings back and forth like a classical pendulum.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="harmonic_oscillator.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=jHjebJtBXUs" target="_blank" rel="noopener" title="Solving the quantum harmonic oscillator with ladder operators">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/jHjebJtBXUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Solving the quantum harmonic oscillator with ladder operators<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=cm8tf6NuePI" target="_blank" rel="noopener" title="Time independent Schrodinger equation and stationary states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/cm8tf6NuePI/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Time independent Schrodinger equation and stationary states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=gXkbSp2xzlc" target="_blank" rel="noopener" title="Schrodinger equation and time evolution of quantum state">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/gXkbSp2xzlc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Schrodinger equation and time evolution of quantum state<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=5qpXdGSLWig" target="_blank" rel="noopener" title="How exactly does trapped ions perform quantum computing?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/5qpXdGSLWig/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How exactly does trapped ions perform quantum computing?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A mass on a spring</h2>
+    <p>A particle of mass \(m\) in the potential \(\tfrac12 m\omega^2x^2\). Its natural length is \(x_0=\sqrt{\hbar/m\omega}\) and its natural energy \(\hbar\omega\); the lab measures position in \(x_0\), energy in \(\hbar\omega\) and time in periods \(T=2\pi/\omega\). The lowering operator \(a\) and raising operator \(a^\dagger\) are combinations of position and momentum, and the whole Hamiltonian is built from them:</p>
+    <div class="equation">$$H=\frac{p^2}{2m}+\frac12 m\omega^2x^2=\hbar\omega\Big(a^\dagger a+\frac12\Big),\qquad a=\frac1{\sqrt2}\Big(\frac{x}{x_0}+\frac{i\,x_0\,p}{\hbar}\Big),\qquad [a,a^\dagger]=1$$</div>
+    <p>For a \(^{40}\mathrm{Ca}^+\) ion vibrating at \(\omega/2\pi=1\) MHz, as in the <a href="../trapped-ion-qubit/index.html">trapped-ion lab</a>, \(x_0\approx16\) nm and \(\hbar\omega\approx4\) neV; each rung of the ladder is one phonon.</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-ladder" aria-controls="lab" aria-selected="true" data-mode="ladder">1 · Climb the ladder</button>
+      <button class="tab" role="tab" id="tab-super" aria-controls="lab" aria-selected="false" data-mode="super" tabindex="-1">2 · Superpositions move</button>
+      <button class="tab" role="tab" id="tab-coherent" aria-controls="lab" aria-selected="false" data-mode="coherent" tabindex="-1">3 · Coherent states</button>
+    </div>
+    <div class="mode-intro" data-for="ladder">
+      <h2>Every rung is one ħω above the last.</h2>
+      <p>The raising operator \(a^\dagger\) turns \(|n\rangle\) into \(\sqrt{n+1}\,|n{+}1\rangle\); the lowering operator \(a\) turns it into \(\sqrt n\,|n{-}1\rangle\). On the ground state, \(a\) gives zero: there is no rung below, so the lowest energy is \(\hbar\omega/2\), not zero. Written with a derivative, \(a^\dagger\) turns each wavefunction into the next one up, with one more node.</p>
+      <div class="equation">$$a^\dagger|n\rangle=\sqrt{n+1}\,|n{+}1\rangle,\qquad a|n\rangle=\sqrt n\,|n{-}1\rangle,\qquad a|0\rangle=0,\qquad E_n=\Big(n+\frac12\Big)\hbar\omega,\qquad a^\dagger=\frac1{\sqrt2}\Big(\xi-\frac{d}{d\xi}\Big),\ \ \xi=\frac x{x_0}$$</div>
+    </div>
+    <div class="mode-intro" data-for="super" hidden>
+      <h2>A single rung never moves; two rungs do.</h2>
+      <p>An eigenstate only picks up a phase, \(e^{-iE_nt/\hbar}\), so its probability density is frozen in time. Put two rungs together and their phases turn at different rates: the density sloshes at their difference frequency. Position links only neighbouring rungs, so the centre swings only when the two rungs are next to each other.</p>
+      <div class="equation">$$|\psi(t)\rangle=c_m e^{-i(m+\frac12)\omega t}|m\rangle+c_n e^{-i(n+\frac12)\omega t}|n\rangle,\qquad |\psi(x,t)|^2\ \text{beats at}\ (n-m)\,\omega,\qquad \langle x\rangle\neq0\ \text{only if}\ |n-m|=1$$</div>
+    </div>
+    <div class="mode-intro" data-for="coherent" hidden>
+      <h2>The quantum state that swings like a pendulum.</h2>
+      <p>A coherent state \(|\alpha\rangle\) is the ground-state Gaussian moved off centre. Each of its amplitudes turns at its own rate, yet together they carry the Gaussian back and forth along the classical path without changing its shape. It is the one kind of state the lowering operator leaves unchanged. Squeeze its width and it breathes as it swings.</p>
+      <div class="equation">$$|\alpha\rangle=e^{-|\alpha|^2/2}\sum_n\frac{\alpha^n}{\sqrt{n!}}|n\rangle,\qquad a|\alpha\rangle=\alpha|\alpha\rangle,\qquad \langle x\rangle=\sqrt2\,|\alpha|\,x_0\cos(\omega t-\varphi),\qquad P(n)=e^{-|\alpha|^2}\frac{|\alpha|^{2n}}{n!}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-ladder">
+    <aside class="panel controls" aria-label="Lab controls">
+      <!-- tab 1 -->
+      <div class="ctrl-group" data-modes="ladder">
+        <div class="label-caps">Move on the ladder</div>
+        <div class="ladder-btns">
+          <button class="gate-btn ladder-btn" type="button" id="raise"><span>a<sup>†</sup></span><small>raise</small></button>
+          <button class="gate-btn ladder-btn" type="button" id="lower"><span>a</span><small>lower</small></button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="rung">Rung n</label><output id="rung-out" for="rung"></output></div>
+          <input id="rung" type="range" min="0" max="30" step="1" value="0">
+        </div>
+        <label class="check"><input id="classical" type="checkbox" checked> Show the classical particle</label>
+      </div>
+
+      <!-- tab 2 -->
+      <div class="ctrl-group" data-modes="super">
+        <div class="label-caps">Two rungs</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="lev-m">Lower rung m</label><output id="lev-m-out" for="lev-m"></output></div>
+          <input id="lev-m" type="range" min="0" max="8" step="1" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="lev-n">Upper rung n</label><output id="lev-n-out" for="lev-n"></output></div>
+          <input id="lev-n" type="range" min="1" max="9" step="1" value="1">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="weight">Weight on |n⟩</label><output id="weight-out" for="weight"></output></div>
+          <input id="weight" type="range" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="relphase">Relative phase φ</label><output id="relphase-out" for="relphase"></output></div>
+          <input id="relphase" type="range" min="0" max="355" step="5" value="0">
+        </div>
+        <div class="chips" role="group" aria-label="Examples">
+          <button class="chip-btn" type="button" data-pair="0,1,0.5">|0⟩ + |1⟩</button><button class="chip-btn" type="button" data-pair="0,2,0.5">|0⟩ + |2⟩</button><button class="chip-btn" type="button" data-pair="1,2,0.5">|1⟩ + |2⟩</button><button class="chip-btn" type="button" data-pair="2,5,0.5">|2⟩ + |5⟩</button><button class="chip-btn" type="button" data-pair="0,2,1">Just |2⟩</button>
+        </div>
+      </div>
+
+      <!-- tab 3 -->
+      <div class="ctrl-group" data-modes="coherent">
+        <div class="label-caps">Coherent state α</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="alpha">Size |α|</label><output id="alpha-out" for="alpha"></output></div>
+          <input id="alpha" type="range" min="0" max="4" step="0.05" value="2">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="aphase">Phase φ</label><output id="aphase-out" for="aphase"></output></div>
+          <input id="aphase" type="range" min="0" max="355" step="5" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="squeeze">Width, compared with the ground state</label><output id="squeeze-out" for="squeeze"></output></div>
+          <input id="squeeze" type="range" min="0.5" max="2" step="0.05" value="1">
+          <div class="ctrl__hint">1 is a true coherent state. Other widths are squeezed states.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Examples">
+          <button class="chip-btn" type="button" data-coh="0,0,1">Ground state</button><button class="chip-btn" type="button" data-coh="2,0,1">Pulled aside, let go</button><button class="chip-btn" type="button" data-coh="2,90,1">Kicked from the centre</button><button class="chip-btn" type="button" data-coh="2,0,0.5">Squeezed</button><button class="chip-btn" type="button" data-coh="3.5,0,1">A big swing</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Time controls" data-modes="super coherent">
+        <div class="transport transport--shots">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <span class="chips chips--inline"><button class="chip-btn" type="button" id="reset">Back to t = 0</button></span>
+          <div class="transport__time" id="time-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more">
+          <label>Speed
+            <select id="speed">
+              <option value="0.25">0.25×</option>
+              <option value="1" selected>1×</option>
+              <option value="4">4×</option>
+            </select>
+          </label>
+          <span id="transport-note">One period every 2 seconds at 1×.</span>
+        </div>
+      </section>
+
+      <div class="stats stats--4" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="plot-box plot-box--well"><canvas id="well" role="img" aria-label="The potential, its energy levels and the wavefunction"></canvas></div>
+      </section>
+
+      <div class="note ket" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall" id="pa-box"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+          <div class="plot-box plot-box--tall" id="phasor-box" hidden><canvas id="phasor" role="img" aria-label="The two amplitudes as arrows in the complex plane"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · The ladder</span><button class="predict__load" type="button" data-q="q1">Load the ground state</button></div>
+        <p>Apply the lowering operator \(a\) to the ground state. What do you get? So what is the lowest energy the oscillator can have?</p>
+        <details><summary>Show answer</summary>
+          <p>Zero: \(a|0\rangle=0\), the ladder has no rung below. The lowest energy is \(\hbar\omega/2\), the zero-point energy, and the ground state has the smallest uncertainty allowed, \(\Delta x\,\Delta p=\hbar/2\). Even at absolute zero the particle keeps jiggling.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · The ladder</span><button class="predict__load" type="button" data-q="q2">Load rung 3</button></div>
+        <p>Apply \(a^\dagger\) to \(|3\rangle\). What number multiplies the new state, and how many nodes does its wavefunction have?</p>
+        <details><summary>Show answer</summary>
+          <p>\(a^\dagger|3\rangle=\sqrt4\,|4\rangle=2|4\rangle\), with energy \(4.5\,\hbar\omega\). The wavefunction \(\psi_4\) has four nodes: each step up adds one. Plot A shows the same step done with the derivative form, \((\xi-d/d\xi)\psi_3/\sqrt2\), landing on top of \(2\psi_4\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · The ladder</span><button class="predict__load" type="button" data-q="q3">Load rung 30</button></div>
+        <p>At rung 30, where is the particle most likely to be found? Compare with a classical mass on a spring with the same energy.</p>
+        <details><summary>Show answer</summary>
+          <p>Near the turning points, \(\pm\sqrt{61}\,x_0\approx\pm7.8\,x_0\), just as for the classical mass, which moves slowest there. The quantum density wiggles around the classical curve \(1/\pi\sqrt{A^2-x^2}\), and for high rungs the two agree on average: the correspondence principle. At low rungs they look nothing alike; the ground state is most likely found in the centre.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Superpositions</span><button class="predict__load" type="button" data-q="q4">Load just |2⟩</button></div>
+        <p>A single rung, \(|2\rangle\). Press play. What changes in time, and what does not?</p>
+        <details><summary>Show answer</summary>
+          <p>Only the phase of the amplitude turns, once every \(2T/5\), as its arrow in plot A shows. The probability density does not change at all. That is why eigenstates are called stationary states.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Superpositions</span><button class="predict__load" type="button" data-q="q5">Load |0⟩ + |1⟩</button></div>
+        <p>An equal mix of \(|0\rangle\) and \(|1\rangle\). How often does the density swing back and forth, and how far does its centre move?</p>
+        <details><summary>Show answer</summary>
+          <p>Once per period \(T\), at the frequency \(\omega\) of the energy difference, \(E_1-E_0=\hbar\omega\). The centre swings as \(\langle x\rangle=\tfrac1{\sqrt2}\,x_0\cos\omega t\approx0.71\,x_0\cos\omega t\). The relative phase φ only shifts when the swing starts.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Superpositions</span><button class="predict__load" type="button" data-q="q6">Load |0⟩ + |2⟩</button></div>
+        <p>An equal mix of \(|0\rangle\) and \(|2\rangle\). Does the centre move?</p>
+        <details><summary>Show answer</summary>
+          <p>No, \(\langle x\rangle=0\) at all times: position only links neighbouring rungs, and 0 and 2 are not neighbours. Instead the packet breathes, twice per period: its width swings between about \(0.89\,x_0\) and \(1.49\,x_0\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Coherent states</span><button class="predict__load" type="button" data-q="q7">Load |α| = 2, pulled aside</button></div>
+        <p>Pull the ground state aside to \(2\sqrt2\,x_0\) and let go. Does it spread out, like the free Gaussian packet in the <a href="../gaussian-wave-packet/index.html">wave packet lab</a>? How many quanta does it hold?</p>
+        <details><summary>Show answer</summary>
+          <p>It never spreads. It swings between \(\pm2.83\,x_0\) once per period, keeping its width of \(0.71\,x_0\) and \(\Delta x\,\Delta p=\hbar/2\) at every moment, exactly following the classical mass. It holds \(|\alpha|^2=4\) quanta on average, in a Poisson spread: \(P(n)\) is largest at \(n=3\) and \(n=4\), about 19.5% each. The spring's pull is what stops the spreading that a free packet suffers.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Coherent states</span><button class="predict__load" type="button" data-q="q8">Load a squeezed state</button></div>
+        <p>Squeeze the starting width to half the ground state's. What happens to the width as it swings? Is \(\Delta x\,\Delta p\) still \(\hbar/2\)?</p>
+        <details><summary>Show answer</summary>
+          <p>The width breathes twice per period, from \(0.35\,x_0\) out to \(1.41\,x_0\) and back. \(\Delta x\,\Delta p=\hbar/2\) only at the narrowest and widest moments; in between it is larger, up to about \(1.06\,\hbar\), because position and momentum become correlated. The lowering operator no longer leaves the state unchanged: only true coherent states have that property.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the ladder operators as matrices, checks \([a,a^\dagger]=1\) and the energy ladder, applies \(a^\dagger\) as a derivative, evolves superpositions and coherent states in time, and compares the number distribution with a Poisson curve. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="harmonic_oscillator.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 11 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>Eigenstates:</strong> \(\psi_n(\xi)=H_n(\xi)e^{-\xi^2/2}/\sqrt{2^nn!\sqrt\pi}\), built with the three-term recurrence \(\psi_{n+1}=\sqrt{2/(n+1)}\,\xi\psi_n-\sqrt{n/(n+1)}\,\psi_{n-1}\), which stays accurate up to the 90 rungs used here.</li>
+          <li><strong>Ladder operators:</strong> on the amplitudes, \(a\) and \(a^\dagger\) shift each \(c_n\) by one rung with the factors \(\sqrt n\) and \(\sqrt{n+1}\). Plot A on the first tab applies \(a^\dagger=(\xi-d/d\xi)/\sqrt2\) directly to the wavefunction, with a finite-difference derivative.</li>
+          <li><strong>Time evolution:</strong> each amplitude turns as \(e^{-i(n+1/2)\omega t}\); nothing else changes. Averages come from the ladder operators: \(\langle x\rangle=\sqrt2\,\mathrm{Re}\langle a\rangle\), \(\langle p\rangle=\sqrt2\,\mathrm{Im}\langle a\rangle\), and the spreads from \(\langle a^2\rangle\) and \(\langle a^\dagger a\rangle\).</li>
+          <li><strong>Coherent and squeezed states:</strong> coherent amplitudes come from the formula. A squeezed state is a Gaussian of a different width, projected onto the first 90 eigenstates; its norm is 1 to better than \(10^{-12}\). The overlap with \(a|\psi\rangle\) is \(|\langle a\rangle|^2/\langle a^\dagger a\rangle\), which is 1 exactly for coherent states.</li>
+          <li><strong>Classical particle:</strong> at the same energy, \(x(t)=A\cos(\omega t-\varphi)\), and its probability density is \(1/\pi\sqrt{A^2-x^2}\) between the turning points \(\pm A\).</li>
+          <li><strong>Checks:</strong> the eigenfunctions agree with SciPy's Hermite polynomials to about \(10^{-14}\); coherent states match the moving Gaussian, and squeezed states match the analytic breathing width, to about \(10^{-15}\).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
