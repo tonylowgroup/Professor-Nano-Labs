@@ -37,6 +37,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
 | Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 | Spintronics | Magnetization Dynamics and the LLG Equation | `labs/magnetization-dynamics/` |
+| Spintronics | Tunnelling Magnetoresistance | `labs/tunneling-magnetoresistance/` |
 
 Each lab folder holds its page, its JavaScript and its companion Jupyter
 notebook (saved without outputs).

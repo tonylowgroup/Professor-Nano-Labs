@@ -472,6 +472,8 @@ mjx-container svg { display: inline; }
 .stats--wrap .stat__value { white-space: normal; overflow-wrap: anywhere; }
 .stat__label .sym { text-transform: none; letter-spacing: .02em; }
 .stats--veiled .stat__value { color: var(--muted); }
+.seg.seg--inline { width: auto; margin-top: 0; }
+.seg.seg--inline button { padding: 5px 10px; font-size: 12.5px; }
 
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
