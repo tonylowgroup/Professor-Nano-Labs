@@ -475,6 +475,13 @@ mjx-container svg { display: inline; }
 .seg.seg--inline { width: auto; margin-top: 0; }
 .seg.seg--inline button { padding: 5px 10px; font-size: 12.5px; }
 
+/* Berry phase: the zone map takes the left of the picture in the crystal tab, and the loop on it can be dragged */
+.mag-view--swap { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.mag-view--swap > .mag-view__side { order: -1; }
+@container (max-width: 640px) { .mag-view.mag-view--swap { grid-template-columns: 1fr; } }
+.zone-map { cursor: crosshair; touch-action: none; }
+.zone-map:focus-visible { outline: 3px solid var(--brand-soft); outline-offset: -3px; }
+
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }
 .predict {
