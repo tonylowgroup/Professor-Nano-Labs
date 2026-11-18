@@ -128,7 +128,7 @@ img, svg { display: block; }
 [data-track="crystals"]  { --brand: #127a5e; --brand-strong: #0d5f49; --brand-soft: #e2f3ec; --track-hero: #0f6a50; --track-tint: #b4ead6; }
 [data-track="transport"] { --brand: #b0561b; --brand-strong: #8f4413; --brand-soft: #fbeee3; --track-hero: #9a4a16; --track-tint: #f7cfae; }
 [data-track="spintronics"] { --brand: #2a55b8; --brand-strong: #1f4396; --brand-soft: #e6edfa; --track-hero: #23479d; --track-tint: #c9d8f6; }
-[data-track="geometry"]  { --brand: #a06e00; --brand-strong: #7f5700; --brand-soft: #fbf2dd; --track-hero: #8a5f00; --track-tint: #f3dfa6; }
+[data-track="geometry"]  { --brand: #946600; --brand-strong: #765100; --brand-soft: #fbf2dd; --track-hero: #805800; --track-tint: #f3dfa6; }
 /* The top bar and footer always use the site teal. */
 [data-track] .site-nav, [data-track] .site-footer { --brand: #175569; --brand-strong: #0f3d4c; --brand-soft: #e3eff2; }
 

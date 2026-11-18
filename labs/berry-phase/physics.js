@@ -47,14 +47,14 @@
     const [a, b, c, d] = u;
     return [(a * a - b * b) - (c * c - d * d), -2 * (a * b + c * d), -2 * (a * c - b * d)];
   }
-  // solid angle of the polygon joining unit vectors by great-circle arcs, positive when anticlockwise seen from outside
-  // (a fan of triangles from the first vertex, each by Van Oosterom and Strackee's formula)
+  // solid angle of the polygon joining unit vectors by great-circle arcs, positive when anticlockwise seen from outside:
+  // a fan of signed triangles from the north pole (Van Oosterom and Strackee's formula), defined mod 4π. The pole is never
+  // antipodal to a vertex of the loops used here (all lie above the south pole), so no triangle is degenerate.
   function polySolid(pts) {
-    const dot = (p, q) => p[0] * q[0] + p[1] * q[1] + p[2] * q[2];
+    const dot = (p, q) => p[0] * q[0] + p[1] * q[1] + p[2] * q[2], a = [0, 0, 1], N = pts.length;
     let s = 0;
-    const a = pts[0];
-    for (let j = 1; j < pts.length - 1; j++) {
-      const b = pts[j], c = pts[j + 1], bc = [b[1] * c[2] - b[2] * c[1], b[2] * c[0] - b[0] * c[2], b[0] * c[1] - b[1] * c[0]];
+    for (let j = 0; j < N; j++) {
+      const b = pts[j], c = pts[(j + 1) % N], bc = [b[1] * c[2] - b[2] * c[1], b[2] * c[0] - b[0] * c[2], b[0] * c[1] - b[1] * c[0]];
       s += 2 * Math.atan2(dot(a, bc), 1 + dot(a, b) + dot(b, c) + dot(c, a));
     }
     return s;
@@ -158,7 +158,6 @@
 
   // the reciprocal unit cell used for sums over the zone: origin and two edge vectors
   const cell = model => (model.type === 'qwz' ? [[-Math.PI, -Math.PI], [TAU, 0], [0, TAU]] : [[0, 0], G1, G2]);
-  const cellArea = model => { const [, a, b] = cell(model); return Math.abs(a[0] * b[1] - a[1] * b[0]); };
 
   /* Chern number of the lower band, C = (1/2π) ∫ Ω d²k, by Fukui, Hatsugai and Suzuki: the zone is cut into N × N
      plaquettes and each contributes its (gauge-invariant) Berry phase; the sum is exactly an integer. */
@@ -175,29 +174,52 @@
     return sgn * F / TAU;
   }
 
-  // a loop in k-space: a circle of radius rad about c, anticlockwise. Its Berry phase from the overlaps of the states...
+  /* ---------- adaptive quadrature: Gauss–Kronrod 7–15, halving any panel whose two estimates disagree ---------- */
+  const XK = [0.991455371120812639, 0.949107912342758525, 0.864864423359769073, 0.741531185599394440, 0.586087235467691130, 0.405845151377397167, 0.207784955007898468, 0];
+  const WK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919, 0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
+  const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
+  function gk(f, a, b) {
+    const c = (a + b) / 2, h = (b - a) / 2, f0 = f(c);
+    let K = WK[7] * f0, G = WG[3] * f0;
+    for (let i = 0; i < 7; i++) { const s = f(c - h * XK[i]) + f(c + h * XK[i]); K += WK[i] * s; if (i % 2) G += WG[(i - 1) / 2] * s; }
+    return [K * h, Math.abs((K - G) * h)];
+  }
+  function adapt(f, a, b, tol, depth) {
+    const [K, e] = gk(f, a, b);
+    if (e <= tol || depth <= 0 || !Number.isFinite(K)) return K;
+    const m = (a + b) / 2;
+    return adapt(f, a, m, tol / 1.6, depth - 1) + adapt(f, m, b, tol / 1.6, depth - 1);
+  }
+  // ∫_a^b f, starting from n equal panels, to an absolute tolerance tol
+  function integrate(f, a, b, n, tol) { let s = 0; for (let i = 0; i < n; i++) s += adapt(f, a + (b - a) * i / n, a + (b - a) * (i + 1) / n, tol / n, 18); return s; }
+
+  // a loop in k-space: a circle of radius rad about c, anticlockwise. Its Berry phase from the overlaps of N states...
   function loopPhase(model, c, rad, N) {
     const st = Array.from({ length: N }, (_, j) => lowerState(model, [c[0] + rad * Math.cos(TAU * j / N), c[1] + rad * Math.sin(TAU * j / N)], 'N'));
     return links(st, true).gamma;
   }
-  // ... and the flux of Ω through it (Stokes), by Gauss–Legendre in r and the trapezium rule in angle
-  const GLX = [-0.9739065285171717, -0.8650633666889845, -0.6794095682990244, -0.4333953941292472, -0.1488743389816312, 0.1488743389816312, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717];
-  const GLW = [0.0666713443086881, 0.1494513491505806, 0.2190863625159820, 0.2692667193099963, 0.2955242247147529, 0.2955242247147529, 0.2692667193099963, 0.2190863625159820, 0.1494513491505806, 0.0666713443086881];
-  function loopFlux(model, c, rad, nr, na) {
-    let F = 0, gmin = Infinity;
-    const NR = nr || 4, NA = na || 96;
-    for (let seg = 0; seg < NR; seg++) for (let i = 0; i < 10; i++) {
-      const r = rad * (seg + (1 + GLX[i]) / 2) / NR, w = GLW[i] / 2 * rad / NR;
-      for (let j = 0; j < NA; j++) {
-        const a = TAU * j / NA, k = [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)];
-        F += omega(model, k) * r * w * TAU / NA;
-        gmin = Math.min(gmin, 2 * Math.hypot(...dvec(model, k).d));
-      }
+  // ... with N doubled until it settles (the error falls like 1/N², so each pair is extrapolated)
+  function loopPhaseConv(model, c, rad) {
+    let N = 400, g = loopPhase(model, c, rad, N), best = g;
+    for (let it = 0; it < 6; it++) {
+      const g2 = loopPhase(model, c, rad, 2 * N), d = wrap(g2 - g), est = g2 + d / 3;
+      if (Math.abs(d) < 3e-6) return wrap(est);
+      best = wrap(est); g = g2; N *= 2;
     }
-    return { flux: F, gapMin: gmin };
+    return best;
+  }
+  // ... and the flux of Ω through it (Stokes), adaptively in the radius and the angle, so that narrow peaks near a
+  // closing gap are resolved
+  function loopFlux(model, c, rad) {
+    const inner = r => integrate(a => omega(model, [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]) * r, 0, TAU, 8, 1e-6);
+    return integrate(inner, 0, rad, 4, 1e-5);
+  }
+  // ∮A·dk around the loop in gauge N or S, straight from the connection
+  function loopA(model, c, rad, gauge) {
+    return integrate(a => { const A = connection(model, [c[0] + rad * Math.cos(a), c[1] + rad * Math.sin(a)], gauge); return (-A[0] * Math.sin(a) + A[1] * Math.cos(a)) * rad; }, 0, TAU, 16, 1e-8);
   }
   // the bands E± = d0 ± |d| along a path of k points
   const bands = (model, ks) => ks.map(k => { const { d, d0 } = dvec(model, k), r = Math.hypot(d[0], d[1], d[2]); return [d0 - r, d0 + r]; });
 
-  window.BP = { TAU, up, low, ov, phase, wrap, links, projectorPhase, flag, polySolid, circle, lune, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, cellArea, chern, loopPhase, loopFlux, bands };
+  window.BP = { TAU, up, low, ov, phase, wrap, links, projectorPhase, flag, polySolid, circle, lune, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, chern, integrate, loopPhase, loopPhaseConv, loopFlux, loopA, bands };
 })();

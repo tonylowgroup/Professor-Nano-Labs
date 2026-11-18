@@ -479,8 +479,9 @@ mjx-container svg { display: inline; }
 .mag-view--swap { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
 .mag-view--swap > .mag-view__side { order: -1; }
 @container (max-width: 640px) { .mag-view.mag-view--swap { grid-template-columns: 1fr; } }
-.zone-map { cursor: crosshair; touch-action: none; }
-.zone-map:focus-visible { outline: 3px solid var(--brand-soft); outline-offset: -3px; }
+/* tap to place the loop; horizontal drags move it, vertical swipes still scroll the page on phones */
+.zone-map { cursor: crosshair; touch-action: pan-y; }
+.zone-map:focus-visible { outline: 3px solid var(--brand); outline-offset: -3px; }
 
 /* ---------- Predict first ---------- */
 .predict-list { display: grid; gap: 12px; }

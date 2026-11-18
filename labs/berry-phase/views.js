@@ -80,7 +80,7 @@
 
   /* A complex plane for phases: unit circle, arrows, an arc for the phase swept (a spiral when it passes a full turn),
      and an optional chain of points (the running product of overlaps).
-     scene = { arrows: [{ z, color, dash, label }], arc: { to, color, label }, chain: { pts, color, last }, caption } */
+     scene = { arrows: [{ z, color, dash, label }], arc: { to, color, label }, chain: { pts, color }, caption } */
   class PhaseDial {
     constructor(canvas) {
       this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.scene = null;

@@ -10,7 +10,7 @@
   const START = { thc: 60, logT: Math.log10(30), shape: 'circle', dphi: 120, N: 8, cg: 'smooth', seed: 1, model: 'qwz', qm: 1, hm: 0.2, ht2: 0, hphi: 90, rad: 1, c: [0, 0], gauge: 'N' };
   const S = JSON.parse(JSON.stringify(START));
   let mode = 'loop';
-  const INK = '#14232c', GOLD = '#a06e00', BLUE = '#1f6fb4', RED = '#c2372f', GREEN = '#2e8b57', BERRY = '#a3326c', MUTED = '#5f7382', GREY = '#8a9aa5';
+  const INK = '#14232c', GOLD = '#946600', BLUE = '#1f6fb4', RED = '#c2372f', GREEN = '#2e8b57', BERRY = '#a3326c', MUTED = '#5f7382', GREY = '#8a9aa5';
   const PLAY_S = 6;               // seconds of playback per loop
 
   // ---------- formatting ----------
@@ -43,7 +43,17 @@
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³' };
   const logFmt = v => (Math.abs(v - Math.round(v)) < 1e-6 ? (Math.round(v) === 0 ? '1' : Math.round(v) === 1 ? '10' : `10${String(Math.round(v)).split('').map(c => SUP[c]).join('')}`) : '');
   const cache = new Map();
-  function memo(key, fn) { if (!cache.has(key)) { cache.set(key, fn()); if (cache.size > 60) cache.delete(cache.keys().next().value); } return cache.get(key); }
+  // least recently used goes first; the loop's integrals, which change with every drag, have a cache of their own
+  function lru(store, size) { return (key, fn) => { let v; if (store.has(key)) { v = store.get(key); store.delete(key); } else v = fn(); store.set(key, v); if (store.size > size) store.delete(store.keys().next().value); return v; }; }
+  const loopCache = new Map(), memo = lru(cache, 60), loopMemo = lru(loopCache, 12);
+  // the flux through the loop can take a moment near a closing gap: it is worked out once the controls settle
+  let fluxTimer = 0;
+  function settled(key, fn) {
+    if (loopCache.has(key)) return loopMemo(key, fn);
+    clearTimeout(fluxTimer);
+    fluxTimer = setTimeout(() => { if (!loopCache.has(key)) { loopMemo(key, fn); if (mode === 'crystal') render(); } }, 150);
+    return null;
+  }
   const add = (a, b, s) => [a[0] + s * b[0], a[1] + s * b[1], a[2] + s * b[2]];
 
   // ---------- 1. A spin goes around a loop ----------
@@ -97,7 +107,7 @@
       dots: [{ v: n0, color: INK, r: 4, ring: true }],
       tags: [{ v: add(n0, eth(0), L + 0.12), text: 'start', color: GREEN, size: 11.5, bold: false }],
     });
-    $('sphere').setAttribute('aria-label', `Field on a cone of ${S.thc}° about z; the spin, in blue, ${fid > 0.99 ? 'follows it closely' : 'wobbles around it'}; a green arrow carried along the loop has turned by ${fixed((B.wrap(-Math.cos(thc) * ph) + PI) / DEG, 0)}° relative to the local frame`);
+    $('sphere').setAttribute('aria-label', `Field on a cone of ${S.thc}° about z; the spin, in blue, ${fid > 0.99 ? 'follows it closely' : 'wobbles around it'}; a green arrow carried along the loop has turned by ${fixed((((-Math.cos(thc) * ph) % TAU) + TAU) % TAU / DEG, 0)}° relative to the local frame`);
     // the dial: the phase collected so far, with the dynamical phase removed
     const shown = veil ? 0 : geo, ideal_t = ideal * f;
     dial.draw(veil ? { arrows: [] } : {
@@ -106,20 +116,20 @@
     });
     $('dial').setAttribute('aria-label', veil ? 'Phase dial, hidden until Play' : `Phase collected so far: ${piTxt(geo)}, against ${piTxt(ideal_t)} for a slow loop`);
     stats([
-      ['Solid angle of the loop', `${fixed(Sa / PI, 3)}π`, `2π(1 − cos θ): ${pct(Sa / (4 * PI), 0)} of the sphere`],
+      ['Solid angle of the loop', `${fixed(Sa / PI, 3)}π`, `2π(1 − cos θ): ${pct(Sa / (4 * PI), Sa / (4 * PI) < 0.01 || Sa / (4 * PI) > 0.99 ? 1 : 0)} of the sphere`],
       ['Berry phase', piTxt(ideal), 'minus half the solid angle: the slow-loop result'],
-      [f >= 0.999 ? 'Phase after one loop' : `Phase so far, t = ${fixed(f, 2)}T`, piTxt(geo), `dynamical phase ω_0t/2 = ${fixed(PI * per * f, PI * per * f >= 100 ? 0 : 1)} rad removed`],
+      [f >= 0.999 ? 'Phase after one loop' : `Phase so far, ${sym(`t = ${fixed(f, 2)}T`)}`, piTxt(geo), `dynamical phase ω_0t/2 = ${fixed(PI * per * f, PI * per * f >= 100 ? 0 : 1)} rad removed`],
       [`Spin still in ${sym('|+n⟩')}`, pct(fid, fid > 0.999 ? 2 : 1), `lowest along the loop: ${pct(minF, minF > 0.999 ? 2 : 1)}`],
     ], veil);
     setHTML($('dg-title'), 'The spin follows the field around a cone');
-    put('dg-cap', 'Left: the field\'s direction (black) turns around the dashed cone; the spin (blue) follows it, wobbling around it if the trip is fast. The green arrow is carried along without turning (parallel transport); it starts along the dashed one. Right: the phase the spin has collected, with the dynamical phase taken out (blue; its length is the overlap with |+n⟩), and the slow-loop value so far (gold, dashed). Drag the sphere to turn it.');
+    put('dg-cap', 'On the sphere: the field\'s direction (black) turns around the dashed cone; the spin (blue) follows it, wobbling around it if the trip is fast. The green arrow is carried along without turning (parallel transport); it starts along the dashed one. On the dial: the phase the spin has collected, with the dynamical phase taken out (blue; its length is the overlap with |+n⟩), and the slow-loop value so far (gold, dashed). Drag the sphere to turn it.');
     legend('dg-legend', [[INK, '', 'field direction n'], [BLUE, '', 'spin ⟨σ⟩ and its path'], [GOLD, 'swatch--dash', 'the loop'], [GREEN, '', 'arrow carried without turning']]);
     // plot A: the phase against time
     reset(plotA);
     plotA.opts.xLabel = 'Time t / T'; plotA.opts.yLabel = 'Phase (units of π)'; plotA.opts.zeroLine = true;
     const ys = run.geo.map(g => g / PI), lo = Math.min(0, ideal / PI, ...ys), hi = Math.max(0, ideal / PI, ...ys), pad = 0.08 * (hi - lo) + 0.05;
     plotA.setRange([0, 1], [lo - pad, hi + pad]);
-    const LA = [{ type: 'line', x: [0, 1], y: [0, ideal / PI], color: GOLD, width: 2, dash: [6, 4] }];
+    const LA = veil ? [] : [{ type: 'line', x: [0, 1], y: [0, ideal / PI], color: GOLD, width: 2, dash: [6, 4] }];
     if (!veil && idx > 0) { const xs = [], yy = []; for (let i = 0; i <= idx; i += step) { xs.push(run.t[i] / run.t[nOut]); yy.push(ys[i]); } xs.push(f); yy.push(ys[idx]); LA.push({ type: 'line', x: xs, y: yy, color: BLUE, width: 2.2 }, { type: 'dots', x: [f], y: [ys[idx]], color: BLUE, r: 4.5 }); }
     plotA.draw(LA);
     setHTML($('pa-title'), 'The phase grows as the field goes round');
@@ -129,7 +139,10 @@
     reset(plotB);
     plotB.opts.xLabel = 'Time for one loop (Larmor periods)'; plotB.opts.yLabel = 'Phase after one loop (π)';
     plotB.opts.xTickValues = [0, 1, 2, 3]; plotB.opts.xFormat = logFmt;
-    const F = finals(), gy = F.y.map(p => p.g / PI), blo = Math.min(...gy, ideal / PI), bhi = Math.max(...gy, ideal / PI, 0), bp = 0.1 * (bhi - blo) + 0.05;
+    const F = finals(), gy = F.y.map(p => p.g / PI);
+    let blo = Math.min(...gy, ideal / PI), bhi = Math.max(...gy, ideal / PI, 0);
+    if (bhi - blo < 0.2) { const mid = (bhi + blo) / 2; blo = mid - 0.1; bhi = mid + 0.1; }
+    const bp = 0.1 * (bhi - blo) + 0.05;
     plotB.setRange([0, 3], [blo - bp, bhi + bp]);
     if (veil) plotB.draw([{ type: 'text', x: 1.5, y: (blo + bhi) / 2, text: 'Shown after you press Play', color: MUTED, size: 13 }]);
     else plotB.draw([
@@ -138,20 +151,19 @@
       { type: 'vline', x: S.logT, color: INK, width: 1, dash: [3, 3] },
       { type: 'dots', x: [S.logT], y: [nearest(run.geo[nOut], ideal) / PI], color: INK, r: 5 },
     ]);
-    setHTML($('pb-title'), 'Slower loops converge on the Berry phase');
-    put('pb-cap', `The phase left after one full loop (blue), against the time the loop takes, on a log scale; the gold line is the Berry phase, ${piTxt(ideal)}. The dynamical phase grows in proportion to the time; the Berry phase does not depend on it at all.`);
-    legend('pb-legend', [[BLUE, '', 'phase after one loop'], [GOLD, 'swatch--dash', 'Berry phase −\\(\\mathcal S\\)/2'], [INK, '', 'this loop']]);
+    setHTML($('pb-title'), veil ? 'The phase after one loop, against the loop time' : 'Slower loops converge on the Berry phase');
+    put('pb-cap', veil ? 'Shown after you press Play.' : `The phase left after one full loop (blue), against the time the loop takes, on a log scale; the gold line is the Berry phase, ${piTxt(ideal)}. The dynamical phase grows in proportion to the time; the Berry phase does not depend on it at all.`);
+    legend('pb-legend', veil ? [] : [[BLUE, '', 'phase after one loop'], [GOLD, 'swatch--dash', 'Berry phase −\\(\\mathcal S\\)/2'], [INK, '', 'this loop']]);
     const final = run.geo[nOut];
     setHTML($('info'), veil ? '<b>Make your prediction,</b> then press ▶ Play to carry the spin around the loop.'
       : f < 0.999 ? `<b>${fixed(f * 100, 0)}% of the way round:</b> the spin has collected ${piTxt(geo)} of geometric phase, against ${piTxt(ideal_t)} for a slow loop.`
-      : minF > 0.99 ? `<b>Slow enough: the spin stays in |+n⟩, with a probability that never drops below ${pct(minF, minF > 0.999 ? 2 : 1)}.</b> After one loop it has picked up ${piTxt(final)} on top of the dynamical phase, against the Berry phase ${piTxt(ideal)}${Math.abs(B.wrap(final - ideal)) > 0.005 * PI ? `; the gap closes like 1/T as the loop gets slower` : ''}. ${Math.abs(B.wrap(Sa)) < 1e-6 ? 'The green arrow has turned a full 360°, the solid angle, and is back where it started; the spin\'s state has changed sign. An arrow cannot tell a turn of 2π from none; a spinor can.' : `The green arrow has turned by ${fixed(((Sa % TAU) + TAU) % TAU / DEG, 0)}°, the solid angle (mod 360°): twice the phase, the other way.`}`
-      : `<b>Too fast for the spin to follow:</b> at one point it is only ${pct(minF, 0)} in |+n⟩, and the phase it picks up, ${piTxt(final)}, is not the Berry phase, ${piTxt(ideal)}. Slow the loop down.`);
-    setHTML($('takeaway'), `<b>The Berry phase is geometry, not time.</b> Take ten times longer and the dynamical phase grows tenfold; the Berry phase stays at ${piTxt(ideal)}, set by the solid angle of the loop alone. It is a spin's version of the arrow carried around a sphere: the arrow turns by the solid angle, the spinor's phase by minus half of it.`);
-    $('time').value = Math.round(pos * 1000);
+      : minF > 0.99 ? `<b>Slow enough: the spin stays in |+n⟩, with a probability that never drops below ${pct(minF, minF > 0.999 ? 2 : 1)}.</b> After one loop it has picked up ${piTxt(final)} on top of the dynamical phase, against the Berry phase ${piTxt(ideal)}${Math.abs(B.wrap(final - ideal)) > 0.005 * PI ? `; the gap closes like 1/T as the loop gets slower` : ''}. ${Math.abs(B.wrap(Sa)) < 1e-6 ? 'The green arrow comes back exactly as it left: it has turned through the solid angle, a full 2π, which an arrow cannot tell from no turn at all, while the spin\'s state has changed sign. A spinor can tell.' : `The green arrow has turned by ${fixed(((Sa % TAU) + TAU) % TAU / DEG, 0)}°, the solid angle (mod 360°): twice the phase, the other way.`}`
+      : `<b>Too fast for the spin to follow:</b> at one point it is only ${pct(minF, 0)} in |+n⟩, so the phase it picks up, ${piTxt(final)}, ${Math.abs(B.wrap(final - ideal)) < 0.005 * PI ? `lands close to the Berry phase, ${piTxt(ideal)}, but only by coincidence: this loop encloses so small a cap around the south pole that both are nearly zero, mod 2π` : `is not the Berry phase, ${piTxt(ideal)}`}. Slow the loop down.`);
+    setHTML($('takeaway'), veil ? '<b>Predict first:</b> what phase does the spin bring back, apart from the dynamical one? Press Play to find out.' : `<b>The Berry phase is geometry, not time.</b> Take ten times longer and the dynamical phase grows tenfold; the Berry phase stays at ${piTxt(ideal)}, set by the solid angle of the loop alone. It is a spin's version of the arrow carried around a sphere: the arrow turns by the solid angle, the spinor's phase by minus half of it.`);
+    $('time').value = Math.round(pos * 1000); $('time').setAttribute('aria-valuetext', `${fixed(f, 2)} of the way round the loop`);
     $('time-out').textContent = `${fixed(f, 2)} T`;
     $('play').textContent = playing ? '❚❚ Pause' : '▶ Play';
-    $('info').setAttribute('aria-live', playing ? 'off' : 'polite');
-    $('transport-note').textContent = `One loop plays in ${PLAY_S} s. It takes T = ${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}, so the spin precesses about ${+per.toPrecision(4)} time${per === 1 ? '' : 's'} around the field on the way round.${reduceMotion ? ' Reduced motion is on: each press of Play steps an eighth of the way.' : ''}`;
+    $('transport-note').textContent = `${reduceMotion ? 'Reduced motion is on: each press of Play steps an eighth of the way round.' : `One loop plays in ${PLAY_S} s.`} It takes T = ${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}, so the spin precesses about ${+per.toPrecision(4)} time${per === 1 ? '' : 's'} around the field on the way round.`;
   }
 
   // ---------- 2. Chains of states and gauge ----------
@@ -166,7 +178,9 @@
       for (let j = 1; j < S.N; j++) { const o = B.ov(st[j - 1], smooth[j]); st.push(B.phase(smooth[j], -Math.atan2(o[1], o[0]))); }
     }
     const L = B.links(st, true), Sa = S.shape === 'lune' ? S.dphi * DEG : solid(S.thc * DEG);
-    return { pts, st, L, Sa, exact: -Sa / 2, proj: B.projectorPhase(st), poly: B.polySolid(pts) };
+    // the polygon's solid angle is defined mod 4π: show the branch nearest the smooth loop's
+    const P = B.polySolid(pts), poly = P + 2 * TAU * Math.round((Sa - P) / (2 * TAU));
+    return { pts, st, L, Sa, exact: -Sa / 2, proj: B.projectorPhase(st), poly };
   }
   function renderChain() {
     const C = chain(), N = S.N, { pts, st, L } = C, g = L.gamma;
@@ -206,7 +220,7 @@
       ['Open chain, 1 → N', piTxt(B.wrap(open)), 'without closing: depends on the gauge'],
     ]);
     setHTML($('dg-title'), S.cg === 'pt' ? 'Parallel transport: the flag is carried without turning' : S.cg === 'random' ? 'A random gauge: every phase scrambled' : 'A chain of states in a smooth gauge');
-    put('dg-cap', `Left: ${N} states on the loop (dashed), joined by great-circle arcs (gold). Each state's phase is drawn as a flag at its point: multiplying the state by e<sup>iχ</sup> turns its flag by 2χ. ${S.cg === 'pt' ? 'The berry dashed flag at state 1 is state N carried on to it: the angle between it and state 1\'s own flag is the holonomy.' : ''} Right: the overlaps multiplied one by one (blue dots); the angle of the product is γ_N (gold, dashed: the exact −\\(\\mathcal S\\)/2).`);
+    put('dg-cap', `On the sphere: ${N} states on the loop (dashed), joined by great-circle arcs (gold). Each state's phase is drawn as a flag at its point: multiplying the state by e<sup>iχ</sup> turns its flag by 2χ. ${S.cg === 'pt' ? 'The berry dashed flag at state 1 is state N carried on to it: the angle between it and state 1\'s own flag is the holonomy.' : ''} On the dial: the complex conjugates of the overlaps, ⟨u_{j+1}|u_j⟩, multiplied one by one (blue dots); the angle of the result is γ_N (gold, dashed: the exact −\\(\\mathcal S\\)/2).`);
     legend('dg-legend', [[GOLD, '', 'great-circle polygon'], [GOLD, 'swatch--dash', 'the smooth loop'], [GREEN, '', 'each state\'s flag'], ...(S.cg === 'pt' ? [[BERRY, 'swatch--dash', 'state N carried to state 1']] : [])]);
     // plot A: the phase of each link, and their running sum
     reset(plotA);
@@ -227,8 +241,10 @@
     // plot B: γ_N against N
     reset(plotB);
     plotB.opts.xLabel = 'Number of states N'; plotB.opts.yLabel = 'Phase of the chain (units of π)';
-    const ns = range(3, 60, 57), gs = memo(`gN|${S.shape}|${S.thc}|${S.dphi}`, () => ns.map(k => nearest(B.links((S.shape === 'lune' ? B.lune(S.dphi * DEG, k) : B.circle(S.thc * DEG, k)).map(B.up), true).gamma, C.exact) / PI));
-    const blo = Math.min(...gs, C.exact / PI), bhi = Math.max(...gs, C.exact / PI), bp = 0.12 * (bhi - blo) + 0.03;
+    const ns = range(3, 60, 57), gs = memo(`gN|${S.shape}|${S.shape === 'lune' ? S.dphi : S.thc}`, () => ns.map(k => nearest(B.links((S.shape === 'lune' ? B.lune(S.dphi * DEG, k) : B.circle(S.thc * DEG, k)).map(B.up), true).gamma, C.exact) / PI));
+    let blo = Math.min(...gs, C.exact / PI), bhi = Math.max(...gs, C.exact / PI);
+    if (bhi - blo < 0.2) { const mid = (bhi + blo) / 2; blo = mid - 0.1; bhi = mid + 0.1; }
+    const bp = 0.12 * (bhi - blo) + 0.03;
     plotB.setRange([0, 61], [blo - bp, bhi + bp]);
     plotB.draw([
       { type: 'hline', y: C.exact / PI, color: GOLD, width: 2, dash: [6, 4] },
@@ -243,7 +259,7 @@
     const HINT = { smooth: 'Each state is |+n⟩ as written in tab 1: the phases change smoothly along the loop.', random: 'Each state is multiplied by its own random phase factor e<sup>iχ</sup>.', pt: 'Each phase is chosen so that ⟨u_j|u_{j+1}⟩ is real and positive: the video\'s parallel transport.' };
     put('cg-hint', HINT[S.cg]);
     $('reroll').hidden = S.cg !== 'random';
-    setHTML($('info'), S.cg === 'pt' ? `<b>Parallel transport moves the whole phase into the last link: ${piTxt(L.link[N - 1])}.</b> Every other overlap is real and positive, so each flag is carried along its arc without turning; back at state 1 it has turned by the polygon's solid angle, ${fixed(C.poly / PI, 3)}π (mod 2π), relative to state 1's own flag.`
+    setHTML($('info'), S.cg === 'pt' ? `<b>Parallel transport moves the whole phase into the last link: ${piTxt(L.link[N - 1])}.</b> Every other overlap is real and positive, so each flag is carried along its arc without turning; back at state 1 it has turned, relative to state 1's own flag, by the polygon's solid angle, ${(() => { const t = ((C.poly % TAU) + TAU) % TAU; return t < 1e-6 || t > TAU - 1e-6 ? `${fixed(C.poly / PI, 3)}π: a whole number of turns, which leaves it pointing the same way` : `${fixed(C.poly / PI, 3)}π${Math.abs(C.poly) > TAU ? `, that is ${fixed(t / PI, 3)}π` : ''}`; })()}.`
       : S.cg === 'random' ? `<b>The links changed; γ<sub>N</sub> did not: ${piTxt(g)}.</b> Each state appears in the product once as a ket and once as a bra, so its random phase cancels. The open chain, ${piTxt(B.wrap(open))}, is not gauge invariant: press "New random phases" and it changes.`
       : `<b>${N} states give γ<sub>N</sub> = ${piTxt(g)}, against ${piTxt(C.exact)} for the smooth loop.</b> In this gauge each link carries a small share, about ${piTxt(C.exact / N, 3)} each, as the video's ⟨j|j+1⟩ ≈ 1 − iA·dk suggests.`);
     setHTML($('takeaway'), '<b>The gauge is a choice; the Berry phase is not.</b> Link phases, open paths and the connection change with the gauge. A closed loop\'s product, the projector trace and, in a crystal, the curvature do not: they are what experiments measure.');
@@ -281,15 +297,6 @@
       return { direct, indirect: bot - top };
     });
   }
-  // ∮A·dk in a gauge, straight from the connection (2000 points, midpoint rule)
-  function loopA(md, c, r, gauge) {
-    const n = 2000; let s = 0;
-    for (let j = 0; j < n; j++) {
-      const a = TAU * (j + 0.5) / n, k = [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)], A = B.connection(md, k, gauge);
-      s += (A[0] * -Math.sin(a) + A[1] * Math.cos(a)) * r * TAU / n;
-    }
-    return s;
-  }
   function sphereImage(md) {
     return memo(`img|${mkey()}`, () => {
       const lines = [], nl = 12, np = 90;
@@ -309,10 +316,13 @@
     map.fit(BOX[S.model]);
     const box = [map.xr[0], map.xr[1], map.yr[0], map.yr[1]], nx = 150, ny = Math.round(150 * (box[3] - box[2]) / (box[1] - box[0]));
     const heat = memo(`heat|${key}|${box.map(v => v.toFixed(3)).join(',')}`, () => {
-      let mx = 0;
-      for (let i = 0; i < 60; i++) for (let j = 0; j < 60; j++) { const v = Math.abs(B.omega(md, [box[0] + (box[1] - box[0]) * (i + 0.5) / 60, box[2] + (box[3] - box[2]) * (j + 0.5) / 60])); if (Number.isFinite(v)) mx = Math.max(mx, v); }
-      poles(md).forEach(p => { const v = Math.abs(B.omega(md, p.k)); if (Number.isFinite(v)) mx = Math.max(mx, v); });
-      return { canvas: V.heatCanvas((x, y) => B.omega(md, [x, y]), box, nx, ny, Math.max(0.3 * mx, 1e-12)), max: mx };
+      // the colour scale follows the bulk of the map (its 97th percentile), so a narrow peak near a closing gap
+      // saturates instead of washing everything else out
+      const vals = [];
+      for (let i = 0; i < 60; i++) for (let j = 0; j < 60; j++) { const v = Math.abs(B.omega(md, [box[0] + (box[1] - box[0]) * (i + 0.5) / 60, box[2] + (box[3] - box[2]) * (j + 0.5) / 60])); if (Number.isFinite(v)) vals.push(v); }
+      vals.sort((a, b) => a - b);
+      const p97 = vals.length ? vals[Math.floor(0.97 * (vals.length - 1))] : 0;
+      return { canvas: V.heatCanvas((x, y) => B.omega(md, [x, y]), box, nx, ny, Math.max(0.5 * p97, 1e-12)) };
     });
     const pl = poles(md), vort = S.gauge === 'off' ? [] : pl.filter(p => (S.gauge === 'N' ? p.dz <= 1e-12 : p.dz >= -1e-12)).map(p => p.k);
     let arrows = [];
@@ -329,22 +339,23 @@
     map.draw([{ type: 'image', canvas: heat.canvas, x0: box[0], x1: box[1], y0: box[2], y1: box[3], smooth: true }]);
     // the numbers
     const C = memo(`C|${key}`, () => B.chern(md, 48)), gp = gapInfo(md), closed = gp.direct < 1e-6;
-    const Cr = Math.round(C), g0 = B.loopPhase(md, c, r, 400), g = g0 <= -PI + 1e-9 ? g0 + TAU : g0, fl = memo(`fl|${key}|${c.join(',')}|${r}`, () => B.loopFlux(md, c, r));
     const dirac = pl.filter(p => Math.abs(p.dz) < 1e-9), dist = p => Math.hypot(p.k[0] - c[0], p.k[1] - c[1]);
     const onLoop = dirac.some(p => Math.abs(dist(p) - r) < 0.01), encl = dirac.filter(p => dist(p) < r).length;
+    const lk = `${key}|${c.join(',')}|${r}`, g0 = onLoop ? NaN : loopMemo(`g|${lk}`, () => B.loopPhaseConv(md, c, r)), g = g0 <= -PI + 1e-9 ? g0 + TAU : g0;
+    const Cr = Math.round(C), fl = { flux: onLoop ? NaN : settled(`f|${lk}`, () => B.loopFlux(md, c, r)) }, wait = fl.flux === null;
     stats([
-      [`Chern number ${sym('C')}`, closed ? 'undefined' : String(Cr).replace('-', '−'), closed ? 'the gap is closed' : 'lower band, from 48 × 48 plaquettes'],
+      [`Chern number ${sym('C')}`, closed ? 'not defined' : String(Cr).replace('-', '−'), closed ? 'the gap is closed' : 'lower band, from 48 × 48 plaquettes'],
       [`Hall conductance ${sym('|σ_{xy}|')}`, closed ? '—' : `${Math.abs(Cr)} e²/h`, closed ? 'no gap: a semimetal' : gp.indirect > 0 ? 'with the lower band full' : 'but the bands overlap: a metal'],
-      ['The loop\'s Berry phase', onLoop ? '—' : piTxt(g), onLoop ? 'the loop passes through a gap closing' : `flux of Ω through it: ${piTxt(fl.flux)}`],
+      ['The loop\'s Berry phase', onLoop ? '—' : piTxt(g), onLoop ? 'the loop passes through a gap closing' : wait ? 'flux of Ω through it: working it out…' : `flux of Ω through it: ${piTxt(fl.flux)}`],
       ['Smallest gap', `${fixed(gp.direct, 3)}${S.model === 'qwz' ? '' : ' t'}`, S.model === 'qwz' ? '2|d| at its smallest, in the units of d' : '2|d|, in units of the hopping t'],
     ]);
     // the sphere: the image of the zone, and of the loop
     const lines = sphereImage(md), loopImg = range(0, TAU, 240).map(a => B.unit(B.dvec(md, [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]).d));
     sphere.draw({ curves: lines.map(pts => ({ pts, color: 'rgba(160, 110, 0, .45)', width: 1 })).concat([{ pts: loopImg, color: INK, width: 2.8 }]), dots: [{ v: loopImg[0], color: INK, r: 4 }] });
     $('sphere').setAttribute('aria-label', `The image of the Brillouin zone on the sphere of directions n = d/|d|${closed ? '' : `: it covers the sphere ${Math.abs(Cr)} time${Math.abs(Cr) === 1 ? '' : 's'} net`}`);
-    $('map').setAttribute('aria-label', `Berry curvature over the Brillouin zone, red positive, blue negative; the loop is centred at kx = ${fixed(c[0], 2)}, ky = ${fixed(c[1], 2)}, radius ${fixed(r, 2)}`);
+    $('map').setAttribute('aria-label', `Berry curvature over the Brillouin zone, red positive, blue negative; the loop is centred at kx = ${fixed(c[0], 2)}, ky = ${fixed(c[1], 2)}, radius ${fixed(r, 2)}. Drag on the map, or use the arrow keys, to move it.`);
     setHTML($('dg-title'), 'Berry curvature over the Brillouin zone');
-    put('dg-cap', `Left: the Berry curvature Ω(k) of the lower band (red positive, blue negative; the colour saturates at the strongest peaks), the Berry connection${S.gauge === 'off' ? '' : ` in gauge ${S.gauge} (arrows), its vortices (⊗), where that gauge fails,`} and the loop, which you can drag. The dashed outline is the Brillouin zone. Right: each k sent to the direction n = d/|d|; the grid is the image of the zone, the black curve the image of the loop.`);
+    put('dg-cap', `On the map: the Berry curvature Ω(k) of the lower band (red positive, blue negative; the colour saturates at the strongest peaks), the Berry connection${S.gauge === 'off' ? '' : ` in gauge ${S.gauge} (arrows), its vortices (⊗), where that gauge fails,`} and the loop, which you can drag. The dashed outline is the Brillouin zone. On the sphere: each k sent to the direction n = d/|d|; the grid is the image of the zone, the black curve the image of the loop.`);
     legend('dg-legend', [[RED, 'swatch--area', 'Ω > 0'], [BLUE, 'swatch--area', 'Ω < 0'], [INK, '', 'the loop and its image'], [GOLD, '', 'image of the zone']]);
     // plot A: where C changes
     reset(plotA);
@@ -359,7 +370,7 @@
       ]);
       setHTML($('pa-title'), 'C changes only where the gap closes');
       put('pa-cap', 'The Chern number of the lower band against the mass m. It jumps at m = −2, 0 and 2 (dashed), where the gap closes at M, at X and Y, and at Γ; the dot is this model, from the plaquette sum.');
-      legend('pa-legend', [[GOLD, '', 'C(m)'], [GREY, 'swatch--dash', 'gap closes'], [INK, '', 'this model']]);
+      legend('pa-legend', [[GOLD, '', 'C(m)'], [GREY, 'swatch--dash', 'gap closes'], ...(closed ? [] : [[INK, '', 'this model']])]);
     } else {
       plotA.opts.xLabel = 'Haldane phase φ (degrees)'; plotA.opts.yLabel = 'Sublattice mass M'; plotA.opts.xTickValues = [-180, -90, 0, 90, 180];
       plotA.setRange([-180, 180], [-1, 1]); plotA.opts.zeroLine = true;
@@ -372,12 +383,12 @@
         const hgt = 3 * S3 * S.ht2;
         if (hgt > 0.12) LA.push({ type: 'text', x: 90, y: 0.06, text: 'C = 1', color: RED, size: 12.5, weight: 700 }, { type: 'text', x: -90, y: 0.06, text: 'C = −1', color: BLUE, size: 12.5, weight: 700 });
         if (hgt < 0.85) LA.push({ type: 'text', x: 0, y: 0.82, text: 'C = 0', color: MUTED, size: 12.5, weight: 700 });
-      } else LA.push({ type: 'text', x: 0, y: 0.5, text: 't₂ = 0: no Haldane term, C = 0 whenever M ≠ 0', color: MUTED, size: 12.5 });
+      } else LA.push({ type: 'text', x: 0, y: 0.62, text: 't₂ = 0: no Haldane term,', color: MUTED, size: 12.5 }, { type: 'text', x: 0, y: 0.44, text: 'C = 0 whenever M ≠ 0', color: MUTED, size: 12.5 });
       LA.push({ type: 'dots', x: [S.hphi], y: [S.hm], color: INK, r: 5.5 });
       plotA.draw(LA);
       setHTML($('pa-title'), 'Haldane\'s phase diagram');
       put('pa-cap', `The Chern number over the plane of φ and M, at t_2 = ${fixed(S.ht2, 3)} t. The boundaries, M = ±3√3 t_2 sin φ, are where the gap closes at K or K′: inside, the two valleys' curvature has the same sign and C = ±1; outside, opposite signs and C = 0. The dot is this model.`);
-      legend('pa-legend', [[RED, 'swatch--area', 'C = 1'], [BLUE, 'swatch--area', 'C = −1'], [INK, '', 'this model']]);
+      legend('pa-legend', [...(S.ht2 > 0 ? [[RED, 'swatch--area', 'C = 1'], [BLUE, 'swatch--area', 'C = −1']] : []), [INK, '', 'this model']]);
     }
     // plot B: the bands along a path
     reset(plotB);
@@ -402,18 +413,22 @@
     put('pb-cap', `The two bands, d_0 ± |d|, along the path ${path.map(p => p[1]).join('–')}. The lower one (gold) is the band whose curvature is mapped${S.model === 'hex' && S.ht2 > 0 && Math.abs(Math.cos(S.hphi * DEG)) > 0.01 ? '; Haldane\'s hopping also shifts the bands up and down (d_0), which can make them overlap in energy without closing the gap at any one k' : ''}.`);
     legend('pb-legend', [[GOLD, '', 'lower band'], [GREY, '', 'upper band']]);
     // what the loop shows
-    const gz = S.gauge === 'off' ? null : S.gauge, Aint = gz && !onLoop ? loopA(md, c, r, gz) : NaN, diff = Math.round((Aint - fl.flux) / TAU);
+    // a vortex of the chosen gauge on the loop itself makes ∮A·dk undefined there
+    const gz = S.gauge === 'off' ? null : S.gauge, vOn = gz && vort.some(k => Math.abs(Math.hypot(k[0] - c[0], k[1] - c[1]) - r) < 2e-3);
+    const Aint = gz && !onLoop && !vOn && !wait ? loopMemo(`a${gz}|${lk}`, () => B.loopA(md, c, r, gz)) : NaN, diff = Math.round((Aint - fl.flux) / TAU);
     let info;
     if (onLoop) info = '<b>The loop runs through a point where the gap closes,</b> so the state, and its phase, are not defined all the way round. Move it or change its size.';
     else if (S.model === 'hex' && S.hm === 0 && S.ht2 === 0) info = `<b>Graphene with no gap: Ω is zero everywhere except at K and K′,</b> where all of it sits in a point. A loop around one of them picks up ${encl ? piTxt(g) : 'π'} all the same: the Berry phase of a Dirac cone, which shows up in graphene's half-integer quantum Hall effect.${encl ? '' : ' Move the loop onto K or K′ to see it.'}`;
+    else if (wait) info = `<b>The loop's Berry phase is ${piTxt(g)}.</b> Working out the flux of Ω through it…`;
     else if (encl) info = `<b>The gap closes at a point inside the loop.</b> There Ω is not defined: the loop's Berry phase, ${piTxt(g)}, includes what sits at that point, while the flux of Ω around it, ${piTxt(fl.flux)}, misses it.`;
     else {
       info = `<b>Stokes: the loop's Berry phase, ${piTxt(g)}, is the flux of Ω through it, ${piTxt(fl.flux)}${Math.abs(B.wrap(g - fl.flux)) < 1e-3 && Math.abs(g - fl.flux) > 1 ? ', mod 2π' : ''}.</b>`;
-      if (gz) info += diff === 0 ? ` In gauge ${gz}, ∮A·dk = ${piTxt(Aint)} too: no vortex of gauge ${gz} is inside the loop.` : ` But in gauge ${gz}, ∮A·dk = ${piTxt(Aint)}: it misses ${Math.abs(diff) === 1 ? '' : Math.abs(diff)}2π, because the loop encloses a vortex of gauge ${gz}, where that gauge is not smooth. The Berry phase itself does not notice, only the gauge does.`;
+      if (vOn) info += ` The loop runs through a vortex of gauge ${gz}, where its connection is not defined, so ∮A·dk is not either.`;
+      else if (gz) info += diff === 0 ? ` In gauge ${gz}, ∮A·dk = ${piTxt(Aint)} too: no vortex of gauge ${gz} is inside the loop.` : ` But in gauge ${gz}, ∮A·dk = ${piTxt(Aint)}: it differs from the flux by ${Math.abs(diff) === 1 ? '' : Math.abs(diff)}2π, because the loop encloses a vortex of gauge ${gz}, where that gauge is not smooth. The Berry phase itself does not notice, only the gauge does.`;
     }
     setHTML($('info'), info);
     setHTML($('takeaway'), closed ? '<b>Where the gap closes, the Chern number is not defined:</b> this is the only way an integer like C can change.'
-      : Cr ? `<b>C = ${String(Cr).replace('-', '−')}: the zone's image wraps the sphere ${Math.abs(Cr) === 1 ? 'once' : `${Math.abs(Cr)} times`}.</b> Then no single gauge is smooth over the whole zone: gauge N fails where n = −z, gauge S where n = +z, and one of them must fail somewhere. The total curvature, 2πC, is the mismatch between them, a quantized Hall conductance.`
+      : Cr ? `<b>C = ${String(Cr).replace('-', '−')}: the zone's image wraps the sphere ${Math.abs(Cr) === 1 ? 'once' : `${Math.abs(Cr)} times`}.</b> So n(k) points straight down somewhere, where gauge N fails, and straight up somewhere else, where gauge S fails: no single gauge is smooth over the whole zone. The total curvature, 2πC, is the mismatch between the two, and it is what fixes the Hall conductance of the full band at |C| e²/h.`
       : '<b>C = 0: the zone\'s image does not wrap the sphere.</b> There may be plenty of curvature, positive in one place and negative in another, but it adds up to zero, and a single gauge can be smooth over the whole zone.');
     $('model-hint').innerHTML = S.model === 'qwz' ? 'A square lattice with two orbitals: d = (sin k<sub>x</sub>, sin k<sub>y</sub>, m − cos k<sub>x</sub> − cos k<sub>y</sub>).' : 'Graphene\'s two sublattices, with a mass M on them and Haldane\'s complex second-neighbour hopping t<sub>2</sub>e<sup>±iφ</sup>.';
     $('gauge-hint').textContent = S.gauge === 'off' ? 'The curvature does not depend on a gauge; the connection does.' : `Gauge ${S.gauge} fails, with a vortex (⊗), wherever n points ${S.gauge === 'N' ? 'down, n = −z' : 'up, n = +z'}.`;
@@ -423,7 +438,8 @@
   (function () {
     const cv = $('map');
     let drag = false;
-    const at = e => { const b = cv.getBoundingClientRect(), k = map.toK(e.clientX - b.left, e.clientY - b.top); S.c = [+k[0].toFixed(3), +k[1].toFixed(3)]; later(); };
+    const keep = k => { const bx = BOX[S.model]; return [+clamp(k[0], bx[0], bx[1]).toFixed(3), +clamp(k[1], bx[2], bx[3]).toFixed(3)]; };
+    const at = e => { const b = cv.getBoundingClientRect(); S.c = keep(map.toK(e.clientX - b.left, e.clientY - b.top)); later(); };
     cv.addEventListener('pointerdown', e => { if (mode !== 'crystal') return; drag = true; cv.setPointerCapture(e.pointerId); at(e); });
     cv.addEventListener('pointermove', e => { if (drag) at(e); });
     const end = () => { drag = false; };
@@ -431,7 +447,7 @@
     cv.addEventListener('keydown', e => {
       const d = { ArrowLeft: [-0.1, 0], ArrowRight: [0.1, 0], ArrowUp: [0, 0.1], ArrowDown: [0, -0.1] }[e.key];
       if (!d) return;
-      e.preventDefault(); S.c = [+(S.c[0] + d[0]).toFixed(3), +(S.c[1] + d[1]).toFixed(3)]; later();
+      e.preventDefault(); S.c = keep([S.c[0] + d[0], S.c[1] + d[1]]); later();
     });
   })();
 
@@ -446,7 +462,7 @@
     $('thc-ctrl').hidden = lune; $('dphi-ctrl').hidden = !lune; $('thc-chips').hidden = lune;
     $('qwz-ctrls').hidden = S.model !== 'qwz'; $('hex-ctrls').hidden = S.model !== 'hex';
     document.querySelectorAll('[data-thc]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.thc === S.thc)));
-    const pressed = (attr, val) => document.querySelectorAll(`[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === val)));
+    const pressed = (attr, val) => document.querySelectorAll(`button[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === val)));
     pressed('shape', S.shape); pressed('cg', S.cg); pressed('model', S.model); pressed('gauge', S.gauge);
     const cs = (S.model === 'qwz' ? POINTS.qwz : POINTS.hex);
     if ($('centres').dataset.model !== S.model) { $('centres').dataset.model = S.model; $('centres').innerHTML = cs.map((p, i) => `<button class="chip-btn" type="button" data-at="${i}">Centre on ${p.text}</button>`).join(''); }
@@ -463,6 +479,7 @@
   function render() {
     syncControls();
     if (mode === 'loop') renderLoop(); else if (mode === 'chain') renderChain(); else renderCrystal();
+    $('info').setAttribute('aria-live', mode === 'loop' && playing ? 'off' : 'polite');
     $('plot-a').setAttribute('aria-label', $('pa-title').textContent); $('plot-b').setAttribute('aria-label', $('pb-title').textContent);
   }
   function applyMode() {
@@ -477,7 +494,7 @@
   }
   let pending = false;
   function later() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; render(); }); }
-  const onTune = () => { if (mode === 'loop') { stop(); veil = false; } later(); };
+  const onTune = () => { if (mode === 'loop') stop(); later(); };
   $('per').addEventListener('input', e => { S.logT = Math.log10(NICE[+e.target.value]); onTune(); });
   [['thc', 'thc'], ['nn', 'N'], ['dphi', 'dphi'], ['qm', 'qm'], ['hm', 'hm'], ['ht2', 'ht2'], ['hphi', 'hphi'], ['rad', 'rad']].forEach(([id, key]) => $(id).addEventListener('input', e => { S[key] = +e.target.value; onTune(); }));
   document.querySelector('.lab-main').addEventListener('click', e => {
@@ -492,7 +509,7 @@
     else if (d.preset) { const p = presets()[d.preset]; if (p.model !== S.model) S.c = [0, 0]; Object.assign(S, p); }
     else if (d.at !== undefined && d.at !== '') S.c = (S.model === 'qwz' ? POINTS.qwz : POINTS.hex)[+d.at].k.slice();
     else if (d.gauge) S.gauge = d.gauge;
-    else if (b.id === 'video-values') { Object.assign(S, JSON.parse(JSON.stringify(START))); pos = 1; }
+    else if (b.id === 'video-values') { Object.assign(S, JSON.parse(JSON.stringify(START))); pos = 1; veil = false; }
     else return;
     onTune();
   });
