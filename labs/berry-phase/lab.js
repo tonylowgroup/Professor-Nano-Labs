@@ -184,7 +184,7 @@
     $('transport-note').textContent = `${reduceMotion ? 'Reduced motion is on: each press of Play steps an eighth of the way round.' : `One loop plays in ${PLAY_S} s.`} ${deep ? `It takes T = ${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}, so the spin precesses` : 'On the way, the spin wobbles'} about ${+per.toPrecision(4)} time${per === 1 ? '' : 's'} around the field.`;
   }
 
-  // ---------- 2. Curvature in a crystal ----------
+  // ---------- 2. Curvature in graphene ----------
   const S3 = Math.sqrt(3), KX = 4 * PI / (3 * S3);
   const HEX = range(0, 5, 5).map(i => [KX * Math.cos(i * PI / 3), KX * Math.sin(i * PI / 3)]);
   const model = () => (S.model === 'qwz' ? { type: 'qwz', m: S.qm } : { type: 'hex', M: S.hm, t2: S.ht2, phi: S.hphi * DEG });
