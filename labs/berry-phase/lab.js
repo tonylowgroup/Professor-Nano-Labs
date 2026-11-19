@@ -216,18 +216,75 @@
       return { direct, indirect: bot - top };
     });
   }
-  function sphereImage(md) {
-    return memo(`img|${mkey()}`, () => {
-      const lines = [], nl = 12, np = 90;
-      if (md.type === 'qwz') {
-        for (let i = 0; i < nl; i++) { const x = -PI + TAU * i / nl; lines.push(range(-PI, PI, np).map(y => B.unit(B.dvec(md, [x, y]).d))); lines.push(range(-PI, PI, np).map(y => B.unit(B.dvec(md, [y, x]).d))); }
-      } else {
-        const [, a, b] = B.cell(md);
-        for (let i = 0; i < nl; i++) { const u = i / nl; lines.push(range(0, 1, np).map(v => B.unit(B.dvec(md, [u * a[0] + v * b[0], u * a[1] + v * b[1]]).d))); lines.push(range(0, 1, np).map(v => B.unit(B.dvec(md, [v * a[0] + u * b[0], v * a[1] + u * b[1]]).d))); }
+  // the image of the whole zone on the sphere, as small patches coloured by the sign of the curvature (Go deeper)
+  function zonePaint(md) {
+    return memo(`paint|${mkey()}`, () => {
+      const [o, a, b] = B.cell(md), n = 30, at = (i, j) => [o[0] + (a[0] * i + b[0] * j) / n, o[1] + (a[1] * i + b[1] * j) / n];
+      const S = [];
+      for (let i = 0; i <= n; i++) { S.push([]); for (let j = 0; j <= n; j++) S[i].push(B.stateDir(md, at(i, j))); }
+      const out = [];
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+        const w = B.omega(md, at(i + 0.5, j + 0.5));
+        if (!Number.isFinite(w) || Math.abs(w) < 1e-9) continue;
+        out.push({ quad: [S[i][j], S[i + 1][j], S[i + 1][j + 1], S[i][j + 1]], color: w > 0 ? RED : BLUE, alpha: 0.13 });
       }
-      return lines;
+      return out;
     });
   }
+
+  /* ---------- the loop on the sphere, and its animation ----------
+     A dot runs around the loop on the map; on the sphere, an arrow shows where the electron's state points at that dot,
+     and the area it sweeps out fills in. The Berry phase is minus half that area. */
+  let cryst = null;                                   // what the last render of tab 2 worked out, for the animation
+  const LAP = 5, HOLD = 1.8;                          // seconds round the loop, then a pause on the finished picture
+  let animOn = !reduceMotion, animT0 = performance.now(), animRaf = 0, cardSeen = true;
+  const slerp = (p, q, t) => { const v = [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, p[2] + (q[2] - p[2]) * t], l = Math.hypot(...v) || 1; return v.map(x => x / l); };
+  function drawCrystal(f) {
+    const X = cryst;
+    if (!X) return;
+    const { L, c, r } = X, N = L.pts.length, pos = f * N, j0 = Math.min(N - 1, Math.floor(pos)), cur = f >= 0.999 ? L.pts[0] : slerp(L.pts[j0], L.pts[(j0 + 1) % N], pos - j0);
+    const fills = [], regions = [];
+    let swept = 0;
+    if (L.apex && !X.onLoop) {
+      const oneSign = L.tri.every(t => Math.abs(t) < 1e-9 || Math.sign(t) === Math.sign(L.area));
+      for (let j = 0; j < N && j < pos; j++) {
+        const end = j + 1 <= pos ? L.pts[(j + 1) % N] : cur, area = j + 1 <= pos ? L.tri[j] : B.triSolid(L.apex, L.pts[j], cur);
+        swept += area;
+        // red where it adds to the phase, blue where it takes away; drawn wedge by wedge only if the signs are mixed
+        if (!oneSign && Math.abs(area) > 1e-7) fills.push({ tri: [L.apex, L.pts[j], end], color: area < 0 ? RED : BLUE, alpha: 0.32 });
+      }
+      if (oneSign && pos > 0) {
+        const edge = L.pts.slice(0, Math.min(N, Math.floor(pos) + 1)).concat(pos < N ? [cur] : [L.pts[0]]);
+        regions.push({ pts: sphere._arc(L.apex, edge[0]).concat(edge, sphere._arc(edge[edge.length - 1], L.apex)), color: L.area < 0 ? RED : BLUE, alpha: 0.3 });
+      }
+    }
+    const done = f >= 0.999, traced = L.pts.slice(0, j0 + 1).concat([cur]);
+    const chev = [0.125, 0.375, 0.625, 0.875].map(q => { const i = Math.floor(q * N), a = L.pts[i], b = L.pts[(i + 1) % N], d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], l = Math.hypot(...d) || 1; return { a, b: a.map((v, k) => v + 0.13 * d[k] / l), color: INK, width: 2.2 }; });
+    sphere.draw({
+      paint: deep ? zonePaint(X.md) : [],
+      fills, regions,
+      curves: [{ pts: L.pts.concat([L.pts[0]]), color: GREY, width: 1.4, dash: [4, 4] }, { pts: traced, color: INK, width: 2.8 }],
+      arrows: [{ v: cur, color: INK, width: 3, label: 'state' }],
+      vecs: chev,
+      dots: [{ v: L.pts[0], color: INK, r: 4, ring: true }],
+      caption: X.onLoop ? 'the loop runs through a gap closing' : !L.apex ? '' : done ? `area ${fixed(L.area / PI, 2)}π → Berry phase ${fixed(-L.area / 2 / PI, 2)}π` : `area swept so far: ${fixed(swept / PI, 2)}π`,
+    });
+    $('sphere').setAttribute('aria-label', X.onLoop ? 'The loop runs through a point where the gap closes' : `Where the electron's state points around the loop: it sweeps out ${fixed(Math.abs(L.area) / PI, 2)}π of the sphere, ${L.area > 0 ? 'anticlockwise' : 'clockwise'}, so the Berry phase is ${fixed(-L.area / 2 / PI, 2)}π`);
+    map.overlay.tracer = { k: [c[0] + r * Math.cos(TAU * f), c[1] + r * Math.sin(TAU * f)], color: INK };
+    map.draw(map.layers);
+  }
+  const running = () => mode === 'crystal' && animOn && !document.hidden && cardSeen;
+  const animFrac = now => Math.min(1, (((now - animT0) / 1000) % (LAP + HOLD)) / LAP);
+  function tick(now) { animRaf = 0; if (!running()) return; drawCrystal(animFrac(now)); animRaf = requestAnimationFrame(tick); }
+  function kick() { if (running() && !animRaf) animRaf = requestAnimationFrame(tick); }
+  function syncAnim() { $('anim').textContent = animOn ? '❚❚ Pause' : '▶ Animate'; $('anim').setAttribute('aria-pressed', String(animOn)); }
+  $('anim').addEventListener('click', () => { animOn = !animOn; if (animOn) animT0 = performance.now(); syncAnim(); if (!animOn) drawCrystal(1); kick(); });
+  document.addEventListener('visibilitychange', kick);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { cardSeen = es[0].isIntersecting; kick(); }).observe($('mag-view'));
+  syncAnim();
+  // turn the sphere so the swept area faces the viewer (on a new graphene or loop centre, not while dragging)
+  function aimSphere() { if (cryst && cryst.L.apex) sphere.setView(32 * DEG, clamp(40 * cryst.L.apex[2], -40, 40) * DEG, true); }
+
   function renderCrystal() {
     const md = model(), key = mkey(), r = S.rad, c = S.c, GZ = deep ? S.gauge : 'off';      // the connection only under "Go deeper"
     // the map
@@ -274,14 +331,12 @@
       ['The loop\'s Berry phase', onLoop ? '—' : piTxt(g), loopSub],
       ['Smallest gap', `${fixed(gp.direct, 3)}${S.model === 'qwz' ? '' : ' t'}`, S.model === 'qwz' ? '2|d| at its smallest, in the units of d' : '2|d|, in units of the hopping t'],
     ]);
-    // the sphere: the image of the zone, and of the loop
-    const lines = sphereImage(md), loopImg = range(0, TAU, 240).map(a => B.unit(B.dvec(md, [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]).d));
-    sphere.draw({ curves: lines.map(pts => ({ pts, color: 'rgba(160, 110, 0, .45)', width: 1 })).concat([{ pts: loopImg, color: INK, width: 2.8 }]), dots: [{ v: loopImg[0], color: INK, r: 4 }] });
-    $('sphere').setAttribute('aria-label', `The image of the Brillouin zone on the sphere of directions n = d/|d|${closed ? '' : `: it covers the sphere ${Math.abs(Cr)} time${Math.abs(Cr) === 1 ? '' : 's'} net`}`);
+    // the sphere: where the electron's state points around the loop (drawn, and animated, by drawCrystal)
+    cryst = { md, c, r, onLoop, L: loopMemo(`img|${lk}`, () => B.loopImage(md, c, r, 160)) };
     $('map').setAttribute('aria-label', `Berry curvature over the Brillouin zone, red positive, blue negative; the loop is centred at kx = ${fixed(c[0], 2)}, ky = ${fixed(c[1], 2)}, radius ${fixed(r, 2)}. Drag on the map, or use the arrow keys, to move it.`);
     setHTML($('dg-title'), 'Berry curvature over the Brillouin zone');
-    put('dg-cap', !deep ? `On the map: the Berry curvature of ${S.model === 'hex' ? 'graphene\'s' : 'the'} lower band (red positive, blue negative) over the Brillouin zone (dashed)${S.model === 'hex' ? ', whose corners are the valleys K and K′' : ''}, and your loop: tap or drag to move it. On the sphere: where the electron's state points at each k; the black curve is your loop, and the grid the whole zone.` : `On the map: the Berry curvature Ω(k) of the lower band (red positive, blue negative; the colour saturates at the strongest peaks), the Berry connection${GZ === 'off' ? '' : ` in gauge ${GZ} (arrows), its vortices (⊗), where that gauge fails,`} and the loop, which you can drag. The dashed outline is the Brillouin zone. On the sphere: each k sent to the direction n = d/|d|; the grid is the image of the zone, the black curve the image of the loop.`);
-    legend('dg-legend', [[RED, 'swatch--area', 'Ω > 0'], [BLUE, 'swatch--area', 'Ω < 0'], [INK, '', 'the loop and its image'], [GOLD, '', 'image of the zone']]);
+    put('dg-cap', !deep ? `On the map: the Berry curvature of ${S.model === 'hex' ? 'graphene\'s' : 'the'} lower band (red positive, blue negative) over the Brillouin zone (dashed)${S.model === 'hex' ? ', whose corners are the valleys K and K′' : ''}, and your loop (tap or drag to move it), with a black dot running round it. On the sphere, the arrow shows where the electron's state points at that dot, like the spin in tab 1. As the dot goes round, the arrow sweeps out the shaded area, and the Berry phase is minus half that area. Red means positive and blue negative, on the map and on the sphere. Drag the sphere to turn it.` : `On the map: the Berry curvature Ω(k) of the lower band (red positive, blue negative; the colour saturates at the strongest peaks), the Berry connection${GZ === 'off' ? '' : ` in gauge ${GZ} (arrows), its vortices (⊗), where that gauge fails,`} and the loop, which you can drag. The dashed outline is the Brillouin zone. On the sphere: the direction of the lower band's pseudospin, s = −d/|d|, at the dot running round the loop; it sweeps a solid angle \\(\\mathcal S\\) and \\(\\gamma=-\\mathcal S/2\\) (red where the contribution to γ is positive). The faint paint is the image of the whole zone, red where Ω > 0 and blue where Ω < 0: it covers the sphere C times, net.`);
+    legend('dg-legend', [[RED, 'swatch--area', 'positive curvature, or phase'], [BLUE, 'swatch--area', 'negative'], [INK, '', 'your loop, and the path of the state on the sphere']]);
     // plot A: where C changes
     reset(plotA);
     if (S.model === 'qwz') {
@@ -359,7 +414,7 @@
     else if (S.model === 'hex' && S.hm === 0 && S.ht2 === 0) info = `<b>Plain graphene has no gap: the curvature is zero everywhere except at K and K′,</b> where all of it sits in a point. A loop around one of them picks up ${encl ? piTxt(g) : 'π'} all the same: the Berry phase of a Dirac cone, which shows up in graphene's half-integer quantum Hall effect.${encl ? '' : ' Move the loop onto K or K′ to see it.'}`;
     else if (wait) info = `<b>The loop's Berry phase is ${piTxt(g)}.</b> Working out the ${deep ? 'flux of Ω through it' : 'curvature inside it'}…`;
     else if (encl) info = `<b>The gap closes at a point inside the loop.</b> There Ω is not defined: the loop's Berry phase, ${piTxt(g)}, includes what sits at that point, while the flux of Ω around it, ${piTxt(fl.flux)}, misses it.`;
-    else if (!deep) info = `<b>The loop's Berry phase, ${piTxt(g)}, equals the total Berry curvature inside it, ${piTxt(fl.flux)}${Math.abs(B.wrap(g - fl.flux)) < 1e-3 && Math.abs(g - fl.flux) > 1 ? ', up to a full turn' : ''}.</b> That is what curvature means: Berry phase per unit area. Move the loop around the zone and watch where the phase comes from.`;
+    else if (!deep) info = `<b>The loop's Berry phase is ${piTxt(g)}.</b> Two ways to see it: on the sphere, minus half the area the electron's state sweeps out; on the map, the total curvature inside the loop, ${piTxt(fl.flux)}${Math.abs(B.wrap(g - fl.flux)) < 1e-3 && Math.abs(g - fl.flux) > 1 ? ' (the same, up to a full turn)' : ''}. Drag the loop and watch both change.`;
     else {
       info = `<b>Stokes: the loop's Berry phase, ${piTxt(g)}, is the flux of Ω through it, ${piTxt(fl.flux)}${Math.abs(B.wrap(g - fl.flux)) < 1e-3 && Math.abs(g - fl.flux) > 1 ? ', mod 2π' : ''}.</b>`;
       if (vOn) info += ` The loop runs through a vortex of gauge ${gz}, where its connection is not defined, so ∮A·dk is not either.`;
@@ -371,6 +426,8 @@
       : Cr ? `<b>C = ${String(Cr).replace('-', '−')}: the zone's image wraps the sphere ${Math.abs(Cr) === 1 ? 'once' : `${Math.abs(Cr)} times`}.</b> So n(k) points straight down somewhere, where gauge N fails, and straight up somewhere else, where gauge S fails: no single gauge is smooth over the whole zone. The total curvature, 2πC, is the mismatch between the two, and it is what fixes the Hall conductance of the full band at |C| e²/h.`
       : '<b>C = 0: the zone\'s image does not wrap the sphere.</b> There may be plenty of curvature, positive in one place and negative in another, but it adds up to zero, and a single gauge can be smooth over the whole zone.');
     $('model-hint').innerHTML = S.model === 'qwz' ? 'A square lattice with two orbitals: d = (sin k<sub>x</sub>, sin k<sub>y</sub>, m − cos k<sub>x</sub> − cos k<sub>y</sub>).' : deep ? 'Graphene\'s two sublattices, with a mass M on them and Haldane\'s complex second-neighbour hopping t<sub>2</sub>e<sup>±iφ</sup>.' : 'Carbon atoms on a honeycomb, two in each cell. Pick a kind of graphene:';
+    drawCrystal(running() ? animFrac(performance.now()) : 1);
+    kick();
     $('gauge-hint').textContent = S.gauge === 'off' ? 'The curvature does not depend on a gauge; the connection does.' : `Gauge ${S.gauge} fails, with a vortex (⊗), wherever n points ${S.gauge === 'N' ? 'down, n = −z' : 'up, n = +z'}.`;
   }
 
@@ -433,6 +490,7 @@
     $('dial-box').hidden = mode === 'crystal'; $('map-box').hidden = mode !== 'crystal';
     $('mag-view').classList.toggle('mag-view--swap', mode === 'crystal');
     render();
+    if (mode === 'crystal') aimSphere(); else sphere.setView(32 * DEG, 22 * DEG, true);
   }
   let pending = false;
   function later() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; render(); }); }
@@ -459,6 +517,7 @@
     else if (b.id === 'video-values') { Object.assign(S, JSON.parse(JSON.stringify(START))); pos = 1; veil = false; }
     else return;
     onTune();
+    if (mode === 'crystal' && (d.preset || d.model || (d.at !== undefined && d.at !== '') || b.id === 'video-values')) requestAnimationFrame(() => requestAnimationFrame(aimSphere));
   });
   $('reset-view').addEventListener('click', () => sphere.setView(32 * DEG, 22 * DEG));
   const tabs = Array.from(document.querySelectorAll('.tab'));

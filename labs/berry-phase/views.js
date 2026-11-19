@@ -36,12 +36,38 @@
       c.closePath(); c.fill();
       c.restore();
     }
+    // points along the great-circle arc from a to b
+    _arc(a, b) {
+      const cs = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(cs), n = Math.max(1, Math.ceil(om / 0.08)), out = [];
+      for (let i = 0; i <= n; i++) {
+        const t = i / n;
+        if (om < 1e-6) { out.push(a); continue; }
+        const s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+        out.push([s1 * a[0] + s2 * b[0], s1 * a[1] + s2 * b[1], s1 * a[2] + s2 * b[2]]);
+      }
+      return out;
+    }
+    // a filled patch of the sphere's surface, fainter on the far side
+    _patch(pts, color, alpha) {
+      const c = this.ctx, P = pts.map(v => this.project(v));
+      const depth = pts.reduce((s, v) => s + v[0] * this.B.f[0] + v[1] * this.B.f[1] + v[2] * this.B.f[2], 0) / pts.length;
+      c.save(); c.globalAlpha = alpha * (depth < 0 ? 0.35 : 1); c.fillStyle = color;
+      c.beginPath(); P.forEach((q, i) => (i ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y))); c.closePath(); c.fill();
+      c.restore();
+    }
+    /* scene also takes paint: [{ quad: [4 unit vectors], color, alpha }] (small patches) and
+       fills: [{ tri: [apex, b, c], color, alpha }] (spherical triangles, edges along great circles) and
+       regions: [{ pts, color, alpha }] (one closed outline on the sphere, filled in one piece) */
     draw(scene) {
       const S = scene || {};
-      // the base class draws the sphere, trails and arrows; curves go underneath the arrows, so draw them as trails
-      const trails = (S.curves || []).map(q => ({ pts: q.pts, color: q.color, width: q.width || 2, dash: q.dash })).concat(S.trail || []);
-      super.draw({ arrows: (S.arrows || []).map(a => ({ v: a.v, color: a.color, width: a.width || 3.2, dot: 3.4 })), trail: trails, caption: S.caption });
+      super.draw({ caption: S.caption });                 // the sphere itself, its axes and the caption
       this.scene = S;
+      (S.paint || []).forEach(q => this._patch(q.quad, q.color, q.alpha || 0.1));
+      // a region in one piece (no seams), at one opacity
+      (S.regions || []).forEach(g => { const c = this.ctx, P = g.pts.map(v => this.project(v)); c.save(); c.globalAlpha = g.alpha || 0.3; c.fillStyle = g.color; c.beginPath(); P.forEach((q, i) => (i ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y))); c.closePath(); c.fill(); c.restore(); });
+      (S.fills || []).forEach(f => { const [a, b, d] = f.tri; this._patch(this._arc(a, b).concat(this._arc(b, d)).concat(this._arc(d, a)), f.color, f.alpha || 0.3); });
+      (S.curves || []).concat(S.trail || []).forEach(t => this._poly(t.pts, t.color, t.width || 2.2, { backAlpha: 0.4, backDash: [2, 4], dash: t.dash || [] }));
+      (S.arrows || []).slice().sort((p, q) => this.project(p.v).d - this.project(q.v).d).forEach(a => this._arrow(a.v, a.color, a.width || 3.2, { dot: 3.4 }));
       const c = this.ctx;
       (S.dots || []).forEach(d => {
         const P = this.project(d.v);
@@ -154,7 +180,7 @@
 
   /* The zone map: a NanoPlot kept at equal scales in kx and ky, with overlays drawn in pixels.
      overlay = { zone: [[kx, ky], ...] (closed outline), arrows: [{ k, a }] (a in pixels per unit), vortices: [k],
-                 loop: { c, r, color }, points: [{ k, text }] } */
+                 loop: { c, r, color }, points: [{ k, text }], tracer: { k, color } } */
   class ZoneMap extends NanoPlot {
     constructor(canvas, opts) { super(canvas, opts); this.overlay = {}; this.want = null; }
     _resize() { super._resize(); if (this.want) { this._fit(); if (this.onFit) this.onFit(); } }
@@ -210,6 +236,12 @@
         }
         c.fillStyle = '#fff'; c.strokeStyle = O.loop.color || INK; c.lineWidth = 2;
         c.beginPath(); c.arc(x, y, 3.6, 0, 2 * Math.PI); c.fill(); c.stroke();
+      }
+      // the moving point on the loop, which the sphere follows
+      if (O.tracer) {
+        const x = this.px(O.tracer.k[0]), y = this.py(O.tracer.k[1]);
+        c.fillStyle = O.tracer.color || INK; c.strokeStyle = '#fff'; c.lineWidth = 2.5;
+        c.beginPath(); c.arc(x, y, 6.5, 0, 2 * Math.PI); c.fill(); c.stroke();
       }
       (O.vortices || []).forEach(k => {
         const x = this.px(k[0]), y = this.py(k[1]);

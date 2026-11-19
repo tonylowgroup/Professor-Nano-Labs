@@ -172,8 +172,36 @@
   function loopA(model, c, rad, gauge) {
     return integrate(a => { const A = connection(model, [c[0] + rad * Math.cos(a), c[1] + rad * Math.sin(a)], gauge); return (-A[0] * Math.sin(a) + A[1] * Math.cos(a)) * rad; }, 0, TAU, 16, 1e-8);
   }
+  /* ---------- the loop seen on the sphere ----------
+     At each k the lower band's state is a spin pointing along s = −d/|d| (its pseudospin). Taken around a loop, s traces
+     a closed curve on the sphere, and the loop's Berry phase is minus half the area that curve encloses, the same rule
+     as for a real spin. The area is swept out by a fan of triangles from an apex inside the curve. */
+  const dot3 = (p, q) => p[0] * q[0] + p[1] * q[1] + p[2] * q[2];
+  // signed solid angle of the spherical triangle a, b, c (positive when a → b → c runs anticlockwise seen from outside)
+  function triSolid(a, b, c) {
+    const bc = [b[1] * c[2] - b[2] * c[1], b[2] * c[0] - b[0] * c[2], b[0] * c[1] - b[1] * c[0]];
+    return 2 * Math.atan2(dot3(a, bc), 1 + dot3(a, b) + dot3(b, c) + dot3(c, a));
+  }
+  const stateDir = (model, k) => unit(dvec(model, k).d).map(v => -v);
+  // the curve, an apex for the fan (the candidate that encloses the smaller area), and each triangle's signed area
+  function loopImage(model, c, rad, N) {
+    const pts = Array.from({ length: N }, (_, j) => stateDir(model, [c[0] + rad * Math.cos(TAU * j / N), c[1] + rad * Math.sin(TAU * j / N)]));
+    const cands = [];
+    if (Math.hypot(...dvec(model, c).d) > 1e-6) cands.push(stateDir(model, c));
+    cands.push([0, 0, 1], [0, 0, -1]);
+    const mean = pts.reduce((m, p) => [m[0] + p[0], m[1] + p[1], m[2] + p[2]], [0, 0, 0]), ml = Math.hypot(...mean);
+    if (ml > 1e-3) cands.push(mean.map(v => v / ml));
+    let best = null;
+    cands.forEach(apex => {
+      if (pts.some(q => dot3(apex, q) < -1 + 1e-6)) return;           // an apex opposite a point of the curve is ill-defined
+      const tri = pts.map((p, j) => triSolid(apex, p, pts[(j + 1) % N])), area = tri.reduce((x, y) => x + y, 0);
+      if (!best || Math.abs(area) < Math.abs(best.area) - 1e-9) best = { apex, tri, area };
+    });
+    return Object.assign({ pts }, best);
+  }
+
   // the bands E± = d0 ± |d| along a path of k points
   const bands = (model, ks) => ks.map(k => { const { d, d0 } = dvec(model, k), r = Math.hypot(d[0], d[1], d[2]); return [d0 - r, d0 + r]; });
 
-  window.BP = { TAU, up, low, ov, wrap, links, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, chern, integrate, loopPhase, loopPhaseConv, loopFlux, loopA, bands };
+  window.BP = { TAU, up, low, ov, wrap, links, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, chern, integrate, loopPhase, loopPhaseConv, loopFlux, loopA, stateDir, triSolid, loopImage, bands };
 })();
