@@ -239,6 +239,13 @@
   const LAP = 5, HOLD = 1.8;                          // seconds round the loop, then a pause on the finished picture
   let animOn = !reduceMotion, animT0 = performance.now(), animRaf = 0, cardSeen = true;
   const slerp = (p, q, t) => { const v = [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, p[2] + (q[2] - p[2]) * t], l = Math.hypot(...v) || 1; return v.map(x => x / l); };
+  // the height of the state on the sphere, z = −d_z/|d|, as a formula and with its numbers at the moving dot
+  function heightNotes(md, k) {
+    const { d } = B.dvec(md, k), fk = Math.hypot(d[0], d[1]), dd = Math.hypot(fk, d[2]), z = dd > 1e-12 ? -d[2] / dd : NaN;
+    if (md.type === 'qwz') return [{ text: 'height  z = −d_z / |d|', bold: true }, { text: `here: d_z = ${fixed(d[2], 2)}, |d| = ${fixed(dd, 2)}  →  z = ${Number.isFinite(z) ? fixed(z, 2) : '—'}` }];
+    const m = md.t2 ? 'm' : 'M';
+    return [{ text: `height  z = −${m} / √(${m}² + |f|²)`, bold: true }, { text: `here: ${m} = ${fixed(d[2], 2)}, |f| = ${fixed(fk, 2)}  →  z = ${Number.isFinite(z) ? fixed(z, 2) : '—'}` }];
+  }
   function drawCrystal(f) {
     const X = cryst;
     if (!X) return;
@@ -259,6 +266,7 @@
       }
     }
     const done = f >= 0.999, traced = L.pts.slice(0, j0 + 1).concat([cur]);
+    const kNow = [c[0] + r * Math.cos(TAU * f), c[1] + r * Math.sin(TAU * f)], hex = X.md.type === 'hex';
     const chev = [0.125, 0.375, 0.625, 0.875].map(q => { const i = Math.floor(q * N), a = L.pts[i], b = L.pts[(i + 1) % N], d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], l = Math.hypot(...d) || 1; return { a, b: a.map((v, k) => v + 0.13 * d[k] / l), color: INK, width: 2.2 }; });
     sphere.draw({
       paint: deep ? zonePaint(X.md) : [],
@@ -267,10 +275,13 @@
       arrows: [{ v: cur, color: INK, width: 3, label: 'state' }],
       vecs: chev,
       dots: [{ v: L.pts[0], color: INK, r: 4, ring: true }],
+      // the poles' labels, except where the state's own label would sit on top of them
+      tags: hex ? [{ v: [0, 0, 1], text: 'atom A', color: MUTED, size: 11.5, bold: false, dx: -30, dy: -9 }, { v: [0, 0, -1], text: 'atom B', color: MUTED, size: 11.5, bold: false, dx: -30, dy: 9 }].filter(t => t.v[2] * cur[2] < 0.85) : [],
+      notes: heightNotes(X.md, kNow),
       caption: X.onLoop ? 'the loop runs through a gap closing' : !L.apex ? '' : done ? `area ${fixed(L.area / PI, 2)}π → Berry phase ${fixed(-L.area / 2 / PI, 2)}π` : `area swept so far: ${fixed(swept / PI, 2)}π`,
     });
     $('sphere').setAttribute('aria-label', X.onLoop ? 'The loop runs through a point where the gap closes' : `Where the electron's state points around the loop: it sweeps out ${fixed(Math.abs(L.area) / PI, 2)}π of the sphere, ${L.area > 0 ? 'anticlockwise' : 'clockwise'}, so the Berry phase is ${fixed(-L.area / 2 / PI, 2)}π`);
-    map.overlay.tracer = { k: [c[0] + r * Math.cos(TAU * f), c[1] + r * Math.sin(TAU * f)], color: INK };
+    map.overlay.tracer = { k: kNow, color: INK };
     map.draw(map.layers);
   }
   const running = () => mode === 'crystal' && animOn && !document.hidden && cardSeen;
@@ -426,6 +437,11 @@
       : Cr ? `<b>C = ${String(Cr).replace('-', '−')}: the zone's image wraps the sphere ${Math.abs(Cr) === 1 ? 'once' : `${Math.abs(Cr)} times`}.</b> So n(k) points straight down somewhere, where gauge N fails, and straight up somewhere else, where gauge S fails: no single gauge is smooth over the whole zone. The total curvature, 2πC, is the mismatch between the two, and it is what fixes the Hall conductance of the full band at |C| e²/h.`
       : '<b>C = 0: the zone\'s image does not wrap the sphere.</b> There may be plenty of curvature, positive in one place and negative in another, but it adds up to zero, and a single gauge can be smooth over the whole zone.');
     $('model-hint').innerHTML = S.model === 'qwz' ? 'A square lattice with two orbitals: d = (sin k<sub>x</sub>, sin k<sub>y</sub>, m − cos k<sub>x</sub> − cos k<sub>y</sub>).' : deep ? 'Graphene\'s two sublattices, with a mass M on them and Haldane\'s complex second-neighbour hopping t<sub>2</sub>e<sup>±iφ</sup>.' : 'Carbon atoms on a honeycomb, two in each cell. Pick a kind of graphene:';
+    setHTML($('path-note'), S.model === 'qwz'
+      ? '<b>What sets the path?</b> At each k the state points along s = −d/|d|: its height is z = −d<sub>z</sub>/|d|, and its angle around the z axis is that of −(d<sub>x</sub> + i d<sub>y</sub>), which turns once each time the loop goes round a point where d<sub>x</sub> = d<sub>y</sub> = 0.'
+      : deep
+      ? `<b>What sets the path?</b> The state points along s = −d/|d|, the lower band's pseudospin. The hopping between neighbouring atoms gives d<sub>x</sub> + i d<sub>y</sub> = f(k) = Σ<sub>j</sub> e<sup>ik·δ<sub>j</sub></sup>, which vanishes at K and K′; the mass gives d<sub>z</sub> = m(k) = M${S.ht2 ? ' − 2t<sub>2</sub> sin φ Σ<sub>i</sub> sin k·b<sub>i</sub>' : ''}. So the height is z = −m/√(m² + |f|²), and the angle around the z axis is that of −f(k), which turns once each time the loop goes round K or K′.`
+      : `<b>What sets the path?</b> The electron is shared between graphene's two carbon atoms, A and B. Its <b>height</b> on the sphere says which atom it prefers: the top (atom A) is all on A, the bottom (atom B) all on B, the equator an equal share. The ${S.ht2 ? 'mass m, from the substrate and Haldane\'s hopping,' : 'substrate\'s mass M'} pulls it towards a pole; the hopping between neighbouring atoms, |f|, pulls it back towards the equator. |f| is zero at the valleys K and K′ and grows away from them, so the state sits nearest a pole close to a valley. So z = −${S.ht2 ? 'm' : 'M'}/√(${S.ht2 ? 'm' : 'M'}² + |f|²). Its <b>angle around</b> the sphere is the phase between the two atoms, which turns once every time the loop goes round K or K′.`);
     drawCrystal(running() ? animFrac(performance.now()) : 1);
     kick();
     $('gauge-hint').textContent = S.gauge === 'off' ? 'The curvature does not depend on a gauge; the connection does.' : `Gauge ${S.gauge} fails, with a vortex (⊗), wherever n points ${S.gauge === 'N' ? 'down, n = −z' : 'up, n = +z'}.`;

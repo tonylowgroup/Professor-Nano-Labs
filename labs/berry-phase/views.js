@@ -19,6 +19,8 @@
                vecs: [{ a, b, color, width, dash }], dots: [{ v, color, r, ring }], tags: [{ v, text, color }], caption } */
   class GeoSphere extends BlochSphere {
     constructor(canvas) { super(canvas, { az: 32, el: 22, labels: NOLABELS }); }
+    // leave room under the sphere for the notes
+    _geom() { const g = super._geom(); if (this.scene && this.scene.notes && this.scene.notes.length) { const cut = 8 * this.scene.notes.length + 4; g.R -= cut; g.cy -= cut; } return g; }
     _vec(a, b, color, width, dash) {
       const c = this.ctx, P = this.project(a), Q = this.project(b);
       const dx = Q.x - P.x, dy = Q.y - P.y, len = Math.hypot(dx, dy);
@@ -60,7 +62,7 @@
        regions: [{ pts, color, alpha }] (one closed outline on the sphere, filled in one piece) */
     draw(scene) {
       const S = scene || {};
-      super.draw({ caption: S.caption });                 // the sphere itself, its axes and the caption
+      super.draw({ caption: S.caption, notes: S.notes });   // the sphere itself, its axes and the caption
       this.scene = S;
       (S.paint || []).forEach(q => this._patch(q.quad, q.color, q.alpha || 0.1));
       // a region in one piece (no seams), at one opacity
@@ -77,6 +79,14 @@
         c.restore();
       });
       (S.vecs || []).forEach(v => this._vec(v.a, v.b, v.color, v.width || 2.4, v.dash));
+      // notes: [{ text, color, bold }], lines of text in the bottom-left corner
+      (S.notes || []).forEach((n, i, all) => {
+        c.save(); c.font = `${n.bold ? 700 : 600} 12px ${FONT}`; c.fillStyle = n.color || INK; c.textAlign = 'left'; c.textBaseline = 'bottom';
+        c.lineWidth = 3.5; c.strokeStyle = 'rgba(255,255,255,.92)'; c.lineJoin = 'round';
+        const y = this.h - 6 - 16 * (all.length - 1 - i);
+        c.strokeText(n.text, 10, y); c.fillText(n.text, 10, y);
+        c.restore();
+      });
       const labelled = (S.arrows || []).filter(a => a.label).map(a => ({ v: a.v.map(x => x * 1.16), text: a.label, color: a.color, bold: true }));
       labelled.concat(S.tags || []).forEach(t => {
         const P = this.project(t.v);
