@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en" data-track="spintronics">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetization Dynamics and the LLG Equation · Professor Nano Labs</title>
+<meta name="description" content="Watch a nanomagnet precess around a field, spiral in as damping drains its energy, and switch between the two states of a memory bit, computed live from the Landau-Lifshitz-Gilbert equation. Then write one bit of an MRAM array without disturbing its neighbours. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Spintronics</div>
+    <div class="eyebrow eyebrow--light">Spintronics · Live lab</div>
+    <h1>Magnetization Dynamics and the LLG Equation</h1>
+    <p>Put a nanomagnet in a field and it does not simply swing round to point along it: it spins around the field like a top, and only damping lets it settle. Watch a magnet precess, spiral in and flip between the two states of a memory bit, computed live from the Landau–Lifshitz–Gilbert equation, then write one bit of an MRAM array without disturbing its neighbours.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="magnetization_dynamics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on: the LLG equation, its two torques, and switching a bit.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=8fkmn7GJMoc" target="_blank" rel="noopener" title="Magnetization dynamics and the Landau-Lifshitz-Gilbert equation">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/8fkmn7GJMoc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Magnetization dynamics and the Landau-Lifshitz-Gilbert equation<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=ugrsqPkQXNY" target="_blank" rel="noopener" title="Spintronics memories devices, how are information stored?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/ugrsqPkQXNY/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Spintronics memories devices, how are information stored?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=R9z5s225i1U" target="_blank" rel="noopener" title="Magnetization switching through spin transfer torque">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/R9z5s225i1U/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Magnetization switching through spin transfer torque<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=wEox88pAC7Q" target="_blank" rel="noopener" title="Theory of the tunneling magnetoresistance">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/wEox88pAC7Q/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Theory of the tunneling magnetoresistance<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A magnet behaves like a spinning top</h2>
+    <p>In a small enough magnet all the electron spins point together, so its state is a single arrow: the direction of the magnetization, \(\mathbf m=\mathbf M/M_S\), a point on a sphere. A field exerts a torque on it, and because the magnetization carries spin angular momentum, the torque turns it around the field instead of toward it. Damping slowly drains its energy and lets it spiral in. The Landau–Lifshitz–Gilbert (LLG) equation has one term for each:</p>
+    <div class="equation">$$\frac{d\mathbf m}{dt}=-\gamma\,\mathbf m\times\mathbf H_{\rm eff}+\alpha\,\mathbf m\times\frac{d\mathbf m}{dt},\qquad \mathbf H_{\rm eff}=-\frac{1}{\mu_0M_S}\frac{\partial E}{\partial\mathbf m}$$</div>
+    <p>The first term is the field torque, which conserves energy; the second is the damping torque, which dissipates it. \(\gamma=\mu_0\gamma_e=2.21\times10^5\) m A⁻¹ s⁻¹ sets the pace (28 GHz per tesla) and \(\alpha\) is the damping constant. The effective field is the slope of the energy: an applied field gives \(E=-\mu_0M_S\,\mathbf m\cdot\mathbf H_{\rm ext}\) and uniaxial anisotropy gives \(E=K_{\rm eff}\big[1-(\mathbf m\cdot\hat{\mathbf z})^2\big]\).</p>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-prec" aria-controls="lab" aria-selected="true" data-mode="prec">1 · Precession</button>
+      <button class="tab" role="tab" id="tab-damp" aria-controls="lab" aria-selected="false" data-mode="damp" tabindex="-1">2 · Damping</button>
+      <button class="tab" role="tab" id="tab-switch" aria-controls="lab" aria-selected="false" data-mode="switch" tabindex="-1">3 · Switching a bit</button>
+      <button class="tab" role="tab" id="tab-write" aria-controls="lab" aria-selected="false" data-mode="write" tabindex="-1">4 · Writing MRAM</button>
+    </div>
+    <div class="mode-intro" data-for="prec">
+      <h2>The field turns the magnetization; it does not pull it.</h2>
+      <p>Without damping, the torque \(-\gamma\,\mathbf m\times\mathbf H\) is perpendicular to both \(\mathbf m\) and \(\mathbf H\). It carries \(\mathbf m\) around a cone of fixed angle \(\theta\), so the energy never changes and the magnetization circles the field for ever, at the Larmor frequency. A compass needle would swing to the field; a spin cannot.</p>
+      <div class="equation">$$\frac{d\mathbf m}{dt}=-\gamma\,\mathbf m\times\mathbf H,\qquad E=-\mu_0M_S\,\mathbf m\cdot\mathbf H=-\mu_0M_SH\cos\theta,\qquad f=\frac{\gamma H}{2\pi}$$</div>
+    </div>
+    <div class="mode-intro" data-for="damp" hidden>
+      <h2>Damping drains the energy.</h2>
+      <p>The Gilbert term \(\alpha\,\mathbf m\times d\mathbf m/dt\) opposes the motion. Solving the LLG equation for \(d\mathbf m/dt\) shows what it does: the precession slows by \(1/(1+\alpha^2)\), and a new part of the motion points toward the field. The magnetization spirals in, and its cone closes exponentially.</p>
+      <div class="equation">$$\frac{d\mathbf m}{dt}=-\frac{\gamma}{1+\alpha^2}\Big[\mathbf m\times\mathbf H+\alpha\,\mathbf m\times(\mathbf m\times\mathbf H)\Big],\qquad \tan\frac{\theta}{2}=\tan\frac{\theta_0}{2}\,e^{-t/\tau},\qquad \tau=\frac{1+\alpha^2}{\alpha\gamma H}$$</div>
+    </div>
+    <div class="mode-intro" data-for="switch" hidden>
+      <h2>Two wells, and a field to tip them.</h2>
+      <p>A memory bit needs two stable directions. Uniaxial anisotropy provides them: \(E=K_{\rm eff}\sin^2\theta\) has minima at \(\theta=0\) and \(\pi\), up and down the easy axis, with a barrier between. A field up the axis tilts the landscape. The bit starts pointing down, a few degrees off the axis, and flips only when the field is strong enough to remove the down state's well, when \(H\) exceeds the anisotropy field \(H_K\), or at least to bring the top of the barrier past its starting angle, which for a start \(\theta_t\) off the axis takes \(H_K\cos\theta_t\).</p>
+      <div class="equation">$$E=K_{\rm eff}\sin^2\theta-\mu_0M_SH\cos\theta,\qquad \mathbf H_{\rm eff}=\big(H+H_Km_z\big)\hat{\mathbf z},\qquad H_K=\frac{2K_{\rm eff}}{\mu_0M_S},\qquad \Delta E=K_{\rm eff}\Big(1-\frac{H}{H_K}\Big)^2$$</div>
+    </div>
+    <div class="mode-intro" data-for="write" hidden>
+      <h2>Writing one bit in a crowd.</h2>
+      <p>In a cross-point MRAM, currents in the two lines that cross at the chosen bit make two fields: the word line's along the easy axis, the bit line's along the hard axis. Every other bit on those lines feels only one of them. Stoner and Wohlfarth's astroid says which fields remove the old state: the selected bit must land outside it, the half-selected bits inside. Each field ramps up over 0.5 ns, holds for 2 ns and ramps down.</p>
+      <div class="equation">$$\left|\frac{H_x}{H_K}\right|^{2/3}+\left|\frac{H_e}{H_K}\right|^{2/3}=1\qquad\text{(the astroid: outside it, only one well is left)}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-prec">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="prec damp">
+        <div class="label-caps">Field and starting point</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="hfield">Field H, along z</label><output id="hfield-out" for="hfield"></output></div>
+          <input id="hfield" type="range" min="10000" max="1000000" step="10000" value="100000"><div class="ctrl__hint" id="hfield-hint"></div>
+        </div>
+        <div class="chips" role="group" aria-label="Fields">
+          <button class="chip-btn" type="button" data-h="100000">1 × 10⁵ A/m</button><button class="chip-btn" type="button" data-h="500000">5 × 10⁵ A/m</button><button class="chip-btn" type="button" data-h="1000000">10⁶ A/m</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="theta">Starting angle θ<sub>0</sub> from the field</label><output id="theta-out" for="theta"></output></div>
+          <input id="theta" type="range" min="5" max="175" step="1" value="30">
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="damp">
+        <div class="label-caps">Damping</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="alpha">Damping constant α</label><output id="alpha-out" for="alpha"></output></div>
+          <input id="alpha" type="range" min="0" max="300" step="1" value="100"><div class="ctrl__hint">Logarithmic slider, 0.01 to 10. Metals such as permalloy and CoFeB have α of about 0.005 to 0.02; the video uses 0.1.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Damping constants">
+          <button class="chip-btn" type="button" data-alpha="0.01">0.01</button><button class="chip-btn" type="button" data-alpha="0.1">0.1</button><button class="chip-btn" type="button" data-alpha="1">1</button><button class="chip-btn" type="button" data-alpha="10">10</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="switch">
+        <div class="label-caps">Field pulse</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="hsw">Field H, up the easy axis</label><output id="hsw-out" for="hsw"></output></div>
+          <input id="hsw" type="range" min="0" max="1000000" step="10000" value="600000"><div class="ctrl__hint" id="hsw-hint"></div>
+        </div>
+        <div class="chips" role="group" aria-label="Fields from the video">
+          <button class="chip-btn" type="button" data-hsw="100000">1 × 10⁵ A/m</button><button class="chip-btn" type="button" data-hsw="600000">6 × 10⁵ A/m</button><button class="chip-btn" type="button" data-hsw="0">0</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="tilt">Starting tilt from straight down</label><output id="tilt-out" for="tilt"></output></div>
+          <input id="tilt" type="range" min="0.5" max="40" step="0.5" value="5"><div class="ctrl__hint">Heat keeps a real bit a few degrees off its axis. Exactly on the axis the field exerts no torque at all.</div>
+        </div>
+        <label class="check"><input id="hold" type="checkbox" checked> Leave the field on</label>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="pulse">Pulse length</label><output id="pulse-out" for="pulse"></output></div>
+          <input id="pulse" type="range" min="0.1" max="4" step="0.05" value="1"><div class="ctrl__hint" id="pulse-hint">The field switches off after this time.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="write">
+        <div class="label-caps">Write currents</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="he">Word-line field H<sub>e</sub> (easy axis)</label><output id="he-out" for="he"></output></div>
+          <input id="he" type="range" min="0" max="1.2" step="0.01" value="0.6">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="hx">Bit-line field H<sub>x</sub> (hard axis)</label><output id="hx-out" for="hx"></output></div>
+          <input id="hx" type="range" min="0" max="1.2" step="0.01" value="0.6"><div class="ctrl__hint">Both in units of the anisotropy field H<sub>K</sub>.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Write currents">
+          <button class="chip-btn" type="button" data-write="0.6,0.6">Both 0.6 H<sub>K</sub></button><button class="chip-btn" type="button" data-write="0.3,0.3">Both 0.3 H<sub>K</sub></button><button class="chip-btn" type="button" data-write="0.9,0">Word line only</button><button class="chip-btn" type="button" data-write="0,0.9">Bit line only</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="switch write">
+        <div class="label-caps">The bit</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="kani">Anisotropy K<sub>eff</sub></label><output id="kani-out" for="kani"></output></div>
+          <input id="kani" type="range" min="50000" max="800000" step="10000" value="400000"><div class="ctrl__hint" id="kani-hint"></div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="alpha3">Damping constant α</label><output id="alpha3-out" for="alpha3"></output></div>
+          <input id="alpha3" type="range" min="0.01" max="1" step="0.01" value="0.1">
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the video's values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Time controls">
+        <div class="transport">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <button class="btn-quiet" id="restart" type="button">↺ Start</button>
+          <input id="time" type="range" min="0" max="1000" step="1" value="1000" aria-label="Time">
+          <div class="transport__time" id="time-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more"><span id="transport-note"></span></div>
+      </section>
+
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view">
+          <div class="plot-box plot-box--mag"><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="The direction of the magnetization on a sphere"></canvas></div>
+          <div class="mag-view__side">
+            <div class="plot-box plot-box--mag" id="land-box"><canvas id="land" role="img" aria-label="Energy against angle"></canvas></div>
+            <div class="lat" id="array" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Precession</span><button class="predict__load" type="button" data-q="q1">Load H = 1 × 10⁵ A/m</button></div>
+        <p>In a field of \(10^5\) A/m (0.126 T), how long does the magnetization take to go once around? And with five times the field, as on the video's slides?</p>
+        <details><summary>Show answer</summary>
+          <p>\(f=\gamma H/2\pi=3.52\) GHz, so one turn takes 284 ps. Five times the field turns it five times faster: 17.6 GHz, 57 ps a turn. The frequency is simply proportional to the field, 28.0 GHz per tesla of \(\mu_0H\), and it does not depend on the cone angle. That is why a magnetic resonance measurement of the frequency is a direct measurement of the field the spins feel.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Precession</span><button class="predict__load" type="button" data-q="q2">Load θ<sub>0</sub> = 150°</button></div>
+        <p>Start the magnetization at 150° from the field, almost pointing against it, with no damping. Does it swing round toward the field?</p>
+        <details><summary>Show answer</summary>
+          <p>No. It circles the field on a cone of 150°, at the same 3.52 GHz as before, for ever. The torque \(-\gamma\,\mathbf m\times\mathbf H\) is always perpendicular to \(\mathbf H\), so it does no work: the energy stays at \(E=-\mu_0M_SH\cos150°=+0.87\,\mu_0M_SH\), near the top of the landscape, and the ball never rolls. Only damping can bring it down.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Damping</span><button class="predict__load" type="button" data-q="q3">Load α = 0.1, H = 5 × 10⁵ A/m</button></div>
+        <p>With the video's damping, \(\alpha=0.1\), in a field of \(5\times10^5\) A/m and starting 30° from the field: how many turns does the magnetization make before it is within 1° of the field?</p>
+        <details><summary>Show answer</summary>
+          <p>About five and a half: 5.45 turns in 0.31 ns. The cone closes as \(\tan(\theta/2)=\tan(\theta_0/2)e^{-t/\tau}\) with \(\tau=(1+\alpha^2)/\alpha\gamma H=91\) ps, and going from 30° to 1° takes \(\ln(\tan15°/\tan0.5°)=3.4\) of those. Each \(\tau\) lasts \(1/2\pi\alpha=1.6\) turns whatever the field, so a lightly damped magnet makes many turns on its way in.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Damping</span><button class="predict__load" type="button" data-q="q4">Load α = 1</button></div>
+        <p>Which settles fastest: \(\alpha=0.1\), \(\alpha=1\) or \(\alpha=10\)? Surely more damping is always faster?</p>
+        <details><summary>Show answer</summary>
+          <p>\(\alpha=1\): 62 ps from 30° to 1° at \(5\times10^5\) A/m, against 313 ps for both 0.1 and 10. The relaxation time \(\tau\propto(1+\alpha^2)/\alpha\) is smallest at \(\alpha=1\) and the same for \(\alpha\) and \(1/\alpha\). Heavy damping does not speed things up: it slows the whole motion, and the magnetization creeps straight toward the field with almost no precession, like a spoon in honey.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Switching a bit</span><button class="predict__load" type="button" data-q="q5">Load H = 1 × 10⁵ A/m</button></div>
+        <p>The video's bit: \(K_{\rm eff}=4\times10^5\) J/m³, \(\alpha=0.1\), pointing down. A field of \(10^5\) A/m pushes up the easy axis. Does it switch? What about \(6\times10^5\) A/m?</p>
+        <details><summary>Show answer</summary>
+          <p>Not at \(10^5\) A/m: here \(H_K=2K_{\rm eff}/\mu_0M_S=5\times10^5\) A/m (with \(\mu_0M_S=1.6\) T), so \(h=H/H_K=0.2\), and the down state is still a well, \((1-h)^2=64\%\) as deep as without the field. The magnetization wobbles and settles back down. At \(6\times10^5\) A/m, \(h=1.2\gt1\): the down well is gone and the bit flips up, as in the video.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Switching a bit</span><button class="predict__load" type="button" data-q="q6">Load H = 6 × 10⁵ A/m</button></div>
+        <p>At \(6\times10^5\) A/m the bit switches. How long does it take to cross the equator from a 5° tilt? What if it starts only 2.5° off the axis?</p>
+        <details><summary>Show answer</summary>
+          <p>0.92 ns from 5°, and 1.23 ns from 2.5°: halving the tilt adds 0.31 ns. Near the down pole the tilt grows exponentially, as \(e^{t/t_0}\) with \(t_0=(1+\alpha^2)/\alpha\gamma(H-H_K)=0.46\) ns, so the delay grows as the logarithm of the starting tilt, and a bit sitting exactly on its axis would never start. Real bits are kicked off the axis by heat, so field switching has a random delay.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Switching a bit</span><button class="predict__load" type="button" data-q="q7">Load a 0.8 ns pulse</button></div>
+        <p>Now turn the \(6\times10^5\) A/m field off after 0.8 ns, as the video does once the bit has switched. Does the bit stay switched? What about 1.0 ns?</p>
+        <details><summary>Show answer</summary>
+          <p>After 0.8 ns it falls back down; after 1.0 ns it stays up. With no field the landscape is the symmetric double well, with its barrier at the equator, so all that matters is which side the magnetization is on when the field stops. It crosses at 0.92 ns: at 0.8 ns \(m_z=-0.74\), still in the lower half; at 1.0 ns \(m_z=+0.92\). Once over, the bit keeps its new state with no power, which is what makes MRAM non-volatile.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Writing MRAM</span><button class="predict__load" type="button" data-q="q8">Load 0.6 H<sub>K</sub> on both lines</button></div>
+        <p>Both lines carry enough current for 0.6 \(H_K\). Which bits flip: the selected one, the ones sharing its word line, the ones sharing its bit line?</p>
+        <details><summary>Show answer</summary>
+          <p>Only the selected bit. It feels both fields, and \(0.6^{2/3}+0.6^{2/3}=1.42\gt1\) puts it outside the astroid. Its neighbours feel 0.6 \(H_K\) along one axis only, inside the astroid, so they keep their state. With equal fields the window is from \(2^{-3/2}=0.35\) to 1 \(H_K\). The catch is the current: \(H\approx I/2w\) for a line of width \(w\), so for this stiff bit (\(\mu_0H_K=0.63\) T) 0.6 \(H_K\) needs 60 mA in a 100 nm line. Field-written MRAMs used much softer bits, with \(H_K\) of a few millitesla and a few milliamps of current, but soft bits lose their stability as they shrink. That is why newer MRAMs switch the bit with a spin current instead (the extra torque \(\mathbf N\) on the video's last slide).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook integrates the LLG equation with SciPy, checks the precession frequency and the damped spiral against their formulas, draws the anisotropy energy landscape, times the switching of a bit (with and without a pulse), and maps the Stoner–Wohlfarth astroid by simulation. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="magnetization_dynamics.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 22 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>The magnet:</strong> a single domain (a macrospin): one unit vector \(\mathbf m\) for the whole bit, with \(\mu_0M_S=1.6\) T (\(M_S=1.27\times10^6\) A/m, typical of CoFeB; the video does not give a value) and \(\gamma=\mu_0\gamma_e=2.213\times10^5\) m A⁻¹ s⁻¹. With the video's \(K_{\rm eff}=4\times10^5\) J/m³ this gives \(H_K=5\times10^5\) A/m (0.63 T), so its two fields, \(10^5\) and \(6\times10^5\) A/m, fall on either side of it. The energy curves on the video's slides are sketches: the one for \(10^5\) A/m matches \(h\approx0.25\), while the one for \(6\times10^5\) A/m sits exactly at the threshold, \(h\approx1\), so no single \(M_S\) fits both; 1.6 T puts the two fields at \(h=0.2\) and 1.2.</li>
+          <li><strong>The equation:</strong> the Gilbert form is rewritten in the explicit Landau–Lifshitz form \(d\mathbf m/dt=-\gamma'[\mathbf m\times\mathbf H_{\rm eff}+\alpha\,\mathbf m\times(\mathbf m\times\mathbf H_{\rm eff})]\), \(\gamma'=\gamma/(1+\alpha^2)\), which is the same equation. It is integrated with fourth-order Runge–Kutta, with steps of at most 0.04 rad of precession, renormalizing \(|\mathbf m|=1\) after each; steps are split where a field switches off. The two arrows at the tip of \(\mathbf m\) are the two parts of \(d\mathbf m/dt\): around the field and toward it.</li>
+          <li><strong>Fields:</strong> \(\mathbf H_{\rm eff}=\mathbf H_{\rm ext}+H_Km_z\hat{\mathbf z}\). Only the applied field and uniaxial anisotropy are included: no demagnetizing field beyond what \(K_{\rm eff}\) absorbs, no exchange (the whole bit turns together) and no thermal noise, so a bit is started a chosen angle off its axis instead.</li>
+          <li><strong>Closed forms:</strong> with the field along the easy axis the motion is symmetric about it, and \(dm_z/dt=\alpha\gamma'(H+H_Km_z)(1-m_z^2)\) integrates exactly by partial fractions. The lab uses this for the switching times and to choose how long to run; the relaxation in tab 2 is \(m_z=\tanh(t/\tau+\tanh^{-1}\cos\theta_0)\).</li>
+          <li><strong>Writing MRAM:</strong> the bits are independent macrospins (no stray fields between them). The fields ramp linearly over 0.5 ns, hold for 2 ns and ramp down over 0.5 ns. The astroid is the static Stoner–Wohlfarth boundary. Away from the axes the simulation follows it to about 1%; the ringing of the field ramp can carry a bit over just inside it (down to an astroid sum of about 0.99 at \(\alpha=0.1\)). Along the easy axis a bit pointing straight down feels almost no torque, so a field along that axis alone flips nothing within the pulse, even 20% outside the astroid: the lab marks such bits as at risk, since a longer pulse or a thermal kick would flip them. Line currents use \(H\approx I/2w\), the field next to a wide flat strip.</li>
+          <li><strong>Checks:</strong> the lab's integrator was checked against SciPy's DOP853 solver for precession, damping, switching, pulses and the write ramps, to better than \(10^{-5}\) over the sliders' whole range and \(10^{-7}\) at the video's values, and the switching-time formula against direct numerical integration. The notebook repeats the calculation independently and asserts every number quoted in the answers.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

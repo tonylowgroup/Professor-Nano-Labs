@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en" data-track="spintronics">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tunnelling Magnetoresistance · Professor Nano Labs</title>
+<meta name="description" content="Solve the spin-dependent Schrödinger equation through a magnetic tunnel junction in full, sum every transverse mode with the Landauer formula, and watch the conductance, the spin channels and the spin of the tunnelling current change as you turn the free layer. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Spintronics</div>
+    <div class="eyebrow eyebrow--light">Spintronics · Live lab</div>
+    <h1>Tunnelling Magnetoresistance</h1>
+    <p>Two ferromagnets separated by a nanometre of insulator conduct better when their magnetizations line up. Here the spin-dependent Schrödinger equation is solved numerically through the junction, without the video's thick-barrier approximation, every transverse mode is summed with the Landauer formula, and you turn the free layer yourself: watch the electron's wave decay through the barrier, the four spin channels share the current, and the spin torque the current exerts turn with the magnetization.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="tunneling_magnetoresistance.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on: spin-split bands, spinor rotation, and Slonczewski's tunnelling model.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=wEox88pAC7Q" target="_blank" rel="noopener" title="Theory of the tunneling magnetoresistance">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/wEox88pAC7Q/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Theory of the tunneling magnetoresistance<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=ugrsqPkQXNY" target="_blank" rel="noopener" title="Spintronics memories devices, how are information stored?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/ugrsqPkQXNY/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Spintronics memories devices, how are information stored?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=z7dVABiYnTk" target="_blank" rel="noopener" title="How electricity actually works at the nanoscale?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/z7dVABiYnTk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How electricity actually works at the nanoscale?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=R9z5s225i1U" target="_blank" rel="noopener" title="Magnetization switching through spin transfer torque">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/R9z5s225i1U/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Magnetization switching through spin transfer torque<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The model -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">The video's toy model, solved in full</h2>
+    <p>Each ferromagnet is a free-electron metal whose bands are split by the exchange energy \(\Delta\): majority electrons fill a Fermi sphere of radius \(k_\uparrow\), minority electrons a smaller one, \(k_\downarrow\). An insulating barrier of height \(U\) and thickness \(d\) separates them. The fixed layer's spins point along \(\mathbf m_1=\hat{\mathbf z}\); the free layer's along \(\mathbf m_2(\theta,\varphi)\), so its spinors are rotated:</p>
+    <div class="equation">$$-\frac{\hbar^2}{2m}\frac{d^2\Psi}{dx^2}+V(x)\Psi=E_x\Psi,\qquad \Psi=\begin{pmatrix}\psi_\uparrow\\\psi_\downarrow\end{pmatrix},\qquad |{+}\rangle_{\mathbf m_2}=\begin{pmatrix}\cos\frac\theta2\\e^{i\varphi}\sin\frac\theta2\end{pmatrix},\quad |{-}\rangle_{\mathbf m_2}=\begin{pmatrix}-e^{-i\varphi}\sin\frac\theta2\\\cos\frac\theta2\end{pmatrix}$$</div>
+    <p>The video solves this in the thick-barrier limit, for electrons hitting the barrier head on, which gives Slonczewski's tunnelling polarization and Julliere's formula. Here the same equation is solved numerically, to a fraction of a per cent, for every energy, angle and bias, and every transverse wavevector \(\mathbf k_\parallel\) is added up with the Landauer formula, the same one that governs the quantum transport labs:</p>
+    <div class="equation">$$G=\frac{e^2}{h}\sum_{\mathbf k_\parallel}T(\mathbf k_\parallel)=\frac{e^2}{h}\,\frac{mA}{2\pi\hbar^2}\int T(E_x)\,dE_x,\qquad \mathrm{TMR}=\frac{R_{AP}-R_P}{R_P}=\frac{G_P-G_{AP}}{G_{AP}}$$</div>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-wave" aria-controls="lab" aria-selected="true" data-mode="wave">1 · One electron tunnels</button>
+      <button class="tab" role="tab" id="tab-sum" aria-controls="lab" aria-selected="false" data-mode="sum" tabindex="-1">2 · Every electron: Landauer</button>
+      <button class="tab" role="tab" id="tab-angle" aria-controls="lab" aria-selected="false" data-mode="angle" tabindex="-1">3 · Turning the free layer</button>
+      <button class="tab" role="tab" id="tab-bias" aria-controls="lab" aria-selected="false" data-mode="bias" tabindex="-1">4 · Bias</button>
+    </div>
+    <div class="mode-intro" data-for="wave">
+      <h2>Two spins, one barrier, two different leads.</h2>
+      <p>An electron arriving head on at the Fermi energy is a plane wave in the fixed layer, decays exponentially in the barrier, and comes out as a much weaker wave in the free layer. The barrier is the same for both spins, but the leads are not: majority and minority electrons have different wavevectors on each side, and in the free layer "majority" means along \(\mathbf m_2\). The boundary conditions at the two interfaces decide how much of each spin gets through.</p>
+      <div class="equation">$$k_\uparrow=\sqrt{\frac{2mE_x}{\hbar^2}},\qquad k_\downarrow=\sqrt{\frac{2m(E_x-\Delta)}{\hbar^2}},\qquad \kappa=\sqrt{\frac{2m(U-E_x)}{\hbar^2}},\qquad T\propto e^{-2\kappa d}$$</div>
+    </div>
+    <div class="mode-intro" data-for="sum" hidden>
+      <h2>Only electrons heading almost straight on get through.</h2>
+      <p>An electron with a transverse wavevector \(\mathbf k_\parallel\) keeps it through the barrier, and its sideways kinetic energy is not available for tunnelling: it sees a higher barrier, \(\kappa^2=\kappa_0^2+k_\parallel^2\). So tunnelling picks out a narrow cone around normal incidence, \(|k_\parallel|\lesssim\sqrt{\kappa_0/d}\). The video keeps only its axis, \(k_\parallel=0\); summing the whole cone changes the answer, most of all when the minority Fermi sphere is small.</p>
+      <div class="equation">$$\text{video, thick barrier, }k_\parallel=0:\quad \mathrm{TMR}=\frac{2P^2}{1-P^2},\qquad P=\frac{k_\uparrow-k_\downarrow}{k_\uparrow+k_\downarrow}\,\frac{\kappa^2-k_\uparrow k_\downarrow}{\kappa^2+k_\uparrow k_\downarrow}\ \xrightarrow{\ \kappa\to\infty\ }\ \frac{k_\uparrow-k_\downarrow}{k_\uparrow+k_\downarrow}\ \ \text{(Julliere)}$$</div>
+    </div>
+    <div class="mode-intro" data-for="angle" hidden>
+      <h2>The conductance follows the angle between the magnets.</h2>
+      <p>A majority electron from the fixed layer is, seen from the free layer, a superposition: \(\cos(\theta/2)\) of its majority spin and \(\sin(\theta/2)\) of its minority spin. So the current shifts smoothly between the four spin channels as the free layer turns, and the conductance follows, very nearly, the video's \(\cos\theta\) law: exactly in its thick-barrier limit, with small corrections from multiple reflections in thin, low barriers. The electrons also carry spin across the barrier; the part of it across \(\mathbf m_2\) is absorbed by the free layer, a torque on its magnetization: the spin-transfer torque of the next video.</p>
+      <div class="equation">$$G(\theta)=G_P\cos^2\frac\theta2+G_{AP}\sin^2\frac\theta2=\bar G\,\big(1+P^2\cos\theta\big),\qquad \bar G=\frac{G_P+G_{AP}}{2},\quad P^2=\frac{G_P-G_{AP}}{G_P+G_{AP}}\ \big(=P_IP_{III}\text{ in the video's limit}\big)$$</div>
+    </div>
+    <div class="mode-intro" data-for="bias" hidden>
+      <h2>A bias tilts the barrier and changes the TMR.</h2>
+      <p>A voltage \(V\) drops across the barrier, so its top slopes down and the free layer's bands shift down by \(eV\). Electrons from a window of energies \(eV\) below the fixed layer's Fermi level now tunnel, into states well above the free layer's Fermi level, where its two spin bands are relatively more alike. The current rises faster than linearly and, for most settings, the TMR falls, as in real junctions; for low barriers this free-electron model can also give a TMR that rises or changes sign.</p>
+      <div class="equation">$$I=\frac{e}{h}\sum_{\mathbf k_\parallel}\int T(E,\mathbf k_\parallel;V)\,\big[f_L(E)-f_R(E)\big]\,dE,\qquad \mathrm{TMR}(V)=\frac{I_P(V)-I_{AP}(V)}{I_{AP}(V)}$$</div>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-wave">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">Free layer magnetization m<sub>2</sub></div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="theta">Angle θ from the fixed layer</label><output id="theta-out" for="theta"></output></div>
+          <input id="theta" type="range" min="0" max="180" step="1" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="phi">Azimuth φ</label><output id="phi-out" for="phi"></output></div>
+          <input id="phi" type="range" min="0" max="360" step="5" value="0"><div class="ctrl__hint">The fixed layer m<sub>1</sub> points along z.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Free layer directions">
+          <button class="chip-btn" type="button" data-th="0">Parallel</button><button class="chip-btn" type="button" data-th="90">90°</button><button class="chip-btn" type="button" data-th="180">Antiparallel</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="wave">
+        <div class="label-caps">The electron</div>
+        <div class="seg" role="group" aria-label="Injected spin">
+          <button type="button" data-inj="0" aria-pressed="true">Majority spin</button><button type="button" data-inj="1" aria-pressed="false">Minority spin</button>
+        </div>
+        <div class="ctrl__hint">Injected from the fixed layer at the Fermi energy, head on.</div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">Barrier</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="phib">Height above E<sub>F</sub>, U − E<sub>F</sub></label><output id="phib-out" for="phib"></output></div>
+          <input id="phib" type="range" min="0.3" max="5" step="0.05" value="3">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="thick">Thickness d</label><output id="thick-out" for="thick"></output></div>
+          <input id="thick" type="range" min="3" max="25" step="0.5" value="8">
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="wave bias">
+        <div class="label-caps">Bias</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="bias">Voltage V</label><output id="bias-out" for="bias"></output></div>
+          <input id="bias" type="range" min="0" max="1.5" step="0.01" value="0"><div class="ctrl__hint" id="bias-hint"></div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <div class="label-caps">Ferromagnets (both the same)</div>
+        <div class="chips" role="group" aria-label="Electrode presets">
+          <button class="chip-btn" type="button" data-mat="fe">Fe, free-electron fit</button><button class="chip-btn" type="button" data-mat="strong">Strongly polarized</button><button class="chip-btn" type="button" data-mat="half">Half metal</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="ef">Fermi energy E<sub>F</sub></label><output id="ef-out" for="ef"></output></div>
+          <input id="ef" type="range" min="1.5" max="6" step="0.01" value="4.53">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="delta">Exchange splitting Δ</label><output id="delta-out" for="delta"></output></div>
+          <input id="delta" type="range" min="0" max="6" step="0.01" value="3.85"><div class="ctrl__hint" id="delta-hint"></div>
+        </div>
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view">
+          <div class="plot-box plot-box--mag"><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="Directions of the two magnetizations"></canvas></div>
+          <div class="mag-view__side">
+            <div class="plot-box plot-box--mag" id="prof-box"><canvas id="profile" role="img" aria-label="Energy profile of the junction"></canvas></div>
+            <div class="lat" id="side-svg" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3><div class="seg seg--inline" id="pb-switch" role="group" aria-label="Plot against" hidden><button type="button" data-pb="d" aria-pressed="true">thickness</button><button type="button" data-pb="u" aria-pressed="false">height</button></div></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · One electron</span><button class="predict__load" type="button" data-q="q1">Load the parallel junction</button></div>
+        <p>Fe electrodes, a 3 eV, 8 Å barrier, magnetizations parallel. Majority electrons have more than twice the Fermi wavevector of minority ones. How much more often does a majority electron arriving head on get through?</p>
+        <details><summary>Show answer</summary>
+          <p>Only 1.6 times: \(T=2.6\times10^{-6}\) against \(1.6\times10^{-6}\). Both spins decay at the same rate in the barrier; the difference is in matching the wave at the two interfaces, a factor \(\big[4k\kappa/(\kappa^2+k^2)\big]^2\) that is largest when \(k=\kappa\). With \(\kappa=0.89\) Å⁻¹, the majority electron (\(k_\uparrow=1.09\) Å⁻¹) is above the best match and the minority one (\(k_\downarrow=0.42\) Å⁻¹) below it, so they end up closer than their wavevectors.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · One electron</span><button class="predict__load" type="button" data-q="q2">Load a 10 Å barrier</button></div>
+        <p>Make the barrier 2 Å thicker, from 8 to 10 Å, about one atomic layer of oxide. By how much does the head-on transmission fall?</p>
+        <details><summary>Show answer</summary>
+          <p>By a factor of 35. The wave decays as \(e^{-\kappa x}\), so the probability falls by \(e^{-2\kappa\,\Delta d}=e^{-2\times0.887\times2}=1/34.8\). This exponential sensitivity is why the resistance of a tunnel junction is set by its thinnest few ångströms, and why barriers have to be grown flat to within one atomic layer.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Landauer</span><button class="predict__load" type="button" data-q="q3">Load the starting junction</button></div>
+        <p>The video's head-on, thick-barrier formula and Julliere's formula both give a TMR from the electrodes. What does the exact sum over all electrons give?</p>
+        <details><summary>Show answer</summary>
+          <p>39%, against 2.7% from the video's formula and 48% from Julliere's. Here \(\kappa^2=0.79\) Å⁻² is not much larger than \(k_\uparrow k_\downarrow=0.46\) Å⁻², so the head-on tunnelling polarization \(P=0.12\) is small. But electrons arriving at an angle see a higher barrier, \(\kappa^2=\kappa_0^2+k_\parallel^2\), and smaller wavevectors along \(x\), which raises their polarization; summed over the cone of directions that tunnels, the TMR is much larger than the head-on value.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Landauer</span><button class="predict__load" type="button" data-q="q4">Load a 20 Å barrier</button></div>
+        <p>Thicken the barrier to 20 Å. Does the exact TMR move toward the video's value or toward Julliere's?</p>
+        <details><summary>Show answer</summary>
+          <p>Toward the video's: 9.6% at 20 Å, 4.6% at 40 Å, on its way down to 2.7%. A thicker barrier narrows the cone of directions that tunnels, \(|k_\parallel|\lesssim\sqrt{\kappa/d}\), until only electrons arriving head on are left, which is exactly what the video assumes. Its formula is the thick-barrier limit, but the approach is slow: real barriers, 1 to 2 nm thick, are far from it.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Landauer</span><button class="predict__load" type="button" data-q="q5">Load strongly polarized electrodes</button></div>
+        <p>Electrodes with a tiny minority Fermi sphere (\(k_\downarrow=0.23\) Å⁻¹, Julliere's \(P=0.59\)), and a 2 eV, 8 Å barrier. Julliere's formula gives 107%. Can the exact TMR be larger?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes: 217%, twice Julliere's 107%, and far above the video's 15%. The tunnelling cone, \(|k_\parallel|\lesssim0.30\) Å⁻¹, is wider than the minority Fermi sphere. An electron with \(k_\parallel\gt k_\downarrow\) has no minority state with that \(k_\parallel\) on either side, so for it the junction is a half metal: it tunnels in the parallel state and not at all in the antiparallel one. Julliere's formula, which only counts states, cannot see this; the exact calculation, which keeps \(k_\parallel\), can.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · The free layer</span><button class="predict__load" type="button" data-q="q6">Load θ = 90°</button></div>
+        <p>Turn the free layer to 90°. Is the conductance halfway between parallel and antiparallel? And does turning φ change it?</p>
+        <details><summary>Show answer</summary>
+          <p>Halfway, to better than one part in a million: \(G=0.859\,G_P\), the mean of \(G_P\) and \(G_{AP}=0.719\,G_P\). That is the video's \(\cos\theta\) law, \(G=\bar G(1+P^2\cos\theta)\), which the exact calculation obeys too, only with a larger amplitude than the head-on \(P^2\). Turning φ changes nothing: only the angle between the two magnetizations matters. What φ does turn is the spin torque, which lies in the plane of \(\mathbf m_1\) and \(\mathbf m_2\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · The free layer</span><button class="predict__load" type="button" data-q="q7">Load half-metal electrodes at 90°</button></div>
+        <p>Now electrodes that are half metals (\(\Delta\gt E_F\): no minority electrons at all). What are the TMR, the conductance at 90°, and the torque per electron?</p>
+        <details><summary>Show answer</summary>
+          <p>The TMR is infinite: antiparallel, every electron arrives as a minority electron of the free layer, which has none, so \(G_{AP}=0\). At 90° the conductance is half of \(G_P\), \(\cos^2(45°)\) (to two parts in \(10^7\) here; exactly, in the thick-barrier limit). The torque per electron at 90° is 1.00: each electron arrives with its spin along \(\mathbf m_1\) and leaves along \(\mathbf m_2\), handing over all its \(\hbar/2\) across \(\mathbf m_2\). At other angles it is \(\tan(\theta/2)\): 0.58 at 60°, 1.73 at 120°, and without limit toward antiparallel, because the current, \(\propto\cos^2(\theta/2)\), vanishes faster than the torque, \(\propto\sin\theta\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Bias</span><button class="predict__load" type="button" data-q="q8">Load 0.5 V of bias</button></div>
+        <p>Back to the starting junction, at 0.5 V. Is the TMR still 39%? At what bias does it halve?</p>
+        <details><summary>Show answer</summary>
+          <p>It has fallen to 32%, and it halves at about 0.92 V. Under bias, electrons from the fixed layer's Fermi level tunnel into the free layer \(eV\) above its own Fermi level, where its majority and minority Fermi spheres are relatively more alike, and the tilted barrier is effectively lower. Measured junctions typically halve somewhere between a few tenths of a volt and about a volt, with inelastic processes, such as magnon emission, adding to this elastic effect. (At low barriers this model can even give a TMR that rises with bias: try it.)</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook solves the spinor tunnelling problem exactly in the continuum, checks it against Slonczewski's thick-barrier formulas from the video, sums the transverse modes with the Landauer formula, maps the conductance against the free layer's angle, computes the spin torque per tunnelling electron, and follows the TMR as the bias rises. It needs NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="tunneling_magnetoresistance.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 23 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>The model:</strong> the video's toy model. Free electrons of mass \(m_e\) in all three layers; parabolic majority and minority bands with bottoms at 0 and \(\Delta\) in each ferromagnet; a rectangular barrier \(U=E_F+(U-E_F)\), which a bias \(V\) tilts linearly while lowering the free layer's bands by \(eV\); identical electrodes; zero temperature. The "Fe" preset uses the free-electron fit to iron, \(k_\uparrow=1.09\), \(k_\downarrow=0.42\) Å⁻¹ (\(E_F=4.53\) eV, \(\Delta=3.85\) eV), the values Slonczewski used.</li>
+          <li><strong>Solving it:</strong> the spinor Schrödinger equation is written in finite differences on a lattice of spacing 0.025 Å, and the two semi-infinite ferromagnets enter as exact self-energies, so nothing is truncated. The barrier is spin-independent, so the Green's function is built through it for each spin with the recursive method, and the free layer, with its rotated spin axis, is attached at the end. The spin-resolved transmissions are \(T_{\sigma'\sigma}=\Gamma_{2\sigma'}\Gamma_{1\sigma}|\langle\sigma'|G_{N1}|\sigma\rangle|^2\), as in the quantum transport labs. As the lattice spacing goes to zero this becomes the continuum answer; at 0.025 Å it agrees with an exact continuum solution to about 0.1–0.3%.</li>
+          <li><strong>Landauer:</strong> since the mass is the same everywhere, the transmission depends on \(\mathbf k_\parallel\) only through \(E_x=E_F-\hbar^2k_\parallel^2/2m\), and \(G/A=(e^2/h)(m/2\pi\hbar^2)\int T(E_x)\,dE_x\), where \((e^2/h)(m/2\pi\hbar^2)=80.9\) S per eV per µm². The integral uses Gauss–Legendre points, split at the band edges (with a square-root substitution just above each, where a channel opens as \(\sqrt{E_x-E_{\rm edge}}\)) and packed near \(E_F\), where tunnelling is concentrated. Under bias, \(J=(G/A\text{ per eV})\int T(E_x;V)\,w(E_x)\,dE_x/e\), with \(w\) the width of the window \([E_F-eV,E_F]\) above \(E_x\).</li>
+          <li><strong>The video's formulas:</strong> its thick-barrier, head-on result, \(\mathrm{TMR}=2P^2/(1-P^2)\) with Slonczewski's \(P=\frac{k_\uparrow-k_\downarrow}{k_\uparrow+k_\downarrow}\frac{\kappa^2-k_\uparrow k_\downarrow}{\kappa^2+k_\uparrow k_\downarrow}\), and Julliere's limit \(\kappa\to\infty\). The spinor rotation uses the standard convention, \(|{+}\rangle=(\cos\frac\theta2,\,e^{i\varphi}\sin\frac\theta2)\); the slides' \(R(\theta,\varphi)\) carries the opposite sign of \(\varphi\), which changes nothing measurable here.</li>
+          <li><strong>Spin torque:</strong> the spin current that electrons injected from the fixed layer at \(E_F\) carry out of the barrier, divided by their particle current, in units of \(\hbar/2\). Its part across \(\mathbf m_2\) in the plane of \(\mathbf m_1\) and \(\mathbf m_2\) is the in-plane (Slonczewski) torque per electron. It is negative, pushing \(\mathbf m_2\) away from \(\mathbf m_1\), when the tunnelling current is minority-polarized, as this model gives for low barriers; for a half metal it is \(\tan(\theta/2)\) per electron. Its part along \(\mathbf m_1\times\mathbf m_2\), the field-like torque, is not shown: for identical electrodes it is the same for electrons injected from either side, so it cancels in linear response and only appears at second order in the bias.</li>
+          <li><strong>Left out:</strong> the band structure of real Fe and MgO, whose symmetry filtering gives MgO junctions their several-hundred-per-cent TMR; image forces and the barrier's effective mass; inelastic tunnelling (magnons, phonons) and temperature; interface roughness.</li>
+          <li><strong>Checks:</strong> the lab's transmissions agree with an independent Python implementation to \(10^{-13}\), and with an exact continuum solution (an 8 × 8 linear system for the spinor amplitudes) to the lattice error above; the spin current is conserved across the barrier to \(10^{-11}\); the conductance and current integrals agree with adaptive quadrature to better than \(10^{-8}\). The notebook repeats the calculation in the continuum and asserts every number quoted in the answers.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

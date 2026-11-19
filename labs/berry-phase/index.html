@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en" data-track="geometry">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Berry Phase, Connection and Curvature · Professor Nano Labs</title>
+<meta name="description" content="Carry a spin slowly around a loop and watch it pick up a geometric phase, and map the Berry curvature and Chern number of two lattice models: the Qi–Wu–Zhang model and gapped or Haldane graphene. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum geometry</div>
+    <div class="eyebrow eyebrow--light">Quantum geometry · Live lab</div>
+    <h1>Berry Phase, Connection and Curvature</h1>
+    <p>Take a quantum state around a closed loop and it comes back with a phase that remembers the shape of the loop. Carry a spin slowly around a cone and measure that phase, then move into the Brillouin zone of two crystals, the Qi–Wu–Zhang model and gapped or Haldane graphene, and map the Berry curvature whose total is the quantized Chern number.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="berry_phase.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on: where the Berry phase comes from, why it is real and gauge invariant, the Berry connection as parallel transport, and the curvature.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=6xctcmwR8wo" target="_blank" rel="noopener" title="Deriving Berry phase, Berry connection &amp; Berry curvature">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/6xctcmwR8wo/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving Berry phase, Berry connection &amp; Berry curvature<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=TuWvO8oig0E" target="_blank" rel="noopener" title="Deriving the Dirac Hamiltonian in Graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/TuWvO8oig0E/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the Dirac Hamiltonian in Graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=FrfRj9YWfaE" target="_blank" rel="noopener" title="Quantum Geometry; Differential geometry meets Bloch states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/FrfRj9YWfaE/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quantum Geometry; Differential geometry meets Bloch states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A phase that remembers the path</h2>
+    <p>Hold an arrow flat against a globe and slide it around a closed loop, never letting it twist. When you get back to the start, it points a different way: it has turned by the area the loop encloses on the sphere, its <a href="#g-solid">solid angle</a>. A Foucault pendulum shows the same effect: the Earth carries it once a day around its circle of latitude, and its swing turns by 2π × sin(latitude), a full turn at a pole and none at the equator.</p>
+    <p>Quantum states do this with their <a href="#g-phase">phase</a>. Change a system slowly around a loop and its state comes back with an extra phase that depends only on the shape of the loop, not on how long the trip took: the <a href="#g-berry">Berry phase</a>. The lab builds the idea in two steps: a spin in a turning magnetic field, then electrons in a crystal.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-phase"><dt>Phase</dt><dd>The angle of a complex number. A state's overall phase can't be seen on its own, but differences in phase show up when waves interfere.</dd></div>
+      <div id="g-solid"><dt>Solid angle</dt><dd>The area a loop encloses on a sphere of radius 1. The whole sphere is 4π; half of it, 2π.</dd></div>
+      <div id="g-berry"><dt>Berry phase</dt><dd>The extra phase a state picks up when it is taken slowly around a closed loop. It is set by the loop's geometry alone.</dd></div>
+      <div id="g-gauge"><dt>Gauge</dt><dd>The free choice of each state's overall phase. Nothing you can measure depends on it.</dd></div>
+      <div id="g-curv"><dt>Berry curvature</dt><dd>Berry phase per unit area: the Berry phase of a small loop, divided by the area it encloses.</dd></div>
+      <div id="g-chern"><dt>Chern number</dt><dd>The total Berry curvature of a band, divided by 2π. It is always a whole number.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>Change the parameters \(\mathbf R\) of a Hamiltonian slowly and a state stays in its eigenstate \(|n,\mathbf R\rangle\), collecting the familiar dynamical phase. Berry noticed that it collects a second, geometric phase \(\gamma_n\), the integral of the Berry connection \(\mathbf A_n\) along the path. Around a closed loop, Stokes's theorem turns it into the flux of the Berry curvature \(\Omega_n\) through the loop:</p>
+      <div class="equation">$$|\Psi(t)\rangle=e^{i\gamma_n(t)}\,e^{-\frac i\hbar\int_0^tE_n\,dt'}\,|n,\mathbf R(t)\rangle,\qquad \mathbf A_n=i\langle n,\mathbf R|\nabla_{\mathbf R}|n,\mathbf R\rangle,\qquad \gamma_n=\oint_C\mathbf A_n\cdot d\mathbf R=\iint_S\Omega_n\,dS,\qquad \Omega_n=\nabla_{\mathbf R}\times\mathbf A_n$$</div>
+      <p>The connection depends on the arbitrary phase of each \(|n,\mathbf R\rangle\), the gauge; the phase around a closed loop and the curvature do not, which is why they can be measured. Here the parameters are first the direction of a magnetic field acting on a spin, then the wavevector \(\mathbf k\) of an electron in a crystal.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-loop" aria-controls="lab" aria-selected="true" data-mode="loop">1 · A spin goes around a loop</button>
+      <button class="tab" role="tab" id="tab-crystal" aria-controls="lab" aria-selected="false" data-mode="crystal" tabindex="-1">2 · Curvature in graphene</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="loop">
+      <h2>Carry a spin slowly around a loop and it comes back with an extra phase.</h2>
+      <p>A spin in a magnetic field lines up with the field. Turn the field slowly around a cone and the spin follows it round. When the field is back where it started, so is the spin, but its quantum state has picked up two phases: an ordinary one that grows with time, and the Berry phase, which depends only on the loop. It is minus half the loop's solid angle, \(-\mathcal S/2\).</p>
+      <p class="notice"><b>What to notice:</b> the green arrow, carried round without turning, comes back turned by the solid angle. The spin's Berry phase is half of that, the other way. Make the loop slower and the measured phase settles on it, however slow you go.</p>
+      <details class="math"><summary>The math</summary>
+        <p>A spin-½ in a field along \(\mathbf n\), \(H=-\tfrac{\hbar\omega_0}{2}\,\mathbf n\cdot\boldsymbol\sigma\), sits in the lower level \(|{+}\mathbf n\rangle\), spin along the field. Turn the field around a cone of half-angle \(\theta\) and, if you go slowly compared with the Larmor period \(2\pi/\omega_0\), the spin follows. Back at the start, the state is the one it began in, times a phase: the dynamical phase \(\omega_0T/2\), and the Berry phase, which does not care how long the trip took, only about the loop: minus half the solid angle \(\mathcal S\) it encloses.</p>
+        <div class="equation">$$\gamma=\oint i\langle{+}\mathbf n|\nabla_{\mathbf n}{+}\mathbf n\rangle\cdot d\mathbf n=-\frac{\mathcal S}{2}=-\pi\,(1-\cos\theta),\qquad |{+}\mathbf n\rangle=\begin{pmatrix}\cos\frac\theta2\\e^{i\varphi}\sin\frac\theta2\end{pmatrix}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="crystal" hidden>
+      <h2>In graphene, the loop is in momentum space.</h2>
+      <p>An electron in a crystal has a wavevector \(\mathbf k\) where the spin had a field direction, and at each \(\mathbf k\) its state points somewhere on a sphere, just as the spin did. Take \(\mathbf k\) around a loop and the electron picks up a Berry phase. The Berry phase per unit area is the <a href="#g-curv">Berry curvature</a>, mapped here over graphene's Brillouin zone. Added up over the whole zone it gives 2π times a whole number, the <a href="#g-chern">Chern number</a>, which counts how many times the electron's states wrap the sphere.</p>
+      <p class="notice"><b>What to notice:</b> follow the black dot round your loop. On the sphere, the electron's state sweeps out an area, and the Berry phase is minus half of it, just as for the spin. On a substrate, the loops around K and K′ sweep the same cap in opposite directions, so they cancel and C = 0. In Haldane's graphene they sweep opposite caps in the same direction: between them they cover the whole sphere, and C = 1, a quantized Hall effect with no magnetic field.</p>
+      <details class="math"><summary>The math</summary>
+        <p>For a band in a crystal, the cell-periodic Bloch state \(|u_{\mathbf k}\rangle\) plays the part of the spin state and the wavevector \(\mathbf k\) that of the field. In a two-band model, \(H(\mathbf k)=d_0+\mathbf d(\mathbf k)\cdot\boldsymbol\sigma\), each \(\mathbf k\) gives a direction \(\mathbf n=\mathbf d/|\mathbf d|\), and the lower band is the spin state pointing against it. So the Berry curvature is half the solid angle that \(\mathbf n\) sweeps per unit area of \(\mathbf k\), and its total over the zone, \(2\pi\) for each time \(\mathbf n\) wraps the sphere, gives the Chern number, which quantizes the Hall conductance of the filled band.</p>
+        <div class="equation">$$\Omega(\mathbf k)=\partial_{k_x}A_y-\partial_{k_y}A_x=\tfrac12\,\mathbf n\cdot\big(\partial_{k_x}\mathbf n\times\partial_{k_y}\mathbf n\big),\qquad C=\frac1{2\pi}\iint_{\rm BZ}\Omega\,d^2k\in\mathbb Z,\qquad |\sigma_{xy}|=|C|\,\frac{e^2}{h}$$</div>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-loop">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="loop">
+        <div class="label-caps">The field's loop</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="thc">Size of the loop: cone angle θ</label><output id="thc-out" for="thc"></output></div>
+          <input id="thc" type="range" min="5" max="175" step="1" value="60"><div class="ctrl__hint" id="thc-hint"></div>
+        </div>
+        <div class="chips" role="group" aria-label="Cone angles">
+          <button class="chip-btn" type="button" data-thc="30">30°</button><button class="chip-btn" type="button" data-thc="90">90°, the equator</button><button class="chip-btn" type="button" data-thc="120">120°</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="loop">
+        <div class="label-caps">How slowly</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="per">Time for one loop</label><output id="per-out" for="per"></output></div>
+          <input id="per" type="range" min="0" max="21" step="1" value="10"><div class="range-ends" aria-hidden="true"><span>fast</span><span>slow</span></div><div class="ctrl__hint">Counted in turns of the spin's own wobble about the field (its Larmor period). Many turns per loop is slow, and the spin keeps up.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="crystal">
+        <div class="label-caps">The crystal</div>
+        <div class="seg" role="group" aria-label="Model" data-deep>
+          <button type="button" data-model="hex" aria-pressed="true">Graphene</button><button type="button" data-model="qwz" aria-pressed="false">Qi–Wu–Zhang</button>
+        </div>
+        <div class="ctrl__hint" id="model-hint"></div>
+        <div id="qwz-ctrls" hidden>
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="qm">Mass m</label><output id="qm-out" for="qm"></output></div>
+            <input id="qm" type="range" min="-3" max="3" step="0.05" value="1">
+          </div>
+          <div class="chips" role="group" aria-label="Qi–Wu–Zhang presets">
+            <button class="chip-btn" type="button" data-preset="qtopo">Topological, m = 1</button><button class="chip-btn" type="button" data-preset="qtriv">Trivial, m = 3</button>
+          </div>
+        </div>
+        <div id="hex-ctrls">
+          <div class="chips" role="group" aria-label="Kinds of graphene">
+            <button class="chip-btn" type="button" data-preset="gapless">Plain graphene</button><button class="chip-btn" type="button" data-preset="gapped">Graphene on a substrate</button><button class="chip-btn" type="button" data-preset="haldane">Haldane's graphene</button>
+          </div>
+          <div class="ctrl">
+            <div class="ctrl__row"><label for="hm">Gap from the substrate: mass M</label><output id="hm-out" for="hm"></output></div>
+            <input id="hm" type="range" min="-1" max="1" step="0.01" value="0.2"><div class="ctrl__hint">A substrate such as boron nitride makes graphene's two carbon sites different, which opens a gap.</div>
+          </div>
+          <div class="ctrl" data-deep>
+            <div class="ctrl__row"><label for="ht2">Haldane hopping t<sub>2</sub></label><output id="ht2-out" for="ht2"></output></div>
+            <input id="ht2" type="range" min="0" max="0.3" step="0.005" value="0">
+          </div>
+          <div class="ctrl" data-deep>
+            <div class="ctrl__row"><label for="hphi">Its phase φ</label><output id="hphi-out" for="hphi"></output></div>
+            <input id="hphi" type="range" min="-180" max="180" step="5" value="90"><div class="ctrl__hint">Energies in units of the nearest-neighbour hopping t.</div>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="crystal">
+        <div class="label-caps">The loop in k-space</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="rad">Radius</label><output id="rad-out" for="rad"></output></div>
+          <input id="rad" type="range" min="0.1" max="2.5" step="0.05" value="0.8"><div class="ctrl__hint">Tap or drag on the map to move it; with the map focused, the arrow keys move it too.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Centre the loop on" id="centres"></div>
+        <div data-deep>
+          <div class="label-caps" style="margin-top:10px">Berry connection arrows</div>
+          <div class="seg" role="group" aria-label="Gauge of the connection">
+            <button type="button" data-gauge="N" aria-pressed="true">Gauge N</button><button type="button" data-gauge="S" aria-pressed="false">Gauge S</button><button type="button" data-gauge="off" aria-pressed="false">Hide</button>
+          </div>
+          <div class="ctrl__hint" id="gauge-hint"></div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <section class="panel" aria-label="Time controls" data-modes="loop">
+        <div class="transport">
+          <button class="btn-play" id="play" type="button">▶ Play</button>
+          <button class="btn-quiet" id="restart" type="button">↺ Start</button>
+          <input id="time" type="range" min="0" max="1000" step="1" value="1000" aria-label="Time, as a fraction of the loop">
+          <div class="transport__time" id="time-out" aria-live="off"></div>
+        </div>
+        <div class="transport__more"><span id="transport-note"></span></div>
+      </section>
+
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" data-modes="crystal" aria-pressed="true">❚❚ Pause</button><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view" id="mag-view">
+          <div class="plot-box plot-box--mag" id="sphere-box"><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="Sphere of directions"></canvas></div>
+          <div class="mag-view__side">
+            <div class="plot-box plot-box--mag" id="dial-box"><canvas id="dial" role="img" aria-label="Phase dial"></canvas></div>
+            <div class="plot-box plot-box--mag" id="map-box" hidden><canvas id="map" class="zone-map" tabindex="0" role="img" aria-label="Berry curvature over the Brillouin zone"></canvas></div>
+          </div>
+        </div>
+        <p class="path-note" id="path-note" data-modes="crystal" hidden></p>
+      </section>
+
+      <div class="note" id="info" role="status"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · A spin's loop</span><button class="predict__load" type="button" data-q="small">Load a small loop</button></div>
+        <p>The field circles a narrow 30° cone, slowly. The loop encloses 6.7% of the sphere, a solid angle of \(0.268\pi\). How far does the green arrow turn, and what Berry phase does the spin pick up?</p>
+        <details><summary>Show answer</summary>
+          <p>The arrow turns by the loop's area: \(0.268\pi\), or 48°. The spin's Berry phase is minus half of that, \(-0.134\pi\), or −24°: about a fifteenth of a turn back. The lab measures \(-0.133\pi\) at 100 wobbles per loop. Small loops give small phases; double the loop's area and the phase doubles too.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · A spin's loop</span><button class="predict__load" type="button" data-q="q1">Load the equator</button></div>
+        <p>The field sweeps once around the equator, slowly. The spin follows it and ends where it began. What Berry phase has it picked up?</p>
+        <details><summary>Show answer</summary>
+          <p>Minus π, half a turn: the state comes back with its sign flipped, \(-|{+}\mathbf n\rangle\). The equator encloses half the sphere, a solid angle of \(2\pi\), and the Berry phase is minus half of that. The lab measures \(-0.995\pi\); the last half per cent comes from going round in a finite time. The green arrow, meanwhile, has turned a full 360° and looks unchanged: a spin's state needs two turns, not one, to come back to itself. The sign flip is real: interfere a neutron whose spin has been carried around with one whose spin has not, and it shows.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · A spin's loop</span><button class="predict__load" type="button" data-q="q2">Load a fast loop</button></div>
+        <p>A 60° cone, whose Berry phase is \(-\pi/2\), a quarter turn. Now go around it fast: in a single turn of the spin's own wobble. What phase do you measure? How much slower must you go to get within 1% of \(-\pi/2\)?</p>
+        <details><summary>Show answer</summary>
+          <p>Only \(-0.245\pi\), about half the Berry phase: the spin cannot keep up, it wobbles around the field, and at one point it has only a 75% chance of pointing along it. Slow down and the phase closes in: \(-0.464\pi\) at 10 turns of the wobble, \(-0.496\pi\) at 100, so about 75 for 1%. The error falls like 1 over the loop time; the chance of the spin leaving the field falls much faster, like 1 over its square, so a spin can look as if it follows long before its phase is right.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Crystals</span><button class="predict__load" type="button" data-q="q7">Load graphene on a substrate</button></div>
+        <p>Graphene on a substrate, such as boron nitride, which makes its two carbon sites different and opens a gap (\(M=0.2\,t\)). The loop around the valley K picks up \(-0.81\pi\). What does a loop around the other valley, K′, pick up? What is the Chern number?</p>
+        <details><summary>Show answer</summary>
+          <p>\(+0.81\pi\), and \(C=0\). Each valley holds a peak of Berry curvature, but the two have opposite signs, as they must in a crystal without magnetism: running time backwards swaps K and K′ and flips the curvature. They cancel, so there is no Hall effect; but electrons in valleys K and K′ are pushed sideways in opposite directions, the valley Hall effect. On the sphere, the two loops sweep the same cap, in opposite directions.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Crystals</span><button class="predict__load" type="button" data-q="shrink">Load a small loop around K</button></div>
+        <p>Same graphene, but shrink the loop around K from radius 0.8 to 0.3: a seventh of the area. How much of the \(-0.81\pi\) is left?</p>
+        <details><summary>Show answer</summary>
+          <p>Nearly three quarters: \(-0.587\pi\). The curvature is not spread evenly; it is piled up close to K, the bottom of the valley, where the gap is smallest. Grow the loop instead, to radius 1, and the phase hardly changes, \(-0.831\pi\): the loop has already caught almost all of the valley's curvature. This is what the red and blue spots on the map show; on the sphere, the curve slides towards the pole and the shaded cap shrinks.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Crystals</span><button class="predict__load" type="button" data-q="plain">Load plain graphene</button></div>
+        <p>Plain graphene, with no substrate: no gap at all, and the curvature map is blank. What Berry phase does a loop around K pick up?</p>
+        <details><summary>Show answer</summary>
+          <p>Exactly π, half a turn. Without a gap, the curvature is zero everywhere except at the valley points K and K′ themselves, where all of it is squeezed into a single point. So any loop around K alone picks up π, however big or small it is, and a loop that misses both valleys picks up nothing. On the sphere you can see why: the electron's state runs round the equator, which encloses exactly half the sphere. This Berry phase of π is why graphene's quantum Hall effect is "half-integer". Give graphene a substrate and the point spreads into the peaks of question 5.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Crystals</span><button class="predict__load" type="button" data-q="q8">Load Haldane's graphene</button></div>
+        <p>Haldane's graphene: no substrate, but an extra hopping between next-nearest neighbours that carries a phase, which breaks time-reversal symmetry with no overall magnetic field. What is \(C\)? Now raise the substrate's mass \(M\): at what value does \(C\) change?</p>
+        <details><summary>Show answer</summary>
+          <p>\(C=1\): the two valleys' curvature now has the same sign. On the sphere, the loops around K and K′ sweep opposite caps in the same direction: between them, the electron's states cover the whole sphere once. \(C\) stays 1 as \(M\) rises, until \(M=0.52\,t\) (that is \(3\sqrt3\,t_2\sin\varphi\)): there the gap closes at K, and above it \(C=0\). A whole number cannot change gradually, so the gap has to close for it to change. That is also why a Chern insulator must conduct along its edges, where it meets the vacuum, which has \(C=0\). The Qi–Wu–Zhang model, under "Go deeper", does the same.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · A spin's loop</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="q3">Load a 120° cone</button></div>
+        <p>Open the cone past the equator, to 120°. The loop now encloses three quarters of the sphere, \(\mathcal S=3\pi\), so is the Berry phase \(-3\pi/2\)? But on its other side the loop also encloses the southern cap, \(\mathcal S=\pi\). Which is right?</p>
+        <details><summary>Show answer</summary>
+          <p>Both: \(-3\pi/2\) and \(+\pi/2\) (the southern cap is traversed the other way round) differ by exactly \(2\pi\), a full turn, so they are the same phase. The lab, which follows the phase continuously around the loop, measures \(-1.496\pi\), the same phase as \(+0.504\pi\). It works only because the two choices of "inside" differ by \(4\pi\), the whole sphere, and the spin's phase is half of that. A spin's Berry curvature is that of a magnetic monopole at the centre of the sphere, and this is Dirac's argument for why the charge of a monopole must be quantized.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook computes Berry phases of spin loops from chains of states, checks that they are gauge invariant, solves the adiabatic spin exactly in the rotating frame, then maps the Berry curvature and computes the Chern numbers of the Qi–Wu–Zhang and Haldane models, with Stokes's theorem checked loop by loop. It needs NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="berry_phase.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 31 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>The spin's loop:</strong> \(H(t)=-\tfrac{\hbar\omega_0}{2}\mathbf n(t)\cdot\boldsymbol\sigma\), with \(\mathbf n\) turning about \(z\) at a constant rate \(\omega=2\pi/T\) on a cone of half-angle \(\theta\). In the frame turning with the field the Hamiltonian is constant, \(H'=H(0)-\tfrac{\hbar\omega}{2}\sigma_z\), so the evolution is exact: \(|\psi(t)\rangle=e^{-i\omega t\sigma_z/2}e^{-iH't/\hbar}|{+}\mathbf n(0)\rangle\), with no time steps. The measured phase is \(\arg\langle{+}\mathbf n(t)|\psi(t)\rangle-\omega_0t/2\), with \(|{+}\mathbf n\rangle\) in the gauge written above, followed continuously in time; it becomes the Berry phase when the trip is slow, and the probability \(|\langle{+}\mathbf n|\psi\rangle|^2\) shows how well the spin is following.</li>
+          <li><strong>The green arrow:</strong> a tangent vector carried along the loop without turning about \(\mathbf n\) (parallel transport on the sphere). Relative to the local direction of decreasing latitude it turns by \(-\cos\theta\) per radian of \(\varphi\), and after a full loop it has turned by the enclosed solid angle \(\mathcal S\) (mod \(2\pi\)), twice the spin's phase and opposite in sign.</li>
+          <li><strong>Berry phases of loops:</strong> as in the video's parallel transport, a loop is cut into a chain of states and \(\gamma=-\arg\prod_j\langle u_j|u_{j+1}\rangle\), with the last state joined back to the first. The product does not depend on the phase chosen for each state, so the result is gauge invariant, and it becomes \(\oint\mathbf A\cdot d\mathbf k\) as the states close up.</li>
+          <li><strong>The sphere in tab 2:</strong> the lower band's state is a pseudospin pointing along \(\mathbf s=-\mathbf d/|\mathbf d|\). Around the loop, \(\mathbf s\) traces a closed curve, and the loop's Berry phase is minus half the solid angle that curve encloses, the same rule as for the spin. The area is swept by a fan of spherical triangles from a point inside the curve, chosen so that it encloses the smaller of the two areas and lies as far from the curve as possible; it agrees with the Berry phase from the chain of states to \(10^{-12}\). Under "Go deeper" the faint paint is the image of the whole zone, a 30 × 30 grid of cells coloured by the sign of \(\Omega\).</li>
+          <li><strong>The crystals:</strong> Qi–Wu–Zhang, \(\mathbf d=(\sin k_x,\ \sin k_y,\ m-\cos k_x-\cos k_y)\), lattice constant 1. The honeycomb: graphene's nearest-neighbour hopping \(t=1\) (carbon–carbon distance 1), \(d_x+id_y=\sum_j e^{i\mathbf k\cdot\boldsymbol\delta_j}\), with the Bloch sums built on the atoms' actual positions (so \(H(\mathbf k)\) is not periodic in the reciprocal lattice; another choice of basis would change the local curvature map, but not the Chern number or the phase of a loop centred on K or K′), a sublattice mass \(M\sigma_z\), and Haldane's next-nearest-neighbour hopping \(t_2e^{\pm i\varphi}\), which gives \(d_0=2t_2\cos\varphi\sum_i\cos\mathbf k\cdot\mathbf b_i\) and adds \(-2t_2\sin\varphi\sum_i\sin\mathbf k\cdot\mathbf b_i\) to \(d_z\). The masses at the Dirac points are \(M\mp3\sqrt3\,t_2\sin\varphi\) at K and K′.</li>
+          <li><strong>Curvature, connection and Chern number:</strong> \(\Omega=\mathbf d\cdot(\partial_{k_x}\mathbf d\times\partial_{k_y}\mathbf d)/2|\mathbf d|^3\) for the lower band, from analytic derivatives. The connection is drawn in two gauges: N, \(|u\rangle=(-e^{-i\phi}\sin\frac\vartheta2,\ \cos\frac\vartheta2)\) with \(\mathbf A_N=\sin^2\frac\vartheta2\,\nabla\phi\), smooth except where \(\mathbf n=-\hat z\); and S, \(\mathbf A_S=\mathbf A_N-\nabla\phi\), smooth except where \(\mathbf n=+\hat z\) (\(\vartheta,\phi\) are the angles of \(\mathbf n\)). The crossed circles mark the vortices, where the gauge fails. The Chern number uses Fukui, Hatsugai and Suzuki's method on a 48 × 48 grid over the unit cell of the reciprocal lattice: the sum of the Berry phases of the small plaquettes, which is an integer by construction. The loop's Berry phase uses 400 states on the circle, doubled until the result settles (with Richardson extrapolation); the flux of \(\Omega\) through it and \(\oint\mathbf A\cdot d\mathbf k\) in the chosen gauge use adaptive Gauss–Kronrod quadrature, which resolves the narrow peaks of curvature near a closing gap. The colour scale of the map follows the bulk of the curvature, so the narrowest peaks saturate.</li>
+          <li><strong>Conventions:</strong> \(\mathbf A=i\langle u|\nabla u\rangle\), as in the video, so a state picks up \(e^{+i\gamma}\) with \(\gamma=\oint\mathbf A\cdot d\mathbf k\), and \(C=\frac1{2\pi}\int\Omega\). With these, the Qi–Wu–Zhang lower band has \(C=-1\) for \(0\lt m\lt2\) and \(+1\) for \(-2\lt m\lt0\); other sources may flip either sign. The sign of the Hall conductance depends further on the sign of the charge and the orientation of the axes, so only \(|\sigma_{xy}|\) is quoted.</li>
+          <li><strong>Checks:</strong> the adiabatic phase converges to \(-\mathcal S/2\) like \(1/T\); a loop's Berry phase agrees with the flux of \(\Omega\) through it (Stokes), mod \(2\pi\), to about \(10^{-6}\) or better, also next to a closing gap; the Chern numbers agree with \(\frac1{2\pi}\int\Omega\) and with the masses at the Dirac points. The notebook repeats the calculation independently and asserts every number quoted in the answers.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="physics.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
