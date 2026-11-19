@@ -108,7 +108,7 @@
     if (!(r > 1e-12)) return { g: [[Infinity, 0], [0, Infinity]], tr: Infinity, det: Infinity, omega: NaN };
     const n = scale(d, 1 / r), nx = scale(add(dx, n, -dot(n, dx)), 1 / r), ny = scale(add(dy, n, -dot(n, dy)), 1 / r);
     const g = [[dot(nx, nx) / 4, dot(nx, ny) / 4], [dot(nx, ny) / 4, dot(ny, ny) / 4]];
-    return { g, tr: g[0][0] + g[1][1], det: g[0][0] * g[1][1] - g[0][1] * g[0][1], omega: dot(n, cross(nx, ny)) / 2 };
+    return { g, tr: g[0][0] + g[1][1], det: Math.max(0, g[0][0] * g[1][1] - g[0][1] * g[0][1]), omega: dot(n, cross(nx, ny)) / 2 };
   }
   // eigenvalues and eigenvectors of a 2×2 symmetric matrix (for the metric's ellipses)
   function eig2(g) {

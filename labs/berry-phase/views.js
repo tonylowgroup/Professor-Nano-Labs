@@ -1,6 +1,8 @@
 /* Pictures for the Berry phase lab: a sphere of directions with loops and tangent arrows (built on the shared
    BlochSphere), a dial for phases, and a map of the Brillouin zone (built on NanoPlot) with the Berry curvature,
-   the Berry connection and a loop that can be dragged. */
+   the Berry connection and a loop that can be dragged.
+   Shared: the quantum metric lab (labs/quantum-metric) uses GeoSphere, PhaseDial and ZoneMap from here too;
+   check it after changing them. */
 (function () {
   'use strict';
   const NOLABELS = { z0: '', z1: '', xp: '', xm: '', yp: '', ym: '' };

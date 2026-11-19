@@ -2,7 +2,7 @@
    arrows and curves on it, and a sequential colour map for the quantum metric. */
 (function () {
   'use strict';
-  const INK = '#14232c', MUTED = '#5f7382', FONT = 'Inter, system-ui, sans-serif', DEG = Math.PI / 180;
+  const INK = '#14232c', FONT = 'Inter, system-ui, sans-serif', DEG = Math.PI / 180;
   const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
   function fitCanvas(canvas, ctx) {

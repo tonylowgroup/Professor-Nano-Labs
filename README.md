@@ -13,9 +13,11 @@ assets/css/lab.css    Shared lab components: controls, stat tiles, plots, questi
 assets/js/hero.js     Homepage wave-packet animation
 assets/js/plot.js     Small canvas plotting helper used by the labs
 assets/js/bloch-sphere.js
-                      Sphere drawing shared by the quantum computing labs and the magnetization lab
+                      Sphere drawing shared by the quantum computing, magnetization and quantum geometry labs
 assets/img/           Favicon and images
-labs/<name>/          One folder per lab: index.html, physics.js, lab.js
+labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some add views.js);
+                      the quantum metric lab has metric.js, and also loads the Berry phase
+                      lab's physics.js and views.js
 ```
 
 ## Labs

@@ -23,9 +23,13 @@
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   const range = (a, b, k) => Array.from({ length: k + 1 }, (_, i) => a + (b - a) * i / k);
   const deg = x => `${fixed(x / DEG, Math.abs(x / DEG) < 10 ? 1 : 0)}°`;
+  // a metric that can run to millions near a closing gap: 2 decimals, 1, or a power of ten
+  const SUPS = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const big = v => { if (!Number.isFinite(v)) return '∞'; if (v < 1e4) return fixed(v, v < 10 ? 2 : 1); const e = Math.floor(Math.log10(v)); return `${(v / Math.pow(10, e)).toFixed(1)} × 10${String(e).split('').map(c => SUPS[c]).join('')}`; };
+  const sig = (x, n = 2) => (x === 0 ? '0' : String(Number(x.toPrecision(n))));
   function stats(items) {
     $('stats').className = `stats stats--${items.length} stats--steady stats--wrap`;
-    $('stats').innerHTML = items.map(([label, value, s2]) => `<div class="stat"><div class="stat__label">${sub(label)}</div><div class="stat__value">${value}</div><div class="stat__sub">${sub(s2)}</div></div>`).join('');
+    $('stats').innerHTML = items.map(([label, value, s2]) => `<div class="stat"><div class="stat__label">${sub(label)}</div><div class="stat__value">${sub(value)}</div><div class="stat__sub">${sub(s2)}</div></div>`).join('');
   }
   function typeset(el) { if (window.MathJax && MathJax.typesetPromise && /\\\(/.test(el.innerHTML)) MathJax.typesetPromise([el]).catch(() => {}); }
   function setHTML(el, html) { if (el.dataset.html === html) return; el.dataset.html = html; el.innerHTML = html; typeset(el); }
@@ -43,9 +47,23 @@
   const reset = pl => { pl.opts.xTickValues = null; pl.opts.xFormat = null; pl.opts.yFormat = null; pl.opts.zeroLine = false; pl.opts.xTicks = 6; pl.opts.yTicks = 5; };
   const cache = new Map();
   function memo(key, fn) { let v; if (cache.has(key)) { v = cache.get(key); cache.delete(key); } else v = fn(); cache.set(key, v); if (cache.size > 40) cache.delete(cache.keys().next().value); return v; }
-  const slerp = (p, q, t) => { const v = [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, p[2] + (q[2] - p[2]) * t], l = Math.hypot(...v) || 1; return v.map(x => x / l); };
   const add3 = (a, b, s = 1) => [a[0] + s * b[0], a[1] + s * b[1], a[2] + s * b[2]];
   const unit3 = v => { const l = Math.hypot(...v) || 1; return v.map(x => x / l); };
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  // the shorter great-circle arc from unit vector p to q; for opposite points, the one through the pole nearest p's side
+  function arc(p, q, n = 40) {
+    const c = clamp(dot3(p, q), -1, 1), w = Math.acos(c);
+    let t = add3(q, p, -c);
+    if (Math.hypot(...t) < 1e-6) { const z = Math.abs(p[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0]; t = add3(z, p, -dot3(z, p)); }
+    t = unit3(t);
+    return range(0, w, n).map(a => add3(p.map(x => x * Math.cos(a)), t, Math.sin(a)));
+  }
+  // split a curve on the sphere wherever it jumps, so that a jump is not drawn as a chord through the sphere
+  function pieces(pts, jump = 0.35) {
+    const out = [[pts[0]]];
+    for (let i = 1; i < pts.length; i++) { if (Math.acos(clamp(dot3(pts[i - 1], pts[i]), -1, 1)) > jump) out.push([]); out[out.length - 1].push(pts[i]); }
+    return out.filter(c => c.length > 1);
+  }
   const ellipsePts = (c, W, rx, n = 28) => Array.from({ length: n + 1 }, (_, j) => { const t = TAU * j / n, a = rx * Math.cos(t), b = rx * Math.sin(t); return [c[0] + W[0][0] * a + W[0][1] * b, c[1] + W[1][0] * a + W[1][1] * b]; });
 
   // ---------- the animation: a dot goes round (or along) once, then a pause on the finished picture ----------
@@ -104,7 +122,7 @@
         const a = Math.atan2(cr[0] * Fj.N[0] + cr[1] * Fj.N[1] + cr[2] * Fj.N[2], e[0] * s.v[0] + e[1] * s.v[1] + e[2] * s.v[2]);
         acc = j ? acc + B.wrap(a - prev) : a; prev = a; ang.push(acc);
       });
-      return { Sf, eps, pts, T, F, K: QM.curvature(Sf, S.u), intK: QM.curvatureInside(Sf, S.u, eps), ang };
+      return { Sf, eps, pts, loop3: pts.map(p => Sf.r(...p)), T, F, K: QM.curvature(Sf, S.u), intK: QM.curvatureInside(Sf, S.u, eps), ang };
     });
   }
   // how the turn grows with the size of the loop
@@ -120,8 +138,8 @@
     });
   }
   function surfaceFrame(f) {
-    const X = surfData(), Sf = X.Sf, N = X.pts.length, j = Math.min(N, Math.round(f * N)), step = X.T.steps[j], L = 0.38;
-    const loop3 = X.pts.map(p => Sf.r(...p)), traced = loop3.slice(0, j + 1);
+    const X = surfData(), N = X.pts.length, j = Math.min(N, Math.round(f * N)), step = X.T.steps[j], L = 0.38;
+    const loop3 = X.loop3, traced = loop3.slice(0, j + 1);
     if (f >= 0.999) traced.push(loop3[0]);
     const s0 = X.T.steps[0], e1 = unit3(X.F.e1), e2 = unit3(X.F.e2);
     surf.draw(Object.assign({}, surfMesh(S.surf), {
@@ -143,7 +161,11 @@
     // the chart: the metric's ellipses everywhere, the loop and the point
     plane.opts.xLabel = Sf.u[0]; plane.opts.yLabel = Sf.u[1];
     plane.fit(Sf.box);
-    const [a0, a1, b0, b1] = Sf.box, layers = [], de = 0.05 * Math.min(a1 - a0, b1 - b0);
+    const [a0, a1, b0, b1] = Sf.box, de = 0.05 * Math.min(a1 - a0, b1 - b0), OFF = 'rgba(95, 115, 130, .13)';
+    const layers = [
+      { type: 'hband', y0: plane.yr[0], y1: b0, color: OFF }, { type: 'hband', y0: b1, y1: plane.yr[1], color: OFF },
+      { type: 'vband', x0: plane.xr[0], x1: a0, color: OFF }, { type: 'vband', x0: a1, x1: plane.xr[1], color: OFF },
+    ];
     for (let i = 0; i < 8; i++) for (let jj = 0; jj < 6; jj++) {
       const c = [a0 + (a1 - a0) * (i + 0.5) / 8, b0 + (b1 - b0) * (jj + 0.5) / 6], W = QM.invSqrt(QM.frame(Sf, c).g), pts = ellipsePts(c, W, de);
       layers.push({ type: 'line', x: pts.map(p => p[0]), y: pts.map(p => p[1]), color: 'rgba(148, 102, 0, .55)', width: 1.4 });
@@ -164,8 +186,8 @@
       [`${sym('∬K dA')} inside`, `${fixed(X.intK, 4)} rad`, `Gauss–Bonnet; K × πε² = ${fixed(X.K * area, 4)}`],
     ]);
     setHTML($('dg-title'), `A ${Sf.name.toLowerCase()}, its chart, and an arrow carried round a loop`);
-    put('dg-cap', deep ? 'On the chart, in coordinates (u¹, u²): the faint ellipses are the steps g_{ij}du^idu^j = const, the black ellipse the loop, ε on the surface. On the surface: the coordinate tangent vectors e₁ and e₂ (gold) at the point, and an arrow parallel-transported round the loop (green; dashed, where it started). Drag the surface to turn it; drag on the chart to move the point.'
-      : 'On the chart, each faint ellipse holds the steps that cover the same short distance on the surface; the black one is your loop. On the surface, the gold arrows point along the chart\'s two directions, and the green arrow is slid round the loop without ever being turned. Compare it with the dashed one it started as. Drag the surface to turn it; drag on the chart to move the point.');
+    put('dg-cap', deep ? 'On the chart, in coordinates (u¹, u²): the faint ellipses are the steps with g_{ij} du<sup>i</sup> du<sup>j</sup> = const, the black ellipse the loop, ε on the surface; the shaded margins lie beyond the chart. On the surface: the coordinate tangent vectors e₁ and e₂ (gold) at the point, and an arrow parallel-transported round the loop (green; dashed, where it started). Drag the surface to turn it; drag on the chart to move the point.'
+      : 'On the chart, each faint ellipse holds the steps that cover the same short distance on the surface; the black one is your loop. The shaded margins lie beyond the chart. On the surface, the gold arrows point along the chart\'s two directions, and the green arrow is slid round the loop without ever being turned. Compare it with the dashed one it started as. Drag the surface to turn it; drag on the chart to move the point.');
     legend('dg-legend', [[GOLD, '', 'equal distances, and the chart\'s directions'], [INK, '', 'the loop'], [GREEN, '', 'arrow slid round without turning']]);
     // plot A: the arrow's angle on its way round
     reset(plotA);
@@ -189,7 +211,7 @@
       { type: 'dots', x: [X.eps], y: [X.T.turn / DEG], color: INK, r: 5 },
     ]);
     setHTML($('pb-title'), 'Bigger loops turn the arrow more');
-    put('pb-cap', `The turn after one loop against the loop's size (green), and curvature × area, K πε², the rule for small loops (gold). ${kind === 'flat' ? 'Here the surface is flat: no loop turns the arrow.' : 'Small loops follow the rule; big ones feel how the curvature changes across them.'}`);
+    put('pb-cap', `The turn after one loop against the loop's size (green), and curvature × area, K πε², the rule for small loops (gold). ${kind === 'flat' ? 'Here the surface is flat: no loop turns the arrow.' : S.surf === 'sphere' ? 'On the sphere the curvature is 1 everywhere, so the turn is exactly the area the loop encloses; bigger loops leave the gold line only because the area they enclose is not quite πε².' : 'Small loops follow the rule; bigger ones enclose a little more or less than πε², and the curvature changes across them.'}`);
     legend('pb-legend', [[GREEN, '', 'turn'], [GOLD, 'swatch--dash', 'curvature × area'], [INK, '', 'this loop']]);
     setHTML($('info'), kind === 'flat'
       ? `<b>The arrow comes back exactly as it left.</b> ${S.surf === 'cylinder' ? 'A cylinder is a rolled-up sheet: unroll it and its metric, and so its distances, are those of a flat sheet. It is curved in space, but not to anyone living on it.' : 'On a flat sheet, an arrow slid round any loop comes back unturned.'}`
@@ -223,20 +245,20 @@
     const X = stateData(), j = Math.round(f * NST), n = X.ns[j], n0 = X.ns[0];
     const loop = X.ns, traced = X.ns.slice(0, j + 1);
     // the shortest way back to the start, on the sphere ("as the crow flies")
-    const crowPath = range(0, 1, 40).map(t => slerp(n0, n, t));
+    const crowPath = arc(n0, n), near = dot3(n, n0) > 0.985;
     bloch.draw({
       curves: [{ pts: loop, color: GOLD, width: 1.8, dash: [5, 4] }, { pts: traced, color: INK, width: 2.8 }].concat(j > 0 && j < NST ? [{ pts: crowPath, color: BLUE, width: 1.8, dash: [3, 3] }] : []),
-      arrows: [{ v: n0, color: GREY, width: 2.4 }, { v: n, color: BLUE, width: 3.2, label: 'ψ' }],
+      arrows: [{ v: n0, color: GREY, width: 2.4 }, { v: n, color: BLUE, width: 3.2, label: near ? '' : 'ψ' }],
       dots: [{ v: n0, color: INK, r: 4, ring: true }],
-      tags: [{ v: n0.map(x => x * 1.18), text: 'ψ₀', color: MUTED, size: 12.5 }],
+      tags: [{ v: n0.map(x => x * 1.18), text: near ? 'ψ = ψ₀' : 'ψ₀', color: near ? BLUE : MUTED, size: 12.5 }],
       caption: `travelled ${fixed(X.od[j], 3)} · from the start ${fixed(X.crow[j], 3)}`,
     });
     const o = B.ov(X.st[0], X.st[j]);
-    dial.draw({ arrows: [{ z: [o[0], o[1]], color: BLUE, width: 3.2, label: '⟨ψ₀|ψ⟩' }], caption: `|⟨ψ₀|ψ⟩|² = ${fixed(o[0] * o[0] + o[1] * o[1], 3)}` });
+    dial.draw({ arrows: [{ z: [o[0], o[1]], color: BLUE, width: 3.2 }], caption: `|⟨ψ₀|ψ⟩|² = ${fixed(o[0] * o[0] + o[1] * o[1], 3)}` });
     $('dial').setAttribute('aria-label', `The overlap with the starting state: length ${fixed(Math.hypot(o[0], o[1]), 3)}`);
     // live numbers in the stats
     const live = $('stats').querySelectorAll('.stat__value');
-    if (live.length) { live[0].textContent = fixed(X.d2[j], 3); live[1].textContent = fixed(X.od[j], 3); }
+    if (live.length) { live[0].textContent = fixed(X.crow[j], 3); live[1].textContent = fixed(X.od[j], 3); }
     reset(plotA);
     plotA.opts.xLabel = 'Fraction of the way round'; plotA.opts.yLabel = 'Quantum distance';
     plotA.setRange([0, 1], [0, Math.max(X.length, 0.2) * 1.08]);
@@ -250,19 +272,21 @@
   }
   function renderStates() {
     const X = stateData();
+    // a phase is only defined up to 2π: past −π, say which smaller phase it equals
+    const wrapNote = X.berry < -PI - 1e-9 ? `; the same as +${piTxt(X.berry + TAU)}` : '';
     if (!deep) stats([
-      ['Distance from the start', '', '1 − |⟨ψ₀|ψ⟩|²: 0 for the same state, 1 for the opposite one'],
+      ['Distance from the start', '', 'arccos|⟨ψ₀|ψ⟩|: 0 for the same state, π/2 = 1.571 for the opposite one'],
       ['Distance travelled', '', `the odometer; the whole loop is ${fixed(X.length, 3)}`],
-      ['Berry phase of the loop', piTxt(X.berry), 'its twist, from card 1: −½ the area inside'],
+      ['Berry phase of the loop', piTxt(X.berry), `its twist, from card 1: −½ the solid angle inside${wrapNote}`],
     ]);
     else stats([
-      [`${sym('1 − |⟨ψ₀|ψ⟩|²')}`, '', 'infidelity with the start'],
+      [`${sym('arccos|⟨ψ₀|ψ⟩|')}`, '', 'from the start; its sine, √(1 − |⟨ψ₀|ψ⟩|²), is the video\'s d, and the two agree for nearby states'],
       ['Arc length so far', '', `Σ arccos|⟨ψ_j|ψ_{j+1}⟩|; loop: π sin θ = ${fixed(X.length, 4)}`],
-      ['Metric on the loop', `${sym('g')}_φφ = ${fixed(Math.sin(X.th) ** 2 / 4, 3)}`, 'ds² = ¼(dθ² + sin²θ dφ²): a sphere of radius ½'],
-      ['Berry phase', piTxt(X.berry), `Ω_θφ = ½ sin θ; Q = g − (i/2)Ω`],
+      ['Metric on the loop', `${sym('g')}_{φφ} = ${fixed(Math.sin(X.th) ** 2 / 4, 3)}`, 'ds² = ¼(dθ² + sin²θ dφ²): a sphere of radius ½'],
+      ['Berry phase', piTxt(X.berry), `Ω_{θφ} = −½ sin θ; Q = g − (i/2)Ω${wrapNote}`],
     ]);
     setHTML($('dg-title'), 'A state goes round a loop: distance and odometer');
-    put('dg-cap', 'On the Bloch sphere, the state ψ (blue) goes round the dashed loop from ψ₀; the blue dashed arc is the shortest way back to the start. On the dial: the overlap ⟨ψ₀|ψ⟩, a complex number. Its length sets the distance from the start; its direction is the phase, which depends on the phase chosen for each state.');
+    put('dg-cap', 'On the Bloch sphere, the state ψ (blue) goes round the dashed loop from ψ₀; the blue dashed arc is the shortest way back to the start. On the dial: the overlap ⟨ψ₀|ψ⟩, a complex number. Its length sets the distance from the start, arccos|⟨ψ₀|ψ⟩|; its direction is the phase, which depends on the phase chosen for each state.');
     legend('dg-legend', [[BLUE, '', 'the state now, and the shortest way back'], [INK, '', 'the path travelled'], [GOLD, 'swatch--dash', 'the loop']]);
     setHTML($('pa-title'), 'As the crow flies, and along the road');
     put('pa-cap', `The quantum distance from the start, arccos|⟨ψ₀|ψ⟩| (blue), rises and falls; the distance travelled (black) only grows, to π sin θ = ${fixed(X.length, 3)} for the whole loop.`);
@@ -284,7 +308,7 @@
     $('reroll').hidden = S.cg !== 'random';
     setHTML($('info'), S.cg === 'random'
       ? '<b>Scrambled phases: the overlap\'s arrow jumps about, but its length does not.</b> The distance from the start, the odometer and the Berry phase are exactly as before: none of them depends on the phase given to each state.'
-      : `<b>Round a ${S.thc}° cone, the state travels ${fixed(X.length, 3)}${Math.abs(S.thc - 90) < 0.5 ? ', the longest loop there is: π, the equator of a sphere of radius ½' : ''}.</b> Half way round it is ${fixed(1 - QM.overlap2(X.st[0], X.st[NST / 2]), 3)} from the start${Math.abs(S.thc - 90) < 0.5 ? ', as far as two states can be' : ''}; back at the start, 0, while the odometer keeps the whole length.`);
+      : `<b>Round a ${S.thc}° cone, the state travels ${fixed(X.length, 3)}${Math.abs(S.thc - 90) < 0.5 ? ', the longest of these loops: π, the equator of a sphere of radius ½' : ''}.</b> Half way round it is ${fixed(X.crow[NST / 2], 3)} from the start${Math.abs(S.thc - 90) < 0.5 ? ', π/2, as far as two states can be' : ''}; back at the start, 0, while the odometer keeps the whole length.`);
     setHTML($('takeaway'), '<b>Distance and twist are the two halves of quantum geometry.</b> The quantum metric measures how far a state moves; the Berry curvature, how much it twists. Together they make the quantum geometric tensor, Q = g − (i/2)Ω.');
     $('path-note').hidden = true;
     $('bloch').setAttribute('aria-label', `A state going round a ${S.thc}° cone on the Bloch sphere`);
@@ -318,25 +342,30 @@
       const md = model(), P = pathPoints(), ps = QM.pathStates(md, P.pts), dirs = P.pts.map(k => B.stateDir(md, k));
       const mK = S.hm - 3 * S3 * S.ht2 * Math.sin(S.hphi * DEG), mKp = S.hm + 3 * S3 * S.ht2 * Math.sin(S.hphi * DEG);
       let gap = Infinity;
-      for (let i = 0; i < 60; i++) for (let j = 0; j < 60; j++) { const [o, a, b] = B.cell(md), k = [o[0] + (a[0] * i + b[0] * j) / 60, o[1] + (a[1] * i + b[1] * j) / 60]; gap = Math.min(gap, 2 * Math.hypot(...B.dvec(md, k).d)); }
+      const [o, a, b] = B.cell(md);
+      for (let i = 0; i < 40; i++) for (let j = 0; j < 40; j++) { const k = [o[0] + (a[0] * i + b[0] * j) / 40, o[1] + (a[1] * i + b[1] * j) / 40]; gap = Math.min(gap, 2 * Math.hypot(...B.dvec(md, k).d)); }
       gap = Math.min(gap, 2 * Math.abs(mK), 2 * Math.abs(mKp));
-      return { md, P, dist: ps.dist, dirs, mK, mKp, gap, trK: QM.metric(md, [KX, 0]).tr };
+      // where the gap is closed (a valley whose mass is zero), and the largest single step of the odometer
+      const zK = Math.abs(mK) < 1e-6, zKp = Math.abs(mKp) < 1e-6, shut = zK && zKp ? 'both' : zK ? 'K' : zKp ? 'K′' : '';
+      let jump = 0;
+      for (let i = 1; i <= NP; i++) jump = Math.max(jump, ps.dist[i] - ps.dist[i - 1]);
+      return { md, P, dist: ps.dist, dirs, pieces: pieces(dirs), mK, mKp, gap, shut, jump, trK: QM.metric(md, [KX, 0]).tr, trKp: QM.metric(md, [KX / 2, 2 * PI / 3]).tr };
     });
   }
   function grapheneFrame(f) {
     const X = grapheneData(), j = Math.round(f * NP), k = X.P.pts[j], G = QM.metric(X.md, k), cur = X.dirs[j];
     sphereR.draw({
-      curves: [{ pts: X.dirs, color: GREY, width: 1.4, dash: [4, 4] }, { pts: X.dirs.slice(0, j + 1), color: INK, width: 2.8 }],
+      curves: X.pieces.map(p => ({ pts: p, color: GREY, width: 1.4, dash: [4, 4] })).concat(pieces(X.dirs.slice(0, j + 1)).map(p => ({ pts: p, color: INK, width: 2.8 }))),
       arrows: [{ v: cur, color: INK, width: 3, label: 'state' }],
       dots: [{ v: X.dirs[0], color: INK, r: 4, ring: true }],
       tags: [{ v: [0, 0, 1], text: 'atom A', color: MUTED, size: 11.5, bold: false, dx: -30, dy: -9 }, { v: [0, 0, -1], text: 'atom B', color: MUTED, size: 11.5, bold: false, dx: -30, dy: 9 }].filter(t => t.v[2] * cur[2] < 0.85),
       caption: `travelled ${fixed(X.dist[j], 3)}`,
-      notes: [{ text: 'quantum distance = ½ × length on the sphere', bold: true }, { text: `metric here: tr g = ${Number.isFinite(G.tr) ? fixed(G.tr, G.tr < 10 ? 2 : 1) : '∞'}` }],
+      notes: [{ text: 'quantum distance = ½ × length on the sphere', bold: true }, { text: `metric here: tr g = ${big(G.tr)}` }],
     });
     plane.overlay = Object.assign({}, plane.overlay, { tracer: { k, color: INK } });
     plane.draw(plane.layers);
     const live = $('stats').querySelectorAll('.stat__value');
-    if (live.length) { live[0].textContent = Number.isFinite(G.tr) ? fixed(G.tr, G.tr < 10 ? 2 : 1) : '∞'; live[1].textContent = fixed(X.dist[j], 3); if (deep && live.length > 3) live[2].textContent = Number.isFinite(G.det) ? `${fixed(Math.sqrt(G.det), 3)} = ${fixed(Math.abs(G.omega) / 2, 3)}` : '∞'; }
+    if (live.length) { live[0].textContent = big(G.tr); live[1].textContent = fixed(X.dist[j], 3); if (deep && live.length > 3) live[2].textContent = Number.isFinite(G.det) ? `${fixed(Math.sqrt(Math.max(0, G.det)), 3)} = ${fixed(Math.abs(G.omega) / 2, 3)}` : '∞'; }
     reset(plotA);
     plotA.opts.xLabel = 'Along the path'; plotA.opts.yLabel = 'Quantum distance travelled';
     plotA.opts.xTickValues = X.P.marks.map(m => m[0]); plotA.opts.xFormat = v => { const m = X.P.marks.find(q => Math.abs(q[0] - v) < 1e-9); return m ? m[1] : ''; };
@@ -349,17 +378,18 @@
     ]));
   }
   function renderGraphene() {
-    const X = grapheneData(), md = X.md, closed = X.gap < 1e-6;
+    const X = grapheneData(), md = X.md, closed = !!X.shut, plain = S.hm === 0 && S.ht2 === 0;
+    const where = X.shut === 'both' ? 'both valleys' : X.shut, atK = X.shut === 'both' || X.shut === 'K';
     // the map: tr g, its ellipses, the path
     plane.opts.xLabel = 'Wavevector kx'; plane.opts.yLabel = 'Wavevector ky';
     plane.fit(BOX);
     const box = [plane.xr[0], plane.xr[1], plane.yr[0], plane.yr[1]];
     const heat = memo(`heat|${mkey()}|${box.map(v => v.toFixed(3)).join(',')}`, () => {
       const vals = [];
-      for (let i = 0; i < 60; i++) for (let j = 0; j < 60; j++) { const v = QM.metric(md, [box[0] + (box[1] - box[0]) * (i + 0.5) / 60, box[2] + (box[3] - box[2]) * (j + 0.5) / 60]).tr; if (Number.isFinite(v)) vals.push(v); }
+      for (let i = 0; i < 40; i++) for (let j = 0; j < 40; j++) { const v = QM.metric(md, [box[0] + (box[1] - box[0]) * (i + 0.5) / 40, box[2] + (box[3] - box[2]) * (j + 0.5) / 40]).tr; if (Number.isFinite(v)) vals.push(v); }
       vals.sort((a, b) => a - b);
       const p97 = vals.length ? vals[Math.floor(0.97 * (vals.length - 1))] : 1;
-      return MV.seqCanvas((x, y) => QM.metric(md, [x, y]).tr, box, 150, Math.round(150 * (box[3] - box[2]) / (box[1] - box[0])), Math.max(0.6 * p97, 1e-9));
+      return MV.seqCanvas((x, y) => QM.metric(md, [x, y]).tr, box, 110, Math.round(110 * (box[3] - box[2]) / (box[1] - box[0])), Math.max(0.6 * p97, 1e-9));
     });
     const layers = [{ type: 'image', canvas: heat, x0: box[0], x1: box[1], y0: box[2], y1: box[3], smooth: true }];
     // ellipses: axes along g's eigenvectors, proportional to √eigenvalue (how far the state moves for a fixed step)
@@ -378,47 +408,52 @@
     layers.push({ type: 'line', x: X.P.pts.map(p => p[0]), y: X.P.pts.map(p => p[1]), color: BLUE, width: 2.4 });
     plane.layers = layers;
     plane.overlay = { zone: HEX, points: POINTS };
-    const trTxt = Number.isFinite(X.trK) ? fixed(X.trK, X.trK < 10 ? 2 : 1) : '∞';
+    const trTxt = big(X.trK);
     if (!deep) stats([
       ['Quantum metric at the dot', '', `tr g; at the valley K: ${trTxt}`],
       ['Distance travelled', '', `along the whole path: ${fixed(X.dist[NP], 3)}`],
-      ['Gap', `${fixed(X.gap, 3)} t`, closed ? 'closed: plain graphene' : 'smallest energy gap between the bands'],
+      ['Gap', `${fixed(X.gap, 3)} t`, closed ? (plain ? 'closed: plain graphene' : `closed at ${where}`) : 'smallest energy gap between the bands'],
     ]);
     else stats([
       [`${sym('tr g')} at the dot`, '', `at K: ${trTxt}${S.ht2 === 0 && X.mK !== 0 ? ` = v²/2M² with v = 3/2` : ''}`],
       ['Distance travelled', '', `Σ arccos|⟨u_j|u_{j+1}⟩|; whole path ${fixed(X.dist[NP], 4)}`],
       [`${sym('√det g')} = ${sym('|Ω|/2')}`, '', 'exact for two bands, so tr g ≥ |Ω|'],
-      ['Gap', `${fixed(X.gap, 3)} t`, `masses at K and K′: ${fixed(X.mK, 3)}, ${fixed(X.mKp, 3)}`],
+      ['Gap', `${fixed(X.gap, 3)} t`, `smallest direct gap; masses at K and K′: ${fixed(X.mK, 3)}, ${fixed(X.mKp, 3)}`],
     ]);
     setHTML($('dg-title'), 'The quantum metric over graphene\'s Brillouin zone');
-    put('dg-cap', deep ? 'On the map: tr g of the lower band (darker is larger; saturating at the strongest peaks) and the metric\'s ellipses, axes along the eigenvectors of g, proportional to √eigenvalue; the blue line is the path. On the sphere: the state\'s direction s = −d/|d| along the path; ds = ½|dŝ|, so the quantum distance is half the length of the curve on the Bloch sphere.'
-      : 'On the map: the quantum metric (darker where it is larger) over graphene\'s Brillouin zone, with the valleys K and K′ at its corners. Each small ellipse shows how far the electron\'s state moves for a short step in each direction: bigger ellipses, faster change. The black dot runs along the blue path. On the sphere: where the state points at the dot. The distance it travels is half the length of its path on the sphere.');
+    put('dg-cap', deep ? 'On the map: tr g of the lower band (darker is larger; saturating at the strongest peaks) and the metric\'s ellipses, axes along the eigenvectors of g, proportional to √eigenvalue (the distance a fixed step covers: the reverse of tab 1\'s ellipses, which hold the steps covering a fixed distance); the blue line is the path. On the sphere: the state\'s direction s = −d/|d| along the path; ds = ½|dŝ|, so the quantum distance is half the length of the curve on the Bloch sphere.'
+      : 'On the map: the quantum metric (darker where it is larger) over graphene\'s Brillouin zone, with the valleys K and K′ at its corners. Each small ellipse shows how far the electron\'s state moves for a short step in each direction: bigger ellipses, faster change. (In tab 1 it was the other way round: each ellipse held the steps that go a fixed distance.) The black dot runs along the blue path. On the sphere: where the state points at the dot. The distance it travels is half the length of its path on the sphere.');
     legend('dg-legend', [[GOLD, 'swatch--area', 'quantum metric'], [INK, '', 'how far the state moves per step'], [BLUE, '', 'the path']]);
-    setHTML($('pa-title'), closed && S.path === 'across' ? 'The odometer jumps at K' : 'The distance piles up near the valleys');
-    put('pa-cap', `The quantum distance travelled along the path, ${X.P.name}. It grows fastest where the metric is largest${closed ? '; in plain graphene the state flips at K, a jump of π/2' : ', near the valleys'}.`);
+    const jumps = closed && (S.path === 'tour' || atK);
+    setHTML($('pa-title'), !jumps ? 'The distance piles up near the valleys' : S.path === 'across' ? 'The odometer jumps at K' : 'The odometer jumps at the valleys');
+    put('pa-cap', `The quantum distance travelled along the path, ${X.P.name}. It grows fastest where the metric is largest${!jumps ? ', near the valleys' : S.path === 'across' ? '; with no gap at K the state flips there, a jump of π/2' : `; with no gap at ${X.shut === 'both' ? 'the valleys it jumps at each' : `${where} it jumps there`}, by up to ${fixed(X.jump, 3)}`}.`);
     legend('pa-legend', [[INK, '', 'distance travelled']]);
     // plot B: the metric at K against the mass there
     reset(plotB);
-    const ms = range(Math.log10(0.02), 0, 60).map(v => Math.pow(10, v)), lineY = ms.map(m => Math.log10(2.25 / (2 * m * m)));
+    // masses from 0.01 to 3 cover every setting of the sliders (|M| ≤ 1, 3√3 t₂ ≤ 1.56)
+    const MLO = 0.01, MHI = 3, ms = range(Math.log10(MLO), Math.log10(MHI), 60).map(v => Math.pow(10, v)), lineY = ms.map(m => Math.log10(2.25 / (2 * m * m)));
     plotB.opts.xLabel = 'Mass at the valley, |m| (units of t)'; plotB.opts.yLabel = 'Metric at the valley, tr g';
-    const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴' }, lf = v => (Math.abs(v - Math.round(v)) < 1e-6 ? (Math.round(v) === 0 ? '1' : Math.round(v) === 1 ? '10' : `10${String(Math.round(v)).split('').map(c => SUP[c]).join('')}`) : '');
+    const lf = v => (Math.abs(v - Math.round(v)) < 1e-6 ? (Math.round(v) === 0 ? '1' : Math.round(v) === 1 ? '10' : `10${String(Math.round(v)).split('').map(c => SUPS[c]).join('')}`) : '');
     plotB.opts.xTickValues = [-2, -1, 0]; plotB.opts.xFormat = v => (v === -2 ? '0.01' : v === -1 ? '0.1' : '1'); plotB.opts.yFormat = lf;
-    plotB.setRange([Math.log10(0.02), 0], [0, 4]);
+    plotB.setRange([Math.log10(MLO), Math.log10(MHI)], [-1, 4.4]);
     const LB = [{ type: 'line', x: ms.map(Math.log10), y: lineY, color: GOLD, width: 2.2 }];
-    if (Math.abs(X.mK) > 1e-9) LB.push({ type: 'dots', x: [Math.log10(clamp(Math.abs(X.mK), 0.02, 1))], y: [Math.log10(X.trK)], color: INK, r: 5.5 });
-    else LB.push({ type: 'text', x: -0.85, y: 3.6, text: 'm = 0: the metric at K is infinite', color: MUTED, size: 12 });
+    if (Math.abs(X.mK) >= MLO) LB.push({ type: 'dots', x: [Math.log10(Math.abs(X.mK))], y: [Math.log10(X.trK)], color: INK, r: 5.5 });
+    else LB.push({ type: 'text', x: -0.75, y: 4.2, text: Math.abs(X.mK) < 1e-6 ? 'm = 0: the metric at K is infinite' : `|m| = ${fixed(Math.abs(X.mK), 4)}: off the scale`, color: MUTED, size: 12 });
     plotB.draw(LB);
     setHTML($('pb-title'), 'Halve the gap, four times the metric');
-    put('pb-cap', `The quantum metric at the valley K against the mass there, on log scales: tr g = v²/2m², with v = 3/2 t (gold). The dot is this graphene${S.ht2 ? ', whose mass at K is m = M − 3√3 t_2 sin φ' : ''}. As the gap closes the metric blows up: the signature of a quantum phase transition.`);
+    put('pb-cap', `The quantum metric at the valley K against the mass there, on log scales: tr g = v²/2m², with v = 3/2 t (gold). The dot is this graphene${S.ht2 ? ', whose mass at K is m = M − 3√3 t_2 sin φ' : ''}. As the gap closes the metric blows up: a signature of a quantum phase transition.`);
     legend('pb-legend', [[GOLD, '', 'v²/2m²'], [INK, '', 'this graphene']]);
+    const head = plain ? 'Plain graphene: no gap, and the metric is infinite at K and K′.' : `The gap is closed at ${where}, and the metric is infinite there.`;
     setHTML($('info'), closed
-      ? `<b>Plain graphene: no gap, and the metric is infinite at K.</b> ${S.path === 'across' ? 'Crossing K the state flips at once to an orthogonal one, so the odometer jumps by π/2, the largest step there is.' : 'Wherever the path crosses a valley, the state flips and the odometer jumps by π/2.'}`
-      : `<b>The metric is largest at the valleys: tr g = ${trTxt} at K.</b> There the gap is smallest, and the state turns quickly from one carbon atom to the other as k moves: over a distance of about |m|/v = ${fixed(Math.abs(X.mK) / 1.5, 2)} in k.`);
+      ? `<b>${head}</b> ${S.path === 'across'
+        ? (atK ? 'Crossing K the state flips at once to an orthogonal one, so the odometer jumps by π/2, the largest step there is.' : `This path crosses K, where the gap is open (mass ${fixed(X.mK, 3)}), so the distance grows smoothly; go round the zone to pass through K′.`)
+        : `Where the path turns its corner at ${X.shut === 'both' ? 'each valley' : X.shut}, the state changes at once, by ${fixed(X.jump, 3)}: less than the π/2 of going straight through, because the path turns there.`}`
+      : `<b>The metric is largest at the valleys: tr g = ${Math.abs(Math.abs(X.mK) - Math.abs(X.mKp)) < 1e-9 ? `${trTxt} at K and K′` : `${trTxt} at K and ${big(X.trKp)} at K′`}.</b> There the gap is smallest, and the state changes fastest as k moves: within about |m|/v = ${sig(Math.min(Math.abs(X.mK), Math.abs(X.mKp)) / 1.5)} of ${Math.abs(X.mK) <= Math.abs(X.mKp) ? 'K' : 'K′'} it tilts half way from sitting wholly on one carbon atom toward an equal share of both.`);
     setHTML($('path-note'), sub(deep
       ? '<b>Metric and curvature together.</b> For two bands, g_{ij} = ¼ ∂_in·∂_jn and Ω = ½ n·(∂_xn × ∂_yn), so √det g = |Ω|/2 exactly and tr g ≥ |Ω|: wherever the Berry curvature of card 1 is large, the metric is at least as large. The quantum geometric tensor Q = g − (i/2)Ω holds both.'
-      : '<b>Metric and curvature go together.</b> Where the state changes fast, near the valleys, the Berry curvature of card 1 is large too: for graphene the metric is never smaller than the curvature, and the two are tied exactly, √det g = |Ω|/2.'));
+      : '<b>Metric and curvature go together, one way round.</b> Wherever the Berry curvature of card 1 is large, the metric is at least as large: for graphene tr g ≥ |Ω|, and √det g = |Ω|/2 exactly. Not the other way: with no gap, the curvature is zero away from the valleys, yet the metric near them is large.'));
     $('path-note').hidden = false;
-    setHTML($('takeaway'), '<b>The quantum metric measures how fast a band\'s states change with k.</b> It piles up where the gap is small and blows up as the gap closes; in flat-band materials such as twisted bilayer graphene it even decides whether the electrons can superconduct.');
+    setHTML($('takeaway'), '<b>The quantum metric measures how fast a band\'s states change with k.</b> It piles up where the gap is small and blows up as the gap closes; in flat-band materials such as twisted bilayer graphene it sets a floor on the superfluid weight, how freely paired electrons can flow, and so helps them superconduct.');
     $('plane').setAttribute('aria-label', `The quantum metric of graphene over the Brillouin zone, with a path ${X.P.name}`);
     frameFn = grapheneFrame;
     grapheneFrame(nowF());
@@ -428,7 +463,13 @@
   (function () {
     const cv = $('plane');
     let drag = false;
-    const keep = u => { const b = QM.SURFACES[S.surf].box, m = 0.04 * (b[1] - b[0]); return [+clamp(u[0], b[0] + m, b[1] - m).toFixed(3), +clamp(u[1], b[2] + m, b[3] - m).toFixed(3)]; };
+    const keep = u => {
+      const Sf = QM.SURFACES[S.surf], b = Sf.box;
+      return [0, 1].map(i => {
+        const lo = b[2 * i], hi = b[2 * i + 1], w = hi - lo;
+        return +(Sf.wrap[i] ? lo + ((((u[i] - lo) % w) + w) % w) : clamp(u[i], lo + 0.04 * w, hi - 0.04 * w)).toFixed(3);
+      });
+    };
     const at = e => { const r = cv.getBoundingClientRect(); S.u = keep(plane.toK(e.clientX - r.left, e.clientY - r.top)); later(); aimSoon(); };
     cv.addEventListener('pointerdown', e => { if (mode !== 'surface') return; drag = true; cv.setPointerCapture(e.pointerId); at(e); });
     cv.addEventListener('pointermove', e => { if (drag) at(e); });
@@ -466,7 +507,6 @@
   function render() {
     syncControls();
     if (mode === 'surface') renderSurface(); else if (mode === 'states') renderStates(); else renderGraphene();
-    $('info').setAttribute('aria-live', running() ? 'off' : 'polite');
     $('plot-a').setAttribute('aria-label', $('pa-title').textContent); $('plot-b').setAttribute('aria-label', $('pb-title').textContent);
     kick();
   }
@@ -477,6 +517,7 @@
     document.querySelectorAll('[data-modes], [data-deep]').forEach(el => { el.hidden = !((!el.dataset.modes || el.dataset.modes.split(' ').includes(mode)) && (!('deep' in el.dataset) || deep)); });
     $('plane-box').hidden = mode === 'states'; $('bloch-box').hidden = mode !== 'states';
     $('surf-box').hidden = mode !== 'surface'; $('dial-box').hidden = mode !== 'states'; $('sphere-box').hidden = mode !== 'graphene';
+    $('plane').tabIndex = mode === 'surface' ? 0 : -1; $('plane').style.cursor = mode === 'surface' ? '' : 'default';
     render();
     if (mode === 'surface') aimSurface();
   }
@@ -530,6 +571,7 @@
     QUESTIONS[b.dataset.q]();
     applyMode();
     document.querySelector('.lab-tabs').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    const t = tabs.find(x => x.dataset.mode === mode); if (t) t.focus({ preventScroll: true });
   }));
 
   syncAnim();
