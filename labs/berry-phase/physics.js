@@ -1,4 +1,4 @@
-/* Berry phase, connection and curvature: a spin-1/2 carried around loops, and two-band crystals.
+/* Berry phase, connection and curvature: a spin-1/2 carried around a loop, and two-band crystals.
    Conventions (as in the video): A = i<u|∇u>, the Berry phase of a loop γ = ∮A·dk, Ω = ∂x A_y − ∂y A_x,
    and on a discrete loop γ = −arg Π <u_j|u_{j+1}>, which is gauge invariant.
    Spinors are [re0, im0, re1, im1]. */
@@ -18,7 +18,6 @@
   }
   const ov = (u, v) => [u[0] * v[0] + u[1] * v[1] + u[2] * v[2] + u[3] * v[3], u[0] * v[1] - u[1] * v[0] + u[2] * v[3] - u[3] * v[2]];   // <u|v>
   const cmul = (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
-  const phase = (u, ch) => { const c = Math.cos(ch), s = Math.sin(ch); return [u[0] * c - u[1] * s, u[0] * s + u[1] * c, u[2] * c - u[3] * s, u[2] * s + u[3] * c]; };
   const wrap = a => { let x = (a + Math.PI) % TAU; if (x < 0) x += TAU; return x - Math.PI; };
 
   // phases of a chain of states: each link's −arg<u_j|u_{j+1}> and the loop's γ = −arg Π (closed) or the open-path sum
@@ -28,52 +27,7 @@
     for (let j = 0; j < (closed ? N : N - 1); j++) { const o = ov(states[j], states[(j + 1) % N]); out.push(-Math.atan2(o[1], o[0])); prod = cmul(prod, o); }
     return { link: out, gamma: -Math.atan2(prod[1], prod[0]) };
   }
-  // the same loop phase from projectors only: γ = −arg Tr[P_1 P_2 ... P_N] (P_j = |u_j><u_j|), manifestly gauge invariant
-  function projectorPhase(states) {
-    let M = [[1, 0], [0, 0], [0, 0], [1, 0]];       // 2×2 complex identity, row-major
-    const mm = (A, B) => [cadd(cmul(A[0], B[0]), cmul(A[1], B[2])), cadd(cmul(A[0], B[1]), cmul(A[1], B[3])), cadd(cmul(A[2], B[0]), cmul(A[3], B[2])), cadd(cmul(A[2], B[1]), cmul(A[3], B[3]))];
-    states.forEach(u => {
-      const a = [u[0], u[1]], b = [u[2], u[3]], ac = [u[0], -u[1]], bc = [u[2], -u[3]];
-      M = mm(M, [cmul(a, ac), cmul(a, bc), cmul(b, ac), cmul(b, bc)]);
-    });
-    const tr = cadd(M[0], M[3]);
-    return -Math.atan2(tr[1], tr[0]);
-  }
   const cadd = (a, b) => [a[0] + b[0], a[1] + b[1]];
-
-  // a state's phase drawn as a direction: the "flag" Re[ψᵀ(iσy)σψ], a unit vector at right angles to n that turns by 2χ
-  // (clockwise, seen from outside) when the state is multiplied by e^{iχ}
-  function flag(u) {
-    const [a, b, c, d] = u;
-    return [(a * a - b * b) - (c * c - d * d), -2 * (a * b + c * d), -2 * (a * c - b * d)];
-  }
-  // solid angle of the polygon joining unit vectors by great-circle arcs, positive when anticlockwise seen from outside:
-  // a fan of signed triangles from the north pole (Van Oosterom and Strackee's formula), defined mod 4π. The pole is never
-  // antipodal to a vertex of the loops used here (all lie above the south pole), so no triangle is degenerate.
-  function polySolid(pts) {
-    const dot = (p, q) => p[0] * q[0] + p[1] * q[1] + p[2] * q[2], a = [0, 0, 1], N = pts.length;
-    let s = 0;
-    for (let j = 0; j < N; j++) {
-      const b = pts[j], c = pts[(j + 1) % N], bc = [b[1] * c[2] - b[2] * c[1], b[2] * c[0] - b[0] * c[2], b[0] * c[1] - b[1] * c[0]];
-      s += 2 * Math.atan2(dot(a, bc), 1 + dot(a, b) + dot(b, c) + dot(c, a));
-    }
-    return s;
-  }
-
-  // ---------- loops on the sphere ----------
-  // a circle of latitude at polar angle thc, traversed with increasing φ (anticlockwise seen from +z): solid angle 2π(1 − cos thc)
-  function circle(thc, N) { return Array.from({ length: N }, (_, j) => { const p = TAU * j / N; return [Math.sin(thc) * Math.cos(p), Math.sin(thc) * Math.sin(p), Math.cos(thc)]; }); }
-  // an orange slice: from the north pole down φ = 0 to the equator, along it to φ = dphi, and back up: solid angle dphi
-  function lune(dphi, N) {
-    const L = [Math.PI / 2, dphi, Math.PI / 2], tot = L[0] + L[1] + L[2], pts = [];
-    for (let j = 0; j < N; j++) {
-      let s = tot * j / N;
-      if (s < L[0]) pts.push([Math.sin(s), 0, Math.cos(s)]);
-      else if ((s -= L[0]) < L[1]) pts.push([Math.cos(s), Math.sin(s), 0]);
-      else { s -= L[1]; const t = Math.PI / 2 - s; pts.push([Math.sin(t) * Math.cos(dphi), Math.sin(t) * Math.sin(dphi), Math.cos(t)]); }
-    }
-    return pts;
-  }
 
   /* ---------- a spin carried slowly around the circle: exact time evolution ----------
      H(t) = −(ħω0/2) n(t)·σ, n turning about z once in a time T (ω = 2π/T). In the frame turning with n the Hamiltonian
@@ -221,5 +175,5 @@
   // the bands E± = d0 ± |d| along a path of k points
   const bands = (model, ks) => ks.map(k => { const { d, d0 } = dvec(model, k), r = Math.hypot(d[0], d[1], d[2]); return [d0 - r, d0 + r]; });
 
-  window.BP = { TAU, up, low, ov, phase, wrap, links, projectorPhase, flag, polySolid, circle, lune, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, chern, integrate, loopPhase, loopPhaseConv, loopFlux, loopA, bands };
+  window.BP = { TAU, up, low, ov, wrap, links, spinAt, spinRun, spinFinal, S3, DEL, BB, KPT, G1, G2, dvec, unit, omega, connection, lowerState, cell, chern, integrate, loopPhase, loopPhaseConv, loopFlux, loopA, bands };
 })();

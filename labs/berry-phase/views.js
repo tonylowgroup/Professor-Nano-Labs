@@ -1,4 +1,4 @@
-/* Pictures for the Berry phase lab: a sphere of directions with loops, flags and tangent arrows (built on the shared
+/* Pictures for the Berry phase lab: a sphere of directions with loops and tangent arrows (built on the shared
    BlochSphere), a dial for phases, and a map of the Brillouin zone (built on NanoPlot) with the Berry curvature,
    the Berry connection and a loop that can be dragged. */
 (function () {
@@ -15,20 +15,6 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     return { w, h };
   }
-  const norm = v => { const l = Math.hypot(v[0], v[1], v[2]); return l > 0 ? v.map(x => x / l) : v; };
-  // points along the great-circle arc from a to b (unit vectors)
-  function geodesic(a, b, n) {
-    const c = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(c), out = [];
-    const k = n || Math.max(2, Math.ceil(om / 0.05));
-    for (let i = 0; i <= k; i++) {
-      const t = i / k;
-      if (om < 1e-6) { out.push(a.slice()); continue; }
-      const s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
-      out.push(norm([s1 * a[0] + s2 * b[0], s1 * a[1] + s2 * b[1], s1 * a[2] + s2 * b[2]]));
-    }
-    return out;
-  }
-
   /* scene = { arrows: [{ v, color, label }], trail: [{ pts, color }], curves: [{ pts, color, width, dash }],
                vecs: [{ a, b, color, width, dash }], dots: [{ v, color, r, ring }], tags: [{ v, text, color }], caption } */
   class GeoSphere extends BlochSphere {
@@ -79,8 +65,7 @@
   }
 
   /* A complex plane for phases: unit circle, arrows, an arc for the phase swept (a spiral when it passes a full turn),
-     and an optional chain of points (the running product of overlaps).
-     scene = { arrows: [{ z, color, dash, label }], arc: { to, color, label }, chain: { pts, color }, caption } */
+     scene = { arrows: [{ z, color, dash, label }], arc: { to, color, label }, caption } */
   class PhaseDial {
     constructor(canvas) {
       this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.scene = null;
@@ -132,14 +117,6 @@
           c.font = `italic 700 13px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle';
           c.fillText(S.arc.label, cx + Math.max(10, rl) * Math.cos(am), cy - Math.max(10, rl) * Math.sin(am));
         }
-        c.restore();
-      }
-      if (S.chain && S.chain.pts.length) {
-        const P = S.chain.pts;
-        c.save(); c.strokeStyle = S.chain.color; c.globalAlpha = 0.55; c.lineWidth = 1.4; c.setLineDash([3, 3]);
-        c.beginPath(); c.moveTo(X([1, 0]), Y([1, 0])); P.forEach(z => c.lineTo(X(z), Y(z))); c.stroke();
-        c.setLineDash([]); c.globalAlpha = 1; c.fillStyle = S.chain.color;
-        P.forEach((z, i) => { if (i === P.length - 1) return; c.beginPath(); c.arc(X(z), Y(z), 3, 0, 2 * Math.PI); c.fill(); });
         c.restore();
       }
       (S.arrows || []).forEach(a => {
@@ -244,5 +221,5 @@
     }
   }
 
-  window.BerryViews = { GeoSphere, PhaseDial, ZoneMap, heatCanvas, divColor, geodesic };
+  window.BerryViews = { GeoSphere, PhaseDial, ZoneMap, heatCanvas };
 })();

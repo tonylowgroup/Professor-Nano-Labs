@@ -1,4 +1,4 @@
-/* Berry phase lab: a spin carried around a loop, chains of states in any gauge, curvature in two crystals.
+/* Berry phase lab: a spin carried around a loop, and the Berry curvature of two crystals.
    Physics in physics.js, pictures in views.js. */
 (function () {
   'use strict';
@@ -7,7 +7,7 @@
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const NICE = [1, 1.5, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50, 70, 100, 150, 200, 300, 400, 500, 700, 1000];   // loop times on offer, in Larmor periods
-  const START = { thc: 60, logT: Math.log10(30), shape: 'circle', dphi: 120, N: 8, cg: 'smooth', seed: 1, model: 'hex', qm: 1, hm: 0.2, ht2: 0, hphi: 90, rad: 0.8, c: [4 * Math.PI / (3 * Math.sqrt(3)), 0], gauge: 'N' };
+  const START = { thc: 60, logT: Math.log10(30), model: 'hex', qm: 1, hm: 0.2, ht2: 0, hphi: 90, rad: 0.8, c: [4 * Math.PI / (3 * Math.sqrt(3)), 0], gauge: 'N' };
   const S = JSON.parse(JSON.stringify(START));
   let mode = 'loop';
   // "The essentials" or "Go deeper": a per-viewer preference, remembered where the browser allows
@@ -125,7 +125,7 @@
       arc: { to: shown, color: BLUE, label: 'γ' },
     });
     $('dial').setAttribute('aria-label', veil ? 'Phase dial, hidden until Play' : `Phase collected so far: ${piTxt(geo)}, against ${piTxt(ideal_t)} for a slow loop`);
-    const share = pct(Sa / (4 * PI), Sa / (4 * PI) < 0.01 || Sa / (4 * PI) > 0.99 ? 1 : 0);
+    const share = pct(Sa / (4 * PI), Sa / (4 * PI) < 0.1 || Sa / (4 * PI) > 0.9 ? 1 : 0);
     if (!deep) stats([
       ['Area of the loop (solid angle)', `${fixed(Sa / PI, 3)}π`, `${share} of the sphere`],
       ['Berry phase predicted', piTxt(ideal), `minus half the area: ${turns(ideal)}`],
@@ -184,114 +184,7 @@
     $('transport-note').textContent = `${reduceMotion ? 'Reduced motion is on: each press of Play steps an eighth of the way round.' : `One loop plays in ${PLAY_S} s.`} ${deep ? `It takes T = ${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}, so the spin precesses` : 'On the way, the spin wobbles'} about ${+per.toPrecision(4)} time${per === 1 ? '' : 's'} around the field.`;
   }
 
-  // ---------- 2. Chains of states and gauge ----------
-  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  function chain() {
-    const pts = S.shape === 'lune' ? B.lune(S.dphi * DEG, S.N) : B.circle(S.thc * DEG, S.N);
-    const smooth = pts.map(B.up);
-    let st = smooth;
-    if (S.cg === 'random') { const r = rng(S.seed * 7919 + S.N); st = smooth.map(u => B.phase(u, TAU * r())); }
-    else if (S.cg === 'pt') {
-      st = [smooth[0]];
-      for (let j = 1; j < S.N; j++) { const o = B.ov(st[j - 1], smooth[j]); st.push(B.phase(smooth[j], -Math.atan2(o[1], o[0]))); }
-    }
-    const L = B.links(st, true), Sa = S.shape === 'lune' ? S.dphi * DEG : solid(S.thc * DEG);
-    // the polygon's solid angle is defined mod 4π: show the branch nearest the smooth loop's
-    const P = B.polySolid(pts), poly = P + 2 * TAU * Math.round((Sa - P) / (2 * TAU));
-    return { pts, st, L, Sa, exact: -Sa / 2, proj: B.projectorPhase(st), poly };
-  }
-  function renderChain() {
-    const C = chain(), N = S.N, { pts, st, L } = C, g = L.gamma;
-    const open = L.link.slice(0, N - 1).reduce((a, b) => a + b, 0);
-    // the sphere: the smooth loop, the great-circle polygon, and each state's flag
-    const smoothLoop = S.shape === 'lune' ? B.lune(S.dphi * DEG, 240).concat([[0, 0, 1]]) : range(0, TAU, 160).map(p => [Math.sin(S.thc * DEG) * Math.cos(p), Math.sin(S.thc * DEG) * Math.sin(p), Math.cos(S.thc * DEG)]);
-    let poly = [];
-    for (let j = 0; j < N; j++) poly = poly.concat(V.geodesic(pts[j], pts[(j + 1) % N]));
-    const len = clamp(2.4 / N, 0.12, 0.3);
-    const vecs = st.map((u, j) => ({ a: pts[j], b: add(pts[j], B.flag(u), len), color: j === 0 ? INK : GREEN, width: j === 0 ? 2.6 : 2 }));
-    let closing = null;
-    if (S.cg === 'pt') {
-      // the last state carried on to the first point: its flag shows the holonomy
-      const o = B.ov(st[N - 1], B.up(pts[0])), u = B.phase(B.up(pts[0]), -Math.atan2(o[1], o[0]));
-      closing = { a: pts[0], b: add(pts[0], B.flag(u), len * 1.15), color: BERRY, width: 2.4, dash: [4, 3] };
-      vecs.push(closing);
-    }
-    sphere.draw({
-      curves: [{ pts: smoothLoop, color: GOLD, width: 1.6, dash: [5, 4] }, { pts: poly, color: GOLD, width: 2.6 }],
-      dots: pts.map((p, j) => ({ v: p, color: INK, r: j === 0 ? 4.5 : 3.2, ring: j === 0 })),
-      vecs,
-      tags: [{ v: pts[0].map(x => x * 1.13), text: '1', color: INK, size: 12 }].concat(N <= 12 ? pts.slice(1).map((p, j) => ({ v: p.map(x => x * 1.12), text: String(j + 2), color: MUTED, size: 11, bold: false })) : []),
-    });
-    $('sphere').setAttribute('aria-label', `${N} states on a ${S.shape === 'lune' ? 'slice' : 'circle'} of the sphere, joined by great-circle arcs, each with a hand showing its phase`);
-    // the dial: the running product of the overlaps (conjugated, so its angle is the phase collected)
-    let z = [1, 0]; const chainPts = [];
-    for (let j = 0; j < N; j++) { const o = B.ov(st[j], st[(j + 1) % N]); z = [z[0] * o[0] + z[1] * o[1], z[1] * o[0] - z[0] * o[1]]; chainPts.push(z.slice()); }
-    dial.draw({
-      arrows: [{ z: [Math.cos(C.exact), Math.sin(C.exact)], color: GOLD, width: 2.2, dash: [5, 4] }, { z, color: BLUE, width: 3.2 }],
-      arc: { to: g, color: BLUE, label: 'γ' }, chain: { pts: chainPts, color: BLUE },
-    });
-    $('dial').setAttribute('aria-label', `Running product of the overlaps; its final phase gives γ = ${piTxt(g)}`);
-    if (!deep) stats([
-      ['Berry phase of the smooth loop', piTxt(C.exact), turns(C.exact)],
-      ['Phase around the chain', piTxt(g), `${N} states, chain closed`],
-      ['Phase without closing it', piTxt(B.wrap(open)), 'from state 1 to state N: changes with your choice of phases'],
-    ]);
-    else stats([
-      ['Exact, smooth loop', piTxt(C.exact), `minus half the solid angle, ${S.shape === 'lune' ? 'Δφ = ' : ''}${fixed(C.Sa / PI, 3)}π`],
-      [`Chain ${sym('γ_N')}`, piTxt(g), `−arg Π⟨u_j|u_{j+1}⟩, N = ${N}`],
-      ['From projectors only', piTxt(C.proj), '−arg Tr[P_1P_2⋯P_N]: no phases needed'],
-      ['Open chain, 1 → N', piTxt(B.wrap(open)), 'without closing: depends on the gauge'],
-    ]);
-    setHTML($('dg-title'), S.cg === 'pt' ? `Parallel transport: the ${deep ? 'flag' : 'hand'} is carried without turning` : S.cg === 'random' ? 'A random gauge: every phase scrambled' : 'A chain of states in a smooth gauge');
-    put('dg-cap', !deep ? `On the sphere: ${N} states on the loop (dashed), joined by the shortest paths between them (gold). The little hand at each state shows the phase chosen for it. ${S.cg === 'pt' ? 'The dashed berry hand at state 1 is the last state carried on to the first: the angle between it and state 1\'s own hand shows the Berry phase, doubled. ' : ''}The dial adds up the phase step by step (blue dots); where the arrow ends is the phase around the chain (gold dashed: the smooth loop's Berry phase).` : `On the sphere: ${N} states on the loop (dashed), joined by great-circle arcs (gold). Each state's phase is drawn as a flag at its point: multiplying the state by e<sup>iχ</sup> turns its flag by 2χ. ${S.cg === 'pt' ? 'The berry dashed flag at state 1 is state N carried on to it: the angle between it and state 1\'s own flag is the holonomy.' : ''} On the dial: the complex conjugates of the overlaps, ⟨u_{j+1}|u_j⟩, multiplied one by one (blue dots); the angle of the result is γ_N (gold, dashed: the exact −\\(\\mathcal S\\)/2).`);
-    legend('dg-legend', [[GOLD, '', deep ? 'great-circle polygon' : 'the chain'], [GOLD, 'swatch--dash', 'the smooth loop'], [GREEN, '', deep ? 'each state\'s flag' : 'each state\'s phase'], ...(S.cg === 'pt' ? [[BERRY, 'swatch--dash', 'state N carried to state 1']] : [])]);
-    // plot A: the phase of each link, and their running sum
-    reset(plotA);
-    plotA.opts.xLabel = 'Link j → j+1'; plotA.opts.yLabel = 'Phase (units of π)'; plotA.opts.zeroLine = true;
-    const xs = range(1, N, N - 1), lk = L.link.map(v => v / PI), cum = []; let acc = 0; lk.forEach(v => { acc += v; cum.push(acc); });
-    const all = lk.concat(cum, [C.exact / PI, 0]), lo = Math.min(...all), hi = Math.max(...all), pad = 0.08 * (hi - lo) + 0.05;
-    plotA.setRange([0.5, N + 0.5], [lo - pad, hi + pad]);
-    plotA.opts.xTicks = Math.min(8, N);
-    plotA.draw([
-      { type: 'hline', y: C.exact / PI, color: GOLD, width: 1.6, dash: [6, 4] },
-      { type: 'line', x: [0.5].concat(xs), y: [0].concat(cum), color: BLUE, width: 2 },
-      { type: 'stems', x: xs, y: lk, color: GREEN, width: 1.8, r: N > 30 ? 2.2 : 3.2 },
-    ]);
-    setHTML($('pa-title'), S.cg === 'pt' ? 'All of the phase sits in the last link' : S.cg === 'random' ? 'The links are random; their sum is not' : 'Each link carries a little of the phase');
-    const extra = Math.round((acc * PI - g) / TAU);
-    put('pa-cap', `${deep ? 'The phase of each overlap, −arg⟨u_j|u_{j+1}⟩ (green)' : 'The phase of each step from one state to the next (green)'}, the last one closing the loop back to state 1, and their running sum (blue). ${extra ? `The sum ends at γ_N ${extra > 0 ? '+' : '−'} ${Math.abs(extra) === 1 ? '' : Math.abs(extra)}2π: the same phase.` : 'The sum ends at γ_N.'}`);
-    legend('pa-legend', [[GREEN, '', 'one link'], [BLUE, '', 'running sum'], [GOLD, 'swatch--dash', 'exact −\\(\\mathcal S\\)/2']]);
-    // plot B: γ_N against N
-    reset(plotB);
-    plotB.opts.xLabel = 'Number of states N'; plotB.opts.yLabel = 'Phase of the chain (units of π)';
-    const ns = range(3, 60, 57), gs = memo(`gN|${S.shape}|${S.shape === 'lune' ? S.dphi : S.thc}`, () => ns.map(k => nearest(B.links((S.shape === 'lune' ? B.lune(S.dphi * DEG, k) : B.circle(S.thc * DEG, k)).map(B.up), true).gamma, C.exact) / PI));
-    let blo = Math.min(...gs, C.exact / PI), bhi = Math.max(...gs, C.exact / PI);
-    if (bhi - blo < 0.2) { const mid = (bhi + blo) / 2; blo = mid - 0.1; bhi = mid + 0.1; }
-    const bp = 0.12 * (bhi - blo) + 0.03;
-    plotB.setRange([0, 61], [blo - bp, bhi + bp]);
-    plotB.draw([
-      { type: 'hline', y: C.exact / PI, color: GOLD, width: 2, dash: [6, 4] },
-      { type: 'line', x: ns, y: gs, color: BLUE, width: 1.6 },
-      { type: 'dots', x: ns, y: gs, color: BLUE, r: 2.4 },
-      { type: 'dots', x: [N], y: [nearest(g, C.exact) / PI], color: INK, r: 5.5 },
-    ]);
-    const err = Math.abs(B.wrap(g - C.exact));
-    setHTML($('pb-title'), err < 1e-9 ? 'Exact for every N on this loop' : 'More states, closer to the smooth loop');
-    put('pb-cap', !deep ? `The phase around the chain for 3 to 60 states, the same whatever phases you choose, against the smooth loop's Berry phase (gold). ${err < 1e-9 ? 'On the equator the chain is exact for any number of states.' : 'More states follow the loop more closely.'}` : `γ_N for N = 3 to 60 (the same in every gauge), against the exact −\\(\\mathcal S\\)/2. γ_N is exactly −½ the solid angle of the great-circle polygon, ${fixed(C.poly / PI, 4)}π here; ${err < 1e-9 ? 'on this loop the arcs are the loop itself.' : 'it approaches the smooth loop like 1/N².'}`);
-    legend('pb-legend', [[BLUE, '', 'γ_N'], [GOLD, 'swatch--dash', 'exact −\\(\\mathcal S\\)/2'], [INK, '', `N = ${N}`]]);
-    const HINT = { smooth: 'Each state is |+n⟩ as written in tab 1: the phases change smoothly along the loop.', random: 'Each state is multiplied by its own random phase factor e<sup>iχ</sup>.', pt: 'Each phase is chosen so that ⟨u_j|u_{j+1}⟩ is real and positive: the video\'s parallel transport.' };
-    put('cg-hint', HINT[S.cg]);
-    $('reroll').hidden = S.cg !== 'random';
-    setHTML($('info'), !deep ? (S.cg === 'pt' ? `<b>Parallel transport puts the whole phase, ${piTxt(L.link[N - 1])}, into the last link.</b> Every other step has no phase at all, so each hand is carried along without turning; only when the chain closes does the mismatch show up. You can move the Berry phase from link to link, but never get rid of it.`
-      : S.cg === 'random' ? `<b>The links changed; the total did not: ${piTxt(g)}.</b> Each state's random phase enters once on the way in and once on the way out, and cancels. The phase without closing the loop, ${piTxt(B.wrap(open))}, does change: press "New random phases".`
-      : `<b>${N} states give ${piTxt(g)} around the chain, against ${piTxt(C.exact)} for the smooth loop.</b> In this smooth choice of phases each link carries a small share, about ${piTxt(C.exact / N, 3)}.`)
-      : S.cg === 'pt' ? `<b>Parallel transport moves the whole phase into the last link: ${piTxt(L.link[N - 1])}.</b> Every other overlap is real and positive, so each flag is carried along its arc without turning; back at state 1 it has turned, relative to state 1's own flag, by the polygon's solid angle, ${(() => { const t = ((C.poly % TAU) + TAU) % TAU; return t < 1e-6 || t > TAU - 1e-6 ? `${fixed(C.poly / PI, 3)}π: a whole number of turns, which leaves it pointing the same way` : `${fixed(C.poly / PI, 3)}π${Math.abs(C.poly) > TAU ? `, that is ${fixed(t / PI, 3)}π` : ''}`; })()}.`
-      : S.cg === 'random' ? `<b>The links changed; γ<sub>N</sub> did not: ${piTxt(g)}.</b> Each state appears in the product once as a ket and once as a bra, so its random phase cancels. The open chain, ${piTxt(B.wrap(open))}, is not gauge invariant: press "New random phases" and it changes.`
-      : `<b>${N} states give γ<sub>N</sub> = ${piTxt(g)}, against ${piTxt(C.exact)} for the smooth loop.</b> In this gauge each link carries a small share, about ${piTxt(C.exact / N, 3)} each, as the video's ⟨j|j+1⟩ ≈ 1 − iA·dk suggests.`);
-    setHTML($('takeaway'), deep ? '<b>The gauge is a choice; the Berry phase is not.</b> Link phases, open paths and the connection change with the gauge. A closed loop\'s product, the projector trace and, in a crystal, the curvature do not: they are what experiments measure.' : '<b>The phases are your choice; the Berry phase is not.</b> Whatever phase you give each state, the total around a closed loop comes out the same, which is why it can be measured.');
-  }
-
-  // ---------- 3. Curvature in a crystal ----------
+  // ---------- 2. Curvature in a crystal ----------
   const S3 = Math.sqrt(3), KX = 4 * PI / (3 * S3);
   const HEX = range(0, 5, 5).map(i => [KX * Math.cos(i * PI / 3), KX * Math.sin(i * PI / 3)]);
   const model = () => (S.model === 'qwz' ? { type: 'qwz', m: S.qm } : { type: 'hex', M: S.hm, t2: S.ht2, phi: S.hphi * DEG });
@@ -503,17 +396,15 @@
     const set = (id, v, txt) => { $(id).value = v; $(id + '-out').textContent = txt; $(id).setAttribute('aria-valuetext', txt); };
     const per = nL();
     const speed = per <= 2 ? 'fast' : per <= 10 ? 'medium' : per <= 100 ? 'slow' : 'very slow';
-    set('thc', S.thc, `${S.thc}°`); set('per', NICE.indexOf(Math.round(per * 10) / 10), deep ? `${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}` : `${speed} · ${+per.toPrecision(4)} wobble${per === 1 ? '' : 's'}`); set('nn', S.N, String(S.N)); set('dphi', S.dphi, `${S.dphi}°`);
+    set('thc', S.thc, `${S.thc}°`); set('per', NICE.indexOf(Math.round(per * 10) / 10), deep ? `${+per.toPrecision(4)} Larmor period${per === 1 ? '' : 's'}` : `${speed} · ${+per.toPrecision(4)} wobble${per === 1 ? '' : 's'}`);
     set('qm', S.qm, fixed(S.qm, 2)); set('hm', S.hm, `${fixed(S.hm, 2)} t`); set('ht2', S.ht2, `${fixed(S.ht2, 3)} t`); set('hphi', S.hphi, `${S.hphi}°`); set('rad', S.rad, fixed(S.rad, 2));
     $('thc-hint').textContent = mode === 'loop' ? `Area enclosed (solid angle): ${fixed(solid(S.thc * DEG) / PI, 3)}π of the sphere's 4π.` : '';
     document.querySelectorAll('[data-depth]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.depth === 'deep') === deep)));
     $('depth-hint').textContent = deep ? 'Every control: gauges, the connection, a second crystal, the full formulas.' : 'The main ideas; switch to Go deeper for gauges, connections and a second crystal.';
-    const lune = mode === 'chain' && S.shape === 'lune';
-    $('thc-ctrl').hidden = lune; $('dphi-ctrl').hidden = !lune; $('thc-chips').hidden = lune;
     $('qwz-ctrls').hidden = S.model !== 'qwz'; $('hex-ctrls').hidden = S.model !== 'hex';
     document.querySelectorAll('[data-thc]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.thc === S.thc)));
     const pressed = (attr, val) => document.querySelectorAll(`button[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === val)));
-    pressed('shape', S.shape); pressed('cg', S.cg); pressed('model', S.model); pressed('gauge', S.gauge);
+    pressed('model', S.model); pressed('gauge', S.gauge);
     const cs = (S.model === 'qwz' ? POINTS.qwz : POINTS.hex);
     if ($('centres').dataset.model !== S.model) { $('centres').dataset.model = S.model; $('centres').innerHTML = cs.map((p, i) => `<button class="chip-btn" type="button" data-at="${i}">Centre on ${p.text}</button>`).join(''); }
     document.querySelectorAll('#centres [data-at]').forEach(b => { const p = cs[+b.dataset.at]; b.setAttribute('aria-pressed', String(Math.abs(p.k[0] - S.c[0]) < 1e-6 && Math.abs(p.k[1] - S.c[1]) < 1e-6)); });
@@ -528,7 +419,7 @@
   }
   function render() {
     syncControls();
-    if (mode === 'loop') renderLoop(); else if (mode === 'chain') renderChain(); else renderCrystal();
+    if (mode === 'loop') renderLoop(); else renderCrystal();
     $('info').setAttribute('aria-live', mode === 'loop' && playing ? 'off' : 'polite');
     $('plot-a').setAttribute('aria-label', $('pa-title').textContent); $('plot-b').setAttribute('aria-label', $('pb-title').textContent);
   }
@@ -549,21 +440,18 @@
   function setDepth(d) {
     deep = d;
     try { localStorage.setItem('berry-depth', d ? 'deep' : 'simple'); } catch (e) { /* not remembered: fine */ }
-    // the essentials use graphene and circular loops only
-    if (!deep) { S.shape = 'circle'; if (S.model !== 'hex') { S.model = 'hex'; S.c = POINTS.hex[1].k.slice(); } }
+    // the essentials use graphene only
+    if (!deep && S.model !== 'hex') { S.model = 'hex'; S.c = POINTS.hex[1].k.slice(); }
     applyMode();
   }
   document.querySelectorAll('[data-depth]').forEach(b => b.addEventListener('click', () => setDepth(b.dataset.depth === 'deep')));
   $('per').addEventListener('input', e => { S.logT = Math.log10(NICE[+e.target.value]); onTune(); });
-  [['thc', 'thc'], ['nn', 'N'], ['dphi', 'dphi'], ['qm', 'qm'], ['hm', 'hm'], ['ht2', 'ht2'], ['hphi', 'hphi'], ['rad', 'rad']].forEach(([id, key]) => $(id).addEventListener('input', e => { S[key] = +e.target.value; onTune(); }));
+  [['thc', 'thc'], ['qm', 'qm'], ['hm', 'hm'], ['ht2', 'ht2'], ['hphi', 'hphi'], ['rad', 'rad']].forEach(([id, key]) => $(id).addEventListener('input', e => { S[key] = +e.target.value; onTune(); }));
   document.querySelector('.lab-main').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b || !b.closest('.controls')) return;
     const d = b.dataset;
     if (d.thc) S.thc = +d.thc;
-    else if (d.shape) S.shape = d.shape;
-    else if (d.cg) S.cg = d.cg;
-    else if (b.id === 'reroll') S.seed++;
     else if (d.model) { if (S.model !== d.model) { S.model = d.model; S.c = d.model === 'hex' ? POINTS.hex[1].k.slice() : [0, 0]; } }
     else if (d.preset) { const p = presets()[d.preset]; if (p.model !== S.model) S.c = p.model === 'hex' ? POINTS.hex[1].k.slice() : [0, 0]; Object.assign(S, p); }
     else if (d.at !== undefined && d.at !== '') S.c = (S.model === 'qwz' ? POINTS.qwz : POINTS.hex)[+d.at].k.slice();
@@ -590,9 +478,9 @@
     q1: () => { mode = 'loop'; fresh({ thc: 90, logT: 2 }); stop(); pos = 0; veil = true; },
     q2: () => { mode = 'loop'; fresh({ thc: 60, logT: 0 }); stop(); pos = 0; veil = true; },
     q3: () => { mode = 'loop'; fresh({ thc: 120, logT: 2 }); stop(); pos = 0; veil = true; },
-    q4: () => { mode = 'chain'; fresh({ thc: 90, N: 3 }); },
-    q5: () => { mode = 'chain'; fresh({ thc: 60, N: 8, cg: 'random' }); },
-    q6: () => { mode = 'chain'; fresh({ thc: 60, N: 8, cg: 'pt' }); },
+    small: () => { mode = 'loop'; fresh({ thc: 30, logT: 2 }); stop(); pos = 0; veil = true; },
+    shrink: () => { mode = 'crystal'; fresh({ model: 'hex', hm: 0.2, ht2: 0, c: K.slice(), rad: 0.3 }); },
+    plain: () => { mode = 'crystal'; fresh({ model: 'hex', hm: 0, ht2: 0, c: K.slice(), rad: 0.8 }); },
     q7: () => { mode = 'crystal'; fresh({ model: 'hex', hm: 0.2, ht2: 0, c: K.slice(), rad: 0.8 }); },
     q8: () => { mode = 'crystal'; fresh({ model: 'hex', hm: 0, ht2: 0.1, hphi: 90, c: K.slice(), rad: 0.8 }); },
   };
