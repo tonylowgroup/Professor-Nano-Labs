@@ -57,16 +57,40 @@
       c.beginPath(); P.forEach((q, i) => (i ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y))); c.closePath(); c.fill();
       c.restore();
     }
-    /* scene also takes paint: [{ quad: [4 unit vectors], color, alpha }] (small patches) and
-       fills: [{ tri: [apex, b, c], color, alpha }] (spherical triangles, edges along great circles) and
-       regions: [{ pts, color, alpha }] (one closed outline on the sphere, filled in one piece) */
+    /* An area of the sphere as many small patches { pts, color }: each is painted solid (with a hairline stroke, so
+       neighbours leave no seams) on a layer of its own, one for the near side and one for the far side, and each layer
+       is then laid on the sphere at one opacity, the far one fainter. This stays right from any viewpoint, where one
+       outline filled in the plane would fold over itself. */
+    _mesh(mesh) {
+      const W = this.canvas.width, H = this.canvas.height, dpr = W / this.w, f = this.B.f;
+      const off = this._off || (this._off = document.createElement('canvas'));
+      if (off.width !== W || off.height !== H) { off.width = W; off.height = H; }
+      const o = off.getContext('2d');
+      ['back', 'front'].forEach(side => {
+        o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, W, H); o.setTransform(dpr, 0, 0, dpr, 0, 0);
+        o.lineWidth = 1; o.lineJoin = 'round';
+        let any = false;
+        mesh.patches.forEach(p => {
+          const depth = p.pts.reduce((sum, v) => sum + v[0] * f[0] + v[1] * f[1] + v[2] * f[2], 0);
+          if ((depth >= 0) !== (side === 'front')) return;
+          any = true;
+          o.fillStyle = p.color; o.strokeStyle = p.color; o.beginPath();
+          p.pts.forEach((v, i) => { const P = this.project(v); if (i) o.lineTo(P.x, P.y); else o.moveTo(P.x, P.y); });
+          o.closePath(); o.fill(); o.stroke();
+        });
+        if (!any) return;
+        const c = this.ctx;
+        c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = (mesh.alpha || 0.3) * (side === 'front' ? 1 : 0.4); c.drawImage(off, 0, 0); c.restore();
+      });
+    }
+    /* scene also takes mesh: { patches: [{ pts, color }], alpha } (an area, see _mesh), paint: [{ quad: [4 unit vectors], color, alpha }] (small patches) and
+       fills: [{ tri: [apex, b, c], color, alpha }] (spherical triangles, edges along great circles) */
     draw(scene) {
       const S = scene || {};
       super.draw({ caption: S.caption, notes: S.notes });   // the sphere itself, its axes and the caption
       this.scene = S;
       (S.paint || []).forEach(q => this._patch(q.quad, q.color, q.alpha || 0.1));
-      // a region in one piece (no seams), at one opacity
-      (S.regions || []).forEach(g => { const c = this.ctx, P = g.pts.map(v => this.project(v)); c.save(); c.globalAlpha = g.alpha || 0.3; c.fillStyle = g.color; c.beginPath(); P.forEach((q, i) => (i ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y))); c.closePath(); c.fill(); c.restore(); });
+      if (S.mesh) this._mesh(S.mesh);
       (S.fills || []).forEach(f => { const [a, b, d] = f.tri; this._patch(this._arc(a, b).concat(this._arc(b, d)).concat(this._arc(d, a)), f.color, f.alpha || 0.3); });
       (S.curves || []).concat(S.trail || []).forEach(t => this._poly(t.pts, t.color, t.width || 2.2, { backAlpha: 0.4, backDash: [2, 4], dash: t.dash || [] }));
       (S.arrows || []).slice().sort((p, q) => this.project(p.v).d - this.project(q.v).d).forEach(a => this._arrow(a.v, a.color, a.width || 3.2, { dot: 3.4 }));
@@ -79,12 +103,19 @@
         c.restore();
       });
       (S.vecs || []).forEach(v => this._vec(v.a, v.b, v.color, v.width || 2.4, v.dash));
-      // notes: [{ text, color, bold }], lines of text in the bottom-left corner
+      // notes: [{ text, color, bold }], lines of text in the bottom-left corner; _{x} or _X sets x as a subscript
       (S.notes || []).forEach((n, i, all) => {
-        c.save(); c.font = `${n.bold ? 700 : 600} 12px ${FONT}`; c.fillStyle = n.color || INK; c.textAlign = 'left'; c.textBaseline = 'bottom';
+        const y = this.h - 6 - 16 * (all.length - 1 - i), runs = [];
+        String(n.text).split(/(_\{[^}]*\}|_[A-Za-z0-9])/).forEach(t => { if (!t) return; const m = t.match(/^_\{?([^}]*)\}?$/); runs.push(m ? { t: m[1], sub: true } : { t, sub: false }); });
+        c.save(); c.fillStyle = n.color || INK; c.textAlign = 'left'; c.textBaseline = 'bottom';
         c.lineWidth = 3.5; c.strokeStyle = 'rgba(255,255,255,.92)'; c.lineJoin = 'round';
-        const y = this.h - 6 - 16 * (all.length - 1 - i);
-        c.strokeText(n.text, 10, y); c.fillText(n.text, 10, y);
+        let x = 10;
+        runs.forEach(r => {
+          c.font = `${n.bold ? 700 : 600} ${r.sub ? 9 : 12}px ${FONT}`;
+          const yy = r.sub ? y + 3 : y;
+          c.strokeText(r.t, x, yy); c.fillText(r.t, x, yy);
+          x += c.measureText(r.t).width + (r.sub ? 1 : 0);
+        });
         c.restore();
       });
       const labelled = (S.arrows || []).filter(a => a.label).map(a => ({ v: a.v.map(x => x * 1.16), text: a.label, color: a.color, bold: true }));
