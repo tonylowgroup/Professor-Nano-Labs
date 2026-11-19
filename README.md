@@ -35,6 +35,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js
 | Crystals & energy bands | Graphene Band Structure: From Tight Binding to Dirac Cones | `labs/graphene-bands/` |
 | Crystals & energy bands | Graphene Electrostatics and Quantum Capacitance | `labs/graphene-electrostatics/` |
 | Quantum geometry | Berry Phase, Connection and Curvature | `labs/berry-phase/` |
+| Quantum geometry | The Quantum Metric | `labs/quantum-metric/` |
 | Nanoscale transport | Graphene Ballistic Transport | `labs/graphene-ballistic-transport/` |
 | Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 | Spintronics | Magnetization Dynamics and the LLG Equation | `labs/magnetization-dynamics/` |
