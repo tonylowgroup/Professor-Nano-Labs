@@ -286,7 +286,8 @@
     map.draw(map.layers);
   }
   const running = () => mode === 'crystal' && animOn && !document.hidden && cardSeen;
-  const animFrac = now => Math.min(1, (((now - animT0) / 1000) % (LAP + HOLD)) / LAP);
+  // a frame can be stamped a moment before the animation (re)started: never let the fraction go below 0
+  const animFrac = now => clamp((((now - animT0) / 1000) % (LAP + HOLD)) / LAP, 0, 1);
   function tick(now) { animRaf = 0; if (!running()) return; drawCrystal(animFrac(now)); animRaf = requestAnimationFrame(tick); }
   function kick() { if (running() && !animRaf) animRaf = requestAnimationFrame(tick); }
   function syncAnim() { $('anim').textContent = animOn ? '❚❚ Pause' : '▶ Animate'; $('anim').setAttribute('aria-pressed', String(animOn)); }

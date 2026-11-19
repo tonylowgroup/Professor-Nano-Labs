@@ -1,7 +1,9 @@
 /* Berry phase, connection and curvature: a spin-1/2 carried around a loop, and two-band crystals.
    Conventions (as in the video): A = i<u|∇u>, the Berry phase of a loop γ = ∮A·dk, Ω = ∂x A_y − ∂y A_x,
    and on a discrete loop γ = −arg Π <u_j|u_{j+1}>, which is gauge invariant.
-   Spinors are [re0, im0, re1, im1]. */
+   Spinors are [re0, im0, re1, im1].
+   Shared: the quantum metric lab (labs/quantum-metric) loads this file too, for the same graphene model; keep
+   window.BP's names and conventions stable, or update that lab with them. */
 (function () {
   'use strict';
   const TAU = 2 * Math.PI;

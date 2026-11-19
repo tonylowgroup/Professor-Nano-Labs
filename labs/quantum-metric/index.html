@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en" data-track="geometry">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quantum Metric · Professor Nano Labs</title>
+<meta name="description" content="Measure distances on curved surfaces, then between quantum states: carry an arrow around a sphere and a saddle, follow a quantum state's odometer on the Bloch sphere, and map the quantum metric of graphene's Bloch states. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum geometry</div>
+    <div class="eyebrow eyebrow--light">Quantum geometry · Live lab</div>
+    <h1>The Quantum Metric</h1>
+    <p>Geometry starts with measuring distance. Measure it on curved surfaces, where an arrow carried around a loop comes back turned; then between quantum states, where a state on its way round a loop runs up a distance on a quantum odometer; then between the Bloch states of graphene, whose quantum metric piles up at the valleys and blows up as the gap closes.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="quantum_metric.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on: the metric and curvature of classical surfaces, and how the same ideas measure Bloch states, through the quantum geometric tensor.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=FrfRj9YWfaE" target="_blank" rel="noopener" title="Quantum Geometry; Differential geometry meets Bloch states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/FrfRj9YWfaE/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Quantum Geometry; Differential geometry meets Bloch states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=6xctcmwR8wo" target="_blank" rel="noopener" title="Deriving Berry phase, Berry connection &amp; Berry curvature">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/6xctcmwR8wo/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving Berry phase, Berry connection &amp; Berry curvature<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=Bj2rNT5fa9s" target="_blank" rel="noopener" title="Deriving the Bloch's theorem">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/Bj2rNT5fa9s/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the Bloch's theorem<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">How far apart are two states?</h2>
+    <p>On a map, a step of one centimetre does not always cover the same distance on the ground: near the poles of a world map, Greenland looks enormous. The <a href="#g-metric">metric</a> is the rule that turns steps on the map into true distances, and once you have it, you can work out how curved the surface is without ever leaving it.</p>
+    <p>Quantum states can be measured the same way. Two states that are nearly the same are close; two that cannot be confused are far apart. Change a crystal's wavevector \(\mathbf k\) a little and its Bloch state moves a little: the <a href="#g-qmetric">quantum metric</a> says how far. Card 1 met its partner, the Berry curvature, which says how much the state twists. Together they are the quantum geometry of the band.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-metric"><dt>Metric</dt><dd>The rule that turns small steps in your coordinates into real distances. On a flat sheet with a square grid it is trivial; on a curved surface it changes from place to place.</dd></div>
+      <div id="g-curv"><dt>Curvature</dt><dd>How much an arrow, carried round a small loop without ever being turned, has turned when it comes back, per unit area of the loop.</dd></div>
+      <div id="g-fs"><dt>Quantum distance</dt><dd>How different two states are, from their overlap: arccos|⟨ψ|φ⟩| is 0 for the same state and π/2 for states that can never be confused. For nearby states its square is 1 − |⟨ψ|φ⟩|².</dd></div>
+      <div id="g-qmetric"><dt>Quantum metric</dt><dd>The square of the quantum distance between the states at k and at k + dk, divided by the square of the step: how fast the state changes as k moves.</dd></div>
+      <div id="g-berry"><dt>Berry curvature</dt><dd>The quantum metric's partner from card 1: how much the state's phase twists round a small loop, per unit area.</dd></div>
+      <div id="g-qgt"><dt>Quantum geometric tensor</dt><dd>The two together: its real part is the quantum metric, its imaginary part minus half the Berry curvature.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>On a surface \(\mathbf r(u^1,u^2)\) the tangent vectors \(\mathbf e_i=\partial\mathbf r/\partial u^i\) define the metric \(g_{ij}=\mathbf e_i\cdot\mathbf e_j\), and \(ds^2=g_{ij}\,du^i du^j\). For Bloch states \(|u_{\mathbf k}\rangle\), the tangent vectors are \(|D_iu\rangle=(1-P)|\partial_iu\rangle\) with \(P=|u\rangle\langle u|\), and their inner products form the quantum geometric tensor:</p>
+      <div class="equation">$$Q_{ij}=\langle D_iu|D_ju\rangle=\langle\partial_iu|\partial_ju\rangle-A_iA_j=g_{ij}-\tfrac i2\,\Omega_{ij},\qquad 1-\big|\langle u_{\mathbf k}|u_{\mathbf k+d\mathbf k}\rangle\big|^2\approx g_{ij}\,dk_i\,dk_j$$</div>
+      <p>The quantum metric \(g_{ij}=\mathrm{Re}\,Q_{ij}\) is real and symmetric, like a surface's metric; the Berry curvature \(\Omega_{ij}=-2\,\mathrm{Im}\,Q_{ij}\) is antisymmetric. Neither depends on the phase chosen for each state.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-surface" aria-controls="lab" aria-selected="true" data-mode="surface">1 · Measuring a curved surface</button>
+      <button class="tab" role="tab" id="tab-states" aria-controls="lab" aria-selected="false" data-mode="states" tabindex="-1">2 · Distance between quantum states</button>
+      <button class="tab" role="tab" id="tab-graphene" aria-controls="lab" aria-selected="false" data-mode="graphene" tabindex="-1">3 · The quantum metric of graphene</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="surface">
+      <h2>A map of a curved surface needs a metric to measure it.</h2>
+      <p>Any surface can be drawn, a piece at a time, on a flat chart with two coordinates, like a world map. The metric \(g_{ij}\) turns steps on the chart into distances on the surface: where the chart squeezes the surface, a short step on the chart is a long way on the surface. And the metric alone tells you how curved the surface is: slide an arrow round a small loop without ever turning it, and it comes back turned by the curvature times the area.</p>
+      <p class="notice"><b>What to notice:</b> the small ellipses on the chart are the steps that all cover the same distance on the surface; they are circles only where the chart is true to scale. The arrow comes back turned one way on a sphere, the other way on a saddle, and not at all on a cylinder, which is curved in space but flat to anyone living on it.</p>
+      <details class="math"><summary>The math</summary>
+        <p>With \(\mathbf e_i=\partial\mathbf r/\partial u^i\), \(g_{ij}=\mathbf e_i\cdot\mathbf e_j\) and \(ds^2=g_{ij}du^idu^j\). An arrow carried along a curve so that it never turns within the surface (\(\nabla\mathbf v=0\), parallel transport) comes back round a loop turned by the total Gaussian curvature inside, \(\delta\alpha=\iint K\,dA\) (Gauss–Bonnet), which is \(K\times\text{area}\) for a small loop. \(K=\det L/\det g\), with \(L_{ij}=\partial_i\partial_j\mathbf r\cdot\hat{\mathbf n}\); Gauss showed it depends on \(g\) alone.</p>
+        <div class="equation">$$ds^2=g_{ij}\,du^i du^j,\qquad \partial_k\mathbf e_i=\Gamma^m_{ki}\,\mathbf e_m+L_{ki}\,\hat{\mathbf n},\qquad \delta\alpha=\oint\!\!\text{turn}=\iint K\,dA\approx K\times\text{area}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="states" hidden>
+      <h2>Quantum states have a distance too.</h2>
+      <p>How different two quantum states are comes down to their overlap \(|\langle\psi|\varphi\rangle|\): 1 for the same state, 0 for states that can never be confused. The quantum distance \(\arccos|\langle\psi|\varphi\rangle|\) runs from 0 to \(\pi/2\); for nearby states its square is \(1-|\langle\psi|\varphi\rangle|^2\), the form in the video. For a spin, the states sit on the Bloch sphere, and this distance turns it into a measured surface: a sphere of radius ½. Send a state round a loop and add up the small steps: that is its quantum odometer.</p>
+      <p class="notice"><b>What to notice:</b> the distance from the start, "as the crow flies", rises and falls; the odometer, "along the road", only grows. Scramble every state's phase: nothing you can measure changes. The loop's length is set by the metric; its Berry phase, from card 1, by the curvature.</p>
+      <details class="math"><summary>The math</summary>
+        <p>For nearby states, \(1-|\langle u|u+du\rangle|^2\approx g_{ij}\,du^idu^j\). For a spin-½ in direction \((\theta,\varphi)\) this gives \(ds^2=\tfrac14\big(d\theta^2+\sin^2\theta\,d\varphi^2\big)\), a sphere of radius ½: so a circle of latitude has length \(\pi\sin\theta\), and the Fubini–Study distance between any two states is \(\arccos|\langle\psi|\varphi\rangle|\), half the angle between their arrows.</p>
+        <div class="equation">$$d_{\rm FS}(\psi,\varphi)=\arccos\big|\langle\psi|\varphi\rangle\big|,\qquad ds^2=\tfrac14\big(d\theta^2+\sin^2\theta\,d\varphi^2\big),\qquad Q_{ij}=g_{ij}-\tfrac i2\Omega_{ij}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="graphene" hidden>
+      <h2>In graphene, the quantum metric piles up at the valleys.</h2>
+      <p>Move along a path in graphene's Brillouin zone and the electron's state, a mix of its two carbon atoms, changes. The quantum metric says how fast, at each \(\mathbf k\). Far from the valleys the state barely changes; at the valleys K and K′, where the gap is smallest, it turns quickly, and the metric is large. Shrink the gap and it becomes larger still.</p>
+      <p class="notice"><b>What to notice:</b> the ellipses on the map show how far the state moves for a small step in each direction, and they swell at K and K′. Halve the gap and the metric at K grows four times; close it, in plain graphene, and the state flips to an orthogonal one as it crosses K: the odometer jumps.</p>
+      <details class="math"><summary>The math</summary>
+        <p>For a two-band model \(H=d_0+\mathbf d\cdot\boldsymbol\sigma\), with \(\mathbf n=\mathbf d/|\mathbf d|\), the lower band has \(g_{ij}=\tfrac14\,\partial_i\mathbf n\cdot\partial_j\mathbf n\) and \(\Omega_{xy}=\tfrac12\,\mathbf n\cdot(\partial_x\mathbf n\times\partial_y\mathbf n)\). Because \(\partial_x\mathbf n\times\partial_y\mathbf n\) points along \(\mathbf n\), \(\sqrt{\det g}=|\Omega|/2\) exactly, and so \(\mathrm{tr}\,g\ge|\Omega|\). Near a valley, a massive Dirac cone with speed \(v\) and mass \(M\) gives \(\mathrm{tr}\,g=v^2/2M^2\) at K.</p>
+        <div class="equation">$$g_{ij}=\tfrac14\,\partial_i\mathbf n\cdot\partial_j\mathbf n,\qquad \sqrt{\det g}=\tfrac12|\Omega|,\qquad \mathrm{tr}\,g\ \ge\ |\Omega|,\qquad \mathrm{tr}\,g\big|_{K}=\frac{v^2}{2M^2}$$</div>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-surface">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="surface">
+        <div class="label-caps">The surface</div>
+        <div class="seg" role="group" aria-label="Surface">
+          <button type="button" data-surf="plane" aria-pressed="false">Plane</button><button type="button" data-surf="cylinder" aria-pressed="false">Cylinder</button><button type="button" data-surf="sphere" aria-pressed="true">Sphere</button><button type="button" data-surf="saddle" aria-pressed="false">Saddle</button>
+        </div>
+        <div class="ctrl__hint" id="surf-hint"></div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="eps">Size of the loop</label><output id="eps-out" for="eps"></output></div>
+          <input id="eps" type="range" min="0.1" max="0.8" step="0.05" value="0.5"><div class="ctrl__hint" id="eps-hint">Tap or drag on the chart to move the point; with the chart focused, the arrow keys move it too.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="states">
+        <div class="label-caps">The loop on the Bloch sphere</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="thc">Cone angle θ</label><output id="thc-out" for="thc"></output></div>
+          <input id="thc" type="range" min="5" max="175" step="1" value="60">
+        </div>
+        <div class="chips" role="group" aria-label="Cone angles">
+          <button class="chip-btn" type="button" data-thc="30">30°</button><button class="chip-btn" type="button" data-thc="90">90°, the equator</button><button class="chip-btn" type="button" data-thc="120">120°</button>
+        </div>
+        <div class="label-caps" style="margin-top:10px">The phase of each state</div>
+        <div class="seg" role="group" aria-label="Phases">
+          <button type="button" data-cg="smooth" aria-pressed="true">Smooth</button><button type="button" data-cg="random" aria-pressed="false">Scrambled</button>
+        </div>
+        <div class="ctrl__hint" id="cg-hint"></div>
+        <button class="chip-btn" type="button" id="reroll">New random phases</button>
+      </div>
+      <div class="ctrl-group" data-modes="graphene">
+        <div class="label-caps">The graphene</div>
+        <div class="chips" role="group" aria-label="Kinds of graphene">
+          <button class="chip-btn" type="button" data-preset="gapless">Plain graphene</button><button class="chip-btn" type="button" data-preset="gapped">Graphene on a substrate</button><button class="chip-btn" type="button" data-preset="haldane">Haldane's graphene</button>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="hm">Gap from the substrate: mass M</label><output id="hm-out" for="hm"></output></div>
+          <input id="hm" type="range" min="-1" max="1" step="0.01" value="0.2"><div class="ctrl__hint">A substrate such as boron nitride makes graphene's two carbon sites different, which opens a gap of 2M at the valleys.</div>
+        </div>
+        <div class="ctrl" data-deep>
+          <div class="ctrl__row"><label for="ht2">Haldane hopping t<sub>2</sub></label><output id="ht2-out" for="ht2"></output></div>
+          <input id="ht2" type="range" min="0" max="0.3" step="0.005" value="0">
+        </div>
+        <div class="ctrl" data-deep>
+          <div class="ctrl__row"><label for="hphi">Its phase φ</label><output id="hphi-out" for="hphi"></output></div>
+          <input id="hphi" type="range" min="-180" max="180" step="5" value="90"><div class="ctrl__hint">Energies in units of the nearest-neighbour hopping t.</div>
+        </div>
+        <div class="label-caps" style="margin-top:10px">The path through the zone</div>
+        <div class="seg" role="group" aria-label="Path">
+          <button type="button" data-path="across" aria-pressed="true">Across valley K</button><button type="button" data-path="tour" aria-pressed="false">Γ–K–M–K′–Γ</button>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--3 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button><button class="btn-quiet btn-small" id="reset-view" type="button">Reset view</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view" id="mag-view">
+          <div class="mag-view__side">
+            <div class="plot-box plot-box--mag" id="plane-box"><canvas id="plane" class="zone-map" tabindex="0" role="img" aria-label="Chart"></canvas></div>
+            <div class="plot-box plot-box--mag" id="bloch-box" hidden><canvas id="bloch" class="sphere" tabindex="0" role="img" aria-label="Bloch sphere"></canvas></div>
+          </div>
+          <div class="mag-view__side">
+            <div class="plot-box plot-box--mag" id="surf-box"><canvas id="surf" class="sphere" tabindex="0" role="img" aria-label="The surface in 3D"></canvas></div>
+            <div class="plot-box plot-box--mag" id="dial-box" hidden><canvas id="dial" role="img" aria-label="Overlap with the starting state"></canvas></div>
+            <div class="plot-box plot-box--mag" id="sphere-box" hidden><canvas id="sphere" class="sphere" tabindex="0" role="img" aria-label="Where the electron's state points"></canvas></div>
+          </div>
+        </div>
+        <p class="path-note" id="path-note"></p>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Surfaces</span><button class="predict__load" type="button" data-q="cyl">Load a cylinder</button></div>
+        <p>Carry the arrow round a loop on a cylinder. The cylinder is plainly curved. Does the arrow come back turned?</p>
+        <details><summary>Show answer</summary>
+          <p>No, not at all, wherever the loop is. A cylinder is a rolled-up sheet of paper: you can unroll it flat without stretching or tearing, so distances on it, and its metric, are those of a flat sheet, and its curvature is zero. It is curved in space, but not to anyone living on it, and an arrow slid round a loop cannot tell it from a plane. A sphere cannot be flattened without stretching it, which is why every world map distorts.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Surfaces</span><button class="predict__load" type="button" data-q="sad">Load the saddle</button></div>
+        <p>A loop of size 0.5 turns the arrow by 44° anticlockwise on a sphere of radius 1. Put the same loop at the centre of the saddle, where the curvature is −1. What happens?</p>
+        <details><summary>Show answer</summary>
+          <p>It turns the other way, clockwise, by 38°. On a sphere, the curvature is positive, and the arrow turns the same way the loop goes round; on a saddle it is negative, and it turns against it. A small loop would turn it by curvature × area = 45° either way; these loops are not quite small, and the saddle flattens out away from its centre, so it gives a little less.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Surfaces</span><button class="predict__load" type="button" data-q="map">Load latitude 60°</button></div>
+        <p>On the sphere's chart, longitude across and latitude up, like a world map, move the point up to latitude 60°. What shape is the ellipse of equal distances there?</p>
+        <details><summary>Show answer</summary>
+          <p>Twice as wide as it is tall. At latitude 60°, a circle of latitude is only half as long as the equator, \(\cos 60°=\tfrac12\), but the chart draws it just as long; so a degree of longitude covers half the distance of a degree of latitude, \(g_{\varphi\varphi}=\cos^2 60°=\tfrac14\), and the ellipse must stretch across to cover the same distance. That is why Greenland looks so big on a world map.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Quantum distance</span><button class="predict__load" type="button" data-q="eq">Load the equator</button></div>
+        <p>A state goes round the equator of the Bloch sphere. Half way round, how far is it from where it started? And how far has it travelled?</p>
+        <details><summary>Show answer</summary>
+          <p>As far as two states can be: \(\arccos 0=\pi/2\), with \(1-|\langle\psi_0|\psi\rangle|^2=1\). Half way round the equator the state points the opposite way, and opposite spins can never be confused. On the odometer it has travelled \(\pi/2\) too: the equator is a great circle, so half way round it is also the shortest way. All the way round it is \(\pi\): the equator of a sphere of radius ½. Back at the start its distance from the start is 0 again, but the odometer still reads \(\pi\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Quantum distance</span><button class="predict__load" type="button" data-q="scr">Load scrambled phases</button></div>
+        <p>Give every state on the loop a random phase, and press "New random phases" a few times. What changes?</p>
+        <details><summary>Show answer</summary>
+          <p>Only the direction of the arrow in the dial, the phase of the overlap \(\langle\psi_0|\psi\rangle\), which jumps about. Its length does not, so neither does the distance from the start; nor do the odometer and the Berry phase. Distances depend only on \(|\langle\psi|\varphi\rangle|\), so, like the Berry curvature, the quantum metric does not care about the phase you give each state.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Quantum distance</span><button class="predict__load" type="button" data-q="cone">Load a 120° cone</button></div>
+        <p>Compare loops round a 60° and a 120° cone. Which is longer on the odometer? Which has the larger Berry phase?</p>
+        <details><summary>Show answer</summary>
+          <p>They are exactly as long, \(\pi\sin\theta=2.72\), mirror images on either side of the equator, where the longest of these loops, \(\pi\), runs. But the 120° loop encloses three times the area, so its Berry phase is three times larger, \(-1.5\pi\) against \(-0.5\pi\). (A phase only counts up to whole turns of \(2\pi\), so \(-1.5\pi\) is the same as \(+0.5\pi\): the two twists are equal and opposite.) The metric measures the loop's length, the curvature the area inside it: the real and imaginary parts of one tensor.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Graphene</span><button class="predict__load" type="button" data-q="half">Load graphene on a substrate</button></div>
+        <p>Graphene on a substrate with \(M=0.2\,t\): the quantum metric at the valley K is \(\mathrm{tr}\,g=28\). Halve the mass to \(0.1\,t\). What does it become?</p>
+        <details><summary>Show answer</summary>
+          <p>Four times larger, 112.5. Near K the electron is a massive Dirac particle. At K its state sits wholly on one carbon atom, and it tilts toward an equal share of both over a distance of about \(M/v\) in \(\mathbf k\), with \(v=\tfrac32 t\): halve the mass and it turns twice as fast, and the metric, a speed squared, grows four times: \(\mathrm{tr}\,g=v^2/2M^2\). As the gap closes the metric blows up, one of the signatures of a quantum phase transition.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Graphene</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="flip">Load plain graphene</button></div>
+        <p>Plain graphene, with no gap, and the path straight across valley K. What does the odometer do as the path crosses K?</p>
+        <details><summary>Show answer</summary>
+          <p>It jumps by \(\pi/2\), the largest step there is. Without a gap the electron's state hardly changes near K along this line, but on the far side of K it is a different, orthogonal state: crossing K it flips across the Bloch sphere at once, and \(\arccos 0=\pi/2\). The metric is infinite at K: along this path, that whole \(\pi/2\) is concentrated at the single point K. Give graphene a small gap and the jump is smoothed out over a distance of about \(M/v\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook computes the metric and Gaussian curvature of the four surfaces, carries an arrow round loops and checks its turn against Gauss–Bonnet, measures quantum distances and loop lengths on the Bloch sphere, and maps the quantum metric of graphene, checking \(\sqrt{\det g}=|\Omega|/2\) and the blow-up at the valleys. It needs NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="quantum_metric.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta">.ipynb · 18 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>The surfaces:</strong> a plane, \(\mathbf r=(x,y,0)\); a cylinder of radius 1, \((\cos\varphi,\sin\varphi,h)\); a sphere of radius 1 in longitude \(\varphi\) and latitude \(\lambda\), \((\cos\lambda\cos\varphi,\cos\lambda\sin\varphi,\sin\lambda)\); and a saddle, \(z=(x^2-y^2)/2\). The tangent vectors and the metric come from central differences of \(\mathbf r\); the Gaussian curvature from \(K=\det L/\det g\), with the second fundamental form \(L_{ij}=\partial_i\partial_j\mathbf r\cdot\hat{\mathbf n}\). On the saddle \(K=-1/(1+x^2+y^2)^2\).</li>
+          <li><strong>The loop:</strong> the metric ellipse \(g_{ij}\,du^idu^j=\varepsilon^2\) around the point, which to first order is a circle of radius \(\varepsilon\) on the surface; it is shrunk if needed to stay on the chart. The arrow starts along \(\mathbf e_1\) and is carried round 400 points: at each step it is rotated with the surface's normal, by the smallest rotation taking one normal to the next, so it never turns within the surface (the Levi-Civita parallel transport of the surface). Its turn is compared with \(\iint K\,dA\) over the inside of the loop (Gauss–Bonnet), by Gauss–Legendre quadrature, and with \(K\times\text{area}\), the small-loop value.</li>
+          <li><strong>Quantum distances:</strong> for spin-½ states \(|{+}\mathbf n\rangle\) on a circle of latitude, the distance from the start is the Fubini–Study distance \(\arccos|\langle\psi_0|\psi\rangle|\), and the odometer adds up \(\arccos|\langle\psi_j|\psi_{j+1}\rangle|\) over 400 steps: the shortest distance for each step, so it cuts the loop's curve very slightly short of its length, \(\pi\sin\theta\). "Scrambled" multiplies each state by a random phase. The Berry phase is \(-\tfrac12\) the solid angle the loop encloses on the unit Bloch sphere, \(-\pi(1-\cos\theta)\), as in card 1.</li>
+          <li><strong>Graphene:</strong> the same model as card 1, with carbon–carbon distance 1 and hopping \(t=1\): \(d_x+id_y=\sum_je^{i\mathbf k\cdot\boldsymbol\delta_j}\), a sublattice mass \(M\) and Haldane's \(t_2e^{\pm i\varphi}\). The quantum metric of the lower band is \(g_{ij}=\tfrac14\partial_i\mathbf n\cdot\partial_j\mathbf n\), from analytic derivatives of \(\mathbf d\); it agrees with \(1-|\langle u_{\mathbf k}|u_{\mathbf k+\delta\mathbf k}\rangle|^2\) for small steps. Each ellipse on the map has axes along the eigenvectors of \(g\), proportional to the square roots of its eigenvalues: the distance the state moves for a step of fixed size in each direction. The odometer adds up \(\arccos|\langle u_j|u_{j+1}\rangle|\) along the path, 1200 steps.</li>
+          <li><strong>Checks:</strong> with 400 steps, the arrow's turn agrees with \(\iint K\,dA\) to about \(10^{-4}\) rad, and loop lengths on the Bloch sphere with \(\pi\sin\theta\) to about \(10^{-5}\); both errors shrink as the steps get smaller. \(\sqrt{\det g}\) agrees with \(|\Omega|/2\) to \(10^{-12}\), and \(\mathrm{tr}\,g\) at K with \(v^2/2M^2\) to rounding error. The notebook repeats the calculation independently and asserts every number quoted in the answers.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="../../assets/js/bloch-sphere.js"></script>
+<script src="../berry-phase/physics.js"></script>
+<script src="../berry-phase/views.js"></script>
+<script src="metric.js"></script>
+<script src="views.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
