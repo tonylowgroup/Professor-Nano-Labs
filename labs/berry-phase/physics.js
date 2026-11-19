@@ -191,11 +191,14 @@
     cands.push([0, 0, 1], [0, 0, -1]);
     const mean = pts.reduce((m, p) => [m[0] + p[0], m[1] + p[1], m[2] + p[2]], [0, 0, 0]), ml = Math.hypot(...mean);
     if (ml > 1e-3) cands.push(mean.map(v => v / ml));
+    // every apex inside the same region gives the same area; of those, keep the one farthest from the curve, so that the
+    // fan, and the picture of it, is well shaped
     let best = null;
     cands.forEach(apex => {
       if (pts.some(q => dot3(apex, q) < -1 + 1e-6)) return;           // an apex opposite a point of the curve is ill-defined
       const tri = pts.map((p, j) => triSolid(apex, p, pts[(j + 1) % N])), area = tri.reduce((x, y) => x + y, 0);
-      if (!best || Math.abs(area) < Math.abs(best.area) - 1e-9) best = { apex, tri, area };
+      const clear = Math.min(...pts.map(q => Math.acos(Math.max(-1, Math.min(1, dot3(apex, q))))));
+      if (!best || Math.abs(area) < Math.abs(best.area) - 1e-6 || (Math.abs(Math.abs(area) - Math.abs(best.area)) <= 1e-6 && clear > best.clear)) best = { apex, tri, area, clear };
     });
     return Object.assign({ pts }, best);
   }

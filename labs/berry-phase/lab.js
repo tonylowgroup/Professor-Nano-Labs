@@ -519,7 +519,7 @@
     onTune();
     if (mode === 'crystal' && (d.preset || d.model || (d.at !== undefined && d.at !== '') || b.id === 'video-values')) requestAnimationFrame(() => requestAnimationFrame(aimSphere));
   });
-  $('reset-view').addEventListener('click', () => sphere.setView(32 * DEG, 22 * DEG));
+  $('reset-view').addEventListener('click', () => (mode === 'crystal' ? aimSphere() : sphere.setView(32 * DEG, 22 * DEG)));
   const tabs = Array.from(document.querySelectorAll('.tab'));
   tabs.forEach((b, i) => {
     b.addEventListener('click', () => { mode = b.dataset.mode; veil = false; applyMode(); });
