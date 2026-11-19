@@ -176,6 +176,7 @@ mjx-container svg { display: inline; }
 
 .player { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .stats--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stats--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .chain-card { padding: 10px 18px; color: var(--brand); }
 .chain { width: 100%; height: auto; }
 .chain__label { font-size: 18px; fill: var(--muted); }
@@ -533,3 +534,22 @@ mjx-container svg { display: inline; }
   .transport { grid-template-columns: auto auto 1fr; }
   .transport input[type="range"] { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Berry phase: the "essentials / go deeper" switch, plain-language intros with the maths folded away, a glossary */
+.depth-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -2px 0 16px; }
+.depth-row__label { font-size: 13px; font-weight: 700; color: var(--muted); }
+.depth-row__hint { font-size: 13px; color: var(--muted); }
+.mode-intro .notice { margin-top: 10px; color: var(--ink); }
+details.math { margin-top: 10px; max-width: 900px; }
+details.math > summary { cursor: pointer; font-size: 14px; font-weight: 700; color: var(--brand-strong); }
+details.math[open] > summary { margin-bottom: 8px; }
+details.math p { margin: 0 0 8px; }
+.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin: 16px 0 6px; }
+/* links to the glossary, from the intros */
+a[href^="#g-"] { color: var(--brand-strong); text-decoration: underline dotted; text-underline-offset: 3px; }
+.gloss > div { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--brand-soft); scroll-margin-top: 90px; }
+.gloss dt { font-weight: 800; color: var(--brand-strong); font-size: 14px; }
+.gloss dd { margin: 3px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.gloss > div:target { outline: 2px solid var(--brand); }
+.predict__level { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-strong); background: var(--brand-soft); border-radius: 999px; padding: 2px 9px; }
+.range-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 2px; }
