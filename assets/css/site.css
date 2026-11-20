@@ -241,11 +241,89 @@ img, svg { display: block; }
 }
 .principles p { margin: 0; color: var(--muted); line-height: 1.6; font-size: 15px; }
 
-/* ---------- About ---------- */
-.about { display: grid; grid-template-columns: 180px 1fr; gap: 40px; align-items: center; }
-.about__badge svg { width: 180px; height: 180px; }
-.about__text p { color: var(--ink-2); line-height: 1.7; max-width: 680px; margin: 0 0 12px; font-size: 16.5px; }
-.about__links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+/* ---------- Full-width bands at the end of the homepage: About and the summer school ----------
+   Both share one layout; each band sets its own colours. */
+.about-band, .school-band { background: var(--band-bg); color: var(--band-ink); padding: 88px 0 92px; }
+/* About: in the style of the YouTube channel's banner (black, white lettering outlined in gold) */
+.about-band { --pn-gold: #ffc000; --band-bg: #000; --band-ink: #f2f2f2; --band-soft: #c9c9c9; --band-accent: #ffc000; --band-on-accent: #000; }
+/* Quantum + Chips: the colours of the school's logo (navy chip, gold pins) */
+.school-band { --band-bg: #14283f; --band-ink: #eef2f7; --band-soft: #c4cfdc; --band-accent: #f6c142; --band-on-accent: #14283f; }
+.about__head { text-align: center; }
+.about__eyebrow { color: var(--band-accent); }
+.about-band .about__mark {
+  font-family: Calibri, Carlito, Inter, system-ui, sans-serif; font-weight: 700; letter-spacing: 0; font-variant-ligatures: none;
+  font-size: clamp(44px, 7vw, 80px); line-height: 1.08; color: var(--band-ink); margin: 14px 0 6px;
+  text-shadow:
+    0.045em 0.000em 0 var(--pn-gold),
+    0.043em 0.012em 0 var(--pn-gold),
+    0.039em 0.022em 0 var(--pn-gold),
+    0.032em 0.032em 0 var(--pn-gold),
+    0.023em 0.039em 0 var(--pn-gold),
+    0.012em 0.043em 0 var(--pn-gold),
+    0.000em 0.045em 0 var(--pn-gold),
+    -0.012em 0.043em 0 var(--pn-gold),
+    -0.022em 0.039em 0 var(--pn-gold),
+    -0.032em 0.032em 0 var(--pn-gold),
+    -0.039em 0.022em 0 var(--pn-gold),
+    -0.043em 0.012em 0 var(--pn-gold),
+    -0.045em 0.000em 0 var(--pn-gold),
+    -0.043em -0.012em 0 var(--pn-gold),
+    -0.039em -0.022em 0 var(--pn-gold),
+    -0.032em -0.032em 0 var(--pn-gold),
+    -0.023em -0.039em 0 var(--pn-gold),
+    -0.012em -0.043em 0 var(--pn-gold),
+    -0.000em -0.045em 0 var(--pn-gold),
+    0.012em -0.043em 0 var(--pn-gold),
+    0.023em -0.039em 0 var(--pn-gold),
+    0.032em -0.032em 0 var(--pn-gold),
+    0.039em -0.023em 0 var(--pn-gold),
+    0.043em -0.012em 0 var(--pn-gold),
+    0.025em 0.000em 0 var(--pn-gold),
+    0.022em 0.012em 0 var(--pn-gold),
+    0.013em 0.022em 0 var(--pn-gold),
+    0.000em 0.025em 0 var(--pn-gold),
+    -0.012em 0.022em 0 var(--pn-gold),
+    -0.022em 0.012em 0 var(--pn-gold),
+    -0.025em 0.000em 0 var(--pn-gold),
+    -0.022em -0.012em 0 var(--pn-gold),
+    -0.013em -0.022em 0 var(--pn-gold),
+    -0.000em -0.025em 0 var(--pn-gold),
+    0.013em -0.022em 0 var(--pn-gold),
+    0.022em -0.013em 0 var(--pn-gold);
+}
+.about__tagline {
+  font-family: Calibri, Carlito, Inter, system-ui, sans-serif; font-weight: 700; font-variant-ligatures: none;
+  font-size: clamp(19px, 2.4vw, 28px); line-height: 1.3; color: #fff; margin: 0;
+}
+.about__rule { width: 56px; height: 3px; border-radius: 2px; background: var(--band-accent); margin: 34px auto 34px; border: 0; }
+.about__text { max-width: 720px; margin: 0 auto; }
+.about__text p { color: var(--band-soft); line-height: 1.75; margin: 0 0 14px; font-size: 16.5px; }
+.about__text p:first-child { color: var(--band-ink); }
+.about__links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.btn--accent { background: var(--band-accent); color: var(--band-on-accent); }
+.btn--accent:hover { filter: brightness(1.08); }
+.btn--line { background: transparent; color: var(--band-ink); border-color: rgba(255, 255, 255, .42); }
+.btn--line:hover { filter: none; border-color: var(--band-accent); color: var(--band-accent); }
+.about-band :focus-visible, .school-band :focus-visible { outline-color: var(--band-accent); }
+
+.school__logo { width: 88px; height: auto; border-radius: 18px; margin: 0 auto 20px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); }
+.school__title { font-size: clamp(40px, 6vw, 68px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--band-ink); margin: 12px 0 10px; }
+.school__title .plus { color: var(--band-accent); }
+.about__tagline, .school__tagline, .school__meta { text-wrap: balance; }
+.school__tagline { font-size: clamp(18px, 2.2vw, 24px); font-weight: 600; line-height: 1.35; color: var(--band-ink); margin: 0; }
+.school__meta { margin: 14px 0 0; font-size: 14px; font-weight: 600; letter-spacing: .02em; color: var(--band-soft); }
+.school__weeks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 960px; margin: 30px auto 0; }
+.school__week { border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 20px 22px; }
+.school__week h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.01em; color: var(--band-ink); }
+.school__week h3 span { display: block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--band-accent); margin-bottom: 6px; }
+.school__week p { margin: 0; color: var(--band-soft); line-height: 1.65; font-size: 15px; }
+.school__photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 960px; margin: 16px auto 0; padding: 0; list-style: none; }
+.school__photos figure { margin: 0; position: relative; height: 100%; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, .06); }
+.school__photos li { aspect-ratio: 4 / 3; }
+.school__photos li:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+.school__photos img { width: 100%; height: 100%; object-fit: cover; }
+.school__photos figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 12px 9px; font-size: 12.5px; line-height: 1.35; color: #fff; background: linear-gradient(rgba(8, 16, 28, 0), rgba(8, 16, 28, .86)); }
+.school__links { justify-content: center; margin-top: 34px; }
 
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 13.5px; }
@@ -272,7 +350,10 @@ img, svg { display: block; }
   .track { padding-left: 0; }
   .track:not(:last-child)::before { display: none; }
   .track__num { position: static; margin-bottom: 4px; }
-  .about { grid-template-columns: 1fr; gap: 20px; }
-  .about__badge svg { width: 110px; height: 110px; }
+  .about-band, .school-band { padding: 60px 0 64px; }
+  .about__rule { margin: 26px auto; }
+  .school__weeks { grid-template-columns: 1fr; }
+  .school__photos { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .school__photos li:first-child { grid-row: auto; aspect-ratio: 4 / 3; }
   .site-footer__inner { padding: 20px 16px; }
 }

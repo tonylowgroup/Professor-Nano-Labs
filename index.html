@@ -11,7 +11,7 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Carlito:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
@@ -33,6 +33,7 @@
       <a href="#labs">Labs</a>
       <a href="#how">How it works</a>
       <a href="#about">About</a>
+      <a href="#summer-school">Summer school</a>
       <a class="nav-cta" href="https://www.youtube.com/@professornano" data-youtube>YouTube <span aria-hidden="true">↗</span></a>
     </div>
   </div>
@@ -1272,25 +1273,61 @@
   </section>
 
   <!-- ============ About ============ -->
-  <section class="section" id="about" aria-labelledby="about-title">
-    <div class="shell about">
-      <div class="about__badge" aria-hidden="true">
-        <svg viewBox="0 0 120 120">
-          <path d="M60 8 105 34v52L60 112 15 86V34Z" fill="#175569"/>
-          <path d="M60 8 105 34v52L60 112 15 86V34Z" fill="none" stroke="#7fe0e8" stroke-width="2" stroke-opacity=".6"/>
-          <text x="60" y="71" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="30" fill="#fff" letter-spacing="-1">PN</text>
-        </svg>
+  <section class="about-band" id="about" aria-labelledby="about-title">
+    <div class="shell">
+      <div class="about__head">
+        <div class="eyebrow about__eyebrow">About</div>
+        <h2 class="about__mark" id="about-title">Professor Nano</h2>
+        <p class="about__tagline">big ideas precisely explained in nano time</p>
       </div>
+      <hr class="about__rule">
       <div class="about__text">
-        <div class="eyebrow">About</div>
-        <h2 id="about-title">Professor Nano</h2>
         <p>Hello, I’m Tony Low, a professor at the University of Minnesota, with over two decades of research experience in semiconductors, nano-devices, quantum materials and emerging technologies at IBM T.J. Watson Research Center, Columbia University, Yale University, Purdue University and the National University of Singapore.</p>
         <p>Professor Nano shares key ideas through concise, 10-minute “knowledge nuggets” built from first principles, spanning semiconductors, electronic and optical devices, quantum physics, nanotechnology and the science behind future computing. We won’t shy away from math, because equations often provide the clearest path to understanding.</p>
         <p>These labs put those equations in motion: change a parameter and see what the model predicts.</p>
         <div class="about__links">
-          <a class="btn btn--brand" href="https://www.youtube.com/@professornano" data-youtube>Visit the channel <span aria-hidden="true">↗</span></a>
-          <a class="btn btn--outline" href="https://github.com/tonylowgroup/Professor-Nano-Labs">Notebooks on GitHub <span aria-hidden="true">↗</span></a>
+          <a class="btn btn--accent" href="https://www.youtube.com/@professornano" data-youtube>Visit the channel <span aria-hidden="true">↗</span></a>
+          <a class="btn btn--line" href="https://github.com/tonylowgroup/Professor-Nano-Labs">Notebooks on GitHub <span aria-hidden="true">↗</span></a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Summer school ============ -->
+  <section class="school-band" id="summer-school" aria-labelledby="school-title">
+    <div class="shell">
+      <div class="about__head">
+        <img class="school__logo" src="assets/img/quantum-chips/logo.png" alt="" width="88" height="84">
+        <div class="eyebrow about__eyebrow">Summer school</div>
+        <h2 class="school__title" id="school-title">Quantum <span class="plus">+</span> Chips</h2>
+        <p class="school__tagline">From atoms to materials to devices to chips</p>
+        <p class="school__meta">Two weeks every summer · University of Minnesota · For undergraduates</p>
+      </div>
+      <hr class="about__rule">
+      <div class="about__text">
+        <p>Quantum + Chips is a two-week summer school at the University of Minnesota, led by Professor Tony Low with experts from industry and academia. It is open to undergraduates from a wide range of disciplines, such as physics, engineering, chemistry and mathematics, and teaches a first-principles approach that runs from atoms to materials to devices to chips: going “from quantum to chips”.</p>
+        <p>Since it began in 2023, the school has brought together about 50 students each year from across the US and abroad, typically from late July to early August. Along with lectures and a hackathon, students tour labs and companies, hear from industry, and make lasting connections with each other.</p>
+      </div>
+      <div class="school__weeks">
+        <div class="school__week">
+          <h3><span>Week 1</span>Deep dive</h3>
+          <p>Lectures from atoms to devices, each paired with a hands-on Python lab, and a hackathon on challenge problems in quantum and chips. The lectures are on the Professor Nano channel.</p>
+        </div>
+        <div class="school__week">
+          <h3><span>Week 2</span>Deep tech</h3>
+          <p>Talks by experts on devices, semiconductor and quantum chips, clean-room and company visits, and a careers panel. Speakers in past years have come from Intel, Nvidia, Google, Honeywell, Quantinuum, Seagate, SkyWater, NVE and 3M.</p>
+        </div>
+      </div>
+      <ul class="school__photos" aria-label="Photos from Quantum + Chips 2024">
+        <li><figure><img src="assets/img/quantum-chips/group.jpg" alt="About fifty students and organizers posing together outside a university building" width="1040" height="780" loading="lazy"><figcaption>Quantum + Chips 2024: 50 participants, half from US institutions and half from South Korea</figcaption></figure></li>
+        <li><figure><img src="assets/img/quantum-chips/intel-talk.jpg" alt="A speaker from Intel presenting slides in a lecture hall" width="640" height="480" loading="lazy"><figcaption>A talk from Intel on future logic technology</figcaption></figure></li>
+        <li><figure><img src="assets/img/quantum-chips/clean-room.jpg" alt="Students in white clean-room suits inside a fabrication facility" width="640" height="480" loading="lazy"><figcaption>A clean-room tour</figcaption></figure></li>
+        <li><figure><img src="assets/img/quantum-chips/hackathon.jpg" alt="Six members of a team holding award plaques at the front of a lecture room" width="640" height="480" loading="lazy"><figcaption>The winning hackathon team</figcaption></figure></li>
+        <li><figure><img src="assets/img/quantum-chips/panel.jpg" alt="Panelists seated at the front of a lecture room answering a student's question" width="640" height="480" loading="lazy"><figcaption>A careers panel with Quantinuum, UMN and Honeywell</figcaption></figure></li>
+      </ul>
+      <div class="about__links school__links">
+        <a class="btn btn--accent" href="https://sites.google.com/umn.edu/quantum/home">Visit the summer school <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--line" href="https://sites.google.com/umn.edu/quantum/hackathon">Hackathon projects <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
