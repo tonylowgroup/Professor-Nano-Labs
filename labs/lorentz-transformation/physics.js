@@ -16,7 +16,7 @@
   // the muon: mean lifetime at rest, the speed of light, and the height where cosmic rays make it
   const MUON = { tau: 2.1969811e-6, c: 299792458, height: 15000 };
   const muonRange = (b, dilate) => (dilate ? gamma(b) : 1) * b * MUON.c * MUON.tau;
-  const survive = (d, b, dilate) => Math.exp(-d / muonRange(b, dilate));
+  const survive = (d, b, dilate) => (d <= 0 ? 1 : b <= 0 ? 0 : Math.exp(-d / muonRange(b, dilate)));
 
   // ---------- 2. The train and the lightning ----------
   // on the platform the moving train is contracted to L0/γ; the strikes hit its ends at t = 0
@@ -26,7 +26,7 @@
       L,
       A: [-L / 2, 0],                                    // the strike at the back
       B: [L / 2, 0],                                     // the strike at the front
-      back: t => -L / 2 + b * t, front: t => L / 2 + b * t, mid: t => b * t,
+      mid: t => b * t,
       // when the light from each strike reaches the passenger in the middle of the train (platform time)
       seeFront: L / (2 * (1 + b)), seeBack: L / (2 * (1 - b)),
       // and the platform observer standing where the middle of the train was at t = 0

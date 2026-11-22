@@ -39,11 +39,15 @@
 
   // the flux across a straight segment (normal to the right of the direction of travel, so outward on an
   // anticlockwise loop) and the line integral along it
-  const angle = (x1, y1, x2, y2) => Math.atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2);
+  // a side that runs through the centre, or ends on it, sees the field only along itself there: it adds no angle,
+  // so a box whose edge holds the centre gets half the total (a quarter at a corner), the symmetric value
+  const angle = (x1, y1, x2, y2) => { const cr = x1 * y2 - y1 * x2, dt = x1 * x2 + y1 * y2; return Math.abs(cr) < 1e-12 && dt <= 1e-12 ? 0 : Math.atan2(cr, dt); };
+  // the logarithmic parts cancel round any closed box; a side ending on the centre gets none
+  const logr = (x1, y1, x2, y2) => { const a = Math.hypot(x1, y1), b = Math.hypot(x2, y2); return a < 1e-12 || b < 1e-12 ? 0 : Math.log(b / a); };
   function seg(fd, x1, y1, x2, y2) {
     const dx = x2 - x1, dy = y2 - y1;
-    if (fd.point === 'div') return [angle(x1, y1, x2, y2), Math.log(Math.hypot(x2, y2) / Math.hypot(x1, y1))];
-    if (fd.point === 'curl') return [-Math.log(Math.hypot(x2, y2) / Math.hypot(x1, y1)), angle(x1, y1, x2, y2)];
+    if (fd.point === 'div') return [angle(x1, y1, x2, y2), logr(x1, y1, x2, y2)];
+    if (fd.point === 'curl') return [-logr(x1, y1, x2, y2), angle(x1, y1, x2, y2)];
     let flux = 0, circ = 0;
     for (let i = 0; i < GL.x.length; i++) {
       const s = (1 + GL.x[i]) / 2, [fx, fy] = fd.F(x1 + s * dx, y1 + s * dy);
@@ -99,7 +103,8 @@
   const PANELS = 34;
   function chargeFlux(q, s, R) {
     if (s < 1e-12) return q;
-    const f = t => { const u = 1 - t * t, w = R * R + s * s - 2 * R * s * u; return w <= 0 ? 0 : 2 * t * R * R * (R - s * u) / Math.pow(w, 1.5); };
+    // with u = 1 − t², written so that nothing cancels when s ≈ R: w = (R − s)² + 2Rst², R − su = (R − s) + st²
+    const f = t => { const w = (R - s) * (R - s) + 2 * R * s * t * t; return w <= 0 ? 0 : 2 * t * R * R * ((R - s) + s * t * t) / Math.pow(w, 1.5); };
     let tot = 0;
     for (let k = 0; k < PANELS; k++) {
       const a = k === PANELS - 1 ? 0 : Math.SQRT2 * Math.pow(2, -(k + 1)), b = Math.SQRT2 * Math.pow(2, -k), m = (a + b) / 2, h = (b - a) / 2;
@@ -118,13 +123,16 @@
     return I * tot / TAU;
   }
   function surface(src, cx, cy, R) {
-    let total = 0, inside = 0;
+    let total = 0, inside = 0, on = 0, onQ = [];
     for (const s of src.items) {
       const d = Math.hypot(s.x - cx, s.y - cy);
+      // a charge or wire exactly on the surface: the field blows up there and the total is not defined;
+      // taken symmetrically, half of it counts
+      if (Math.abs(d - R) < 1e-9) { total += s.q / 2; on++; onQ.push(s.q); continue; }
       total += src.kind === 'charge' ? chargeFlux(s.q, d, R) : wireCirc(s.q, s.x, s.y, cx, cy, R, 1440);
       if (d < R) inside += s.q;
     }
-    return { total, inside };
+    return { total, inside, on, onQ };
   }
   // the outward (charges) or along-the-loop (wires) field round the circle where the sphere or loop meets the plane
   function rim(src, cx, cy, R, M) {
@@ -132,7 +140,8 @@
     for (let k = 0; k <= M; k++) {
       const a = TAU * k / M, x = cx + R * Math.cos(a), y = cy + R * Math.sin(a), [fx, fy] = field2(src, x, y);
       th.push(360 * k / M);
-      v.push(src.kind === 'charge' ? fx * Math.cos(a) + fy * Math.sin(a) : -fx * Math.sin(a) + fy * Math.cos(a));
+      const val = src.kind === 'charge' ? fx * Math.cos(a) + fy * Math.sin(a) : -fx * Math.sin(a) + fy * Math.cos(a);
+      v.push(Number.isFinite(val) ? val : NaN);
     }
     return { th, v };
   }

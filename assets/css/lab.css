@@ -37,7 +37,7 @@ mjx-container svg { display: inline; }
 .btn__icon { width: 18px; height: 18px; flex: none; }
 .btn__meta { font-weight: 500; opacity: .8; font-size: 13px; margin-left: 4px; }
 
-.lab-main { padding: 28px 0 64px; display: grid; gap: 22px; }
+.lab-main { padding-top: 28px; padding-bottom: 64px; display: grid; gap: 22px; }   /* keeps the .shell side gutters */
 
 /* Notebook download panel */
 .notebook { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
@@ -466,6 +466,7 @@ mjx-container svg { display: inline; }
 
 /* Magnetization dynamics: the sphere beside the energy landscape or the MRAM array */
 .mag-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 8px; }
+.mag-view__side { min-width: 0; }   /* lets a canvas shrink back when the box narrows */
 .plot-box.plot-box--mag { height: 340px; }
 .mag-view .lat { margin-top: 0; }
 @container (max-width: 640px) { .mag-view { grid-template-columns: 1fr; } .plot-box.plot-box--mag { height: 300px; } }
