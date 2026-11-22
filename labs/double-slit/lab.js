@@ -105,7 +105,7 @@
       if (!run || run.done || mode !== 'wave') return;
       const t0 = performance.now();
       while (performance.now() - t0 < 22 && run.sim.steps < D.STEPS) { run.sim.step(); if (run.sim.steps % FRAME_EVERY === 0) snap(); }
-      if (run.sim.steps >= D.STEPS) { run.done = true; renderWave(); return; }
+      if (run.sim.steps >= D.STEPS) { run.done = true; animT0 = performance.now(); run.sim.release(); renderWave(); kick(); return; }
       if (performance.now() - lastDraw > 120) { lastDraw = performance.now(); waveFrame(1, true); waveTables(); }
       work();
     });
@@ -138,13 +138,22 @@
     out.push({ type: 'vline', x: G.screen / L, color: ORANGE, width: 1.6, dash: [5, 4] });
     return out;
   }
-  function screenCurve(scr) {
-    // the screen's record so far, on the visible rows, scaled to its own largest value
+  function screenCurve(scr, ref) {
+    // the screen's record, on the visible rows, scaled to ref (or to its own largest value)
     const ys = [], vs = [];
     for (let j = G.edge; j < N - G.edge; j++) { ys.push(D.rowY(j) / L); vs.push(scr[j]); }
-    const m = Math.max(...vs, 1e-30);
-    return { ys, vs: vs.map(v => v / m) };
+    const own = Math.max(...vs, 1e-30), m = ref || own;
+    return { ys, vs: vs.map(v => v / m), own };
   }
+  const visMax = scr => { let m = 1e-30; for (let j = G.edge; j < N - G.edge; j++) m = Math.max(m, scr[j]); return m; };
+  // while the run is going: the height the finished record should reach, from the probability already through
+  // the wall (each unit of probability that crosses the screen leaves about 1/k0 there) and the Huygens shape
+  function expectedPeak() {
+    const h = run.sim.history[run.sim.history.length - 1], T = Math.max(h ? h.through : 0, 0.15), H = pattern();
+    let s = 0; for (const v of H.I) s += v;
+    return 0.8 * (T / D.K0) * Math.max(...H.I) / (s * (YS[1] - YS[0]));
+  }
+  const recordRef = scr => (run.done ? visMax(run.frames[run.frames.length - 1].screen) : Math.max(visMax(scr), expectedPeak()));
   function waveFrame(f, live) {
     if (!run) return;
     const rest = run.done && f >= 1 && !live;
@@ -152,12 +161,12 @@
     const rec = rest ? run.frames[run.frames.length - 1].screen : fr.screen;
     paint(fr);
     const layers = [{ type: 'image', canvas: img, x0: 0, x1: N / L, y0: -N / 2 / L, y1: N / 2 / L, smooth: true }].concat(wallLayers());
-    layers.push({ type: 'text', x: G.edge / L + 0.3, y: YMAX - 0.4, text: run.done ? `t = ${fixed(fr.t / (L / D.K0), 1)} λ/v` : `computing: ${Math.round(100 * run.sim.steps / D.STEPS)}%`, align: 'left', size: 11.5, color: VIOLET });
+    layers.push({ type: 'text', x: G.edge / L + 0.3, y: YMAX - 0.4, text: run.done ? `t = ${fixed(fr.t / (L / D.K0), 1)} λ/v${rest ? ', the busiest moment' : ''}` : `computing: ${Math.round(100 * run.sim.steps / D.STEPS)}%`, align: 'left', size: 11.5, color: VIOLET });
     field.opts.xLabel = 'x (wavelengths)'; field.opts.yLabel = 'y (wavelengths)'; field.opts.yFormat = null; field.opts.xTickValues = null;
     field.setRange([G.edge / L, (N - G.edge) / L], [-YMAX, YMAX]);
     field.draw(layers);
     // the screen: what it has recorded up to this moment, against Huygens' prediction
-    const sc = screenCurve(rec), H = pattern(), hm = Math.max(...H.I);
+    const sc = screenCurve(rec, recordRef(rec)), H = pattern(), hm = Math.max(...H.I);
     side.opts.xLabel = rest ? 'Recorded on the screen: all of it' : 'Recorded on the screen so far'; side.opts.yLabel = 'y (wavelengths)'; side.opts.xTickValues = [0, 0.5, 1]; side.opts.xFormat = v => (v === 0 ? '0' : v === 1 ? 'max' : '');
     side.setRange([0, 1.12], [-YMAX, YMAX]);
     const poly = { type: 'poly', x: [0].concat(sc.vs, [0]), y: [sc.ys[0]].concat(sc.ys, [sc.ys[sc.ys.length - 1]]), fill: alpha(ORANGE, 0.25), color: ORANGE, width: 1.6 };
@@ -168,7 +177,7 @@
   let view1 = null;
   // plots A and B and the numbers, from the run so far
   function waveTables() {
-    const sim = run.sim, H = pattern(), sc = screenCurve(sim.screen);
+    const sim = run.sim, H = pattern(), sc = screenCurve(sim.screen, recordRef(sim.screen));
     // plot A: the screen pattern, simulated and predicted, each scaled to its largest value
     reset(plotA);
     plotA.opts.xLabel = 'Position on the screen, y (wavelengths)'; plotA.opts.yLabel = 'Brightness on the screen';
@@ -203,11 +212,11 @@
       ['First side stripe, Huygens', open2 ? `${fixed(spacingH, 3)} λ` : '—', 'wavelets from every point of the open slits'],
       ['Grid', `${N} × ${N}`, `Δt = ${G.dt}, V₀ = ${G.V0}, λ = ${L} grid steps`],
     ]);
-    $('field').setAttribute('aria-label', `The wave packet meeting ${open2 ? 'two slits' : 'one slit'} ${trim(S.d)} wavelengths apart; ${done ? `${pct(last.through)} of it gets through` : 'the simulation is running'}`);
+    $('field').setAttribute('aria-label', `The wave packet meeting ${open2 ? `two slits ${trim(S.d)} wavelengths apart` : `one slit (the ${S.open} one)`}; ${done ? `${pct(last.through)} of it gets through` : 'the simulation is running'}`);
     $('side').setAttribute('aria-label', open2 ? `The screen records stripes about ${fixed(spacingH, 2)} wavelengths apart` : 'The screen records a single broad hump');
   }
   function renderWave() {
-    startRun();
+    if (!settling || !run) startRun();
     const open2 = S.open === 'both';
     setHTML($('dg-title'), open2 ? 'A wave packet meets two slits' : `A wave packet meets one slit (the ${S.open} one)`);
     put('dg-cap', deep
@@ -216,7 +225,7 @@
     legend('dg-legend', [[VIOLET, 'swatch--area', deep ? 'the wave (hue: phase)' : 'the wave'], [WALL, 'swatch--area', 'the wall'], [ORANGE, 'swatch--dash', 'the screen and its record'], [INK, 'swatch--dash', 'Huygens prediction']]);
     setHTML($('pa-title'), 'The pattern on the screen');
     put('pa-cap', deep
-      ? 'The time-integrated |ψ|² along the screen (orange), against the sum of Huygens wavelets e^{ikr}/√r from both slits, averaged over the packet\'s spread of wavelengths (dashed), each scaled to its own peak. The Huygens sum lights each slit evenly, Kirchhoff\'s approximation; in a slit only a wavelength or so wide the real wave is strongest in the middle, so it spreads wider and the outer stripes come out brighter.'
+      ? 'The time-integrated |ψ|² along the screen (orange), against the sum of Huygens wavelets e<sup>ikr</sup>/√r from both slits, averaged over the packet\'s spread of wavelengths (dashed), each scaled to its own peak. The Huygens sum lights each slit evenly, Kirchhoff\'s approximation; in a slit only a wavelength or so wide the real wave is strongest in the middle, so it spreads wider and the outer stripes come out brighter.'
       : 'What the screen records once the packet has gone by (orange), against the prediction from Huygens\' wavelets (dashed): bright where the waves from the two slits arrive in step. The stripes sit in the same places; the simulation\'s outer ones are brighter, because a slit only a wavelength wide spreads the wave a little wider than the simple Huygens picture assumes.');
     legend('pa-legend', [[ORANGE, '', 'simulation'], [INK, 'swatch--dash', 'Huygens prediction']]);
     setHTML($('pb-title'), 'How much gets through');
@@ -228,7 +237,7 @@
       ? `<b>One slit, no stripes.</b> The wave fans out from the open slit into one broad hump${S.a <= 1 ? ': a slit a wavelength wide or narrower spreads it over every angle, so there is no dark stripe at all' : ', with dark stripes only far out, where the slit\'s own edges interfere'}. Open both slits to see the stripes.`
       : `<b>The first bright stripes either side sit about ${fixed(pk[0] || NaN, 1)} wavelengths out</b> in the Huygens prediction: there the paths from the two slits differ by one wavelength. The rule of thumb for the spacing, λL/d, gives ${fixed(LX / S.d, 2)}. Move the slits apart and the stripes crowd together.`);
     setHTML($('takeaway'), '<b>The wave goes through both slits.</b> Each slit sends out its own wave; on the screen they add, and where they arrive out of step they cancel. Close one slit and there is nothing to cancel with: the stripes disappear.');
-    frameFn = f => waveFrame(f);
+    frameFn = run.done ? (f => waveFrame(f)) : null;
     waveFrame(run.done ? nowF() : 1, !run.done);
     work();
   }
@@ -242,7 +251,7 @@
       const I = kind === 'which' ? D.marked(H, S.dm) : H.I, draw = D.sampler(YS, I), r = D.rng(S.seed * 7919 + (kind === 'which' ? 17 : 3));
       const n = kind === 'which' ? 4000 : 10000, y = new Float64Array(n), z = new Float64Array(n), top = new Uint8Array(n);
       for (let i = 0; i < n; i++) {
-        y[i] = draw(r()) / L; z[i] = r();
+        y[i] = draw(r()) / L; z[i] = 0.03 + 0.94 * r();
         // with the path known, each particle also says which slit it took: the top one with chance I1 / (I1 + I2) here
         const j = Math.max(0, Math.min(YS.length - 1, Math.round((y[i] * L - YS[0]) / (YS[1] - YS[0])))), u = r();
         top[i] = u < H.I1[j] / (H.I1[j] + H.I2[j]) ? 1 : 0;
@@ -272,8 +281,8 @@
   }
   function drawScreen(det, n, colorBy, note) {
     field.opts.xLabel = 'Position on the screen, y (wavelengths)'; field.opts.yLabel = 'Along the slits'; field.opts.yFormat = () => ''; field.opts.xTickValues = null;
-    field.setRange([-YMAX, YMAX], [0, 1]);
-    field.draw([{ type: 'vband', x0: -YMAX, x1: YMAX, color: 'rgba(20, 35, 44, 0.03)' }].concat(screenLayers(det, n, colorBy), note ? [{ type: 'text', x: -YMAX + 0.3, y: 0.985, text: note, align: 'left', size: 11.5, color: VIOLET }] : []));
+    field.setRange([-YMAX, YMAX], [0, 1.09]);
+    field.draw([{ type: 'vband', x0: -YMAX, x1: YMAX, color: 'rgba(20, 35, 44, 0.03)' }].concat(screenLayers(det, n, colorBy), note ? [{ type: 'text', x: -YMAX + 0.3, y: 1.08, text: note, align: 'left', size: 11.5, color: VIOLET }] : []));
   }
   const ramp = (f, total) => (f >= 1 ? total : Math.max(1, Math.round(total * f * f * f)));
 
@@ -327,14 +336,13 @@
       ? `<b>${total === 1 ? 'One particle, one dot.' : `${total} particles, ${total} dots.`}</b> Each lands at a single point, at random. With so few, no one could see stripes, yet every dot fell where |ψ|² is not zero.`
       : `<b>${big(total)} particles: ${total >= 1000 ? 'the stripes are plain to see' : 'the stripes are starting to show'}.</b> ${pct(inC / total)} landed in the central stripe, against ${pct(cs.share)} expected. No one can say where the next particle will land; only the odds are known.`);
     setHTML($('takeaway'), '<b>The wave sets the odds; each particle lands in one place.</b> A single detection is random, but |ψ|² decides how likely each place is. Many detections trace out the interference pattern: the Born rule.');
-    $('field').setAttribute('aria-label', `${big(total)} particles detected on the screen, piling up in stripes`);
+    $('field').setAttribute('aria-label', `${big(total)} particles detected on the screen, ${total < 200 ? 'scattered with no clear pattern yet' : 'piling up in stripes'}`);
     $('side').setAttribute('aria-label', '');
     frameFn = oneFrame;
     oneFrame(nowF());
   }
 
   // ---------- 3. Which way did it go? ----------
-  let view3 = null;
   function whichFrame(f) {
     const det = detections('which'), n = ramp(f, 4000);
     drawScreen(det, n, S.dm >= 0.999, f < 1 ? `${big(n)} so far` : '');
@@ -424,7 +432,18 @@
   }
   let pending = false;
   function later() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; render(); }); }
-  [['sd', 'd'], ['sa', 'a'], ['cnt', 'cnt'], ['dm', 'dm']].forEach(([id, key]) => $(id).addEventListener('input', e => { S[key] = +e.target.value; later(); }));
+  // the slits stay at least half a wavelength of wall apart; a new simulation waits until a slider settles
+  let settling = false, settleTimer = 0;
+  [['sd', 'd'], ['sa', 'a'], ['cnt', 'cnt'], ['dm', 'dm']].forEach(([id, key]) => {
+    $(id).addEventListener('input', e => {
+      $('info').setAttribute('aria-live', 'off');
+      S[key] = +e.target.value;
+      if (S.a > S.d - 0.5) { if (key === 'd') S.a = Math.max(0.75, S.d - 0.5); else if (key === 'a') S.d = Math.min(6, S.a + 0.5); }
+      if (key === 'd' || key === 'a') { settling = true; clearTimeout(settleTimer); settleTimer = setTimeout(() => { settling = false; render(); }, 220); }
+      later();
+    });
+    $(id).addEventListener('change', () => $('info').setAttribute('aria-live', 'polite'));
+  });
   document.querySelector('.lab-main').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b || !b.closest('.controls')) return;

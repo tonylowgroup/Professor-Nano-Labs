@@ -69,13 +69,12 @@
       const n2 = N * N, dt = G.dt;
       this.re = new Float64Array(n2); this.im = new Float64Array(n2);
       // potential phase for half a step, the absorbing mask, and the kinetic phase for a full step
-      this.vr = new Float64Array(n2); this.vi = new Float64Array(n2); this.mask = new Float32Array(n2); this.wallMask = new Uint8Array(n2);
+      this.vr = new Float64Array(n2); this.vi = new Float64Array(n2); this.mask = new Float32Array(n2);
       const S = slits(d, a, open);
       for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
         const o = j * N + i, y = rowY(j);
         const inWall = i >= G.wall && i < G.wall + G.thick && !S.some(s => Math.abs(y - s.y) < s.a / 2);
         const V = inWall ? G.V0 : 0;
-        this.wallMask[o] = inWall ? 1 : 0;
         this.vr[o] = Math.cos(-V * dt / 2); this.vi[o] = Math.sin(-V * dt / 2);
         // a smooth absorbing border: the mask falls from 1 to about 0.94 per step at the very edge
         const e = Math.min(i, N - 1 - i, j, N - 1 - j), u = e < G.edge ? (G.edge - e) / G.edge : 0;
@@ -98,6 +97,8 @@
       this.lostLeft = 0; this.lostRight = 0;                 // what the absorbing edges have taken, before and beyond the wall
     }
     _phase(ar, ai) { const re = this.re, im = this.im; for (let o = 0; o < re.length; o++) { const r = re[o], q = im[o]; re[o] = r * ar[o] - q * ai[o]; im[o] = r * ai[o] + q * ar[o]; } }
+    // a finished run keeps only its screen record and bookkeeping
+    release() { this.re = this.im = this.vr = this.vi = this.mask = this.kr = this.ki = null; }
     step() {
       this._phase(this.vr, this.vi);
       fft2(this.re, this.im, false);
