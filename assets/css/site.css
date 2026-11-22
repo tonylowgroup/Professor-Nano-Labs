@@ -358,3 +358,65 @@ img, svg { display: block; }
   .school__photos li:first-child { grid-row: auto; aspect-ratio: 4 / 3; }
   .site-footer__inner { padding: 20px 16px; }
 }
+
+/* ---------- Homepage labs: track tiles, the track bar, folded videos (assets/js/tracks.js) ---------- */
+.track-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 232px), 1fr)); gap: 18px; }
+.track-tile {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: var(--radius);
+  box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease;
+}
+.track-tile:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(13, 38, 51, .14); }
+.track-tile:focus-within { outline: 3px solid var(--brand); outline-offset: 2px; }
+.track-tile__art { background: var(--brand-soft); color: var(--brand); border-bottom: 1px solid var(--line); }
+.track-tile__art svg { display: block; width: 100%; height: auto; }
+.track-tile__body { display: flex; flex-direction: column; flex: 1; padding: 14px 18px 16px; }
+.track-tile__head { display: flex; align-items: center; gap: 10px; }
+.track-tile__num {
+  flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
+  background: var(--brand); color: #fff; font-weight: 800; font-size: 13px; letter-spacing: .02em;
+}
+.track-tile__title { font-size: 18px; line-height: 1.25; margin: 0; letter-spacing: -.01em; }
+.track-tile__link { color: var(--ink); }
+.track-tile__link:focus { outline: none; }
+.track-tile__link::after { content: ""; position: absolute; inset: 0; z-index: 1; }   /* the whole tile is the link */
+.track-tile__desc {
+  color: var(--muted); font-size: 14px; line-height: 1.55; margin: 10px 0 0;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.track-tile__labs { list-style: none; margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.45; color: var(--ink-2); display: grid; gap: 4px; }
+.track-tile__labs li { position: relative; padding-left: 14px; }
+.track-tile__labs li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); opacity: .7; }
+.track-tile__go { margin-top: auto; padding-top: 14px; color: var(--brand); font-weight: 700; font-size: 14px; }
+.track-tile__arrow { display: inline-block; transition: transform .18s ease; }
+.track-tile:hover .track-tile__arrow { transform: translateX(4px); }
+.track-tiles__all { margin: 22px 0 0; font-size: 14.5px; }
+.track-tiles__all a { color: var(--brand); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+.track-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 30px; scroll-margin-top: 84px; }
+.track-nav:focus { outline: none; }
+.track-nav a { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: 13.5px; font-weight: 600; line-height: 1.2; }
+.track-nav a:hover { border-color: var(--brand); color: var(--brand); }
+.track-nav__chip { display: inline-flex; align-items: center; gap: 7px; }
+.track-nav__chip[data-track]::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+.track-nav__chip[aria-current="page"]::before { background: #fff; }
+.track-nav__back { color: var(--ink) !important; border-color: transparent !important; background: transparent !important; padding-left: 0 !important; }
+.track-nav__back:hover { color: var(--brand) !important; }
+.track-nav a[aria-current="page"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+.tracks--one .track { padding-bottom: 0; }
+.tracks--one .track::before { display: none; }
+.track__title:focus { outline: none; }
+
+/* the related videos fold away under each card, to keep the cards short */
+details.videos { padding: 16px 22px 16px; }
+details.videos > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: 0; }
+details.videos > summary::-webkit-details-marker { display: none; }
+details.videos > summary::after {
+  content: ""; width: 7px; height: 7px; margin-left: 4px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform .2s ease;
+}
+details.videos[open] > summary::after { transform: translateY(1px) rotate(-135deg); }
+details.videos[open] > summary { margin-bottom: 12px; }
+details.videos > summary:hover { color: var(--brand-strong); }
+.videos__count { color: var(--muted); font-weight: 700; letter-spacing: .06em; }
+@media (max-width: 640px) { .track-nav { scroll-margin-top: 12px; } .track-tile__art { display: none; } .track-tiles { gap: 14px; } }

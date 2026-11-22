@@ -11,6 +11,7 @@ index.html            Homepage
 assets/css/site.css   Shared styles: top bar, footer, buttons, cards, colour tokens
 assets/css/lab.css    Shared lab components: controls, stat tiles, plots, questions
 assets/js/hero.js     Homepage wave-packet animation
+assets/js/tracks.js   Homepage labs: track tiles, one track at a time (index.html#quantum-foundations)
 assets/js/plot.js     Small canvas plotting helper used by the labs
 assets/js/bloch-sphere.js
                       Sphere drawing shared by the quantum computing, magnetization and quantum geometry labs

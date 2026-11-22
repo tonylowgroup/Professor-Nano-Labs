@@ -92,8 +92,11 @@
       <div class="section__head">
         <div class="eyebrow">The labs</div>
         <h2 id="labs-title">From atoms to devices</h2>
-        <p class="lead">Labs are grouped into seven tracks, from the ideas quantum mechanics is built on, through qubits, crystals and the geometry of quantum states, to electrons moving through real nanoscale devices, the magnets that store information, and the electromagnetic fields underneath it all. Each lab comes with the Professor Nano videos that explain its physics.</p>
+        <p class="lead">Labs are grouped into seven tracks, from the ideas quantum mechanics is built on, through qubits, crystals and the geometry of quantum states, to electrons moving through real nanoscale devices, the magnets that store information, and the electromagnetic fields underneath it all. Pick a track to see its labs, each with the Professor Nano videos that explain its physics.</p>
       </div>
+
+      <div class="track-tiles" id="track-tiles" hidden></div>
+      <nav class="track-nav" id="track-nav" aria-label="Tracks" hidden></nav>
 
       <ol class="tracks">
         <li class="track" data-track="quantum" aria-labelledby="track-01">
@@ -130,8 +133,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/gaussian-wave-packet/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=7hOyxlRb2LM" target="_blank" rel="noopener" title="Free quantum electron wave versus Gaussian packet">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/7hOyxlRb2LM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -146,7 +149,7 @@
                     <span class="video__title">Schrodinger equation and time evolution of quantum state<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/harmonic-oscillator/index.html" tabindex="-1" aria-hidden="true">
@@ -184,8 +187,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/harmonic-oscillator/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=jHjebJtBXUs" target="_blank" rel="noopener" title="Solving the quantum harmonic oscillator with ladder operators">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/jHjebJtBXUs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -200,7 +203,7 @@
                     <span class="video__title">Schrodinger equation and time evolution of quantum state<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/hydrogen-atom/index.html" tabindex="-1" aria-hidden="true">
@@ -231,8 +234,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/hydrogen-atom/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=ag8tfER8-2g" target="_blank" rel="noopener" title="Schrodinger equation solutions to the hydrogen atom">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/ag8tfER8-2g/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -247,7 +250,7 @@
                     <span class="video__title">Quantum orbital angular momentum<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/blackbody-radiation/index.html" tabindex="-1" aria-hidden="true">
@@ -276,8 +279,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/blackbody-radiation/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=nLy5hnDJbvA" target="_blank" rel="noopener" title="The story of unraveling the true character of electrons and how it gives birth to quantum mechanics">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/nLy5hnDJbvA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -292,7 +295,7 @@
                     <span class="video__title">Deriving the Bose Einstein distribution function<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/perturbation-theory/index.html" tabindex="-1" aria-hidden="true">
@@ -332,8 +335,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/perturbation-theory/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=Iodqi6rWa0E" target="_blank" rel="noopener" title="Perturbation theory in quantum mechanics (non-degenerate) + Example">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/Iodqi6rWa0E/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -348,7 +351,7 @@
                     <span class="video__title">How an electron binds two protons, the hydrogen molecule ion<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/double-slit/index.html" tabindex="-1" aria-hidden="true">
@@ -447,8 +450,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/double-slit/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=L4YajTag6Ko" target="_blank" rel="noopener" title="What 3 experiments really tell us about quantum superposition">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/L4YajTag6Ko/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -463,7 +466,7 @@
                     <span class="video__title">Illustrating the difference between pure coherent and mixed states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -510,8 +513,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/qubits-bloch-sphere/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=lqWSziZJsLs" target="_blank" rel="noopener" title="Mapping the qubit state onto the Bloch Sphere">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/lqWSziZJsLs/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -526,7 +529,7 @@
                     <span class="video__title">Two qubit state: Separable vs Entangled vs Bell states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/entanglement-bell-test/index.html" tabindex="-1" aria-hidden="true">
@@ -557,8 +560,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/entanglement-bell-test/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=9vDyS2_Hufk" target="_blank" rel="noopener" title="Quantum entanglement; exposing its key features">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/9vDyS2_Hufk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -573,7 +576,7 @@
                     <span class="video__title">Quick introduction to the density matrix in quantum mechanics<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/three-qubits-teleportation/index.html" tabindex="-1" aria-hidden="true">
@@ -623,8 +626,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/three-qubits-teleportation/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=iMjpZwISIlA" target="_blank" rel="noopener" title="Two and three qubits quantum gates">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/iMjpZwISIlA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -639,7 +642,7 @@
                     <span class="video__title">Quantum entanglement; exposing its key features<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/trapped-ion-qubit/index.html" tabindex="-1" aria-hidden="true">
@@ -684,8 +687,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/trapped-ion-qubit/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=5qpXdGSLWig" target="_blank" rel="noopener" title="How exactly does trapped ions perform quantum computing?">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/5qpXdGSLWig/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -700,7 +703,7 @@
                     <span class="video__title">Two and three qubits quantum gates<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -831,8 +834,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/bravais-lattices/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=rpZOt_rBx4I" target="_blank" rel="noopener" title="Basics of crystal structure and terminologies, we make it easier to understand in 2D">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/rpZOt_rBx4I/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -847,7 +850,7 @@
                     <span class="video__title">Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/atoms-to-a-band/index.html" tabindex="-1" aria-hidden="true">
@@ -905,8 +908,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/atoms-to-a-band/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=Hm-v4Eby0hk" target="_blank" rel="noopener" title="How energy bands are formed? Key quantum concepts simplified">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/Hm-v4Eby0hk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -921,7 +924,7 @@
                     <span class="video__title">Linear combination of atomic orbitals (tight-binding method) for electrons in crystalline solids<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/graphene-bands/index.html" tabindex="-1" aria-hidden="true">
@@ -951,8 +954,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/graphene-bands/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=3b34QM15JTM" target="_blank" rel="noopener" title="Calculating the band structure of graphene">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/3b34QM15JTM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -967,7 +970,7 @@
                     <span class="video__title">Calculating electron and hole densities in graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/graphene-electrostatics/index.html" tabindex="-1" aria-hidden="true">
@@ -998,8 +1001,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/graphene-electrostatics/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=wBRvi_NRIog" target="_blank" rel="noopener" title="Calculating electron and hole densities in graphene">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/wBRvi_NRIog/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1014,7 +1017,7 @@
                     <span class="video__title">Calculating the band structure of graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -1075,8 +1078,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/berry-phase/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=6xctcmwR8wo" target="_blank" rel="noopener" title="Deriving Berry phase, Berry connection &amp; Berry curvature">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/6xctcmwR8wo/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1091,7 +1094,7 @@
                     <span class="video__title">Quantum Geometry; Differential geometry meets Bloch states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/quantum-metric/index.html" tabindex="-1" aria-hidden="true">
@@ -1159,8 +1162,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/quantum-metric/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=FrfRj9YWfaE" target="_blank" rel="noopener" title="Quantum Geometry; Differential geometry meets Bloch states">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/FrfRj9YWfaE/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1175,7 +1178,7 @@
                     <span class="video__title">Mapping the qubit state onto the Bloch Sphere<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -1211,8 +1214,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/graphene-ballistic-transport/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=2RoP7nZv474" target="_blank" rel="noopener" title="Ballistic electronic transport in graphene devices">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/2RoP7nZv474/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1227,7 +1230,7 @@
                     <span class="video__title">How electricity actually works at the nanoscale?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/nanoscale-transistor/index.html" tabindex="-1" aria-hidden="true">
@@ -1256,8 +1259,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/nanoscale-transistor/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=WBf-SfYD0bI" target="_blank" rel="noopener" title="Physics of the nanoscale transistor">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/WBf-SfYD0bI/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1272,7 +1275,7 @@
                     <span class="video__title">How electricity actually works at the nanoscale?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -1316,8 +1319,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/magnetization-dynamics/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=8fkmn7GJMoc" target="_blank" rel="noopener" title="Magnetization dynamics and the Landau-Lifshitz-Gilbert equation">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/8fkmn7GJMoc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1332,7 +1335,7 @@
                     <span class="video__title">Magnetization switching through spin transfer torque<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/tunneling-magnetoresistance/index.html" tabindex="-1" aria-hidden="true">
@@ -1365,8 +1368,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/tunneling-magnetoresistance/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=wEox88pAC7Q" target="_blank" rel="noopener" title="Theory of the tunneling magnetoresistance">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/wEox88pAC7Q/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1381,7 +1384,7 @@
                     <span class="video__title">Magnetization switching through spin transfer torque<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -1423,8 +1426,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/divergence-curl/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=K8JEA-S46bM" target="_blank" rel="noopener" title="Why are Maxwell equations written in terms of curl and divergence? An intuitive framework">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/K8JEA-S46bM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1439,7 +1442,7 @@
                     <span class="video__title">Derive Biot Savart's law from Maxwell equations... [Concepts Challenge]<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
             <article class="lab-card lab-card--live">
               <a class="lab-card__art" href="labs/lorentz-transformation/index.html" tabindex="-1" aria-hidden="true">
@@ -1482,8 +1485,8 @@
                 </ul>
                 <a class="lab-card__launch" href="labs/lorentz-transformation/index.html">Launch lab <span aria-hidden="true">→</span></a>
               </div>
-              <div class="videos">
-                <div class="videos__label">Related videos</div>
+              <details class="videos">
+                <summary class="videos__label">Related videos <span class="videos__count">(3)</span></summary>
                 <ul>
                   <li><a class="video video--first" href="https://www.youtube.com/watch?v=KUuaOiH9bhM" target="_blank" rel="noopener" title="Discovering Lorentz transformation with Albert Einstein">
                     <span class="video__thumb"><img src="https://i.ytimg.com/vi/KUuaOiH9bhM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="video__badge">Watch first</span></span>
@@ -1498,7 +1501,7 @@
                     <span class="video__title">Discovering the relativistic Dirac equation with Paul Dirac and graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
                   </a></li>
                 </ul>
-              </div>
+              </details>
             </article>
           </div>
         </li>
@@ -1636,5 +1639,6 @@
 </footer>
 
 <script src="assets/js/hero.js" defer></script>
+<script src="assets/js/tracks.js" defer></script>
 </body>
 </html>
