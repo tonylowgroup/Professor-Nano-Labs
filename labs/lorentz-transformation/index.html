@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en" data-track="fields">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lorentz Transformation: Clocks, Trains and Light · Professor Nano Labs</title>
+<meta name="description" content="Watch a moving light clock tick slowly, see two lightning strikes that are simultaneous on the platform but not on the train, and add velocities that never pass the speed of light. A lab on special relativity from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a href="../../index.html#summer-school">Summer school</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Electromagnetism</div>
+    <div class="eyebrow eyebrow--light">Electromagnetism · Live lab</div>
+    <h1>The Lorentz Transformation: Clocks, Trains and Light</h1>
+    <p>Maxwell's equations give light one speed, and Einstein took that literally: the speed of light is the same for everyone, however they move. Watch what has to give. A moving clock ticks slowly, a moving train is short, two flashes at the same time on the platform are not at the same time on the train, and no two speeds add up to more than light.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="lorentz_transformation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>Follow Einstein from the constant speed of light to the Lorentz transformation.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=KUuaOiH9bhM" target="_blank" rel="noopener" title="Discovering Lorentz transformation with Albert Einstein">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/KUuaOiH9bhM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Discovering Lorentz transformation with Albert Einstein<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=32kmvmioc8A" target="_blank" rel="noopener" title="How the beautiful unification of electricity and magnetism begins...">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/32kmvmioc8A/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How the beautiful unification of electricity and magnetism begins...<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=jpu36CYydkc" target="_blank" rel="noopener" title="The light wave and particle debate, from Newton to Einstein">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/jpu36CYydkc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The light wave and particle debate, from Newton to Einstein<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=QYUyAkz7DuA" target="_blank" rel="noopener" title="Discovering the relativistic Dirac equation with Paul Dirac and graphene">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/QYUyAkz7DuA/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Discovering the relativistic Dirac equation with Paul Dirac and graphene<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">One speed for everyone</h2>
+    <p>Maxwell's equations predict waves of electric and magnetic field travelling at \(c=1/\sqrt{\mu_0\varepsilon_0}\approx3\times10^8\) m/s: light. They do not say relative to what. Einstein's answer, in 1905, was: relative to anyone. Every observer moving steadily measures the same \(c\), and the laws of physics look the same to all of them.</p>
+    <p>That one rule forces space and time to mix. If you and I move relative to each other, my clocks run slow by your measure, my metre sticks are short, and what is simultaneous for me is not for you; and the other way round. The rule that converts my coordinates of an event into yours is the Lorentz transformation. In this lab, \(c=1\): times in seconds go with distances in light-seconds.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-frame"><dt>Frame</dt><dd>An observer's set of rulers and synchronised clocks, all moving together at a steady speed: the platform's, or the train's.</dd></div>
+      <div id="g-event"><dt>Event</dt><dd>Something that happens at one place at one time: a lightning strike, a tick of a clock. Each frame gives it a place x and a time t.</dd></div>
+      <div id="g-gamma"><dt>Lorentz factor</dt><dd>γ = 1/√(1 − v²/c²): 1 at rest, 1.25 at 0.6c, 10 at 0.995c, without limit as v approaches c.</dd></div>
+      <div id="g-dil"><dt>Time dilation</dt><dd>A moving clock runs slow by a factor γ, measured by clocks it moves past.</dd></div>
+      <div id="g-con"><dt>Length contraction</dt><dd>A moving object is shorter along its motion by a factor γ, measured in the frame it moves through.</dd></div>
+      <div id="g-sim"><dt>Relativity of simultaneity</dt><dd>Two events at the same time in one frame happen at different times in a frame moving along the line between them.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>For a frame moving at speed \(v\) along \(x\), an event at \((x,t)\) has coordinates</p>
+      <div class="equation">$$x'=\gamma\,(x-vt),\qquad t'=\gamma\Big(t-\frac{vx}{c^2}\Big),\qquad \gamma=\frac{1}{\sqrt{1-v^2/c^2}},\qquad c^2t'^2-x'^2=c^2t^2-x^2$$</div>
+      <p>The last equation is what stays the same: the spacetime interval between two events. A light ray, \(x=ct\), has interval zero in every frame, so it moves at \(c\) in every frame. At low speeds \(\gamma\approx1\) and \(vx/c^2\approx0\), and the transformation becomes Galileo's, \(x'=x-vt\), \(t'=t\).</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-clock" aria-controls="lab" aria-selected="true" data-mode="clock">1 · The light clock</button>
+      <button class="tab" role="tab" id="tab-train" aria-controls="lab" aria-selected="false" data-mode="train" tabindex="-1">2 · The train and the lightning</button>
+      <button class="tab" role="tab" id="tab-add" aria-controls="lab" aria-selected="false" data-mode="add" tabindex="-1">3 · Adding velocities</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="clock">
+      <h2>A moving clock ticks slowly.</h2>
+      <p>The simplest clock: a flash of light bouncing between two mirrors, one tick for each trip up and back. Put one clock on the platform and send an identical one past at speed \(v\). Seen from the platform, the moving clock's light has to travel along a diagonal to keep up with its mirrors. The diagonal is longer, light is no faster, so each tick takes longer.</p>
+      <p class="notice"><b>What to notice:</b> at everyday speeds the two clocks keep step. At \(0.6c\) the moving clock makes 8 ticks for every 10 of the platform clock; near light it almost stops. Muons made high in the atmosphere live only 2.2 μs, too short to reach the ground at any speed, unless their clocks run slow.</p>
+      <details class="math"><summary>The math</summary>
+        <p>On the platform, half a tick of the moving clock takes \(\Delta t/2\): the light goes \(c\Delta t/2\) along the diagonal while the mirrors move \(v\Delta t/2\) sideways, and the mirrors are \(L\) apart. Pythagoras:</p>
+        <div class="equation">$$\Big(\frac{c\Delta t}{2}\Big)^2=L^2+\Big(\frac{v\Delta t}{2}\Big)^2\;\Rightarrow\;\Delta t=\frac{2L/c}{\sqrt{1-v^2/c^2}}=\gamma\,\Delta\tau$$</div>
+        <p>where \(\Delta\tau=2L/c\) is the tick of the clock at rest. A muon with lifetime \(\tau\) travels \(\gamma v\tau\) on average before it decays, and the fraction that survive a distance \(d\) is \(e^{-d/\gamma v\tau}\).</p>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="train" hidden>
+      <h2>Same time on the platform, not on the train.</h2>
+      <p>Lightning strikes both ends of a moving train, at the same moment as judged on the platform. Light from the two strikes meets in the middle of the platform at the same time, so the platform says: simultaneous. But a passenger in the middle of the train is rushing towards the front flash and away from the back one, and sees the front flash first. Light moves at \(c\) for her too, and she sits in the middle of the train, so she concludes: the front was struck first.</p>
+      <p class="notice"><b>What to notice:</b> in the spacetime diagram, each frame's "now" is a line. The platform's lines are level; the train's are tilted, and the faster the train, the more they tilt. Switch to the train's view: now the train is at rest, its strikes are at different times, and the platform's clocks are the ones out of step.</p>
+      <details class="math"><summary>The math</summary>
+        <p>On the platform the train, of rest length \(L_0\), is \(L=L_0/\gamma\) long, and the strikes are at \(x=\mp L/2\), \(t=0\). In the train's frame, with \(t'=\gamma(t-vx/c^2)\),</p>
+        <div class="equation">$$t'_{\rm back}-t'_{\rm front}=\gamma\,\frac{vL}{c^2}=\frac{vL_0}{c^2},\qquad x'_{\rm front}-x'_{\rm back}=\gamma L=L_0,\qquad (\Delta x')^2-c^2(\Delta t')^2=L^2$$</div>
+        <p>The front strike comes first by \(vL_0/c^2\), and the strikes are a full train length apart, as they must be for someone on board. The interval is the same in both frames.</p>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="add" hidden>
+      <h2>Speeds don't simply add.</h2>
+      <p>Throw a ball forwards at \(u'\) inside a train that moves at \(v\). Common sense says the platform sees the ball at \(u'+v\). That is very nearly right for balls and trains, and badly wrong near the speed of light: the platform sees \((u'+v)/(1+u'v/c^2)\), which never exceeds \(c\). Shine a torch forwards instead of throwing a ball, and the platform sees its light move at exactly \(c\).</p>
+      <p class="notice"><b>What to notice:</b> in the spacetime diagram, common sense would send the ball outside the light lines; relativity bends it back inside. What does add simply is the rapidity, \(\phi\) with \(v=c\tanh\phi\): equal pushes add equal rapidity, but each brings a smaller gain in speed.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The ball's path in the train is \(x'=u't'\). Transform back to the platform with \(x=\gamma(x'+vt')\), \(t=\gamma(t'+vx'/c^2)\), and divide:</p>
+        <div class="equation">$$u=\frac{x}{t}=\frac{u'+v}{1+u'v/c^2},\qquad \tanh^{-1}\frac{u}{c}=\tanh^{-1}\frac{u'}{c}+\tanh^{-1}\frac{v}{c}$$</div>
+        <p>With \(u'=c\), \(u=(c+v)/(1+v/c)=c\), for any \(v\).</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-clock">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="clock">
+        <div class="label-caps">The moving clock</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="bc">Speed, v/c</label><output id="bc-out" for="bc"></output></div>
+          <input id="bc" type="range" min="0" max="0.995" step="0.005" value="0.6">
+        </div>
+        <div class="chips" role="group" aria-label="Speeds">
+          <button class="chip-btn" type="button" data-bc="0.1">0.1</button><button class="chip-btn" type="button" data-bc="0.6">0.6</button><button class="chip-btn" type="button" data-bc="0.8">0.8</button><button class="chip-btn" type="button" data-bc="0.995">0.995</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="train">
+        <div class="label-caps">The train</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="bt">Speed, v/c</label><output id="bt-out" for="bt"></output></div>
+          <input id="bt" type="range" min="0" max="0.8" step="0.05" value="0.6">
+          <div class="ctrl__hint">Its length at rest is L₀ = 1 light-second.</div>
+        </div>
+        <div class="label-caps" style="margin-top:10px">Seen from</div>
+        <div class="seg" role="group" aria-label="Seen from">
+          <button type="button" data-view="platform" aria-pressed="true">The platform</button><button type="button" data-view="train" aria-pressed="false">The train</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="add">
+        <div class="label-caps">The train and the ball</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="bv">Train speed, v/c</label><output id="bv-out" for="bv"></output></div>
+          <input id="bv" type="range" min="0" max="0.99" step="0.01" value="0.5">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="bu">Ball in the train, u′/c</label><output id="bu-out" for="bu"></output></div>
+          <input id="bu" type="range" min="-0.99" max="1" step="0.01" value="0.5">
+          <div class="ctrl__hint">At 1 the "ball" is a flash of light.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Examples">
+          <button class="chip-btn" type="button" id="torch">Shine a torch</button>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view mag-view--wide" id="mag-view">
+          <div class="mag-view__side" id="main-box"><div class="plot-box plot-box--mag"><canvas id="scene" role="img" aria-label="The clocks"></canvas><canvas id="diagram" role="img" aria-label="The spacetime diagram" hidden></canvas></div></div>
+          <div class="mag-view__side" id="side-box"><div class="plot-box plot-box--mag"><canvas id="side" role="img" aria-label="The side view"></canvas></div></div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Light clock</span><button class="predict__load" type="button" data-q="six">Load v = 0.6c</button></div>
+        <p>The moving clock passes at \(0.6c\). While the platform clock ticks 10 times, how many times does the moving clock tick?</p>
+        <details><summary>Show answer</summary>
+          <p>8. At \(0.6c\), \(\gamma=1/\sqrt{1-0.36}=1/0.8=1.25\), so each tick of the moving clock takes 1.25 platform ticks, and 10 platform ticks hold \(10/1.25=8\) of them. In the light triangle, for each half tick the light goes 1.25 mirror gaps along the diagonal while the clock moves 0.75 gaps sideways: \(1.25^2=1^2+0.75^2\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Light clock</span><button class="predict__load" type="button" data-q="eight">Load v = 0.8c</button></div>
+        <p>At \(0.8c\), someone riding with the moving clock looks back at the platform clock. Whose clock does she see running slow?</p>
+        <details><summary>Show answer</summary>
+          <p>The platform's, by the same factor, \(\gamma=5/3\): to her, the platform clock makes 6 ticks while hers makes 10. Both are right. Each compares one passing clock with two of their own, at two places, and their own two clocks are synchronised only by their own standard of "at the same time". Tab 2 shows how the two standards differ.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Light clock</span><button class="predict__load" type="button" data-q="muon">Load the muon, 0.995c</button></div>
+        <p>Muons are made 15 km up, by cosmic rays, and come down at \(0.995c\). They live 2.2 μs on average. How far does a typical muon get, and what fraction reach the ground?</p>
+        <details><summary>Show answer</summary>
+          <p>Without time dilation, \(0.995\,c\times2.2\) μs is only 655 m, and the fraction reaching the ground would be \(e^{-15000/655}\approx10^{-10}\): none. With \(\gamma=10.0\), their clocks run ten times slow; a typical muon travels 6.56 km, and \(e^{-15/6.56}\approx10\%\) reach the ground, as detectors at sea level find (counting only the muons made at 15 km with this speed). Seen by the muon, its clock is fine: the atmosphere is contracted to 1.5 km.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Simultaneity</span><button class="predict__load" type="button" data-q="strikes">Load the train at 0.6c</button></div>
+        <p>The strikes are simultaneous on the platform. For the passenger in the middle of the train, which end was struck first, and by how much?</p>
+        <details><summary>Show answer</summary>
+          <p>The front, by \(vL_0/c^2=0.6\) s for a train one light-second long. She sees the front flash at 0.25 s and the back flash at 1 s (platform time); she knows both flashes travelled half a train length at \(c\) to reach her, so she concludes the front strike really did happen first. In the train's view the tilted "now" lines through the two strikes are 0.6 s apart.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Length</span><button class="predict__load" type="button" data-q="short">Load the train at 0.8c</button></div>
+        <p>At \(0.8c\), how long is the train, one light-second long at rest, as measured on the platform? Does the passenger agree?</p>
+        <details><summary>Show answer</summary>
+          <p>On the platform it is \(L_0/\gamma=1/(5/3)=0.6\) light-seconds long: the strikes that hit its two ends at the same platform time are 0.6 apart. The passenger disagrees: for her the train is 1 long, and the strikes were not simultaneous. The front was struck 0.8 s before the back, while the platform was sliding past, so the platform marks are what she finds contracted.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · The interval</span><button class="predict__load" type="button" data-q="interval">Load the two views</button></div>
+        <p>Platform and passenger disagree about the time and the distance between the two strikes. Is there anything they agree on? Could anyone see both strikes at the same place?</p>
+        <details><summary>Show answer</summary>
+          <p>They agree on the interval \((\Delta x)^2-c^2(\Delta t)^2\): at \(0.6c\), the platform says \(0.8^2-0=0.64\), the passenger \(1^2-0.6^2=0.64\). Every observer's pair \((\Delta x,c\Delta t)\) lies on the same hyperbola, so no one sees the strikes less than 0.8 apart, and no one sees them at the same place. Observers moving the other way along the platform see the back strike first: the order of these events depends on the frame, which is safe, because neither can cause the other.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Adding</span><button class="predict__load" type="button" data-q="half">Load 0.5c + 0.5c</button></div>
+        <p>The train moves at \(0.5c\), and the ball is thrown forwards at \(0.5c\) inside it. How fast does the ball move, seen from the platform?</p>
+        <details><summary>Show answer</summary>
+          <p>\(0.8c\), not \(c\): \((0.5+0.5)/(1+0.25)=0.8\). In rapidities it does add: \(\tanh^{-1}0.5=0.549\), twice that is 1.099, and \(\tanh1.099=0.8\). Two pushes of \(0.9c\) give \(0.9945c\): the closer you get to \(c\), the less each push gains.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Adding</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="torch">Load a torch on a fast train</button></div>
+        <p>The train moves at \(0.9c\) and a passenger shines a torch forwards. How fast does the platform see the light go?</p>
+        <details><summary>Show answer</summary>
+          <p>Exactly \(c\): \((1+0.9)/(1+0.9)=1\). Common sense says \(1.9c\). This is the experimental fact Einstein started from: light from a moving source still moves at \(c\), measured from anywhere. Everything else in this lab, the slow clocks, the short trains, the tilted "now", follows from it.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the Lorentz transformation as a matrix, checks that it keeps the speed of light and the interval fixed, follows the light clock and the muons, transforms the lightning strikes into the train's frame, and adds velocities as matrices to show why rapidities add. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="lorentz_transformation.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta" id="nb-size">.ipynb · 11 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>Units:</strong> \(c=1\). Times in seconds and distances in light-seconds, or any other matching pair.</li>
+          <li><strong>The light clock:</strong> mirrors half a unit apart, so a tick of the clock at rest takes one unit of time. The moving clock's light follows the same up-and-down rhythm in its own time \(\tau=t/\gamma\), while the clock moves at \(v\); its zigzag trail is drawn on the platform. The picture follows the moving clock, so the platform marks slide past.</li>
+          <li><strong>The muon:</strong> mean lifetime 2.1969811 μs, \(c=299\,792\,458\) m/s, made 15 km up. Mean range \(\gamma v\tau\); surviving fraction \(e^{-d/\gamma v\tau}\), against \(e^{-d/v\tau}\) without time dilation.</li>
+          <li><strong>The train:</strong> rest length \(L_0=1\). On the platform it is \(L_0/\gamma\) long, and the strikes are at \(x=\mp L_0/2\gamma\), \(t=0\). The train's view applies the Lorentz transformation, \(x'=\gamma(x-vt)\), \(t'=\gamma(t-vx)\), to every event and every line in the diagram; the light rays stay at 45° in both views. The scene beside the diagram shows positions along the track at the moving "now" of the chosen frame.</li>
+          <li><strong>Other observers:</strong> plot A applies the transformation for observers moving at \(u\) along the platform, from \(-0.8c\) to \(0.8c\), to the two strikes; plot B draws each one's \((\Delta x,c\Delta t)\), which all lie on \((\Delta x)^2-(c\Delta t)^2=L^2\).</li>
+          <li><strong>Adding velocities:</strong> \(u=(u'+v)/(1+u'v)\), against Galileo's \(u'+v\); rapidities \(\phi=\tanh^{-1}(v/c)\).</li>
+          <li><strong>Checks:</strong> the notebook builds the transformation as a 2 × 2 matrix, checks it keeps \(c^2t^2-x^2\) fixed and that two boosts make one boost with the added velocity, and asserts the numbers quoted in the questions.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

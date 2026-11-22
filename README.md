@@ -45,6 +45,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some a
 | Spintronics | Magnetization Dynamics and the LLG Equation | `labs/magnetization-dynamics/` |
 | Spintronics | Tunnelling Magnetoresistance | `labs/tunneling-magnetoresistance/` |
 | Electromagnetism | Divergence and Curl: Reading Maxwell's Equations | `labs/divergence-curl/` |
+| Electromagnetism | The Lorentz Transformation: Clocks, Trains and Light | `labs/lorentz-transformation/` |
 
 Each lab folder holds its page, its JavaScript and its companion Jupyter
 notebook (saved without outputs).
