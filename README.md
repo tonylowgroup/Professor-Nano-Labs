@@ -28,6 +28,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some a
 | Quantum foundations | Quantum Harmonic Oscillator: Ladders and Coherent States | `labs/harmonic-oscillator/` |
 | Quantum foundations | The Hydrogen Atom: Orbitals and Spectral Lines | `labs/hydrogen-atom/` |
 | Quantum foundations | Blackbody Radiation | `labs/blackbody-radiation/` |
+| Quantum foundations | Perturbation Theory: Small Pushes, Order by Order | `labs/perturbation-theory/` |
 | Quantum computing | Qubits on the Bloch Sphere | `labs/qubits-bloch-sphere/` |
 | Quantum computing | Entanglement: Correlations No Coin Can Fake | `labs/entanglement-bell-test/` |
 | Quantum computing | Three Qubits: Toffoli Gates and Teleportation | `labs/three-qubits-teleportation/` |
