@@ -11,6 +11,7 @@ index.html            Homepage
 assets/css/site.css   Shared styles: top bar, footer, buttons, cards, colour tokens
 assets/css/lab.css    Shared lab components: controls, stat tiles, plots, questions
 assets/js/hero.js     Homepage wave-packet animation
+assets/js/tracks.js   Homepage labs: track tiles, one track at a time (index.html#quantum-foundations)
 assets/js/plot.js     Small canvas plotting helper used by the labs
 assets/js/bloch-sphere.js
                       Sphere drawing shared by the quantum computing, magnetization and quantum geometry labs
@@ -44,6 +45,8 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some a
 | Nanoscale transport | Physics of the Nanoscale Transistor | `labs/nanoscale-transistor/` |
 | Spintronics | Magnetization Dynamics and the LLG Equation | `labs/magnetization-dynamics/` |
 | Spintronics | Tunnelling Magnetoresistance | `labs/tunneling-magnetoresistance/` |
+| Electromagnetism | Divergence and Curl: Reading Maxwell's Equations | `labs/divergence-curl/` |
+| Electromagnetism | The Lorentz Transformation: Clocks, Trains and Light | `labs/lorentz-transformation/` |
 
 Each lab folder holds its page, its JavaScript and its companion Jupyter
 notebook (saved without outputs).
@@ -52,8 +55,8 @@ notebook (saved without outputs).
 
 Each track has its own accent colour, set in `assets/css/site.css`:
 quantum foundations (violet), quantum computing (berry), crystals and
-energy bands (emerald), quantum geometry (gold), nanoscale transport (copper) and spintronics (cobalt blue). A lab page picks its colour with
-`<html data-track="quantum">` (or `computing`, `crystals`, `geometry`, `transport`, `spintronics`); on the homepage
+energy bands (emerald), quantum geometry (gold), nanoscale transport (copper), spintronics (cobalt blue) and electromagnetism (teal). A lab page picks its colour with
+`<html data-track="quantum">` (or `computing`, `crystals`, `geometry`, `transport`, `spintronics`, `fields`); on the homepage
 each track row carries the same attribute. Everything inside follows the
 `--brand` tokens, so new labs need no extra colour work.
 

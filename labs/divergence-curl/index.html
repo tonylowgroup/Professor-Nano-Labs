@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en" data-track="fields">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divergence and Curl: Reading Maxwell's Equations · Professor Nano Labs</title>
+<meta name="description" content="Drag a flux box and a paddle wheel through vector fields to see what divergence and curl measure; get Coulomb's law from Gauss's law and the field of a wire from Ampère's; and see why the curl of a gradient and the divergence of a curl are always zero. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a href="../../index.html#summer-school">Summer school</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / <a href="../../index.html#electromagnetism">Electromagnetism</a></div>
+    <div class="eyebrow eyebrow--light">Electromagnetism · Live lab</div>
+    <h1>Divergence and Curl: Reading Maxwell's Equations</h1>
+    <p>Maxwell's equations say only two things about a field: how much of it springs out of each point, and how much it swirls round each point. Drag a flux box and a paddle wheel through a gallery of fields to see both; get Coulomb's law and the field of a wire from them; and see why a field that comes from a hill can never swirl.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="divergence_curl.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>Why Maxwell wrote his equations with divergence and curl, and what each one means.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=K8JEA-S46bM" target="_blank" rel="noopener" title="Why are Maxwell equations written in terms of curl and divergence? An intuitive framework">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/K8JEA-S46bM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Why are Maxwell equations written in terms of curl and divergence? An intuitive framework<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=S7ShN3GIu9Q" target="_blank" rel="noopener" title="What makes a vector field? An intuitive understanding of its constituents.">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/S7ShN3GIu9Q/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">What makes a vector field? An intuitive understanding of its constituents.<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=lXF7HDVrCRI" target="_blank" rel="noopener" title="Derive Coulomb's law from Maxwell equations... [Concepts Challenge]">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/lXF7HDVrCRI/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Derive Coulomb's law from Maxwell equations... [Concepts Challenge]<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=bXslyzSAhv4" target="_blank" rel="noopener" title="Derive Biot Savart's law from Maxwell equations... [Concepts Challenge]">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/bXslyzSAhv4/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Derive Biot Savart's law from Maxwell equations... [Concepts Challenge]<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=PC1ZUn1qqNU" target="_blank" rel="noopener" title="The curl of gradient is zero! Two intuitive explanations">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/PC1ZUn1qqNU/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The curl of gradient is zero! Two intuitive explanations<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=0HWpuuzlpVQ" target="_blank" rel="noopener" title="Divergence of curl is zero! An intuitive explanation">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/0HWpuuzlpVQ/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Divergence of curl is zero! An intuitive explanation<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=QR5_Nw_pqGc" target="_blank" rel="noopener" title="The intuition behind Gauss divergence theorem">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/QR5_Nw_pqGc/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The intuition behind Gauss divergence theorem<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Two questions to ask a field</h2>
+    <p>A vector field puts an arrow at every point: the electric field, the magnetic field, the velocity of water. Shrink a box around any point and ask two questions. How much of the field flows out of the box, more than flows in? That is the <b>divergence</b>: the field's sources and sinks. And if you dropped a tiny paddle wheel there, would the field turn it? That is the <b>curl</b>: the field's swirl.</p>
+    <p>Maxwell's four equations are exactly these two questions, asked of the electric field \(\mathbf E\) and the magnetic field \(\mathbf B\): electric charges are where \(\mathbf E\) springs out; nothing is where \(\mathbf B\) springs out, because there are no magnetic charges; currents, and changing fields, are where the fields swirl.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-field"><dt>Vector field</dt><dd>An arrow at every point in space: a direction and a strength, like the wind on a weather map.</dd></div>
+      <div id="g-flux"><dt>Flux</dt><dd>How much field crosses a surface: the outward part of the arrows, added up over the surface. Out counts positive, in negative.</dd></div>
+      <div id="g-div"><dt>Divergence</dt><dd>The net flux out of a tiny box, per unit of its size. Positive at a source, negative at a sink, zero where whatever flows in flows out again.</dd></div>
+      <div id="g-circ"><dt>Circulation</dt><dd>How much the field pushes you along as you walk round a closed loop: the part of each arrow along your path, added up.</dd></div>
+      <div id="g-curl"><dt>Curl</dt><dd>The circulation round a tiny loop, per unit of its area. A tiny paddle wheel turns at half this rate; positive means anticlockwise.</dd></div>
+      <div id="g-grad"><dt>Gradient</dt><dd>The arrows that point straight uphill on a landscape, as long as the slope is steep. The electric field of static charges is minus the gradient of the voltage.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>In two dimensions, for a field \(\mathbf F=(F_x,F_y)\), with Maxwell's equations below:</p>
+      <div class="equation">$$\nabla\cdot\mathbf F=\frac{\partial F_x}{\partial x}+\frac{\partial F_y}{\partial y}=\lim_{A\to0}\frac{1}{A}\oint\mathbf F\cdot\hat{\mathbf n}\,ds,\qquad (\nabla\times\mathbf F)_z=\frac{\partial F_y}{\partial x}-\frac{\partial F_x}{\partial y}=\lim_{A\to0}\frac{1}{A}\oint\mathbf F\cdot d\mathbf l$$</div>
+      <div class="equation">$$\nabla\cdot\mathbf E=\frac{\rho}{\varepsilon_0},\qquad \nabla\cdot\mathbf B=0,\qquad \nabla\times\mathbf E=-\frac{\partial\mathbf B}{\partial t},\qquad \nabla\times\mathbf B=\mu_0\mathbf J+\mu_0\varepsilon_0\frac{\partial\mathbf E}{\partial t}$$</div>
+      <p>The divergence theorem of Gauss and the curl theorem of Stokes turn these into statements about whole surfaces and loops: the flux out of a closed surface equals the divergence added up inside it, and the circulation round a loop equals the curl added up over the area it encloses.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-field" aria-controls="lab" aria-selected="true" data-mode="field">1 · Flux box and paddle wheel</button>
+      <button class="tab" role="tab" id="tab-gauss" aria-controls="lab" aria-selected="false" data-mode="gauss" tabindex="-1">2 · Coulomb and Biot–Savart</button>
+      <button class="tab" role="tab" id="tab-zeros" aria-controls="lab" aria-selected="false" data-mode="zeros" tabindex="-1">3 · Two zeros</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="field">
+      <h2>What springs out, and what swirls.</h2>
+      <p>Pick a field and drag the probe through it: a small box with a paddle wheel at its centre. The box adds up how much of the field leaves through its four sides, more than enters: the flux, orange where it leaves and blue where it enters. The paddle wheel turns if the field pushes harder on one side of it than the other. Divide each by the box's area and you have the divergence and the curl.</p>
+      <p class="notice"><b>What to notice:</b> the shape of the arrows can fool you. Arrows that all point the same way can still turn the wheel, and arrows that go round in circles may not turn it at all. Shrink the box: for a smooth field, flux ÷ area and circulation ÷ area settle on the divergence and curl at that point.</p>
+      <details class="math"><summary>The math</summary>
+        <p>For a small square of side \(\ell\) centred on \((x,y)\), the flux out through the right side minus the flux in through the left is about \(\ell\,[F_x(x+\ell/2)-F_x(x-\ell/2)]\approx\ell^2\,\partial F_x/\partial x\); the top and bottom give \(\ell^2\,\partial F_y/\partial y\). Going round the square, the bottom and top give \(-\ell^2\,\partial F_x/\partial y\), and the sides \(\ell^2\,\partial F_y/\partial x\):</p>
+        <div class="equation">$$\oint\mathbf F\cdot\hat{\mathbf n}\,ds\approx\ell^2\,\nabla\cdot\mathbf F,\qquad \oint\mathbf F\cdot d\mathbf l\approx\ell^2\,(\nabla\times\mathbf F)_z,\qquad \omega_{\rm wheel}=\tfrac12(\nabla\times\mathbf F)_z$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="gauss" hidden>
+      <h2>Count what is inside; the field follows.</h2>
+      <p>Gauss's law is the divergence equation added up over a closed surface: the flux of \(\mathbf E\) out of any closed surface is the charge inside, divided by \(\varepsilon_0\). Ampère's law is the curl equation added up over a loop: the circulation of \(\mathbf B\) round any loop is \(\mu_0\) times the current through it. Move and resize the sphere, or the loop, and watch the total stay fixed while the field on it changes completely.</p>
+      <p class="notice"><b>What to notice:</b> the total jumps only when a charge or a wire crosses the surface. Centre a sphere on one charge and symmetry makes the field the same all over it, so a flux of \(q/\varepsilon_0\) spread over \(4\pi r^2\) gives Coulomb's law; a loop round a wire gives the wire's field the same way.</p>
+      <details class="math"><summary>The math</summary>
+        <p>Integrate \(\nabla\cdot\mathbf E=\rho/\varepsilon_0\) over the inside of a sphere of radius \(r\) round a point charge and use the divergence theorem; integrate \(\nabla\times\mathbf B=\mu_0\mathbf J\) over a disc round a wire and use Stokes's theorem:</p>
+        <div class="equation">$$\oint\mathbf E\cdot d\mathbf A=\frac{q}{\varepsilon_0}\;\Rightarrow\;E\,4\pi r^2=\frac{q}{\varepsilon_0},\;\;E=\frac{q}{4\pi\varepsilon_0r^2};\qquad \oint\mathbf B\cdot d\mathbf l=\mu_0I\;\Rightarrow\;B=\frac{\mu_0I}{2\pi r}$$</div>
+        <p>For a wire of any shape, \(\nabla\cdot\mathbf B=0\) lets you write \(\mathbf B=\nabla\times\mathbf A\); then \(\nabla\times\mathbf B=\mu_0\mathbf J\) becomes \(\nabla^2\mathbf A=-\mu_0\mathbf J\), solved like Coulomb's law, and taking its curl gives the Biot–Savart law, \(d\mathbf B=\frac{\mu_0I}{4\pi}\frac{d\mathbf l\times\hat{\mathbf r}}{r^2}\).</p>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="zeros" hidden>
+      <h2>Downhill never swirls; contours never end.</h2>
+      <p>Start from a landscape with a hill and a valley. Its gradient, pointing downhill, is a field that never swirls: walk round any loop and you come back to the height you started at, so the field did no net work on you. Turn every arrow a quarter turn and they run along the contours instead: a field that never springs out of anywhere, because the contours never start or end.</p>
+      <p class="notice"><b>What to notice:</b> on the downhill field, the paddle wheel never turns, wherever you put it; on the field along the contours, the box never catches any net flux. Each field has the other quantity instead: the downhill field springs out of the hilltop, and the contour field swirls round it.</p>
+      <details class="math"><summary>The math</summary>
+        <p>Both zeros come from the order of partial derivatives not mattering, \(\partial_x\partial_y\varphi=\partial_y\partial_x\varphi\):</p>
+        <div class="equation">$$\nabla\times(\nabla\varphi)=\partial_x\partial_y\varphi-\partial_y\partial_x\varphi=0,\qquad \nabla\cdot\big(\nabla\times(\psi\hat{\mathbf z})\big)=\partial_x\partial_y\psi-\partial_y\partial_x\psi=0$$</div>
+        <p>Read backwards, they are how Maxwell's equations are solved: \(\nabla\cdot\mathbf B=0\) means \(\mathbf B=\nabla\times\mathbf A\) for some vector potential \(\mathbf A\), and in statics \(\nabla\times\mathbf E=0\) means \(\mathbf E=-\nabla V\) for some voltage \(V\).</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-field">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="field">
+        <div class="label-caps">The field</div>
+        <div class="chips" role="group" aria-label="Which field">
+          <button class="chip-btn" type="button" data-field="source" aria-pressed="true">Source</button><button class="chip-btn" type="button" data-field="vortex" aria-pressed="false">Vortex</button><button class="chip-btn" type="button" data-field="shear" aria-pressed="false">Shear</button><button class="chip-btn" type="button" data-field="saddle" aria-pressed="false">Saddle</button><button class="chip-btn" type="button" data-field="river" aria-pressed="false">River</button><button class="chip-btn" type="button" data-field="fading" aria-pressed="false">Fading source</button><button class="chip-btn" type="button" data-field="charge" aria-pressed="false">Line charge</button><button class="chip-btn" type="button" data-field="drain" aria-pressed="false">Whirlpool</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="gauss">
+        <div class="label-caps">Inside</div>
+        <div class="chips" role="group" aria-label="Charges or wires">
+          <button class="chip-btn" type="button" data-src="one" aria-pressed="true">One charge</button><button class="chip-btn" type="button" data-src="pair" aria-pressed="false">± pair</button><button class="chip-btn" type="button" data-src="wire" aria-pressed="false">One wire</button><button class="chip-btn" type="button" data-src="wires" aria-pressed="false">Two wires</button>
+        </div>
+        <div class="ctrl__hint" id="src-hint"></div>
+      </div>
+      <div class="ctrl-group" data-modes="zeros">
+        <div class="label-caps">The field</div>
+        <div class="seg" role="group" aria-label="Which field">
+          <button type="button" data-pot="grad" aria-pressed="true">Downhill, −∇φ</button><button type="button" data-pot="curl" aria-pressed="false">Along contours</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="field zeros">
+        <div class="label-caps">The probe</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="px">Centre, x</label><output id="px-out" for="px"></output></div>
+          <input id="px" type="range" min="-1.6" max="1.6" step="0.05" value="0.8">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="py">Centre, y</label><output id="py-out" for="py"></output></div>
+          <input id="py" type="range" min="-1.6" max="1.6" step="0.05" value="0.5">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="side">Box size</label><output id="side-out" for="side"></output></div>
+          <input id="side" type="range" min="0.1" max="1.6" step="0.05" value="0.6">
+          <div class="ctrl__hint">Or tap the picture to move the probe there.</div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="gauss">
+        <div class="label-caps" id="surf-label">The sphere</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="cx">Centre, x</label><output id="cx-out" for="cx"></output></div>
+          <input id="cx" type="range" min="-1.6" max="1.6" step="0.05" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="cy">Centre, y</label><output id="cy-out" for="cy"></output></div>
+          <input id="cy" type="range" min="-1.6" max="1.6" step="0.05" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="rad">Radius</label><output id="rad-out" for="rad"></output></div>
+          <input id="rad" type="range" min="0.2" max="1.8" step="0.05" value="0.8">
+          <div class="ctrl__hint">Or tap the picture to move the centre there.</div>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view mag-view--wide" id="mag-view">
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="field" class="zone-map" tabindex="0" role="img" aria-label="The field and the probe"></canvas></div></div>
+          <div class="mag-view__side" id="side-box"><div class="plot-box plot-box--mag"><canvas id="zoom" role="img" aria-label="The probe up close"></canvas></div></div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Paddle wheel</span><button class="predict__load" type="button" data-q="shear">Load the shear flow</button></div>
+        <p>In the shear flow every arrow points straight to the right; only their lengths change, longer towards the top. Does the paddle wheel turn?</p>
+        <details><summary>Show answer</summary>
+          <p>Yes, clockwise. The field pushes harder on the wheel's top paddles than on its bottom ones, so it turns, even though nothing flows in a circle. The curl is \(\partial F_y/\partial x-\partial F_x/\partial y=0-1=-1\) everywhere, the circulation round the box is \(-1\times\) its area (\(-0.36\) for a box 0.6 across), and the wheel turns at half the curl, 0.5 radians per unit time. Think of a stick floating in a river that flows faster on one side: it spins.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Paddle wheel</span><button class="predict__load" type="button" data-q="drain">Load the whirlpool</button></div>
+        <p>Water circles a drain, faster and faster towards the middle (\(v\propto1/r\)). Put the paddle wheel away from the drain. Does it turn?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The wheel is carried round the drain, but it does not turn about its own axis: the faster water on its inner side is exactly offset by the way the flow curves, so the curl is zero everywhere except at the drain itself. The circulation round any box that misses the drain is 0; round any box that encloses it, it is \(2\pi\approx6.283\), however big or small the box. All the curl is concentrated at one point, like the magnetic field round a thin wire.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Flux box</span><button class="predict__load" type="button" data-q="fading">Load the fading source</button></div>
+        <p>Every arrow in the fading source points outwards, away from the centre. Move the box out to \(x=1.6\). Is more field leaving the box than entering?</p>
+        <details><summary>Show answer</summary>
+          <p>No: less. The arrows point out, but out here they shrink faster than they spread apart, so less field leaves the box than enters it, and the flux is negative: this is a sink. The divergence, \(1.5\,(2-r^2)\,e^{-r^2/2}\), is positive only inside \(r=\sqrt2\approx1.41\); at \(x=1.6\) it is \(-0.23\). Arrows pointing away from a point don't make a source; what matters is whether more leaves than arrives.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Flux box</span><button class="predict__load" type="button" data-q="saddle">Load the saddle</button></div>
+        <p>In the saddle, the field rushes in from the top and bottom and out to the left and right. Centre the box on the middle. Does field pile up, or does the wheel turn?</p>
+        <details><summary>Show answer</summary>
+          <p>Neither. With the box 0.6 across, 0.18 flows in through the top, 0.18 through the bottom, and 0.18 out through each side: a net flux of zero, so the divergence is \(1+(-1)=0\). The pushes on the wheel's paddles cancel too, so the curl is zero. A field can look dramatic and still have no sources and no swirl; this one is the flow round the corner of a room.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Coulomb</span><button class="predict__load" type="button" data-q="sphere">Load a sphere round a charge</button></div>
+        <p>A sphere of radius 0.5 sits centred on a point charge. Double its radius to 1. What happens to the flux through it, and to the field on its surface?</p>
+        <details><summary>Show answer</summary>
+          <p>The flux stays exactly the same, \(q/\varepsilon_0\): the same charge is inside. But the surface area grows four times, so the field on it must fall to a quarter, from \(0.318\) to \(0.080\) (in units where \(q/\varepsilon_0=1\)). That is the inverse-square law: \(E\cdot4\pi r^2=q/\varepsilon_0\), so \(E=q/4\pi\varepsilon_0r^2\). Coulomb's law follows from Gauss's law plus symmetry.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Coulomb</span><button class="predict__load" type="button" data-q="pair">Load the ± pair</button></div>
+        <p>Now the sphere of radius 1 encloses a positive and a negative charge. The field on the sphere is clearly not zero. What is the total flux?</p>
+        <details><summary>Show answer</summary>
+          <p>Zero. The field leaves the sphere on the side near the positive charge (0.47 outward where it is strongest) and enters on the side near the negative one, by exactly as much. Gauss's law counts only the net charge inside, here \(q-q=0\). Slide the sphere until only one charge is inside and the flux jumps to \(\pm q/\varepsilon_0\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Biot–Savart</span><button class="predict__load" type="button" data-q="miss">Load a loop beside the wire</button></div>
+        <p>A loop sits beside a current-carrying wire without going round it. The magnetic field on the loop isn't zero. What is the circulation round it?</p>
+        <details><summary>Show answer</summary>
+          <p>Zero. On the side of the loop nearer the wire, \(\mathbf B\) runs one way along the loop; on the far side it runs the other way, weaker but along a longer stretch, and the two cancel exactly. Ampère's law counts only the current through the loop. Move the loop to go round the wire, anywhere and at any size, and the circulation is \(\mu_0I\) every time.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Two zeros</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="hill">Load the hilltop</button></div>
+        <p>The field points downhill from a hill, \(\mathbf F=-\nabla\varphi\). Put the box on the hilltop. Does field leave the box? Does the wheel turn? Try other places too.</p>
+        <details><summary>Show answer</summary>
+          <p>Field leaves the box, about 2.1 for a box 0.6 across, because all the arrows run away downhill from the top: the hilltop is a source. But the wheel never turns, here or anywhere: the circulation is zero for every box, because walking round a loop on a landscape brings you back to the height you started at. That is \(\nabla\times\nabla\varphi=0\). It is why the electric field of static charges, \(\mathbf E=-\nabla V\), has no curl; and turned a quarter turn, it is why a field written as a curl, like \(\mathbf B=\nabla\times\mathbf A\), never springs out of anywhere.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook draws the same fields, measures flux and circulation round boxes and checks them against the divergence and curl, integrates the field of a point charge over off-centre spheres and the field of a wire round loops, and checks both zeros numerically. It needs only NumPy, SciPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="divergence_curl.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta" id="nb-size">.ipynb · 16 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>Units:</strong> lengths and fields in arbitrary units, the picture running from −2 to 2. In tab 2, charges in units where \(q/\varepsilon_0=1\) and currents where \(\mu_0I=1\).</li>
+          <li><strong>The fields:</strong> source \((x,y)\), vortex \((-y,x)\), shear \((y,0)\), saddle \((x,-y)\), river \((1-y^2/4,\,0)\), fading source \(1.5\,(x,y)\,e^{-r^2/2}\), line charge \((x,y)/r^2\) and whirlpool \((-y,x)/r^2\). Their divergence and curl are worked out by hand, and the box measures them independently.</li>
+          <li><strong>Flux and circulation:</strong> \(\oint\mathbf F\cdot\hat{\mathbf n}\,ds\) and \(\oint\mathbf F\cdot d\mathbf l\) on each side of the box, by 24-point Gauss–Legendre quadrature. For the line charge and the whirlpool, whose fields blow up at the centre, each side is done exactly: it contributes the angle it subtends at the centre.</li>
+          <li><strong>The paddle wheel</strong> turns at half the curl at its centre; the moving dots are carried along by the field, faster where it is stronger.</li>
+          <li><strong>Gauss's law:</strong> the field of point charges in three dimensions, \(\mathbf E=q\,\hat{\mathbf r}/4\pi\varepsilon_0r^2\), shown in the plane through them. The flux through the sphere is a surface integral; by symmetry about the line from the sphere's centre to each charge it reduces to one integral, done on panels that crowd in where a charge comes close to the surface. It agrees with Gauss's law to better than \(10^{-7}\).</li>
+          <li><strong>Ampère's law:</strong> long straight wires along \(z\), \(\mathbf B=\mu_0I\,\hat{\boldsymbol\varphi}/2\pi r\). The circulation is summed over a 1440-sided polygon; along each straight piece, \(\int\mathbf B\cdot d\mathbf l\) is exactly \(\mu_0I\) times the angle it subtends at the wire, divided by \(2\pi\).</li>
+          <li><strong>Two zeros:</strong> the landscape \(\varphi\) is a hill of height 1.2 at \((-0.8,0.5)\) and a valley of depth 1 at \((0.9,-0.45)\), both Gaussians of width 0.6. The downhill field is \(-\nabla\varphi\); the contour field is \(\nabla\times(\varphi\hat{\mathbf z})=(\partial_y\varphi,-\partial_x\varphi)\). Their divergence and curl are \(-\nabla^2\varphi\) and 0, and 0 and \(-\nabla^2\varphi\).</li>
+          <li><strong>Checks:</strong> the notebook repeats every calculation independently with SciPy's adaptive integrators and asserts the numbers quoted in the questions.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
