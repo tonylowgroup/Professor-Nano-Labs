@@ -234,7 +234,7 @@
     waveTables();
     const H = pattern(), pk = peaks(H.I).filter(y => y > 0.05);
     setHTML($('info'), !open2
-      ? `<b>One slit, no stripes.</b> The wave fans out from the open slit into one broad hump${S.a <= 1 ? ': a slit a wavelength wide or narrower spreads it over every angle, so there is no dark stripe at all' : ', with dark stripes only far out, where the slit\'s own edges interfere'}. Open both slits to see the stripes.`
+      ? `<b>One slit, no stripes.</b> The wave fans out from the open slit into one broad hump${S.a <= 1 ? ': a slit a wavelength wide or narrower spreads it over every angle, so there is no dark stripe at all' : ', a little narrower now; a single slit\'s own dark stripes would sit further out than this screen reaches'}. Open both slits to see the stripes.`
       : `<b>The first bright stripes either side sit about ${fixed(pk[0] || NaN, 1)} wavelengths out</b> in the Huygens prediction: there the paths from the two slits differ by one wavelength. The rule of thumb for the spacing, λL/d, gives ${fixed(LX / S.d, 2)}. Move the slits apart and the stripes crowd together.`);
     setHTML($('takeaway'), '<b>The wave goes through both slits.</b> Each slit sends out its own wave; on the screen they add, and where they arrive out of step they cancel. Close one slit and there is nothing to cancel with: the stripes disappear.');
     frameFn = run.done ? (f => waveFrame(f)) : null;
@@ -315,7 +315,7 @@
       ['Particles detected', big(total), total === 1 ? 'one dot: no pattern yet' : 'each one a single dot'],
       ['In the central stripe', pct(inC / total), `predicted: ${pct(cs.share)}`],
       ['Histogram noise', total >= 10 ? pct(nzT) : '—', 'shrinks as 1/√N'],
-      ['Stripe spacing', `${fixed(Math.min(...peaks(H.I).filter(y => y > 0.05)), 2)} λ`, 'where the dots pile up'],
+      ['First side stripe', `${fixed(Math.min(...peaks(H.I).filter(y => y > 0.05)), 2)} λ`, 'where the dots pile up'],
     ]);
     else stats([
       ['N', big(total), 'detections drawn from P(y) = |ψ|²/∫|ψ|²'],
@@ -390,15 +390,15 @@
     legend('pa-legend', [[VIOLET, '', 'with this marker'], [BLUE, 'swatch--dash', 'top slit alone'], [RED, 'swatch--dash', 'bottom slit alone'], [GREY, 'swatch--dot', 'no marker']]);
     setHTML($('pb-title'), 'Knowledge against stripes');
     put('pb-cap', deep
-      ? 'The visibility of the central fringe (violet dot), computed from the pattern, against Englert\'s duality relation D² + V² = 1 (dashed): which-path knowledge and interference trade off along a quarter circle.'
+      ? 'The visibility of the central fringe (violet dot): without a marker it is 1 here, so with one it is exactly √(1 − D²), on Englert\'s duality relation D² + V² = 1 for a pure marker (dashed): which-path knowledge and interference trade off along a quarter circle.'
       : 'The strength of the stripes against how well the path is known: they fall along a quarter circle, V = √(1 − D²) (dashed). Full knowledge, no stripes; no knowledge, full stripes.');
     legend('pb-legend', [[VIOLET, 'swatch--area', 'this marker'], [GREY, 'swatch--dash', 'V = √(1 − D²)']]);
     setHTML($('info'), S.dm === 0
-      ? '<b>No marker: full stripes.</b> Nothing records the path, so the two ways through interfere completely, and the central stripe goes fully dark at its edges.'
+      ? '<b>No marker: full stripes.</b> Nothing records the path, so the two ways through interfere completely, and the central stripe goes almost completely dark at its edges, to about 1% of its peak.'
       : S.dm >= 0.999
       ? '<b>Path known: the stripes are gone.</b> Each particle\'s marker says which slit it took, so the two ways through no longer interfere: the pattern is just the two single-slit humps added up.'
       : `<b>Partly known: visibility ${fixed(V, 2)}.</b> The marker could tell the paths apart with distinguishability ${fixed(S.dm, 2)}, and the stripes fade to √(1 − ${fixed(S.dm, 2)}²) = ${fixed(V, 2)} of their full strength.`);
-    setHTML($('takeaway'), '<b>Which way, or interference: not both.</b> Stripes need the two paths to be indistinguishable. Anything that could tell them apart, even a marker no one looks at, weakens the stripes, by exactly as much as it could tell.');
+    setHTML($('takeaway'), '<b>Which way, or interference: not both.</b> Stripes need the two paths to be indistinguishable. Anything that could tell them apart, even a marker no one looks at, weakens the stripes; for a marker in a pure state, by exactly as much as it could tell.');
     $('field').setAttribute('aria-label', `4000 particles on the screen with a which-path marker of distinguishability ${fixed(S.dm, 2)}; fringe visibility ${fixed(V, 2)}`);
     $('side').setAttribute('aria-label', '');
     frameFn = whichFrame;

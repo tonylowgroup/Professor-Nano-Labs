@@ -11,8 +11,10 @@
   const N = 256, LAMBDA = 8, K0 = 2 * Math.PI / LAMBDA, TAU = 2 * Math.PI;
   // the layout, in grid steps (x across, y up; y = 0 is the middle row)
   // V0 * dt must stay well below pi: the wall acts through the phase e^{-iV dt}, and a phase past 2 pi would turn it into a dip.
-  // V0 = 2.5 is 8 times the packet's energy (k0^2/2 = 0.31), and the 4-step wall lets through less than 1e-7.
-  const G = { x0: 60, sx: 12, sy: 28, wall: 104, thick: 4, screen: 216, edge: 24, V0: 2.5, dt: 0.5, tEnd: 330 };
+  // V0 = 2.5 is 8 times the packet's energy (k0^2/2 = 0.31); the 4-step wall lets through about 1e-5 on this grid, negligible.
+  // The absorbing border works at a rate absorb * u^2 per unit time (u = 1 at the outer edge), independent of dt, strong enough
+  // that what bounces off the wall and leaves through the left edge cannot wrap round the periodic grid and come back.
+  const G = { x0: 60, sx: 12, sy: 28, wall: 104, thick: 4, screen: 216, edge: 24, V0: 2.5, dt: 0.5, tEnd: 330, absorb: 0.6 };
 
   // ---------- a radix-2 complex FFT, in place on separate real and imaginary arrays ----------
   function makeFFT(n) {
@@ -76,9 +78,9 @@
         const inWall = i >= G.wall && i < G.wall + G.thick && !S.some(s => Math.abs(y - s.y) < s.a / 2);
         const V = inWall ? G.V0 : 0;
         this.vr[o] = Math.cos(-V * dt / 2); this.vi[o] = Math.sin(-V * dt / 2);
-        // a smooth absorbing border: the mask falls from 1 to about 0.94 per step at the very edge
+        // a smooth absorbing border: at dt = 0.5 the mask falls from 1 to about 0.74 per step at the very edge
         const e = Math.min(i, N - 1 - i, j, N - 1 - j), u = e < G.edge ? (G.edge - e) / G.edge : 0;
-        this.mask[o] = Math.exp(-0.06 * u * u);
+        this.mask[o] = Math.exp(-G.absorb * dt * u * u);
       }
       this.kr = new Float64Array(n2); this.ki = new Float64Array(n2);
       const kk = i => TAU * (i < N / 2 ? i : i - N) / N;
