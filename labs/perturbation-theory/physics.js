@@ -21,9 +21,9 @@
   // <m|x|n> for m != n: -8 m n / (pi^2 (m^2 - n^2)^2) when m + n is odd, zero otherwise; <n|x - 1/2|n> = 0
   const xmn = (m, n) => (m === n || (m + n) % 2 === 0 ? 0 : -8 * m * n / (PI * PI * Math.pow(m * m - n * n, 2)));
   const KINDS = {
-    tilt: { name: 'Tilt', W: x => x - 0.5, el: (m, n) => xmn(m, n) },
-    bump: { name: 'Bump in the middle', W: x => (Math.abs(x - 0.5) < BUMP / 2 ? 1 : 0), el: (m, n) => interval(m, n, 0.5 - BUMP / 2, 0.5 + BUMP / 2) },
-    step: { name: 'Step on one side', W: x => (x > 0.5 ? 1 : 0), el: (m, n) => interval(m, n, 0.5, 1) },
+    tilt: { W: x => x - 0.5, el: (m, n) => xmn(m, n) },                                       // W(x) itself, for reference and tests
+    bump: { W: x => (Math.abs(x - 0.5) < BUMP / 2 ? 1 : 0), el: (m, n) => interval(m, n, 0.5 - BUMP / 2, 0.5 + BUMP / 2) },
+    step: { W: x => (x > 0.5 ? 1 : 0), el: (m, n) => interval(m, n, 0.5, 1) },
   };
   const cacheW = {};
   function Wmat(kind) {
@@ -34,27 +34,9 @@
   }
   const level0 = n => n * n;
 
-  // ---------- exact: cyclic Jacobi diagonalisation of a symmetric matrix ----------
-  function jacobi(A0) {
-    const n = A0.length, A = A0.map(r => Float64Array.from(r)), V = Array.from({ length: n }, (_, i) => { const r = new Float64Array(n); r[i] = 1; return r; });
-    for (let sweep = 0; sweep < 60; sweep++) {
-      let off = 0;
-      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) off += A[p][q] * A[p][q];
-      if (off < 1e-26) break;
-      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) {
-        const apq = A[p][q];
-        if (Math.abs(apq) < 1e-300) continue;
-        const th = (A[q][q] - A[p][p]) / (2 * apq), t = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1)), c = 1 / Math.sqrt(t * t + 1), s = t * c;
-        for (let k = 0; k < n; k++) { const akp = A[k][p], akq = A[k][q]; A[k][p] = c * akp - s * akq; A[k][q] = s * akp + c * akq; }
-        for (let k = 0; k < n; k++) { const apk = A[p][k], aqk = A[q][k]; A[p][k] = c * apk - s * aqk; A[q][k] = s * apk + c * aqk; }
-        for (let k = 0; k < n; k++) { const vkp = V[k][p], vkq = V[k][q]; V[k][p] = c * vkp - s * vkq; V[k][q] = s * vkp + c * vkq; }
-      }
-    }
-    const order = Array.from({ length: n }, (_, i) => i).sort((i, j) => A[i][i] - A[j][j]);
-    return { vals: order.map(i => A[i][i]), vecs: order.map(i => Float64Array.from(V, r => r[i])) };
-  }
-  // the same, about ten times faster: Householder reduction to tridiagonal form, then the QL algorithm with implicit
-  // shifts (tred2 and tql2, as in EISPACK and JAMA). Returns the eigenvalues in ascending order and their vectors.
+  // ---------- exact: diagonalisation of a symmetric matrix ----------
+  // Householder reduction to tridiagonal form, then the QL algorithm with implicit shifts (tred2 and tql2, as in
+  // EISPACK and JAMA). Returns the eigenvalues in ascending order and their vectors.
   function eigh(A0) {
     const n = A0.length, V = A0.map(r => Float64Array.from(r)), d = new Float64Array(n), e = new Float64Array(n);
     for (let j = 0; j < n; j++) d[j] = V[n - 1][j];
@@ -204,7 +186,6 @@
     for (let m = 0; m < N; m++) { if (!c[m]) continue; const w = c[m] * k, row = B[m]; for (let i = 0; i < xs.length; i++) out[i] += w * row[i]; }
     return out;
   }
-  const potential = (kind, s, x) => s * KINDS[kind].W(x);
 
   // ---------- two coupled levels: the video's example ----------
   // |1> at E1 = -delta/2 and |2> at E2 = +delta/2, coupled by V: H = [[-delta/2, V], [V, delta/2]]
@@ -213,14 +194,12 @@
     // lower eigenstate a|1> + b|2> with a = <1|lower>: weight on |1> = (1 + delta / 2r) / 2
     const w1 = r > 0 ? 0.5 * (1 + delta / (2 * r)) : 0.5;
     const E1 = -delta / 2, E2 = delta / 2;
-    // second-order perturbation theory, treating V as the push: E1 + V^2 / (E1 - E2), E2 + V^2 / (E2 - E1)
-    const pt1 = delta !== 0 ? E1 - V * V / delta : (V === 0 ? E1 : -Math.sign(V) * Infinity);
-    const pt2 = delta !== 0 ? E2 + V * V / delta : (V === 0 ? E2 : Infinity);
-    // first-order states |1> + V/(E1 - E2)|2> and |2> + V/(E2 - E1)|1>, normalised: weight on the unperturbed state
-    const c = delta !== 0 ? V / delta : Infinity;
+    // first-order states |1> + V/(E1 - E2)|2> and |2> + V/(E2 - E1)|1>, normalised: the weight left on the unperturbed
+    // state. With no coupling there is no push at all, and the unperturbed states are exact.
+    const c = V === 0 ? 0 : delta !== 0 ? V / delta : Infinity;
     const keep = Number.isFinite(c) ? 1 / (1 + c * c) : 0;
-    return { lower: -r, upper: r, gap: 2 * r, w1, E1, E2, pt1, pt2, keep, ratio: Math.abs(c) };
+    return { lower: -r, upper: r, gap: 2 * r, w1, E1, E2, keep };
   }
 
-  window.PT = { N, BUMP, KINDS, Wmat, level0, jacobi, eigh, exact, series, coeffs, exactCoeffs, overlap2, norm, wave, potential, twoLevel, xmn, interval };
+  window.PT = { N, BUMP, KINDS, Wmat, level0, eigh, exact, series, coeffs, exactCoeffs, overlap2, norm, wave, twoLevel, xmn, interval };
 })();
