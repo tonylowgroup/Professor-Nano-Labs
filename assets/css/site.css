@@ -129,6 +129,7 @@ img, svg { display: block; }
 [data-track="transport"] { --brand: #b0561b; --brand-strong: #8f4413; --brand-soft: #fbeee3; --track-hero: #9a4a16; --track-tint: #f7cfae; }
 [data-track="spintronics"] { --brand: #2a55b8; --brand-strong: #1f4396; --brand-soft: #e6edfa; --track-hero: #23479d; --track-tint: #c9d8f6; }
 [data-track="geometry"]  { --brand: #946600; --brand-strong: #765100; --brand-soft: #fbf2dd; --track-hero: #805800; --track-tint: #f3dfa6; }
+[data-track="fields"]    { --brand: #0b6e85; --brand-strong: #08566a; --brand-soft: #e0f1f5; --track-hero: #095e72; --track-tint: #b5e0ea; }
 /* The top bar and footer always use the site teal. */
 [data-track] .site-nav, [data-track] .site-footer { --brand: #175569; --brand-strong: #0f3d4c; --brand-soft: #e3eff2; }
 
