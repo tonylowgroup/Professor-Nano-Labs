@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en" data-track="quantum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Double Slit, One Particle at a Time · Professor Nano Labs</title>
+<meta name="description" content="Send a quantum wave packet at two slits and watch it interfere, in a full simulation of the Schrödinger equation; then send particles one at a time and watch the fringes build up dot by dot; then mark which slit each one took and watch the fringes fade. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a href="../../index.html#summer-school">Summer school</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>The Double Slit, One Particle at a Time</h1>
+    <p>Send a quantum wave packet at a wall with two slits and watch it split, spread and interfere, computed from the Schrödinger equation as you watch. Then send particles one at a time and see the stripes appear dot by dot, and mark which slit each one took to see the stripes fade.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="double_slit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>Quantum superposition, the state \((|1\rangle+e^{i\varphi}|2\rangle)/\sqrt2\): here, a particle that goes through slit 1 and slit 2 at once.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=L4YajTag6Ko" target="_blank" rel="noopener" title="What 3 experiments really tell us about quantum superposition">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/L4YajTag6Ko/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">What 3 experiments really tell us about quantum superposition<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=1J3z6_-8CP0" target="_blank" rel="noopener" title="The 7 postulates of quantum mechanics that connects formalism to physical reality">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/1J3z6_-8CP0/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">The 7 postulates of quantum mechanics that connects formalism to physical reality<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=TZ4FPPm-1TM" target="_blank" rel="noopener" title="Illustrating the difference between pure coherent and mixed states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/TZ4FPPm-1TM/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Illustrating the difference between pure coherent and mixed states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=jfwoUOOw5ms" target="_blank" rel="noopener" title="Fourier vs Heisenberg uncertainty principle">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/jfwoUOOw5ms/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Fourier vs Heisenberg uncertainty principle<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Two paths, one particle</h2>
+    <p>A particle's wave can reach a point on the screen through either slit. The two contributions add as waves, \(\psi=\psi_1+\psi_2\), and the chance of finding the particle there is \(|\psi_1+\psi_2|^2\): bright where the two waves arrive in step, dark where they arrive out of step. Yet every particle is detected at a single point. The stripes are a pattern of probability, drawn one particle at a time.</p>
+    <p>The lab measures lengths in the particle's wavelength \(\lambda=h/p\). For an electron with 50 eV of energy, \(\lambda\approx0.17\) nm; for a slow one with 1 eV, about 1.2 nm.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-wave"><dt>Wave packet</dt><dd>A particle's wavefunction, bunched up in space and moving: here a Gaussian with wavelength λ, wide enough to reach both slits.</dd></div>
+      <div id="g-interf"><dt>Interference</dt><dd>Two waves adding: crest on crest makes a bright fringe, crest on trough a dark one. The fringes are λL/d apart for slits d apart and a screen L away.</dd></div>
+      <div id="g-diff"><dt>Diffraction</dt><dd>A wave spreading out after passing through an opening. The narrower the slit, the wider it spreads.</dd></div>
+      <div id="g-born"><dt>Born rule</dt><dd>The chance of detecting the particle at a point is |ψ|² there. One detection is random; many of them trace out |ψ|².</dd></div>
+      <div id="g-which"><dt>Which-path marker</dt><dd>Anything that records which slit the particle took. If its two records can be told apart, the two paths no longer interfere.</dd></div>
+      <div id="g-vis"><dt>Visibility</dt><dd>How strong the fringes are: (I<sub>max</sub> − I<sub>min</sub>)/(I<sub>max</sub> + I<sub>min</sub>), 1 for fringes that go fully dark, 0 for none.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>The wavefunction obeys the time-dependent Schrödinger equation in two dimensions, with a potential \(V(x,y)\) that is high inside the wall and zero elsewhere, including inside the slits:</p>
+      <div class="equation">$$i\hbar\,\frac{\partial\psi}{\partial t}=-\frac{\hbar^2}{2m}\Big(\frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}\Big)\psi+V(x,y)\,\psi,\qquad P(y)\propto|\psi_1(y)+\psi_2(y)|^2=|\psi_1|^2+|\psi_2|^2+2\,\mathrm{Re}\,\psi_1^*\psi_2$$</div>
+      <p>The last term, the interference term, makes the fringes. Bright fringes sit where the paths from the two slits differ by a whole number of wavelengths; far from the slits, at angles \(\sin\theta=m\lambda/d\), which on a screen at distance \(L\) are spaced about \(\lambda L/d\) apart.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-wave" aria-controls="lab" aria-selected="true" data-mode="wave">1 · A wave meets two slits</button>
+      <button class="tab" role="tab" id="tab-one" aria-controls="lab" aria-selected="false" data-mode="one" tabindex="-1">2 · One particle at a time</button>
+      <button class="tab" role="tab" id="tab-which" aria-controls="lab" aria-selected="false" data-mode="which" tabindex="-1">3 · Which way did it go?</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="wave">
+      <h2>The wave goes through both slits.</h2>
+      <p>A wave packet heads for a wall with two narrow slits. Most of it bounces back, but the part that gets through spreads out from each slit, and the two spreading waves overlap. Where they meet in step they add; where they meet out of step they cancel. A screen further on records the sum: bright and dark stripes.</p>
+      <p class="notice"><b>What to notice:</b> behind the wall, the wave from each slit fans out, and the two fans cross in a pattern of rays. Close one slit and the rays, and the stripes, are gone: a single slit gives one broad hump. Move the slits apart and the stripes crowd together.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The simulation solves the Schrödinger equation on a 256 × 256 grid by the split-step Fourier method: each short time step \(\Delta t\) applies the potential as a phase, \(e^{-iV\Delta t/2\hbar}\), in position space, and the kinetic energy as a phase, \(e^{-i\hbar k^2\Delta t/2m}\), in momentum space. The prediction it is compared with adds up Huygens wavelets from every point of each open slit:</p>
+        <div class="equation">$$\psi(y)\propto\sum_{\rm slits}\int_{\rm slit}A(y')\,\frac{e^{ikr}}{\sqrt r}\,\frac{1+\cos\theta}{2}\,dy',\qquad r=\sqrt{L^2+(y-y')^2},\qquad \Delta y\approx\frac{\lambda L}{d}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="one" hidden>
+      <h2>Each particle lands in one place.</h2>
+      <p>Turn the source down until particles go through one at a time. Each one makes a single dot on the screen, at a place nobody can predict. At first the dots look scattered at random. But they never land in the dark stripes, and as they pile up, the stripes appear: the pattern of the wave, |ψ|², drawn by many single particles.</p>
+      <p class="notice"><b>What to notice:</b> with ten particles you cannot see any stripes; with a thousand you can't miss them. The histogram's ragged edges smooth out as \(1/\sqrt N\). Akira Tonomura's team at Hitachi recorded exactly this with single electrons in 1989.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The Born rule: the probability of a detection between \(y\) and \(y+dy\) is \(P(y)\,dy\), with \(P\propto|\psi|^2\). Each dot is drawn at random from \(P\). A strip of the screen expected to collect \(\bar n\) dots collects \(\bar n\pm\sqrt{\bar n}\), so the relative noise falls as \(1/\sqrt{N}\):</p>
+        <div class="equation">$$P(y)=\frac{|\psi(y)|^2}{\int|\psi|^2\,dy},\qquad \frac{\delta n}{\bar n}\approx\frac{1}{\sqrt{\bar n}}\propto\frac1{\sqrt N}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="which" hidden>
+      <h2>Find out which way, and the stripes fade.</h2>
+      <p>Add a marker that records which slit each particle went through: say, a tag on the particle that ends up in one state after the top slit and another after the bottom. If the two tags can be told apart perfectly, the two paths no longer interfere and the stripes vanish, leaving the two single-slit humps. If they can only partly be told apart, the stripes only partly fade.</p>
+      <p class="notice"><b>What to notice:</b> the more you could learn about the path, the weaker the stripes. With distinguishability D, the fringe visibility is \(V=\sqrt{1-D^2}\): you can't have both full which-path knowledge and full stripes.</p>
+      <details class="math"><summary>The math</summary>
+        <p>With marker states \(|\chi_1\rangle\) and \(|\chi_2\rangle\), the particle and marker together are \(\psi_1|\chi_1\rangle+\psi_2|\chi_2\rangle\), and the pattern on the screen, ignoring the marker, is</p>
+        <div class="equation">$$P(y)\propto|\psi_1|^2+|\psi_2|^2+2\,\mathrm{Re}\big(\psi_1^*\psi_2\,\langle\chi_1|\chi_2\rangle\big),\qquad V=|\langle\chi_1|\chi_2\rangle|,\qquad D=\sqrt{1-|\langle\chi_1|\chi_2\rangle|^2},\qquad D^2+V^2=1$$</div>
+        <p>For a marker in a pure state, \(D^2+V^2=1\); a noisy marker gives \(D^2+V^2<1\). This is Englert's duality relation (1996).</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-wave">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps">The slits</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="sd">Slit spacing, d</label><output id="sd-out" for="sd"></output></div>
+          <input id="sd" type="range" min="2" max="6" step="0.25" value="3">
+          <div class="ctrl__hint">Centre to centre, in wavelengths.</div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="sa">Slit width, a</label><output id="sa-out" for="sa"></output></div>
+          <input id="sa" type="range" min="0.75" max="2" step="0.25" value="1">
+          <div class="ctrl__hint">Narrower than half a wavelength, a slit would hardly let the wave through at all.</div>
+        </div>
+        <div data-modes="wave">
+          <div class="label-caps" style="margin-top:10px">Open</div>
+          <div class="seg" role="group" aria-label="Which slits are open">
+            <button type="button" data-open="both" aria-pressed="true">Both</button><button type="button" data-open="top" aria-pressed="false">Top only</button><button type="button" data-open="bottom" aria-pressed="false">Bottom only</button>
+          </div>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="one">
+        <div class="label-caps">The particles</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="cnt">How many</label><output id="cnt-out" for="cnt"></output></div>
+          <input id="cnt" type="range" min="0" max="8" step="1" value="6">
+        </div>
+        <div class="chips" role="group" aria-label="How many particles">
+          <button class="chip-btn" type="button" data-cnt="2">10</button><button class="chip-btn" type="button" data-cnt="4">100</button><button class="chip-btn" type="button" data-cnt="6">1000</button><button class="chip-btn" type="button" data-cnt="8">10 000</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="which">
+        <div class="label-caps">The which-path marker</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="dm">Distinguishability, D</label><output id="dm-out" for="dm"></output></div>
+          <input id="dm" type="range" min="0" max="1" step="0.05" value="0">
+          <div class="ctrl__hint">0: the marker says nothing about the path. 1: it tells the path every time.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Examples">
+          <button class="chip-btn" type="button" data-dm="0">No marker</button><button class="chip-btn" type="button" data-dm="0.6">D = 0.6</button><button class="chip-btn" type="button" data-dm="1">Path known</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="one which">
+        <button class="chip-btn" type="button" id="reroll">New random run</button>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view mag-view--wide" id="mag-view">
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="field" role="img" aria-label="The wave and the slits"></canvas></div></div>
+          <div class="mag-view__side" id="side-box"><div class="plot-box plot-box--mag"><canvas id="side" role="img" aria-label="The screen"></canvas></div></div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · The wave</span><button class="predict__load" type="button" data-q="wide">Load slits 6λ apart</button></div>
+        <p>With the slits \(3\lambda\) apart, the first bright stripes either side of the centre sit about \(5\lambda\) out. Move the slits twice as far apart, to \(6\lambda\). What happens to the stripes?</p>
+        <details><summary>Show answer</summary>
+          <p>They crowd together: the first side stripe moves in to about \(2.3\lambda\), and twice as many stripes fit on the screen. A bright stripe sits where the paths from the two slits differ by a whole number of wavelengths; with the slits further apart, the path difference grows faster as you move along the screen, so you reach the next whole wavelength sooner. The rule of thumb is a spacing of \(\lambda L/d\), with the screen \(L=13.5\lambda\) away: \(4.5\lambda\), then \(2.25\lambda\). With the slits close together, the first side stripe sits on the shoulder of each slit's own spread, which nudges it outwards: the simulation puts it at \(5.1\lambda\), the Huygens prediction at \(4.6\lambda\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · The wave</span><button class="predict__load" type="button" data-q="one">Load one slit</button></div>
+        <p>Close the bottom slit. Do the stripes survive?</p>
+        <details><summary>Show answer</summary>
+          <p>No. The wave fans out from the one open slit into a single broad hump, centred behind it at \(y=+1.5\lambda\), and nowhere on the screen does it go dark: a slit only a wavelength wide spreads the wave over every angle. The stripes need two waves to add and cancel; with one slit there is nothing to cancel with.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · The wave</span><button class="predict__load" type="button" data-q="width">Load wider slits</button></div>
+        <p>Keep the slits \(3\lambda\) apart but make each one twice as wide, \(a=2\lambda\). What changes?</p>
+        <details><summary>Show answer</summary>
+          <p>Only three bright stripes are left, the central one and one either side, at about \(\pm4.0\lambda\). A wider slit spreads its wave less, so each slit's own hump, the envelope the stripes live under, is narrower and cuts off the outer stripes. The spacing is still set by \(d\), though the narrower envelope pulls the side stripes in, to about \(4\lambda\). More of the wave also gets through: 41.5% instead of 24%.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · One at a time</span><button class="predict__load" type="button" data-q="ten">Load 10 particles</button></div>
+        <p>Send just ten particles through the slits, one at a time. Can you see the stripes?</p>
+        <details><summary>Show answer</summary>
+          <p>No. Ten dots, each at a single place, scattered with no visible pattern. Each particle is detected whole, at one point; the stripes are a pattern in the odds, and odds only show up in many trials. With a few hundred dots the stripes start to show, and with thousands they are unmistakable, as Tonomura's team saw with single electrons in 1989.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · One at a time</span><button class="predict__load" type="button" data-q="central">Load 10 000 particles</button></div>
+        <p>Where will the next particle land? And what fraction of particles land in the central bright stripe, between the first two dark stripes?</p>
+        <details><summary>Show answer</summary>
+          <p>No one can say where the next one lands: only the probability, \(|\psi|^2\), is fixed. The central stripe runs from \(-2.3\lambda\) to \(+2.3\lambda\) and holds 34% of the probability on the screen, so about 34% of the particles land there; with 10 000 particles, about 3440, give or take about 50. Almost none land in the middle of a dark stripe, where \(|\psi|^2\) is nearly zero.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · One at a time</span><button class="predict__load" type="button" data-q="noise">Load 100 particles</button></div>
+        <p>Compare the histogram for 100 particles with the one for 10 000. How much smoother is the second?</p>
+        <details><summary>Show answer</summary>
+          <p>About ten times smoother, not a hundred. A strip expected to collect \(\bar n\) particles gets \(\bar n\pm\sqrt{\bar n}\), so the relative noise falls as \(1/\sqrt N\): a hundred times more particles, \(\sqrt{100}=10\) times less noise. In this run it drops from 45% to under 5%.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Which way</span><button class="predict__load" type="button" data-q="known">Load a perfect marker</button></div>
+        <p>Mark every particle with which slit it went through, so that the path is known every time (D = 1). What happens to the stripes?</p>
+        <details><summary>Show answer</summary>
+          <p>They vanish: the fringe visibility drops to zero, and the screen shows the two single-slit humps added together. The dots coloured by their slit show it plainly: each colour makes one broad hump. Interference needs the two paths to be indistinguishable; once the marker could tell them apart, they no longer interfere, even if nobody reads the marker.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Which way</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="half">Load D = 0.6</button></div>
+        <p>Now the marker can only partly tell the paths apart, with distinguishability D = 0.6. How strong are the stripes?</p>
+        <details><summary>Show answer</summary>
+          <p>The visibility is \(V=\sqrt{1-D^2}=\sqrt{1-0.36}=0.80\): the stripes keep 80% of their contrast, and the dark stripes fill in a little. Which-path knowledge and interference trade off along the quarter circle \(D^2+V^2=1\), Englert's duality relation; a noisy marker would do worse, \(D^2+V^2<1\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook runs the same split-step simulation of the two-dimensional Schrödinger equation, compares its screen pattern with Huygens' wavelets, draws particles one at a time with the Born rule, and checks the duality relation between which-path knowledge and fringe visibility. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="double_slit.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta" id="nb-size">.ipynb · 17 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>Units:</strong> \(\hbar=m=1\), lengths in grid steps, with the wavelength \(\lambda=8\) steps (\(k_0=2\pi/8\)). Everything on the page is quoted in wavelengths, so it applies to any particle: an electron, a neutron, a molecule.</li>
+          <li><strong>The simulation:</strong> the time-dependent Schrödinger equation on a 256 × 256 grid, by the split-step Fourier method with \(\Delta t=0.5\): half a step of the potential as a phase, a full step of kinetic energy in momentum space, half a step of the potential. The packet starts as a Gaussian moving at \(k_0\), 12 steps wide along \(x\) and 28 across. The wall is 4 steps thick, with \(V_0=2.5\), eight times the packet's energy; \(V_0\Delta t\) is kept well below \(\pi\), because the wall acts through the phase \(e^{-iV\Delta t}\). A border 24 steps wide absorbs whatever reaches the edges, so nothing wraps round.</li>
+          <li><strong>The screen:</strong> a column \(13.5\lambda\) beyond the wall, adding up \(|\psi|^2\) over time until the packet has passed, including the waves that leave the slits at wide angles and take longer to arrive. The bookkeeping also tracks how much probability gets beyond the wall; with what bounces back, it adds up to 1.</li>
+          <li><strong>The prediction:</strong> Huygens wavelets \(e^{ikr}/\sqrt r\), the two-dimensional form, with the obliquity factor \((1+\cos\theta)/2\), from every point of each open slit, lit by the packet's Gaussian profile, and averaged over its spread of wavelengths. This is Kirchhoff's approximation, which lights each slit evenly; for slits about a wavelength wide the simulation spreads the wave a little wider.</li>
+          <li><strong>Particles:</strong> each detection is drawn at random from the predicted pattern, by inverting its cumulative distribution, with a seeded random number generator so that a run can be repeated. The noise is the rms difference between the histogram and the expected counts, relative to the rms expected count.</li>
+          <li><strong>Which way:</strong> with a marker of distinguishability \(D\), the interference term is multiplied by \(|\langle\chi_1|\chi_2\rangle|=\sqrt{1-D^2}\). The visibility is the central stripe's contrast, the interference term against the two slits' own light at \(y=0\). With the path known, each particle's slit is drawn with the chance \(|\psi_1|^2/(|\psi_1|^2+|\psi_2|^2)\) at the place it lands.</li>
+          <li><strong>Checks:</strong> the FFT agrees with a direct Fourier transform to \(10^{-13}\); the simulation with \(\Delta t=0.5\) agrees with one at \(\Delta t=0.25\) to a correlation of 0.99; and the notebook repeats the simulation and asserts the numbers quoted in the questions.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>

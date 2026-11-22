@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" data-track="quantum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perturbation Theory: Small Pushes, Order by Order · Professor Nano Labs</title>
+<meta name="description" content="Push a solved quantum system a little and its levels move. Watch first- and second-order perturbation theory close in on the exact answer for a particle in a tilted box, see the state borrow from its neighbours, and finish with two coupled levels that repel and refuse to cross. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a href="../../index.html#summer-school">Summer school</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / Quantum foundations</div>
+    <div class="eyebrow eyebrow--light">Quantum foundations · Live lab</div>
+    <h1>Perturbation Theory: Small Pushes, Order by Order</h1>
+    <p>Most quantum problems cannot be solved exactly, but many are a solved problem plus a small push. Tilt a particle in a box and watch first and second order close in on the exact energy, and where they give out; see the state borrow a little of its neighbours, then couple two levels and watch them repel and refuse to cross.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="perturbation_theory.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>The episode this lab is built on: first- and second-order corrections to energies and states, intermediate normalisation, and a two-level example with level repulsion and an avoided crossing.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=Iodqi6rWa0E" target="_blank" rel="noopener" title="Perturbation theory in quantum mechanics (non-degenerate) + Example">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/Iodqi6rWa0E/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Perturbation theory in quantum mechanics (non-degenerate) + Example<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=cm8tf6NuePI" target="_blank" rel="noopener" title="Time independent Schrodinger equation and stationary states">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/cm8tf6NuePI/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Time independent Schrodinger equation and stationary states<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=4i9YHKyNS9g" target="_blank" rel="noopener" title="How an electron binds two protons, the hydrogen molecule ion">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/4i9YHKyNS9g/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How an electron binds two protons, the hydrogen molecule ion<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=Hm-v4Eby0hk" target="_blank" rel="noopener" title="How energy bands are formed? Key quantum concepts simplified">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/Hm-v4Eby0hk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">How energy bands are formed? Key quantum concepts simplified<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">A solved problem, plus a small push</h2>
+    <p>A particle in a box is one of the few problems with an exact answer: standing waves, with energies \(E_n^{(0)}=n^2E_1\). Now tilt the box with an electric field, or put a bump in it. There is no formula any more, but if the push is small, the answer cannot be far from the one we know. Perturbation theory finds it one order at a time: first the push averaged over the old state, then the extra the state gains by borrowing a little of its neighbours.</p>
+    <p>The lab measures lengths in the box width \(L\) and energies in the ground-state energy \(E_1=\pi^2\hbar^2/2mL^2\). For an electron in a 10 nm-wide GaAs quantum well, taken as infinitely deep, \(E_1\approx56\) meV, and a tilt of strength 1 is a field of about 56 kV/cm.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-push"><dt>Perturbation</dt><dd>The small extra term V added to a Hamiltonian H⁽⁰⁾ we can already solve: here, the tilt, bump or step in the box.</dd></div>
+      <div id="g-order"><dt>Order</dt><dd>How many times the push enters a correction: first-order terms grow in proportion to the push, second-order ones as its square.</dd></div>
+      <div id="g-element"><dt>Matrix element</dt><dd>V<sub>mn</sub> = ⟨m|V|n⟩: how strongly the push links state n to state m. Zero means the push cannot mix them directly; they can still mix at higher order, through a third state.</dd></div>
+      <div id="g-denom"><dt>Energy denominator</dt><dd>E<sub>n</sub> − E<sub>m</sub>, the gap between two unperturbed levels. Nearby levels have small gaps, so, for links of similar strength, they mix the most.</dd></div>
+      <div id="g-inorm"><dt>Intermediate normalisation</dt><dd>The choice ⟨n⁽⁰⁾|n⟩ = 1: keep the old state's coefficient fixed at 1 and add the corrections at right angles to it. It simplifies the algebra; the state is normalised at the end.</dd></div>
+      <div id="g-repel"><dt>Level repulsion</dt><dd>Two levels linked by a push move apart: the lower one goes down and the upper one up.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>Write \(H=H^{(0)}+\lambda V\) and expand both the energy and the state in powers of \(\lambda\), with intermediate normalisation \(\langle n^{(0)}|n\rangle=1\), so that every correction is orthogonal to \(|n^{(0)}\rangle\). Collecting each power of \(\lambda\) in \(H|n\rangle=E_n|n\rangle\) gives, with \(V_{mn}=\langle m^{(0)}|V|n^{(0)}\rangle\):</p>
+      <div class="equation">$$E_n^{(1)}=V_{nn},\qquad E_n^{(2)}=\sum_{m\ne n}\frac{|V_{mn}|^2}{E_n^{(0)}-E_m^{(0)}},\qquad |n^{(1)}\rangle=\sum_{m\ne n}\frac{V_{mn}}{E_n^{(0)}-E_m^{(0)}}\,|m^{(0)}\rangle$$</div>
+      <div class="equation">$$|n^{(2)}\rangle=\sum_{m\ne n}\Bigg[\sum_{k\ne n}\frac{V_{mk}V_{kn}}{(E_n^{(0)}-E_m^{(0)})(E_n^{(0)}-E_k^{(0)})}-\frac{V_{nn}V_{mn}}{(E_n^{(0)}-E_m^{(0)})^2}\Bigg]|m^{(0)}\rangle$$</div>
+      <p>The series makes sense only while every ratio \(|V_{mn}/(E_n^{(0)}-E_m^{(0)})|\) is small: the push must be weak compared with the gaps to the levels it mixes. It also needs level \(n\) to be non-degenerate: an equal level would make one of these ratios infinite. Hence the name, non-degenerate perturbation theory.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-energy" aria-controls="lab" aria-selected="true" data-mode="energy">1 · Energies, order by order</button>
+      <button class="tab" role="tab" id="tab-state" aria-controls="lab" aria-selected="false" data-mode="state" tabindex="-1">2 · How the state changes</button>
+      <button class="tab" role="tab" id="tab-two" aria-controls="lab" aria-selected="false" data-mode="two" tabindex="-1">3 · Two levels repel</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="energy">
+      <h2>For a weak push, each order brings the level closer.</h2>
+      <p>Switch on a push of strength \(s\). To first order, a level moves by the push averaged over its old state. To second order, every other level nudges it, by \(|V_{mn}|^2/(E_n-E_m)\): a level below pushes it up, a level above pushes it down, and, for links of similar strength, the closer the level, the harder it pushes.</p>
+      <p class="notice"><b>What to notice:</b> a tilt does nothing to the ground level at first order, because the state is symmetric and the tilt is not, yet the level still drops, at second order. The second-order curve hugs the exact one while the push is small, and drifts off when it is not.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The unperturbed box has \(\psi_n=\sqrt{2/L}\,\sin(n\pi x/L)\) and \(E_n^{(0)}=n^2E_1\). The tilt is \(V=s\,(x/L-\tfrac12)\), whose matrix elements are \(V_{mn}=-\frac{8mn\,s}{\pi^2(m^2-n^2)^2}\) when \(m+n\) is odd and zero otherwise, so \(V_{nn}=0\) and, for the ground state,</p>
+        <div class="equation">$$E_n\approx n^2E_1+V_{nn}+\sum_{m\ne n}\frac{|V_{mn}|^2}{E_n^{(0)}-E_m^{(0)}},\qquad E^{(2)}_{\rm ground}=-\frac{64\,s^2}{\pi^4}\sum_{m\ \mathrm{even}}\frac{m^2}{(m^2-1)^5}\approx-0.01083\,s^2$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="state" hidden>
+      <h2>The state borrows a little of its neighbours.</h2>
+      <p>To first order the new state is the old one plus a small amount of every other state, \(c_m=V_{mn}/(E_n-E_m)\): the same small numbers that set the second-order energy. To first order, only states the push links directly take part: a tilt, which is odd about the middle of the box, mixes in only states of opposite symmetry. The others join at second order, borrowed through those.</p>
+      <p class="notice"><b>What to notice:</b> while the push is gentle, the corrected state lies almost exactly on the exact one. Intermediate normalisation keeps the old state's coefficient fixed at 1, so the corrected state comes out slightly longer than 1; normalising it changes things only at second order.</p>
+      <details class="math"><summary>The math</summary>
+        <p>With \(\langle n^{(0)}|n\rangle=1\), the corrections are orthogonal to \(|n^{(0)}\rangle\), and its squared length is \(\langle n|n\rangle=1+\sum_{m\ne n}|c_m|^2+O(V^3)\), with \(c_m=V_{mn}/(E_n^{(0)}-E_m^{(0)})\) including the strength of the push. Dividing the state by its length leaves the old state's share, the square of its coefficient, at</p>
+        <div class="equation">$$|\langle n^{(0)}|n\rangle|^2_{\rm normalised}=\frac{1}{\langle n|n\rangle}\approx1-\sum_{m\ne n}\frac{|V_{mn}|^2}{(E_n^{(0)}-E_m^{(0)})^2}$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="two" hidden>
+      <h2>Two coupled levels repel, and never cross.</h2>
+      <p>The video ends with a two-level system. Here it is an electron in one of two quantum dots, \(|1\rangle\) on the left at \(\varepsilon_1=-\delta/2\) and \(|2\rangle\) on the right at \(\varepsilon_2=+\delta/2\), with tunnelling \(V\) between them. To second order the two levels move apart by \(V^2/|\delta|\) each: level repulsion. But tune the detuning \(\delta\) to zero and that divides by zero. The exact levels never cross: the gap between them never falls below \(2V\), its value at \(\delta=0\).</p>
+      <p class="notice"><b>What to notice:</b> far from the crossing, the electron stays in its own dot and perturbation theory is excellent. Near it, the electron is shared by both dots and the series fails: there the two levels have to be treated together, exactly, as degenerate perturbation theory does.</p>
+      <details class="math"><summary>The math</summary>
+        <div class="equation">$$H=\begin{pmatrix}\varepsilon_1&V\\V&\varepsilon_2\end{pmatrix},\quad \varepsilon_{1,2}=\mp\frac\delta2,\qquad E_\pm=\pm\sqrt{\delta^2/4+V^2},\qquad \varepsilon_1+\frac{V^2}{\varepsilon_1-\varepsilon_2}=-\frac\delta2-\frac{V^2}{\delta}$$</div>
+        <p>Expanding the square root, \(\sqrt{\delta^2/4+V^2}=\tfrac{|\delta|}2+\tfrac{V^2}{|\delta|}-\tfrac{V^4}{|\delta|^3}+\dots\): perturbation theory is this expansion, and it converges only while \(2|V|<|\delta|\).</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-energy">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group" data-modes="energy state">
+        <div class="label-caps">The push</div>
+        <div class="seg" role="group" aria-label="Kind of push">
+          <button type="button" data-kind="tilt" aria-pressed="true">Tilt</button><button type="button" data-kind="bump" aria-pressed="false">Bump</button><button type="button" data-kind="step" aria-pressed="false">Step</button>
+        </div>
+        <div class="ctrl__hint" id="kind-hint"></div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="str">Strength of the push, s</label><output id="str-out" for="str"></output></div>
+          <input id="str" type="range" min="0" max="30" step="0.25" value="5">
+          <div class="ctrl__hint" id="str-hint"></div>
+        </div>
+        <div class="label-caps" style="margin-top:10px">Which level</div>
+        <div class="seg" role="group" aria-label="Which level">
+          <button type="button" data-n="1" aria-pressed="true">1</button><button type="button" data-n="2" aria-pressed="false">2</button><button type="button" data-n="3" aria-pressed="false">3</button><button type="button" data-n="4" aria-pressed="false">4</button><button type="button" data-n="5" aria-pressed="false">5</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="state">
+        <div class="label-caps">Correct the state to</div>
+        <div class="seg" role="group" aria-label="Order of the corrected state">
+          <button type="button" data-order="1" aria-pressed="true">First order</button><button type="button" data-order="2" aria-pressed="false">Second order</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="two">
+        <div class="label-caps">Two quantum dots</div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="det">Detuning δ = ε₂ − ε₁</label><output id="det-out" for="det"></output></div>
+          <input id="det" type="range" min="-2" max="2" step="0.02" value="1">
+          <div class="ctrl__hint">A gate voltage moves one dot's level against the other.</div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl__row"><label for="cpl">Tunnel coupling V</label><output id="cpl-out" for="cpl"></output></div>
+          <input id="cpl" type="range" min="0" max="0.6" step="0.01" value="0.2">
+          <div class="ctrl__hint">How easily the electron tunnels between the dots: the push.</div>
+        </div>
+        <div class="chips" role="group" aria-label="Examples">
+          <button class="chip-btn" type="button" data-two="1,0.2">Far apart</button><button class="chip-btn" type="button" data-two="0,0.2">On resonance, δ = 0</button><button class="chip-btn" type="button" data-two="1,0.6">Strong coupling</button>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view mag-view--wide" id="mag-view">
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="scene" role="img" aria-label="The box, its levels and the push"></canvas></div></div>
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="side" role="img" aria-label="The corrections"></canvas></div></div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-a" role="img" aria-label="First plot"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <ul class="legend" id="pb-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="plot-b" role="img" aria-label="Second plot"></canvas></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway" role="status"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Energies</span><button class="predict__load" type="button" data-q="tilt1">Load a tilted box</button></div>
+        <p>Tilt the box with strength \(s=5\), with the particle in the ground state. To first order, does its energy go up or down? And to second order?</p>
+        <details><summary>Show answer</summary>
+          <p>To first order it does not move at all: the ground state is symmetric about the middle of the box and the tilt is antisymmetric, so the push averages to zero, \(V_{11}=0\). To second order it drops by \(0.01083\,s^2=0.271\), to \(0.729\,E_1\); the exact answer is \(0.741\,E_1\). The ground level never goes up at second order: every other level lies above it, so no term in the sum can be positive.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Energies</span><button class="predict__load" type="button" data-q="step">Load a step</button></div>
+        <p>Raise the right half of the box by \(s=2\). To first order, how much does each level rise? Which way does second order change it?</p>
+        <details><summary>Show answer</summary>
+          <p>Every level rises by exactly 1 at first order, half the step: each standing wave spends half its time in each half of the box. Second order then lowers the ground level by 0.25, to \(1.75\,E_1\) (exact \(1.766\,E_1\)), because the particle shifts towards the lower, left half; but it raises level 2, by 0.19, because level 1 below pushes it up harder than level 3 pushes it down.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Energies</span><button class="predict__load" type="button" data-q="tilt2">Load level 2, tilted</button></div>
+        <p>Same tilt, \(s=5\), but now level 2. The ground level went down. Does level 2 go down too?</p>
+        <details><summary>Show answer</summary>
+          <p>No, it goes up, by 0.081 to second order (exact 0.069). Level 1 below pushes it up by 0.270, level 3 above pushes it down by 0.189, and the rest hardly matter. Level 1 wins: it is closer, \(4-1=3\) against \(9-4=5\). Plot B shows each push as a bar.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · The state</span><button class="predict__load" type="button" data-q="borrow">Load the tilted ground state</button></div>
+        <p>With the tilt at \(s=5\), which other states does the ground state borrow from, and how much?</p>
+        <details><summary>Show answer</summary>
+          <p>To first order, only the even ones, 2, 4, 6, …: the tilt is odd about the middle, so it links each state directly only to states of the opposite symmetry. Almost all of it comes from state 2, \(c_2=0.300\) to first order (exact 0.287), with \(c_4=0.005\) a distant second. Adding a little \(\psi_2\) to \(\psi_1\) shifts the particle towards the low side of the tilt. The odd states are not linked to state 1 directly, but they come in at second order, through state 2: the exact state has \(c_3=0.035\), so the tilted state has no definite symmetry at all.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · The state</span><button class="predict__load" type="button" data-q="inorm">Load the same state</button></div>
+        <p>With intermediate normalisation, the first-order state is \(\psi_1+0.300\,\psi_2+\dots\), with the coefficient of \(\psi_1\) fixed at 1. How long is it? Once normalised, how much of \(\psi_1\) is left?</p>
+        <details><summary>Show answer</summary>
+          <p>Its length is \(\sqrt{1+\sum|c_m|^2}=1.044\): a little more than 1, because the borrowed parts are at right angles to \(\psi_1\). Normalised, the share of \(\psi_1\) is \(1/1.090=0.917\), against 0.923 exactly. The change from 1 is of second order, \(\sum|c_m|^2\), which is why the first-order state needs no normalising at first order.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · The state</span><button class="predict__load" type="button" data-q="hard">Load a strong tilt</button></div>
+        <p>Turn the tilt up to \(s=20\). How well does the first-order state match the exact one now?</p>
+        <details><summary>Show answer</summary>
+          <p>Badly: it borrows \(c_2=1.20\) of state 2, more than it keeps of state 1, against \(c_2=0.82\) in the exact state; and it misses \(c_3=0.32\) entirely, since odd states only come in at second order. The small parameter is no longer small, and the overlap with the exact state falls to 0.903 (0.950 at second order). The energy fares worse still: second order gives \(-3.33\,E_1\) against the exact \(-1.97\,E_1\).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Two levels</span><button class="predict__load" type="button" data-q="far">Load two dots, far apart</button></div>
+        <p>The two dots' levels are \(\delta=1\) meV apart, with a tunnel coupling \(V=0.2\) meV. How far does each level move? Where is the electron in the lower state?</p>
+        <details><summary>Show answer</summary>
+          <p>They repel: the lower level moves down and the upper level up, by \(V^2/\delta=0.040\) meV each to second order; the exact shift is 0.0385 meV. The electron in the lower state is still 96.4% in the left dot, close to the 96.2% of first-order perturbation theory. The small parameter \(V/\delta=0.2\) really is small here.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Two levels</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="res">Load the dots on resonance</button></div>
+        <p>Now tune the two levels to the same energy, \(\delta=0\). What does perturbation theory predict? What actually happens?</p>
+        <details><summary>Show answer</summary>
+          <p>The second-order formula divides by \(\varepsilon_1-\varepsilon_2=0\) and blows up: non-degenerate perturbation theory breaks down. In reality the levels never cross. They keep a gap of \(2V=0.4\) meV, the smallest it gets, and both states are shared equally between the dots, \((|1\rangle\pm|2\rangle)/\sqrt2\). Sweeping \(\delta\) through zero, the lower state slides from one dot to the other: an avoided crossing. Equal levels need degenerate perturbation theory, which first diagonalises the push within the degenerate pair.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook builds the box's matrix elements for the tilt, bump and step, computes first- and second-order energies and states, checks them against exact diagonalisation and a finite-difference solution, shows intermediate normalisation at work, and works through the two-level example. It needs only NumPy and Matplotlib.</p>
+    </div>
+    <a class="btn btn--brand" href="perturbation_theory.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta" id="nb-size">.ipynb · 17 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose">
+        <ul>
+          <li><strong>The box:</strong> \(0&lt;x&lt;L\), with \(\psi_n=\sqrt{2/L}\sin(n\pi x/L)\) and \(E_n^{(0)}=n^2E_1\). Strengths \(s\) are in units of \(E_1\). The tilt is \(s\,(x/L-\tfrac12)\); the bump is \(s\) over the middle tenth of the box; the step is \(s\) over the right half.</li>
+          <li><strong>Matrix elements:</strong> exact formulas. For the tilt, \(V_{mn}=-\frac{8mn\,s}{\pi^2(m^2-n^2)^2}\) when \(m+n\) is odd; for the bump and step, the integral of \(2\sin(m\pi x)\sin(n\pi x)\) over the raised region.</li>
+          <li><strong>Perturbation theory:</strong> the first- and second-order energies and states from the formulas in the math box, summing over the first 40 box states, with intermediate normalisation \(\langle n^{(0)}|n\rangle=1\). Plot B of the first tab shows each term of the second-order sum.</li>
+          <li><strong>The exact answer:</strong> the Hamiltonian \(E_n^{(0)}\delta_{mn}+V_{mn}\) in the same 40 states, diagonalised numerically (Householder reduction and the QL algorithm). In one dimension levels never cross, so the exact level \(n\) is simply the \(n\)-th lowest. The notebook checks these energies against a finite-difference solution with 4000 grid points; they agree to better than \(10^{-3}\,E_1\).</li>
+          <li><strong>Overlaps:</strong> \(|\langle\psi_{\rm exact}|\psi_{\rm approx}\rangle|^2\) after normalising both. The share of the old state is \(|\langle n^{(0)}|n\rangle|^2\) for the normalised exact state, against \(1/(1+\sum|c_m^{(1)}|^2)\) from perturbation theory.</li>
+          <li><strong>Two levels:</strong> \(H=\begin{pmatrix}\varepsilon_1&V\\V&\varepsilon_2\end{pmatrix}\) with \(\varepsilon_{1,2}=\mp\delta/2\), exact levels \(\pm\sqrt{\delta^2/4+V^2}\), and the lower state's weight on the left dot \(\tfrac12(1+\delta/\sqrt{\delta^2+4V^2})\). Perturbation theory gives \(\varepsilon_1-V^2/\delta\) and \(\varepsilon_2+V^2/\delta\), that is \(\pm(|\delta|/2+V^2/|\delta|)\) for the upper and lower levels, and a first-order state that keeps \(1/(1+V^2/\delta^2)\) of the unperturbed one.</li>
+          <li><strong>Checks:</strong> the matrix elements agree with numerical integration to \(10^{-10}\); at weak pushes perturbation theory and the exact answer differ only at third order and above; and the numbers quoted in the questions are asserted in the notebook.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/plot.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
