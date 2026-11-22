@@ -10,7 +10,7 @@
   let deep = false;
   try { deep = localStorage.getItem('lorentz-depth') === 'deep'; } catch (e) { /* not remembered: fine */ }
 
-  const INK = '#14232c', BLUE = '#1f6fb4', ORANGE = '#b35900', GREY = '#5f7382', LIGHT = '#c3ced5', AMBER = '#e0a100';
+  const INK = '#14232c', ORANGE = '#b35900', GREY = '#5f7382', LIGHT = '#c3ced5', AMBER = '#e0a100', AMBER_TEXT = '#8a6500';
   const BRAND = (getComputedStyle(document.documentElement).getPropertyValue('--brand') || '#0b6e85').trim();
 
   // ---------- formatting and page helpers ----------
@@ -18,6 +18,8 @@
   const trim = v => String(Math.round(v * 1000) / 1000).replace('-', '−');
   const sub = t => String(t).replace(/_\{([^}]*)\}|_([A-Za-z0-9])/g, (m, a, b) => `<sub>${a || b}</sub>`);
   const sym = t => `<span class="sym">${t}</span>`;
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const tiny = p => (p >= 0.001 ? `${(100 * p).toFixed(1)}%` : p < 1e-30 ? 'essentially none' : (() => { const e = Math.floor(Math.log10(p)), m = Math.round(p / Math.pow(10, e)); return `${m} × 10${String(e).split('').map(c => SUP[c]).join('')}`; })());
   const range = (a, b, k) => Array.from({ length: k + 1 }, (_, i) => a + (b - a) * i / k);
   function stats(items) {
     $('stats').className = `stats stats--${items.length} stats--steady stats--wrap`;
@@ -26,7 +28,8 @@
   function typeset(el) { if (window.MathJax && MathJax.typesetPromise && /\\\(/.test(el.innerHTML)) MathJax.typesetPromise([el]).catch(() => {}); }
   function setHTML(el, html) { if (el.dataset.html === html) return; el.dataset.html = html; el.innerHTML = html; typeset(el); }
   const put = (id, t) => setHTML($(id), sub(t));
-  function legend(id, items) { setHTML($(id), items.map(([c, k, l]) => `<li style="color:${c}"><span class="swatch ${k}"></span><span>${sub(l)}</span></li>`).join('')); }
+  const PALE = [AMBER, LIGHT];
+  function legend(id, items) { setHTML($(id), items.map(([c, k, l]) => PALE.includes(c) ? `<li style="color:#33454f"><span class="swatch ${k}" style="color:${c}"></span><span>${sub(l)}</span></li>` : `<li style="color:${c}"><span class="swatch ${k}"></span><span>${sub(l)}</span></li>`).join('')); }
   const alpha = (hex, a) => { const v = parseInt(hex.slice(1), 16); return `rgba(${v >> 16}, ${(v >> 8) & 255}, ${v & 255}, ${a})`; };
   const MARGIN = { l: 54, r: 14, t: 12, b: 40 };
   const dia = new NanoPlot($('diagram'), { margin: { l: 50, r: 10, t: 10, b: 38 }, narrowMargin: { l: 50, r: 8 } });
@@ -66,7 +69,7 @@
   function syncAnim() { $('anim').textContent = animOn ? '❚❚ Pause' : '▶ Animate'; $('anim').setAttribute('aria-pressed', String(animOn)); }
   $('anim').addEventListener('click', () => { animOn = !animOn; if (animOn) animT0 = performance.now(); syncAnim(); if (!animOn) { lastF = 1; frame(1); } kick(); });
   document.addEventListener('visibilitychange', kick);
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; kick(); }).observe($('lab'));
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; kick(); }).observe($('mag-view'));
   const nowF = () => (running() ? quant(animFrac(performance.now())) : 1);
   function frame(f) { if (mode === 'clock') drawClocks(f); else if (mode === 'train') drawTrain(f); else drawAdd(f); }
 
@@ -114,8 +117,11 @@
     line(pd, [A, B], GREY, 2); line(pd, [B, C], INK, 2); line(pd, [A, C], AMBER, 3);
     text(pd, `v·Δt/2 = ${fixed(across, 2)} L`, (A[0] + B[0]) / 2, Y0 + 10, { align: 'center' });
     text(pd, 'L', C[0] + 8, (B[1] + C[1]) / 2 - 7, { color: INK, weight: 700 });
-    const mx = (A[0] + C[0]) / 2, my = (A[1] + C[1]) / 2;
-    text(pd, `c·Δt/2 = ${fixed(g, 2)} L`, mx - 10, my - 24, { color: ORANGE, weight: 700, align: across * sc > 120 ? 'center' : 'left' });
+    const mx = (A[0] + C[0]) / 2, my = (A[1] + C[1]) / 2, hl = Math.hypot(C[0] - A[0], C[1] - A[1]) || 1, nx = (C[1] - A[1]) / hl, ny = -(C[0] - A[0]) / hl;
+    const lx = mx + 16 * nx, ly = my + 16 * ny, lab = `c·Δt/2 = ${fixed(g, 2)} L`;
+    x.font = '700 12px Inter, system-ui, sans-serif'; x.textAlign = 'right'; x.textBaseline = 'middle'; x.lineWidth = 4; x.strokeStyle = 'rgba(255,255,255,0.92)'; x.lineJoin = 'round';
+    const lxc = Math.max(x.measureText(lab).width + 4, lx);
+    x.strokeText(lab, lxc, ly); x.fillStyle = ORANGE; x.fillText(lab, lxc, ly);
     if (deep) text(pd, `${fixed(g, 3)}² = 1² + ${fixed(across, 3)}²`, W - 12, 28, { align: 'right', color: INK });
   }
   function renderClock() {
@@ -135,7 +141,7 @@
     const bs = range(0, 0.995, 199);
     plotA.opts.xLabel = 'Speed, v/c'; plotA.opts.yLabel = 'Lorentz factor γ'; plotA.opts.xTickValues = null; plotA.opts.xFormat = null;
     plotA.setRange([0, 1], [0, 11]);
-    plotA.draw([{ type: 'hline', y: 1, color: LIGHT }, { type: 'vline', x: 1, color: LIGHT, label: 'c' }, { type: 'line', x: bs, y: bs.map(P.gamma), color: BRAND, width: 2.4 }, { type: 'vline', x: b, color: INK, dash: [3, 4] }, { type: 'dots', x: [b], y: [g], color: INK, r: 4.5 }]);
+    plotA.draw([{ type: 'hline', y: 1, color: LIGHT }, { type: 'vline', x: 1, color: GREY, label: 'c' }, { type: 'line', x: bs, y: bs.map(P.gamma), color: BRAND, width: 2.4 }, { type: 'vline', x: b, color: INK, dash: [3, 4] }, { type: 'dots', x: [b], y: [g], color: INK, r: 4.5 }]);
     put('pa-title', 'How slow a moving clock runs');
     put('pa-cap', 'γ stays close to 1 until v is a sizeable fraction of c, then grows without limit.');
     legend('pa-legend', [[BRAND, '', 'γ = 1/√(1 − v²/c²)'], [INK, 'swatch--dot', 'this speed']]);
@@ -143,8 +149,8 @@
     const ds = range(0, M.height, 150), km = ds.map(d => d / 1000);
     plotB.opts.xLabel = 'Distance travelled (km)'; plotB.opts.yLabel = 'Muons still alive'; plotB.opts.xTickValues = null;
     plotB.setRange([0, 15], [0, 1.05]);
-    const at = P.survive(M.height, b, true);
-    plotB.draw([{ type: 'line', x: km, y: ds.map(d => P.survive(d, b, false)), color: GREY, width: 1.8, dash: [5, 4] }, { type: 'line', x: km, y: ds.map(d => P.survive(d, b, true)), color: BRAND, width: 2.4, fill: alpha(BRAND, 0.1) }, { type: 'dots', x: [15], y: [at], color: INK, r: 4.5 }, { type: 'text', x: 14.6, y: Math.min(0.98, at + 0.12), text: b < 1e-9 ? 'at rest, none get anywhere' : `${at >= 0.001 ? fixed(100 * at, 1) + '%' : at.toExponential(0)} reach the ground`, align: 'right', color: INK }]);
+    const reach = P.survive(M.height, b, true);
+    plotB.draw([{ type: 'line', x: km, y: ds.map(d => P.survive(d, b, false)), color: GREY, width: 1.8, dash: [5, 4] }, { type: 'line', x: km, y: ds.map(d => P.survive(d, b, true)), color: BRAND, width: 2.4, fill: alpha(BRAND, 0.1) }, { type: 'dots', x: [15], y: [reach], color: INK, r: 4.5 }, { type: 'text', x: 14.6, y: Math.min(0.98, reach + 0.12), text: b < 1e-9 ? 'at rest, none get anywhere' : `${tiny(reach)} reach the ground`, align: 'right', color: INK }]);
     put('pb-title', 'Muons from 15 km up');
     put('pb-cap', `A simple model: muons made 15 km up, all moving straight down at ${trim(b)}c, with a mean lifetime of 2.197 μs; it ignores the energy they lose in the air. Dashed: what would survive if their clocks were not slowed.`);
     legend('pb-legend', [[BRAND, '', 'with time dilation'], [GREY, 'swatch--dash', 'without']]);
@@ -205,7 +211,8 @@
     const xb = at(-L / 2, b, now)[0], xf = at(L / 2, b, now)[0], xm = at(0, b, now)[0];
     x.fillStyle = alpha(BRAND, 0.15); x.strokeStyle = BRAND; x.lineWidth = 2; x.fillRect(X(xb), yT - 16, X(xf) - X(xb), 32); x.strokeRect(X(xb), yT - 16, X(xf) - X(xb), 32);
     dot(pd, X(xm), yT, 5, BRAND); text(pd, 'passenger', X(xm), yT - 34, { align: 'center', color: BRAND });
-    text(pd, 'back', X(xb) + 4, yT + 20, { size: 11 }); text(pd, 'front', X(xf) - 4, yT + 20, { size: 11, align: 'right' });
+    if (X(xf) - X(xb) > 72) { text(pd, 'back', X(xb) + 4, yT + 20, { size: 11 }); text(pd, 'front', X(xf) - 4, yT + 20, { size: 11, align: 'right' }); }
+    else { text(pd, 'back', X(xb) - 4, yT + 20, { size: 11, align: 'right' }); text(pd, 'front', X(xf) + 4, yT + 20, { size: 11 }); }
     // the strikes and their light
     [[T.A, 'A'], [T.B, 'B']].forEach(([[xe, te]]) => {
       const [xv, tv] = V(xe, te);
@@ -222,16 +229,16 @@
     legend('dg-legend', [[ORANGE, 'swatch--dot', 'lightning strikes'], [AMBER, '', 'their light'], [INK, 'swatch--dash', 'same time, platform'], [BRAND, 'swatch--dash', 'same time, train']]);
     stats([
       [`Lorentz factor ${sym('γ')}`, fixed(g, 3), `at ${trim(b)}c`],
-      ['The train on the platform', `${fixed(T.L, 3)} light-s`, `L_0/γ; it is 1 at rest`],
+      ['The train on the platform', `${fixed(T.L, 3)} light‑s`, `L_0/γ; it is 1 at rest`],
       ['For the passenger', b < 1e-9 ? 'at the same time' : `front first, by ${fixed(s.dt, 3)} s`, b < 1e-9 ? 'the train is not moving' : `vL_0/c²; on the platform, at the same time`],
-      [`Interval ${sym('Δx² − c²Δt²')}`, fixed(s.interval, 3), deep ? `platform ${fixed(T.L, 3)}² − 0² ; train 1² − ${fixed(s.dt, 3)}²` : 'the same in both frames'],
+      [`Interval ${sym('Δx² − c²Δt²')}`, fixed(s.interval, 3), deep ? `platform ${fixed(T.L, 3)}² − 0²; train 1² − ${fixed(s.dt, 3)}²` : 'the same in both frames'],
     ]);
     put('info', b < 1e-9 ? 'At rest, the train and the platform agree on everything: the strikes are simultaneous for both, and the train is 1 light-second long.' : tv
       ? `In the train's frame the train is at rest and 1 light-second long. The front strike comes ${fixed(s.dt, 3)} s before the back one, and the passenger, in the middle, sees each flash half a second after it happened, the time light takes to cross half the train. The platform's level line has tipped: its clocks are out of step.`
       : `On the platform both strikes happen at t = 0, and their light meets at the platform observer at ${fixed(T.seePlatform, 3)} s. The passenger, moving towards the front flash, sees it at ${fixed(T.seeFront, 3)} s and the back flash at ${fixed(T.seeBack, 3)} s. Follow the tilted teal line through the back strike, the train's "now" at that moment: it meets the front's worldline only above the strike there, so the front strike was already in the train's past. For the train, the front came first.`);
     // plot A: who sees which strike first
     const us = range(-0.8, 0.8, 160), dts = us.map(u => P.strikes(b, u, 1).dt);
-    plotA.opts.xLabel = 'Observer\'s speed along the platform, u/c'; plotA.opts.yLabel = 't_back − t_front (s)'; plotA.opts.xTickValues = null;
+    plotA.opts.xLabel = 'Observer\'s speed along the platform, u/c'; plotA.opts.yLabel = 't(back) − t(front) (s)'; plotA.opts.xTickValues = null;
     plotA.setRange([-0.8, 0.8], [-1.45, 1.45]);
     plotA.draw([{ type: 'hline', y: 0, color: LIGHT, dash: [] }, { type: 'line', x: us, y: dts, color: BRAND, width: 2.4 }, { type: 'dots', x: [0], y: [0], color: INK, r: 4.5 }, { type: 'dots', x: [b], y: [s.dt], color: BRAND, r: 5 }, { type: 'text', x: -0.42, y: 1.3, text: 'front first ↑', color: GREY }, { type: 'text', x: -0.42, y: -1.15, text: 'back first ↓', color: GREY }]);
     put('pa-title', 'Which strike comes first depends on who is asking');
@@ -252,7 +259,8 @@
   function drawAdd(f) {
     const v = S.bv, up = S.bu, u = P.add(up, v), gal = up + v, now = 1.0 * f;
     dia.opts.xLabel = 'Position, x (light-seconds)'; dia.opts.yLabel = 'Time, ct (seconds)';
-    fitAround(dia, 0.7, 0.52, 0.6);
+    { const lo = Math.min(-0.35, u - 0.3, gal - 0.3, up < 0 ? -1.05 : 0), hi = Math.max(1.2, Math.min(gal, 2.3) + 0.15), H = dia.h - dia.m.t - dia.m.b, W = dia.w - dia.m.l - dia.m.r;
+      const halfY = Math.max(0.6, (hi - lo) / 2 * H / W); fitAround(dia, (lo + hi) / 2, -0.08 + halfY, halfY); }
     const xr = dia.xr, Ls = [];
     // the forbidden regions outside the light lines
     Ls.push({ type: 'poly', x: [0, 3, 3], y: [0, 0, 3], fill: alpha(ORANGE, 0.06) }, { type: 'poly', x: [0, -3, -3], y: [0, 0, 3], fill: alpha(ORANGE, 0.06) });
@@ -262,8 +270,10 @@
     if (f < 1) Ls.push({ type: 'hline', y: now, color: alpha(INK, 0.4), dash: [] });
     Ls.push({ type: 'dots', x: [0, v * now, u * now], y: [now, now, now], colors: [INK, BRAND, ORANGE], r: 5 });
     if (gal * now < xr[1]) Ls.push({ type: 'dots', x: [gal * now], y: [now], color: GREY, r: 3.5 });
-    Ls.push({ type: 'text', x: Math.min(xr[1] - 0.25, 1.02), y: 1.08, text: 'light', color: ORANGE, size: 11 });
-    if (gal > 1.001) Ls.push({ type: 'text', x: Math.min(xr[1] - 0.45, gal * 0.55 + 0.15), y: 0.5, text: 'faster than light', color: GREY, size: 11 });
+    // labels just outside the light lines, where the ball (always inside them) can never be
+    const xR = Math.min(xr[1] - 0.22, dia.yr[1] - 0.1), xL = Math.min(-xr[0] - 0.22, dia.yr[1] - 0.1);
+    Ls.push({ type: 'text', x: xR, y: xR - 0.2, text: 'light', color: AMBER_TEXT, size: 11 }, { type: 'text', x: -xL, y: xL - 0.2, text: 'light', color: AMBER_TEXT, size: 11 });
+    if (gal > 1.001) Ls.push({ type: 'text', x: Math.min(xr[1] - 0.6, 1.35), y: 0.3, text: 'faster than light', color: GREY, size: 11, align: 'left' });
     dia.draw(Ls);
   }
   function renderAdd() {
@@ -275,11 +285,11 @@
     stats([
       [`Common sense, ${sym('u′ + v')}`, `${fixed(gal, 3)}c`, gal > 1 ? 'faster than light: impossible' : 'Galileo\'s rule'],
       ['Relativity', `${fixed(u, 4)}c`, deep ? `(u′ + v)/(1 + u′v/c²) = ${fixed(gal, 2)}/${fixed(1 + up * v, 3)}` : '(u′ + v)/(1 + u′v/c²)'],
-      ['Rapidities', light ? '∞' : `${fixed(fv, 3)} + ${fixed(fu, 3)}`, light ? 'light has unlimited rapidity' : `= ${fixed(ft, 3)}, and tanh ${fixed(ft, 3)} = ${fixed(Math.tanh(ft), 4)}`],
+      ['Rapidities', light ? '∞' : `${fixed(fv, 3)} ${fu < 0 ? '−' : '+'} ${fixed(Math.abs(fu), 3)}`, light ? 'light has unlimited rapidity' : `= ${fixed(ft, 3)}, and tanh ${fixed(ft, 3)} = ${fixed(Math.tanh(ft), 4)}`],
       [`The ball's ${sym('γ')}`, light ? '∞' : fixed(P.gamma(u), 3), light ? 'light has no rest frame' : 'measured on the platform'],
     ]);
-    put('info', light ? `Light from a torch on a train at ${trim(v)}c: common sense says ${fixed(gal, 2)}c, but the platform measures exactly c. (1 + ${trim(v)})/(1 + ${trim(v)}) = 1, whatever the train's speed.`
-      : `Thrown at ${trim(up)}c inside a train moving at ${trim(v)}c, the ball moves at ${fixed(u, 4)}c on the platform${Math.abs(u - gal) < 5e-5 ? ', just what common sense gives here: with one of the speeds zero, there is nothing to correct.' : `, not ${fixed(gal, 3)}c.`} ${Math.abs(u - gal) < 5e-5 ? '' : Math.abs(up * v) < 0.01 ? 'At low speeds the correction is tiny: common sense works.' : `The correction factor 1 + u′v/c² = ${fixed(1 + up * v, 3)}.`}`);
+    put('info', light && v < 1e-9 ? 'A torch on a train at rest: its light moves at c, and everyone agrees.' : light ? `Light from a torch on a train at ${trim(v)}c: common sense says ${fixed(gal, 2)}c, but the platform measures exactly c. (1 + ${trim(v)})/(1 + ${trim(v)}) = 1, whatever the train's speed.`
+      : `Thrown at ${trim(up)}c inside a train moving at ${trim(v)}c, the ball moves at ${fixed(u, 4)}c on the platform${Math.abs(u - gal) < 5e-5 ? (Math.abs(up + v) < 1e-9 ? ': the two speeds cancel, and the ball stands still on the platform, as common sense says too.' : ', just what common sense gives here: with one of the speeds zero, there is nothing to correct.') : `, not ${fixed(gal, 3)}c.`} ${Math.abs(u - gal) < 5e-5 ? '' : Math.abs(up * v) < 0.01 ? 'At low speeds the correction is tiny: common sense works.' : `The correction factor 1 + u′v/c² = ${fixed(1 + up * v, 3)}.`}`);
     // plot A: relativity against common sense, for this train
     const us = range(-1, 1, 200);
     plotA.opts.xLabel = 'Ball in the train, u′/c'; plotA.opts.yLabel = 'Ball on the platform, u/c'; plotA.opts.xTickValues = null;
@@ -316,6 +326,7 @@
     frame(nowF());
     $('plot-a').setAttribute('aria-label', $('pa-title').textContent); $('plot-b').setAttribute('aria-label', $('pb-title').textContent);
     $('scene').setAttribute('aria-label', `${$('dg-title').textContent}. ${$('info').textContent}`); $('diagram').setAttribute('aria-label', `${$('dg-title').textContent}. ${$('info').textContent}`);
+    $('side').setAttribute('aria-label', mode === 'clock' ? `The light triangle: in half a tick the moving clock's light goes ${fixed(P.gamma(S.bc), 2)} L along the diagonal while the clock moves ${fixed(S.bc * P.gamma(S.bc), 2)} L sideways and the mirrors are L apart.` : 'The track at the current moment: the train, its passenger, the platform observer, and the light from the two strikes.');
     kick();
   }
   function applyMode() {
@@ -350,7 +361,7 @@
   document.querySelectorAll('[data-depth]').forEach(b => b.addEventListener('click', () => {
     deep = b.dataset.depth === 'deep';
     try { localStorage.setItem('lorentz-depth', deep ? 'deep' : 'simple'); } catch (e) { /* not remembered: fine */ }
-    applyMode();
+    render();
   }));
   const tabs = Array.from(document.querySelectorAll('.tab'));
   tabs.forEach((b, i) => {
