@@ -28,12 +28,12 @@
   function typeset(el) { if (window.MathJax && MathJax.typesetPromise && /\\\(/.test(el.innerHTML)) MathJax.typesetPromise([el]).catch(() => {}); }
   function setHTML(el, html) { if (el.dataset.html === html) return; el.dataset.html = html; el.innerHTML = html; typeset(el); }
   const put = (id, t) => setHTML($(id), sub(t));
-  function legend(id, items) { setHTML($(id), items.map(([c, k, l]) => `<li style="color:${c}"><span class="swatch ${k}"></span><span>${sub(l)}</span></li>`).join('')); }
+  function legend(id, items) { setHTML($(id), items.map(([c, k, l]) => /^rgba/.test(c) ? `<li style="color:#33454f"><span class="swatch ${k}" style="color:${c}"></span><span>${sub(l)}</span></li>` : `<li style="color:${c}"><span class="swatch ${k}"></span><span>${sub(l)}</span></li>`).join('')); }
   const alpha = (hex, a) => { const v = parseInt(hex.slice(1), 16); return `rgba(${v >> 16}, ${(v >> 8) & 255}, ${v & 255}, ${a})`; };
   const MARGIN = { l: 50, r: 14, t: 12, b: 40 };
   const field = new NanoPlot($('field'), { margin: { l: 40, r: 10, t: 10, b: 34 }, narrowMargin: { l: 38, r: 8 }, xLabel: 'x', yLabel: 'y' });
-  const plotA = new NanoPlot($('plot-a'), { margin: MARGIN, narrowMargin: { l: 48, r: 10 } });
-  const plotB = new NanoPlot($('plot-b'), { margin: MARGIN, narrowMargin: { l: 48, r: 10 } });
+  const plotA = new NanoPlot($('plot-a'), { margin: MARGIN, narrowMargin: { l: 58, r: 16 } });
+  const plotB = new NanoPlot($('plot-b'), { margin: MARGIN, narrowMargin: { l: 58, r: 16 } });
   const cache = new Map();
   function memo(key, fn) { let v; if (cache.has(key)) { v = cache.get(key); cache.delete(key); } else v = fn(); cache.set(key, v); if (cache.size > 40) cache.delete(cache.keys().next().value); return v; }
 
@@ -177,7 +177,10 @@
     if (mode === 'gauss') return;
     if (!zw) zsize();
     zx.clearRect(0, 0, zw, zh);
-    const b = view.box, fd = curField(), h = S.side / 2, side = Math.min(zw, zh) * 0.56, ox = zw / 2, oy = zh / 2 + 6, sc = side / (2 * h);
+    zx.font = '700 12.5px Inter, system-ui, sans-serif';
+    const labelOf = s => (deep ? [`out ${signed(s[0], 3)}`, `∮ ${signed(s[1], 3)}`] : [signed(s[0], 2)]);
+    const lw = Math.max(...view.box.sides.map(s => Math.max(...labelOf(s).map(q => zx.measureText(q).width)))), narrowHead = zw < 300;
+    const b = view.box, fd = curField(), h = S.side / 2, side = Math.max(60, Math.min(Math.min(zw, zh) * 0.56, (zw - 2 * (lw + 22)) / 1.24, zh - 110)), ox = zw / 2, oy = zh / 2 + (narrowHead ? 14 : 6), sc = side / (2 * h);
     const P = (x, y) => [ox + (x - S.px) * sc, oy - (y - S.py) * sc];
     zx.font = '600 12px Inter, system-ui, sans-serif'; zx.fillStyle = GREY; zx.textAlign = 'left'; zx.textBaseline = 'top';
     zx.fillText('The probe up close', 10, 8);
@@ -200,7 +203,7 @@
     zx.font = '700 12.5px Inter, system-ui, sans-serif'; zx.textBaseline = 'middle';
     b.sides.forEach((s, i) => {
       const [X, Y, al] = where[i]; zx.textAlign = al; zx.fillStyle = Math.abs(s[0]) < 5e-4 ? GREY : s[0] > 0 ? ORANGE : BLUE;
-      zx.fillText(deep ? `${signed(s[0], 3)} · ∮ ${signed(s[1], 3)}` : signed(s[0], 2), X, Y);
+      const ls = labelOf(s); ls.forEach((q, k) => zx.fillText(q, X, Y + (k - (ls.length - 1) / 2) * 15));
     });
     // the singular point, if the box holds it
     if (fd.point && Math.abs(S.px) < h && Math.abs(S.py) < h) {
@@ -212,7 +215,9 @@
     for (let k = 0; k < 4; k++) { const a = theta + k * Math.PI / 2; zx.beginPath(); zx.moveTo(ox, oy); zx.lineTo(ox + r * Math.cos(a), oy - r * Math.sin(a)); zx.stroke(); zx.beginPath(); zx.moveTo(ox + r * Math.cos(a), oy - r * Math.sin(a)); zx.lineTo(ox + r * Math.cos(a) - 0.16 * r * Math.sin(a), oy - r * Math.sin(a) - 0.16 * r * Math.cos(a)); zx.stroke(); }
     zx.lineCap = 'butt'; zx.fillStyle = INK; zx.beginPath(); zx.arc(ox, oy, 4.5, 0, TAU); zx.fill();
     const w = wheelRate(); zx.font = '600 12px Inter, system-ui, sans-serif'; zx.textAlign = 'right'; zx.textBaseline = 'top'; zx.fillStyle = GREY;
-    zx.fillText(Math.abs(w) < 5e-4 ? 'wheel: still' : `wheel: ${w > 0 ? 'anticlockwise' : 'clockwise'}`, zw - 10, 8);
+    const ws = Math.abs(w) < 5e-4 ? 'wheel: still' : `wheel: ${w > 0 ? 'anticlockwise' : 'clockwise'}`;
+    if (narrowHead) { zx.textAlign = 'left'; zx.fillText(ws, 10, 24); } else zx.fillText(ws, zw - 10, 8);
+    zc.setAttribute('aria-label', `The probe up close. Flux through the bottom, right, top and left sides: ${b.sides.map(s => fixed(s[0], 3)).join(', ')}. The ${ws}.`);
   }
 
   // ---------- 1. Flux box and paddle wheel ----------
@@ -295,10 +300,10 @@
     put('dg-title', wire ? 'A loop round wires: Ampère\'s law' : 'A sphere round charges: Gauss\'s law');
     put('dg-cap', wire ? 'Grey arrows: the magnetic field of the wires, in a plane across them. The loop is orange where the field runs anticlockwise along it, blue where it runs clockwise. Tap to move the loop.' : 'Grey arrows: the electric field in the plane through the charges. The sphere\'s rim is orange where the field leaves it and blue where it enters. Tap to move the sphere.');
     legend('dg-legend', wire ? [[ORANGE, '', 'field along the loop'], [BLUE, '', 'field against it'], [RED, 'swatch--dot', 'current +I'], [BLUE, 'swatch--dot', 'current −I']] : [[ORANGE, '', 'field leaving'], [BLUE, '', 'field entering'], [RED, 'swatch--dot', 'charge +q'], [BLUE, 'swatch--dot', 'charge −q']]);
-    const encl = (r.inside === 0 ? '0' : `${r.inside > 0 ? '+' : '−'}${wire ? 'I' : 'q'}`) + (on ? ` (+${r.on} on the ${wire ? 'loop' : 'sphere'})` : '');
+    const encl = (r.inside === 0 ? '0' : `${r.inside > 0 ? '+' : '−'}${wire ? 'I' : 'q'}`) + (on ? ` (${r.onQ.map(q => (q > 0 ? '+' : '−') + (wire ? 'I' : 'q')).join(' and ')} on the ${wire ? 'loop' : 'sphere'})` : '');
     const avg = wire ? r.total / (TAU * S.rad) : r.total / (2 * TAU * S.rad * S.rad);
     stats([
-      [wire ? 'Circulation round the loop' : 'Flux out of the sphere', `${fixed(r.total, 3)} ${unit}`, wire ? '∮ B·dl, added up all the way round' : 'E·dA, added up over the whole sphere'],
+      [wire ? 'Circulation round the loop' : 'Flux out of the sphere', `${fixed(r.total, 3)} ${unit}`, deep ? (wire ? 'Ampère: ∮ B·dl = μ_0I_{inside}' : 'Gauss: ∮ E·dA = q_{inside}/ε_0') : (wire ? '∮ B·dl, added up all the way round' : 'E·dA, added up over the whole sphere')],
       [wire ? 'Current through the loop' : 'Charge inside', encl, wire ? 'only the wires inside count' : 'only the charges inside count'],
       [wire ? 'Field along the loop' : 'Outward field round the rim', on ? 'unbounded' : `${fixed(lo, 3)} to ${fixed(hi, 3)}`, on ? `it blows up where the ${what} meets the ${wire ? 'wire' : 'charge'}${r.on > 1 ? 's' : ''}` : 'lowest and highest, round the circle'],
       [wire ? 'Average field along it' : 'Average outward field', fixed(avg, 4), centred ? (wire ? `= μ_0I/2πr = ${fixed(1 / (TAU * S.rad), 4)}` : `= q/4πε_0r² = ${fixed(1 / (2 * TAU * S.rad * S.rad), 4)}`) : (wire ? 'circulation ÷ 2πr' : 'flux ÷ 4πr²')],
@@ -312,7 +317,8 @@
     else msg = `Off-centre, the field on the ${what} is far from even, from ${fixed(lo, 3)} to ${fixed(hi, 3)}, yet the total is still exactly ${fixed(r.total, 3)} ${wire ? 'μ₀I' : 'q/ε₀'}: it counts only what is inside.`;
     put('info', msg);
     // plot A: the total against the radius, for this centre
-    const rs = range(0.05, 1.9, 186), tot = memo(`t|${S.src}|${S.cx}|${S.cy}`, () => rs.map(R => D.surface(src, S.cx, S.cy, R).total));
+    const rs = range(0.05, 1.9, 186), step = R => src.items.reduce((s, it) => { const d = Math.hypot(it.x - S.cx, it.y - S.cy); return s + it.q * (Math.abs(d - R) < 1e-9 ? 0.5 : d < R ? 1 : 0); }, 0);
+    const tot = memo(`t|${S.src}|${S.cx}|${S.cy}`, () => rs.map(R => (wire ? step(R) : D.surface(src, S.cx, S.cy, R).total)));
     plotA.opts.xLabel = 'Radius'; plotA.opts.yLabel = wire ? 'Circulation (μ0 I)' : 'Flux (q/ε0)';
     plotA.setRange([0, 1.9], [-1.3, 1.3]);
     const LA = [{ type: 'hline', y: 0, color: LIGHT, dash: [] }];
@@ -386,7 +392,7 @@
   function syncAnim() { $('anim').textContent = animOn ? '❚❚ Pause' : '▶ Animate'; $('anim').setAttribute('aria-pressed', String(animOn)); $('anim').hidden = mode === 'gauss'; }
   $('anim').addEventListener('click', () => { animOn = !animOn; syncAnim(); drawField(); kick(); });
   document.addEventListener('visibilitychange', kick);
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; kick(); }).observe($('lab'));
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; kick(); }).observe($('mag-view'));
 
   // ---------- controls ----------
   function syncControls() {
@@ -395,9 +401,11 @@
     set('cx', S.cx, trim(S.cx)); set('cy', S.cy, trim(S.cy)); set('rad', S.rad, trim(S.rad));
     const pressed = (attr, val) => document.querySelectorAll(`button[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val))));
     pressed('field', S.field); pressed('src', S.src); pressed('pot', S.pot); pressed('depth', deep ? 'deep' : 'simple');
-    $('depth-hint').textContent = deep ? 'The formulas: divergence and curl at the centre, each side\'s flux and circulation, and the height lost on the walk round the box.' : 'The main ideas; switch to Go deeper for the formulas and the side-by-side numbers.';
+    $('depth-hint').textContent = deep ? 'The formulas: divergence and curl at the centre, each side\'s flux and circulation, Gauss\'s and Ampère\'s laws, and the height lost on the walk round the box.' : 'The main ideas; switch to Go deeper for the formulas and the side-by-side numbers.';
   }
   function render() {
+    const maxSide = Math.round(2 * (2 - Math.max(Math.abs(S.px), Math.abs(S.py))) / 0.05) * 0.05;
+    if (S.side > maxSide) S.side = Math.max(0.1, maxSide);
     syncControls(); syncAnim();
     if (mode === 'field') renderField(); else if (mode === 'gauss') renderGauss(); else renderZeros();
     drawField(); drawZoom();
@@ -418,7 +426,10 @@
   }
   let pending = false;
   function later() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; render(); }); }
-  ['px', 'py', 'side', 'cx', 'cy', 'rad'].forEach(id => $(id).addEventListener('input', e => { S[id] = +e.target.value; later(); }));
+  ['px', 'py', 'side', 'cx', 'cy', 'rad'].forEach(id => {
+    $(id).addEventListener('input', e => { $('info').setAttribute('aria-live', 'off'); S[id] = +e.target.value; later(); });
+    $(id).addEventListener('change', () => $('info').setAttribute('aria-live', 'polite'));
+  });
   document.querySelector('.lab-main').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b || !b.closest('.controls')) return;
@@ -439,9 +450,9 @@
     later();
   }
   let dragging = false;
-  $('field').addEventListener('pointerdown', e => { dragging = true; place(e); });
+  $('field').addEventListener('pointerdown', e => { if (e.button !== 0) return; dragging = true; try { $('field').setPointerCapture(e.pointerId); } catch (err) { /* fine */ } place(e); });
   $('field').addEventListener('pointermove', e => { if (dragging) place(e); });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => $('field').addEventListener(t, () => { dragging = false; }));
+  ['pointerup', 'pointercancel'].forEach(t => $('field').addEventListener(t, () => { dragging = false; }));
   $('field').addEventListener('keydown', e => {
     const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
     if (!d) return;
@@ -449,7 +460,7 @@
     const kx = mode === 'gauss' ? 'cx' : 'px', ky = mode === 'gauss' ? 'cy' : 'py';
     S[kx] = snap(S[kx] + 0.05 * d[0]); S[ky] = snap(S[ky] + 0.05 * d[1]); later();
   });
-  if ('ResizeObserver' in window) new ResizeObserver(() => { zw = 0; dots = []; later(); }).observe($('mag-view'));
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(() => { zw = 0; dots = []; later(); }); ro.observe($('mag-view')); ro.observe($('field').parentElement); }
   document.querySelectorAll('[data-depth]').forEach(b => b.addEventListener('click', () => {
     deep = b.dataset.depth === 'deep';
     try { localStorage.setItem('divcurl-depth', deep ? 'deep' : 'simple'); } catch (e) { /* not remembered: fine */ }

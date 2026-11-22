@@ -123,16 +123,16 @@
     return I * tot / TAU;
   }
   function surface(src, cx, cy, R) {
-    let total = 0, inside = 0, on = 0;
+    let total = 0, inside = 0, on = 0, onQ = [];
     for (const s of src.items) {
       const d = Math.hypot(s.x - cx, s.y - cy);
       // a charge or wire exactly on the surface: the field blows up there and the total is not defined;
       // taken symmetrically, half of it counts
-      if (Math.abs(d - R) < 1e-9) { total += s.q / 2; on++; continue; }
+      if (Math.abs(d - R) < 1e-9) { total += s.q / 2; on++; onQ.push(s.q); continue; }
       total += src.kind === 'charge' ? chargeFlux(s.q, d, R) : wireCirc(s.q, s.x, s.y, cx, cy, R, 1440);
       if (d < R) inside += s.q;
     }
-    return { total, inside, on };
+    return { total, inside, on, onQ };
   }
   // the outward (charges) or along-the-loop (wires) field round the circle where the sphere or loop meets the plane
   function rim(src, cx, cy, R, M) {
