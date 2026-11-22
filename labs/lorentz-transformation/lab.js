@@ -72,6 +72,7 @@
 
   // ---------- 1. The light clock ----------
   const TICKS = 10;
+  const perTen = g => { const x = TICKS / g; return x < 2 ? x.toFixed(3) : x.toFixed(2); };
   function drawClocks(f) {
     const pd = scene; if (!pd.w) pd.size();
     const x = pd.x, W = pd.w, H = pd.h, b = S.bc, g = P.gamma(b), t = TICKS * f;
@@ -125,11 +126,11 @@
     const r1 = P.muonRange(b, true), r0 = P.muonRange(b, false);
     stats([
       [`Lorentz factor ${sym('γ')}`, fixed(g, 3), `1/√(1 − ${fixed(b * b, 3)})`],
-      ['Ticks per 10 at rest', fixed(TICKS / g, 2), 'made by the moving clock'],
+      ['Ticks per 10 at rest', perTen(g), TICKS / g < 1 ? 'not even one whole tick yet' : 'made by the moving clock'],
       ['Each tick lasts', `${fixed(g, 3)} ticks`, 'of the platform clock'],
       ['A muon\'s mean range', r1 >= 1000 ? `${fixed(r1 / 1000, 2)} km` : `${fixed(r1, 0)} m`, deep ? `γvτ; without time dilation vτ = ${fixed(r0, 0)} m` : `${fixed(r0, 0)} m if its clock ran at the normal rate`],
     ]);
-    put('info', b < 0.15 ? `At ${trim(b)}c the two clocks keep almost perfect step: γ = ${fixed(g, 4)}, a difference of ${fixed(100 * (g - 1), 2)}%. Everyday speeds are far smaller still, which is why no one noticed for so long.` : `At ${trim(b)}c the moving clock's light must cover ${fixed(g, 2)} mirror gaps along the diagonal for every gap a clock at rest needs, and it goes no faster. So each tick takes ${fixed(g, 2)} times as long: ${fixed(TICKS / g, 1)} ticks while the platform clock makes 10.`);
+    put('info', b < 1e-9 ? 'With both clocks at rest on the platform, they keep perfect step: γ = 1.' : b < 0.15 ? `At ${trim(b)}c the two clocks keep almost perfect step: γ = ${fixed(g, 4)}, a difference of ${fixed(100 * (g - 1), 2)}%. Everyday speeds are far smaller still, which is why no one noticed for so long.` : `At ${trim(b)}c the moving clock's light must cover ${fixed(g, 2)} mirror gaps along the diagonal for every gap a clock at rest needs, and it goes no faster. So each tick takes ${fixed(g, 2)} times as long: ${perTen(g)} ticks while the platform clock makes 10.`);
     // plot A: γ against speed
     const bs = range(0, 0.995, 199);
     plotA.opts.xLabel = 'Speed, v/c'; plotA.opts.yLabel = 'Lorentz factor γ'; plotA.opts.xTickValues = null; plotA.opts.xFormat = null;
@@ -143,9 +144,9 @@
     plotB.opts.xLabel = 'Distance travelled (km)'; plotB.opts.yLabel = 'Muons still alive'; plotB.opts.xTickValues = null;
     plotB.setRange([0, 15], [0, 1.05]);
     const at = P.survive(M.height, b, true);
-    plotB.draw([{ type: 'line', x: km, y: ds.map(d => P.survive(d, b, false)), color: GREY, width: 1.8, dash: [5, 4] }, { type: 'line', x: km, y: ds.map(d => P.survive(d, b, true)), color: BRAND, width: 2.4, fill: alpha(BRAND, 0.1) }, { type: 'dots', x: [15], y: [at], color: INK, r: 4.5 }, { type: 'text', x: 14.6, y: Math.min(0.98, at + 0.12), text: `${at >= 0.001 ? fixed(100 * at, 1) + '%' : at.toExponential(0)} reach the ground`, align: 'right', color: INK }]);
+    plotB.draw([{ type: 'line', x: km, y: ds.map(d => P.survive(d, b, false)), color: GREY, width: 1.8, dash: [5, 4] }, { type: 'line', x: km, y: ds.map(d => P.survive(d, b, true)), color: BRAND, width: 2.4, fill: alpha(BRAND, 0.1) }, { type: 'dots', x: [15], y: [at], color: INK, r: 4.5 }, { type: 'text', x: 14.6, y: Math.min(0.98, at + 0.12), text: b < 1e-9 ? 'at rest, none get anywhere' : `${at >= 0.001 ? fixed(100 * at, 1) + '%' : at.toExponential(0)} reach the ground`, align: 'right', color: INK }]);
     put('pb-title', 'Muons from 15 km up');
-    put('pb-cap', `Muons made by cosmic rays 15 km up, moving at ${trim(b)}c, with a mean lifetime of 2.2 μs. Dashed: what would survive if their clocks were not slowed.`);
+    put('pb-cap', `A simple model: muons made 15 km up, all moving straight down at ${trim(b)}c, with a mean lifetime of 2.197 μs; it ignores the energy they lose in the air. Dashed: what would survive if their clocks were not slowed.`);
     legend('pb-legend', [[BRAND, '', 'with time dilation'], [GREY, 'swatch--dash', 'without']]);
     put('takeaway', 'Time dilation follows from one fact: light moves at c for everyone. A moving clock runs slow by γ, and so does everything that moves with it: its light, its atoms, a muon\'s decay.');
   }
@@ -190,7 +191,8 @@
     const pd = side; if (!pd.w) pd.size();
     const x = pd.x, W = pd.w, H = pd.h, b = S.bt, T = P.train(b, 1), L = T.L;
     x.clearRect(0, 0, W, H);
-    const xr = dia.xr, X = v => 14 + (v - xr[0]) / (xr[1] - xr[0]) * (W - 28);
+    const ends = [at(-L / 2, b, TR.tmin)[0], at(L / 2, b, TR.tmax)[0], at(0, 0, TR.tmin)[0], at(0, 0, TR.tmax)[0], at(L / 2, b, TR.tmin)[0], at(-L / 2, b, TR.tmax)[0]];
+    const xr = [Math.min(dia.xr[0], Math.min(...ends) - 0.25), Math.max(dia.xr[1], Math.max(...ends) + 0.25)], X = v => 14 + (v - xr[0]) / (xr[1] - xr[0]) * (W - 28);
     text(pd, `The track at t${S.view === 'train' ? '′' : ''} = ${fixed(now, 2)} s, ${S.view === 'train' ? 'in the train\'s frame' : 'on the platform'}`, 12, 8);
     const yT = H * 0.42, yP = H * 0.74;
     // the platform, with its strike marks and observer
@@ -225,13 +227,13 @@
       [`Interval ${sym('Δx² − c²Δt²')}`, fixed(s.interval, 3), deep ? `platform ${fixed(T.L, 3)}² − 0² ; train 1² − ${fixed(s.dt, 3)}²` : 'the same in both frames'],
     ]);
     put('info', b < 1e-9 ? 'At rest, the train and the platform agree on everything: the strikes are simultaneous for both, and the train is 1 light-second long.' : tv
-      ? `In the train's frame the train is at rest and 1 light-second long. The front strike comes ${fixed(s.dt, 3)} s before the back one, and the passenger, in the middle, sees each flash half a light-second after it happened. The platform's level line has tipped: its clocks are out of step.`
-      : `On the platform both strikes happen at t = 0, and their light meets at the platform observer at ${fixed(T.seePlatform, 3)} s. The passenger, moving towards the front flash, sees it at ${fixed(T.seeFront, 3)} s and the back flash at ${fixed(T.seeBack, 3)} s. Follow the tilted teal line through the back strike: it crosses the front's worldline before the strike there, so for the train the front came first.`);
+      ? `In the train's frame the train is at rest and 1 light-second long. The front strike comes ${fixed(s.dt, 3)} s before the back one, and the passenger, in the middle, sees each flash half a second after it happened, the time light takes to cross half the train. The platform's level line has tipped: its clocks are out of step.`
+      : `On the platform both strikes happen at t = 0, and their light meets at the platform observer at ${fixed(T.seePlatform, 3)} s. The passenger, moving towards the front flash, sees it at ${fixed(T.seeFront, 3)} s and the back flash at ${fixed(T.seeBack, 3)} s. Follow the tilted teal line through the back strike, the train's "now" at that moment: it meets the front's worldline only above the strike there, so the front strike was already in the train's past. For the train, the front came first.`);
     // plot A: who sees which strike first
     const us = range(-0.8, 0.8, 160), dts = us.map(u => P.strikes(b, u, 1).dt);
     plotA.opts.xLabel = 'Observer\'s speed along the platform, u/c'; plotA.opts.yLabel = 't_back − t_front (s)'; plotA.opts.xTickValues = null;
-    plotA.setRange([-0.8, 0.8], [-1.1, 1.1]);
-    plotA.draw([{ type: 'hline', y: 0, color: LIGHT, dash: [] }, { type: 'line', x: us, y: dts, color: BRAND, width: 2.4 }, { type: 'dots', x: [0], y: [0], color: INK, r: 4.5 }, { type: 'dots', x: [b], y: [s.dt], color: BRAND, r: 5 }, { type: 'text', x: -0.42, y: 0.95, text: 'front first ↑', color: GREY }, { type: 'text', x: -0.42, y: -0.82, text: 'back first ↓', color: GREY }]);
+    plotA.setRange([-0.8, 0.8], [-1.45, 1.45]);
+    plotA.draw([{ type: 'hline', y: 0, color: LIGHT, dash: [] }, { type: 'line', x: us, y: dts, color: BRAND, width: 2.4 }, { type: 'dots', x: [0], y: [0], color: INK, r: 4.5 }, { type: 'dots', x: [b], y: [s.dt], color: BRAND, r: 5 }, { type: 'text', x: -0.42, y: 1.3, text: 'front first ↑', color: GREY }, { type: 'text', x: -0.42, y: -1.15, text: 'back first ↓', color: GREY }]);
     put('pa-title', 'Which strike comes first depends on who is asking');
     put('pa-cap', 'For observers moving along the platform at every speed from −0.8c to 0.8c. Black dot: the platform; teal dot: the train.');
     legend('pa-legend', [[BRAND, '', 'time between the strikes'], [INK, 'swatch--dot', 'platform'], [BRAND, 'swatch--dot', 'train']]);
@@ -241,7 +243,7 @@
     plotB.setRange([0, 3.2], [-2.6, 2.6]);
     plotB.draw([{ type: 'line', x: [0, 3.2], y: [0, 3.2], color: LIGHT, dash: [4, 4] }, { type: 'line', x: [0, 3.2], y: [0, -3.2], color: LIGHT, dash: [4, 4] }, { type: 'line', x: hx, y: hy, color: BRAND, width: 2.4 }, { type: 'dots', x: [T.L], y: [0], color: INK, r: 4.5 }, { type: 'dots', x: [s.dx], y: [s.dt], color: BRAND, r: 5 }]);
     put('pb-title', 'What every observer agrees on');
-    put('pb-cap', `Each observer finds a different distance and time between the strikes, but all lie on one hyperbola, Δx² − c²Δt² = ${fixed(T.L * T.L, 3)}. It never reaches the light lines (dashed), so no one sees the strikes at one place.`);
+    put('pb-cap', `Each observer finds a different distance and time between the strikes, but all lie on one hyperbola, Δx² − c²Δt² = ${fixed(T.L * T.L, 3)}. Its tip is the platform's ${fixed(T.L, 2)}: no one finds the strikes closer together than that, so no one sees them at one place. It stays outside the light lines (dashed), so neither strike can cause the other.`);
     legend('pb-legend', [[BRAND, '', 'all observers'], [INK, 'swatch--dot', 'platform'], [BRAND, 'swatch--dot', 'train']]);
     put('takeaway', 'Simultaneity is not absolute: events at the same time in one frame are at different times in another moving along the line between them. Length contraction is the same fact seen another way: to measure a moving train, you must mark both ends at the same time, and the two frames disagree on what that means.');
   }
@@ -277,7 +279,7 @@
       [`The ball's ${sym('γ')}`, light ? '∞' : fixed(P.gamma(u), 3), light ? 'light has no rest frame' : 'measured on the platform'],
     ]);
     put('info', light ? `Light from a torch on a train at ${trim(v)}c: common sense says ${fixed(gal, 2)}c, but the platform measures exactly c. (1 + ${trim(v)})/(1 + ${trim(v)}) = 1, whatever the train's speed.`
-      : `Thrown at ${trim(up)}c inside a train moving at ${trim(v)}c, the ball moves at ${fixed(u, 4)}c on the platform, not ${fixed(gal, 3)}c. ${Math.abs(up * v) < 0.01 ? 'At low speeds the correction is tiny: common sense works.' : `The correction factor 1 + u′v/c² = ${fixed(1 + up * v, 3)}.`}`);
+      : `Thrown at ${trim(up)}c inside a train moving at ${trim(v)}c, the ball moves at ${fixed(u, 4)}c on the platform${Math.abs(u - gal) < 5e-5 ? ', just what common sense gives here: with one of the speeds zero, there is nothing to correct.' : `, not ${fixed(gal, 3)}c.`} ${Math.abs(u - gal) < 5e-5 ? '' : Math.abs(up * v) < 0.01 ? 'At low speeds the correction is tiny: common sense works.' : `The correction factor 1 + u′v/c² = ${fixed(1 + up * v, 3)}.`}`);
     // plot A: relativity against common sense, for this train
     const us = range(-1, 1, 200);
     plotA.opts.xLabel = 'Ball in the train, u′/c'; plotA.opts.yLabel = 'Ball on the platform, u/c'; plotA.opts.xTickValues = null;

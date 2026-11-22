@@ -102,7 +102,7 @@
     <details class="math"><summary>The math</summary>
       <p>For a frame moving at speed \(v\) along \(x\), an event at \((x,t)\) has coordinates</p>
       <div class="equation">$$x'=\gamma\,(x-vt),\qquad t'=\gamma\Big(t-\frac{vx}{c^2}\Big),\qquad \gamma=\frac{1}{\sqrt{1-v^2/c^2}},\qquad c^2t'^2-x'^2=c^2t^2-x^2$$</div>
-      <p>The last equation is what stays the same: the spacetime interval between two events. A light ray, \(x=ct\), has interval zero in every frame, so it moves at \(c\) in every frame. At low speeds \(\gamma\approx1\) and \(vx/c^2\approx0\), and the transformation becomes Galileo's, \(x'=x-vt\), \(t'=t\).</p>
+      <p>The last equation is what stays the same: the spacetime interval between the event and the origin; for any two events, use the differences \(\Delta t\) and \(\Delta x\). (The lab's train tab writes it the other way round, \((\Delta x)^2-c^2(\Delta t)^2\), which is just as invariant.) A light ray, \(x=ct\), has interval zero in every frame, so it moves at \(c\) in every frame. At low speeds \(\gamma\approx1\) and \(vx/c^2\approx0\), and the transformation becomes Galileo's, \(x'=x-vt\), \(t'=t\).</p>
     </details>
   </section>
 
@@ -132,7 +132,7 @@
     </div>
     <div class="mode-intro" data-for="train" hidden>
       <h2>Same time on the platform, not on the train.</h2>
-      <p>Lightning strikes both ends of a moving train, at the same moment as judged on the platform. Light from the two strikes meets in the middle of the platform at the same time, so the platform says: simultaneous. But a passenger in the middle of the train is rushing towards the front flash and away from the back one, and sees the front flash first. Light moves at \(c\) for her too, and she sits in the middle of the train, so she concludes: the front was struck first.</p>
+      <p>Lightning strikes both ends of a moving train, at the same moment as judged on the platform. Light from the two strikes reaches an observer standing on the platform midway between them at the same time, so the platform says: simultaneous. But a passenger in the middle of the train is rushing towards the front flash and away from the back one, and sees the front flash first. Light moves at \(c\) for her too, and she sits in the middle of the train, so she concludes: the front was struck first.</p>
       <p class="notice"><b>What to notice:</b> in the spacetime diagram, each frame's "now" is a line. The platform's lines are level; the train's are tilted, and the faster the train, the more they tilt. Switch to the train's view: now the train is at rest, its strikes are at different times, and the platform's clocks are the ones out of step.</p>
       <details class="math"><summary>The math</summary>
         <p>On the platform the train, of rest length \(L_0\), is \(L=L_0/\gamma\) long, and the strikes are at \(x=\mp L/2\), \(t=0\). In the train's frame, with \(t'=\gamma(t-vx/c^2)\),</p>
@@ -143,7 +143,7 @@
     <div class="mode-intro" data-for="add" hidden>
       <h2>Speeds don't simply add.</h2>
       <p>Throw a ball forwards at \(u'\) inside a train that moves at \(v\). Common sense says the platform sees the ball at \(u'+v\). That is very nearly right for balls and trains, and badly wrong near the speed of light: the platform sees \((u'+v)/(1+u'v/c^2)\), which never exceeds \(c\). Shine a torch forwards instead of throwing a ball, and the platform sees its light move at exactly \(c\).</p>
-      <p class="notice"><b>What to notice:</b> in the spacetime diagram, common sense would send the ball outside the light lines; relativity bends it back inside. What does add simply is the rapidity, \(\phi\) with \(v=c\tanh\phi\): equal pushes add equal rapidity, but each brings a smaller gain in speed.</p>
+      <p class="notice"><b>What to notice:</b> in the spacetime diagram, common sense would send the ball onto or beyond the light lines; relativity bends it back inside. What does add simply is the rapidity, \(\phi\) with \(v=c\tanh\phi\): equal pushes add equal rapidity, but each brings a smaller gain in speed.</p>
       <details class="math"><summary>The math</summary>
         <p>The ball's path in the train is \(x'=u't'\). Transform back to the platform with \(x=\gamma(x'+vt')\), \(t=\gamma(t'+vx'/c^2)\), and divide:</p>
         <div class="equation">$$u=\frac{x}{t}=\frac{u'+v}{1+u'v/c^2},\qquad \tanh^{-1}\frac{u}{c}=\tanh^{-1}\frac{u'}{c}+\tanh^{-1}\frac{v}{c}$$</div>
@@ -245,23 +245,23 @@
       </div>
       <div class="predict">
         <div class="predict__head"><span class="predict__tag">Question 2 · Light clock</span><button class="predict__load" type="button" data-q="eight">Load v = 0.8c</button></div>
-        <p>At \(0.8c\), someone riding with the moving clock looks back at the platform clock. Whose clock does she see running slow?</p>
+        <p>At \(0.8c\), someone riding with the moving clock compares it with the platform clock. Whose clock does she measure running slow?</p>
         <details><summary>Show answer</summary>
-          <p>The platform's, by the same factor, \(\gamma=5/3\): to her, the platform clock makes 6 ticks while hers makes 10. Both are right. Each compares one passing clock with two of their own, at two places, and their own two clocks are synchronised only by their own standard of "at the same time". Tab 2 shows how the two standards differ.</p>
+          <p>The platform's, by the same factor, \(\gamma=5/3\): by her measurement, the platform clock makes 6 ticks while hers makes 10. (What she literally sees is different again: light from a clock she is moving away from arrives ever later, so it seems to tick at only a third of her rate; 6 is what she finds once she allows for the light's travel time.) Both are right. Each compares one passing clock with two of their own, at two places, and their own two clocks are synchronised only by their own standard of "at the same time". Tab 2 shows how the two standards differ.</p>
         </details>
       </div>
       <div class="predict">
         <div class="predict__head"><span class="predict__tag">Question 3 · Light clock</span><button class="predict__load" type="button" data-q="muon">Load the muon, 0.995c</button></div>
         <p>Muons are made 15 km up, by cosmic rays, and come down at \(0.995c\). They live 2.2 μs on average. How far does a typical muon get, and what fraction reach the ground?</p>
         <details><summary>Show answer</summary>
-          <p>Without time dilation, \(0.995\,c\times2.2\) μs is only 655 m, and the fraction reaching the ground would be \(e^{-15000/655}\approx10^{-10}\): none. With \(\gamma=10.0\), their clocks run ten times slow; a typical muon travels 6.56 km, and \(e^{-15/6.56}\approx10\%\) reach the ground, as detectors at sea level find (counting only the muons made at 15 km with this speed). Seen by the muon, its clock is fine: the atmosphere is contracted to 1.5 km.</p>
+          <p>Without time dilation, \(0.995\,c\times2.197\) μs is only 655 m, and the fraction reaching the ground would be \(e^{-15000/655}\approx10^{-10}\): none. With \(\gamma=10.0\), their clocks run ten times slow; a typical muon travels 6.56 km, and \(e^{-15/6.56}\approx10\%\) would reach the ground. That is an idealised figure: real muons are made at many heights and energies, and they slow down as they lose energy in the air. But plenty of them do reach sea level, as Rossi and Hall (1941) and Frisch and Smith (1963) measured, which is impossible without time dilation. Seen by the muon, its clock is fine: the atmosphere is contracted to 1.5 km.</p>
         </details>
       </div>
       <div class="predict">
         <div class="predict__head"><span class="predict__tag">Question 4 · Simultaneity</span><button class="predict__load" type="button" data-q="strikes">Load the train at 0.6c</button></div>
         <p>The strikes are simultaneous on the platform. For the passenger in the middle of the train, which end was struck first, and by how much?</p>
         <details><summary>Show answer</summary>
-          <p>The front, by \(vL_0/c^2=0.6\) s for a train one light-second long. She sees the front flash at 0.25 s and the back flash at 1 s (platform time); she knows both flashes travelled half a train length at \(c\) to reach her, so she concludes the front strike really did happen first. In the train's view the tilted "now" lines through the two strikes are 0.6 s apart.</p>
+          <p>The front, by \(vL_0/c^2=0.6\) s for a train one light-second long. She sees the front flash at 0.25 s and the back flash at 1 s (platform time); she knows both flashes travelled half a train length at \(c\) to reach her, so she concludes the front strike really did happen first. Switch to the train's view: there the train's "now" lines through the two strikes are level, and 0.6 s apart.</p>
         </details>
       </div>
       <div class="predict">
@@ -289,7 +289,7 @@
         <div class="predict__head"><span class="predict__tag">Question 8 · Adding</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="torch">Load a torch on a fast train</button></div>
         <p>The train moves at \(0.9c\) and a passenger shines a torch forwards. How fast does the platform see the light go?</p>
         <details><summary>Show answer</summary>
-          <p>Exactly \(c\): \((1+0.9)/(1+0.9)=1\). Common sense says \(1.9c\). This is the experimental fact Einstein started from: light from a moving source still moves at \(c\), measured from anywhere. Everything else in this lab, the slow clocks, the short trains, the tilted "now", follows from it.</p>
+          <p>Exactly \(c\): \((1+0.9)/(1+0.9)=1\). Common sense says \(1.9c\). This is the postulate Einstein started from in 1905, alongside the principle that the laws of physics are the same for every steadily moving observer: light from a moving source still moves at \(c\), measured from anywhere. It was later tested directly, for example in 1964 with gamma rays from particles moving at \(0.99975c\). Everything else in this lab, the slow clocks, the short trains, the tilted "now", follows from those two principles.</p>
         </details>
       </div>
     </div>
@@ -315,7 +315,7 @@
           <li><strong>The light clock:</strong> mirrors half a unit apart, so a tick of the clock at rest takes one unit of time. The moving clock's light follows the same up-and-down rhythm in its own time \(\tau=t/\gamma\), while the clock moves at \(v\); its zigzag trail is drawn on the platform. The picture follows the moving clock, so the platform marks slide past.</li>
           <li><strong>The muon:</strong> mean lifetime 2.1969811 μs, \(c=299\,792\,458\) m/s, made 15 km up. Mean range \(\gamma v\tau\); surviving fraction \(e^{-d/\gamma v\tau}\), against \(e^{-d/v\tau}\) without time dilation.</li>
           <li><strong>The train:</strong> rest length \(L_0=1\). On the platform it is \(L_0/\gamma\) long, and the strikes are at \(x=\mp L_0/2\gamma\), \(t=0\). The train's view applies the Lorentz transformation, \(x'=\gamma(x-vt)\), \(t'=\gamma(t-vx)\), to every event and every line in the diagram; the light rays stay at 45° in both views. The scene beside the diagram shows positions along the track at the moving "now" of the chosen frame.</li>
-          <li><strong>Other observers:</strong> plot A applies the transformation for observers moving at \(u\) along the platform, from \(-0.8c\) to \(0.8c\), to the two strikes; plot B draws each one's \((\Delta x,c\Delta t)\), which all lie on \((\Delta x)^2-(c\Delta t)^2=L^2\).</li>
+          <li><strong>Other observers:</strong> plot A applies the transformation to the two strikes for observers moving at \(u\) along the platform, from \(-0.8c\) to \(0.8c\); plot B draws each one's \((\Delta x,c\Delta t)\), for observers up to \(\pm0.95c\), which all lie on \((\Delta x)^2-(c\Delta t)^2=L^2\).</li>
           <li><strong>Adding velocities:</strong> \(u=(u'+v)/(1+u'v)\), against Galileo's \(u'+v\); rapidities \(\phi=\tanh^{-1}(v/c)\).</li>
           <li><strong>Checks:</strong> the notebook builds the transformation as a 2 × 2 matrix, checks it keeps \(c^2t^2-x^2\) fixed and that two boosts make one boost with the added velocity, and asserts the numbers quoted in the questions.</li>
         </ul>
