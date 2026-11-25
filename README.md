@@ -18,7 +18,8 @@ assets/js/bloch-sphere.js
 assets/img/           Favicon and images
 labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some add views.js);
                       the quantum metric lab has metric.js, and also loads the Berry phase
-                      lab's physics.js and views.js
+                      lab's physics.js and views.js; the space groups lab has data.js (all 230
+                      groups, from gemmi) and crystals.js
 ```
 
 ## Labs
@@ -47,6 +48,7 @@ labs/<name>/          One folder per lab: index.html, physics.js, lab.js (some a
 | Spintronics | Tunnelling Magnetoresistance | `labs/tunneling-magnetoresistance/` |
 | Electromagnetism | Divergence and Curl: Reading Maxwell's Equations | `labs/divergence-curl/` |
 | Electromagnetism | The Lorentz Transformation: Clocks, Trains and Light | `labs/lorentz-transformation/` |
+| Symmetry | The 230 Space Groups | `labs/space-groups/` |
 
 Each lab folder holds its page, its JavaScript and its companion Jupyter
 notebook (saved without outputs).
@@ -55,8 +57,8 @@ notebook (saved without outputs).
 
 Each track has its own accent colour, set in `assets/css/site.css`:
 quantum foundations (violet), quantum computing (berry), crystals and
-energy bands (emerald), quantum geometry (gold), nanoscale transport (copper), spintronics (cobalt blue) and electromagnetism (teal). A lab page picks its colour with
-`<html data-track="quantum">` (or `computing`, `crystals`, `geometry`, `transport`, `spintronics`, `fields`); on the homepage
+energy bands (emerald), quantum geometry (gold), nanoscale transport (copper), spintronics (cobalt blue), electromagnetism (teal) and symmetry (olive). A lab page picks its colour with
+`<html data-track="quantum">` (or `computing`, `crystals`, `geometry`, `transport`, `spintronics`, `fields`, `symmetry`); on the homepage
 each track row carries the same attribute. Everything inside follows the
 `--brand` tokens, so new labs need no extra colour work.
 

@@ -130,6 +130,7 @@ img, svg { display: block; }
 [data-track="spintronics"] { --brand: #2a55b8; --brand-strong: #1f4396; --brand-soft: #e6edfa; --track-hero: #23479d; --track-tint: #c9d8f6; }
 [data-track="geometry"]  { --brand: #946600; --brand-strong: #765100; --brand-soft: #fbf2dd; --track-hero: #805800; --track-tint: #f3dfa6; }
 [data-track="fields"]    { --brand: #0b6e85; --brand-strong: #08566a; --brand-soft: #e0f1f5; --track-hero: #095e72; --track-tint: #b5e0ea; }
+[data-track="symmetry"]  { --brand: #557214; --brand-strong: #445c10; --brand-soft: #eef3df; --track-hero: #4a6512; --track-tint: #d3e3a8; }
 /* The top bar and footer always use the site teal. */
 [data-track] .site-nav, [data-track] .site-footer { --brand: #175569; --brand-strong: #0f3d4c; --brand-soft: #e3eff2; }
 
