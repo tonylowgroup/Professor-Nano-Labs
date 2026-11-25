@@ -147,7 +147,7 @@
     const el = vr.el, Mi = G.inv3(M), Wc = G.mm(G.mm(M, vr.W), Mi);
     const tC = G.mv(M, el.tin || [0, 0, 0]), cC = G.mv(M, el.x0 || [0, 0, 0]);
     // screws and glides in two steps: the turn (or reflection) first, then the slide along the axis (or in the plane)
-    const two = (el.screw > 0) || (el.kind === 'm' && el.letter && el.letter !== 'm');
+    const two = !!el.tin && G.norm(el.tin) > 1e-9 && (el.det > 0 || el.kind === 'm');
     const R1 = s => (two ? Math.min(1, s / 0.6) : s), Q = s => (two ? Math.max(0, (s - 0.6) / 0.4) : s);
     let f;
     if (el.kind === 't' || el.kind === '1') { const sh = G.mv(M, vr.w); f = (p, s, isLeg) => (isLeg ? p : G.add(p, G.scl(sh, s))); }
@@ -178,7 +178,7 @@
   function stepCaption(vr, s, mvr) {
     const el = vr.el;
     if (!mvr.two) return null;
-    const slide = el.screw > 0 ? (() => { const g = grp(), u = el.u; const lam = G.dot(el.tin, u) / G.dot(u, u); const axis = u.filter(v => v !== 0).length === 1 ? 'abc'[u.findIndex(v => v !== 0)] : `[${u.join('')}]`; return `${nice(G.frac(Math.abs(lam)))} ${axis}`; })() : `(${nice(G.pointText(el.glide || el.tin))})`;
+    const slide = el.screw > 0 ? (() => { const g = grp(), u = el.u; const lam = G.dot(el.tin, u) / G.dot(u, u); const axis = u.filter(v => v !== 0).length === 1 ? 'abc'[u.findIndex(v => v !== 0)] : `[${u.join('')}]`; return `${nice(G.frac(Math.abs(lam)))} ${axis}`; })() : `(${nice(G.pointText(el.tin))})`;
     const first = el.screw > 0 ? `1 · turn ${360 / Math.abs(Number(el.kind))}° about the ${el.sym.replace(/[⁺⁻]/g, '')} axis` : '1 · reflect in the plane';
     const second = el.screw > 0 ? `2 · slide ${slide} along the axis` : `2 · slide by ${slide} within the plane`;
     return [{ text: first, on: s < 0.6 || s >= 1 }, { text: second, on: s >= 0.6, color: ORANGE }];
@@ -350,7 +350,7 @@
         }
         if (el.kind === '-1') { const w0 = G.wrap(el.x0); reps(w0[0], w0[1]).forEach(([u, v]) => pointSym(u, v, 'inv', 0, nice(G.frac(w0[2])))); continue; }
         const u = el.u;
-        if (isC(u)) { const w0 = G.wrap(el.x0); const n = Math.abs(Number(el.kind)), key = `${fixed(w0[0], 3)},${fixed(w0[1], 3)}`; const prev = seenPt.get(key); const rank = n * 10 + (el.det < 0 ? 1 : 0); if (!prev || prev.rank < rank) seenPt.set(key, { rank, w0, el }); continue; }
+        if (isC(u)) { const w0 = G.wrap(el.x0); const n = Math.abs(Number(el.kind)), key = `${fixed(w0[0], 3)},${fixed(w0[1], 3)}`; const prev = seenPt.get(key); const rank = n * 10 + (el.det > 0 ? 2 : 0); if (!prev || prev.rank < rank) seenPt.set(key, { rank, w0, el }); continue; }
         if (Math.abs(u[2]) < 1e-9 && el.det > 0) { drawLine(el.x0, [u[0], u[1]], 'axis', null, el); continue; }
         diagInfo.skipped++;
       }
@@ -374,7 +374,7 @@
           else {
             ctx.strokeStyle = BRAND; ctx.lineWidth = letter === 'm' ? 3 : 2;
             const gz = glide && Math.abs(glide[2]) > 1e-9, gxy = glide && (Math.abs(glide[0]) > 1e-9 || Math.abs(glide[1]) > 1e-9);
-            ctx.setLineDash(letter === 'm' ? [] : letter === 'n' ? [8, 3, 2, 3] : letter === 'd' ? [8, 3, 2, 3, 2, 3] : gz && !gxy ? [2, 3] : [8, 4]);
+            ctx.setLineDash(letter === 'm' ? [] : letter === 'd' ? [8, 3, 2, 3, 2, 3] : gz && gxy ? [8, 3, 2, 3] : gz ? [2, 3] : [8, 4]);
           }
           ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); ctx.restore();
           if (axis) { const m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; ctx.fillStyle = BLUE; ctx.font = '700 11px Inter, system-ui, sans-serif'; ctx.fillText(`${axis.sym}${deep ? ' z=' + nice(G.frac(G.wrap(axis.x0)[2])) : ''}`, m[0] + 9, m[1] - 8); }
@@ -397,13 +397,25 @@
     }
     // general positions
     if (S.draw !== 'el') {
-      const orb = G.orbit(g, X0);
-      for (const o of orb) reps(o.f[0], o.f[1]).forEach(([u, v]) => {
-        const q = P(u, v);
-        ctx.strokeStyle = INK; ctx.lineWidth = 1.4; ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(q[0], q[1], 9, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-        if (o.det < 0) { ctx.fillStyle = INK; ctx.font = '800 13px Inter, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(',', q[0] + 0.5, q[1] - 2); }
-        ctx.fillStyle = INK; ctx.font = '600 10.5px Inter, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(zLabel(o.op, X0), q[0] + 11, q[1] - 7);
-      });
+      const orb = G.orbit(g, X0), spots = new Map();
+      for (const o of orb) reps(o.f[0], o.f[1]).forEach(([u, v]) => { const k = `${fixed(u, 4)},${fixed(v, 4)}`; if (!spots.has(k)) spots.set(k, { u, v, list: [] }); spots.get(k).list.push(o); });
+      for (const { u, v, list } of spots.values()) {
+        const q = P(u, v), r = 9;
+        list.sort((a, b) => b.det - a.det);
+        ctx.strokeStyle = INK; ctx.lineWidth = 1.4; ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        ctx.font = '800 13px Inter, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
+        if (list.length === 1) {
+          if (list[0].det < 0) ctx.fillText(',', q[0] + 0.5, q[1] - 2);
+          ctx.font = '600 10.5px Inter, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(zLabel(list[0].op, X0), q[0] + 11, q[1] - 7);
+        } else {
+          // the International Tables' split circle: one copy in each half, a comma in the mirror-image half
+          ctx.beginPath(); ctx.moveTo(q[0], q[1] - r); ctx.lineTo(q[0], q[1] + r); ctx.stroke();
+          list.slice(0, 2).forEach((o, k) => { if (o.det < 0) ctx.fillText(',', q[0] + (k ? 4.5 : -4.5), q[1] - 2); });
+          ctx.font = '600 10.5px Inter, system-ui, sans-serif';
+          ctx.textAlign = 'right'; ctx.fillText(zLabel(list[0].op, X0), q[0] - 11, q[1] - 7);
+          ctx.textAlign = 'left'; ctx.fillText(list.slice(1).map(o => zLabel(o.op, X0)).join(' '), q[0] + 11, q[1] - 7);
+        }
+      }
     }
     if (diagInfo.horiz.length) { ctx.fillStyle = BRAND; ctx.font = '600 11.5px Inter, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`planes across c: ${[...new Set(diagInfo.horiz)].join(', ')}`, 10, 6); }
   }
@@ -421,7 +433,7 @@
       const Wc = G.mm(G.mm(M, o.W), Mi);
       if (o.kind === 'm') {
         const nu = (() => { for (const e of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) { const v = G.sub(e, G.mv(Wc, e)); if (G.norm(v) > 1e-6) return G.scl(v, 1 / G.norm(v)); } return [0, 0, 1]; })();
-        const key = nu.map(v => fixed(Math.abs(v), 3)).join(); if (seen.has('m' + key)) return; seen.add('m' + key);
+        const sg0 = nu.find(v => Math.abs(v) > 1e-6) < 0 ? -1 : 1, key = nu.map(v => fixed(sg0 * v, 3)).join(); if (seen.has('m' + key)) return; seen.add('m' + key);
         let e1 = G.cross(nu, Math.abs(nu[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0]); e1 = G.scl(e1, 1 / G.norm(e1)); const e2 = G.cross(nu, e1);
         cs.strokeStyle = BRAND; cs.lineWidth = 2; cs.beginPath(); let pen = false;
         for (let k = 0; k <= 360; k++) { const t = k * Math.PI / 180, v = G.add(G.scl(e1, Math.cos(t)), G.scl(e2, Math.sin(t))); if (v[2] < -1e-6) { pen = false; continue; } const q = proj(v); if (pen) cs.lineTo(q[0], q[1]); else { cs.moveTo(q[0], q[1]); pen = true; } }
@@ -433,7 +445,7 @@
       }
     });
     // the poles of one general direction under every operation of the point group
-    const v0 = [0.42, 0.27, 0.86];
+    const v0 = [0.47, 0.17, 0.866];
     const pts = [];
     g.reps.forEach(o => { const Wc = G.mm(G.mm(M, o.W), Mi), v = G.mv(Wc, v0); if (!pts.some(p => G.norm(G.sub(p.v, v)) < 1e-6)) pts.push({ v, det: o.det }); });
     pts.forEach(({ v }) => { const q = proj(v); cs.strokeStyle = INK; cs.lineWidth = 1.4; cs.fillStyle = INK; cs.beginPath(); cs.arc(q[0], q[1], q[2] ? 3.5 : 5.5, 0, 2 * Math.PI); if (q[2]) cs.fill(); else cs.stroke(); });
@@ -472,9 +484,9 @@
     put('sg-name', `${g.html}${g.old ? ` (formerly ${g.old})` : ''}${g.setting ? `, ${g.setting}` : ''}`);
     stats([
       ['Space group', `${g.n} · ${g.html}`, g.old ? `formerly ${g.old}` : g.setting || 'standard setting'],
-      ['Crystal system', g.system, `${CENNAME[g.cen]} lattice, ${BRAV[g.system]}${g.cen === 'R' ? 'R' : g.cen}`],
+      ['Crystal system', g.system, `${CENNAME[g.cen]} lattice, ${BRAV[g.system]}${'ABC'.includes(g.cen) ? 'S' : g.cen}`],
       ['Point group', g.pg.replace(/-(\d)/g, '<span class="ovl">$1</span>'), `${g.reps.length} operations without the shifts`],
-      ['General positions', String(order), g.symmorphic ? 'symmorphic: no screws or glides' : 'non-symmorphic: has screws or glides'],
+      ['General positions', String(order), g.symmorphic ? 'symmorphic: one point has the whole point group' : 'non-symmorphic: screws or glides cannot be avoided'],
     ]);
   }
   function renderList() {
@@ -498,7 +510,7 @@
       : o.kind === 't' ? `<b>A centring translation.</b> The lattice is ${CENNAME[g.cen]}, so this shift by (${nice(G.pointText(o.w))}) is a symmetry too; it doubles (or triples, or quadruples) the copies of every other operation.`
       : `<b>${o.sym} · ${o.name}.</b> It ${nice(o.desc)}. ${keeps ? 'It keeps the object\'s handedness.' : 'It turns the object into its mirror image.'}${o.screw > 0 ? ` ${staircase(o)}` : ''}`);
     frameFn = opsScene;
-    put('pa-title', 'The point group, as a stereogram'); put('pa-cap', `The ${g.reps.length} operations with their shifts removed, acting on one direction: dots above the equator, circles below. Teal-green: mirror planes and rotation axes.`);
+    put('pa-title', 'The point group, as a stereogram'); put('pa-cap', `The ${g.reps.length} operations with their shifts removed, acting on one direction: dots above the equator, circles below. Green: mirror planes and rotation axes.`);
     legend('pa-legend', [[INK, 'swatch--dot', 'pole, upper half'], [BRAND, '', 'mirror plane']]);
     put('pb-title', 'The operation, written out'); put('pb-cap', 'Its matrix W and shift w in cell coordinates, x → Wx + w, and what it does to the object.');
     put('opcard', opCard());

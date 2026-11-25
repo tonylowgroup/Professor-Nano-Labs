@@ -108,11 +108,14 @@
     const nzi = [0, 1, 2].filter(k => Math.abs(n[k]) > EPS), d = dot(n, x0);
     const whole = i => nzi.every(k => Math.abs(n[k] / n[i] - Math.round(n[k] / n[i])) < EPS);
     const i = nzi.slice().reverse().find(whole) ?? nzi.reduce((b, k) => (Math.abs(n[k]) > Math.abs(n[b]) ? k : b), nzi[0]);
-    return [0, 1, 2].map(j => {
+    const parts = [0, 1, 2].map(j => {
       if (j !== i) return 'xyz'[j];
       const coef = {}; [0, 1, 2].filter(k => k !== i).forEach(k => { coef['xyz'[k]] = -n[k] / n[i]; });
       return linear(coef, d / n[i]);
-    }).join(',');
+    });
+    // a plane through c whose x depends on y (2y,y,z): name the parameter x, as the International Tables do (2x,x,z)
+    if (i === 0 && Math.abs(n[2]) < EPS && Math.abs(n[1]) > EPS) { parts[0] = parts[0].replace(/y/g, 'x'); parts[1] = 'x'; }
+    return parts.join(',');
   }
   const pointText = x => x.map(frac).join(',');
 
@@ -158,7 +161,8 @@
         if (!nz.some(Boolean)) return 'm';
         if (g.some(q) && g.every(v => Math.abs(v) < EPS || q(v))) return 'd';
         if (nz.filter(Boolean).length === 1 && half(g[nz.indexOf(true)])) return 'abc'[nz.indexOf(true)];
-        if (g.every(v => Math.abs(v) < EPS || half(v))) return 'n';
+        const axial = out.n.filter(v => Math.abs(v) > EPS).length === 1, halves = g.filter(half).length;
+        if (g.every(v => Math.abs(v) < EPS || half(v)) && ((axial && halves === 2) || (!axial && halves === 3))) return 'n';
         return 'g';
       };
       const rank = { m: 0, a: 1, b: 1, c: 1, n: 2, d: 3, g: 4 };
@@ -173,7 +177,10 @@
       out.letter = letter; out.sym = letter;
       out.name = letter === 'm' ? 'mirror plane' : `${letter}-glide plane`;
       out.where = planeText(x0, out.n);
-      out.desc = letter === 'm' ? `reflects through the plane ${out.where}` : `reflects through the plane ${out.where}, then slides by (${pointText(g)})`;
+      const own = pointText(tin), same = sub(tin, g).every(v => Math.abs(v) < 1e-9);
+      out.desc = letter === 'm'
+        ? (norm(tin) < 1e-9 ? `reflects through the plane ${out.where}` : `reflects through the plane ${out.where}, then slides by (${own}), a lattice translation within the plane: a mirror combined with a lattice shift`)
+        : `reflects through the plane ${out.where}, then slides by (${own})${same ? '' : `: the same plane as a ${letter}-glide by (${pointText(g)}), one lattice translation apart`}`;
       return out;
     }
     if (kind === '-1') { out.name = 'inversion centre'; out.sym = '-1'; out.where = pointText(wrap(x0)); out.desc = `sends every point through ${out.where} to the opposite side`; return out; }
@@ -193,12 +200,13 @@
       out.sym = `${n}${j ? sub_ : ''}`; out.name = j ? `${n}${sub_} screw axis` : `${n}-fold rotation axis`;
       out.where = lineText(x0, u);
       const ang = 360 / n;
-      out.desc = j ? `turns ${n === 2 ? '180' : ang}° about the axis ${out.where}, then slides by (${pointText(tin)})` : `turns ${n === 2 ? '180' : ang}° about the axis ${out.where}`;
+      out.desc = j ? `turns ${n === 2 ? '180' : ang}° about the axis ${out.where}, then slides by (${pointText(tin)})`
+        : norm(tin) > 1e-9 ? `turns ${n === 2 ? '180' : ang}° about the axis ${out.where}, then slides by (${pointText(tin)}), a whole lattice translation along the axis: a rotation combined with a lattice shift` : `turns ${n === 2 ? '180' : ang}° about the axis ${out.where}`;
       if (n > 2) out.sym += out.sense > 0 ? '⁺' : '⁻';
     } else {
       out.sym = `-${n}${out.sense > 0 ? '⁺' : '⁻'}`; out.name = `${n}-fold rotoinversion axis`;
-      out.where = `${lineText(x0, u)}; centre ${pointText(wrap(x0))}`;
-      out.desc = `turns ${360 / n}° about the axis ${lineText(x0, u)}, then inverts through ${pointText(wrap(x0))}`;
+      out.where = `${lineText(x0, u)}; centre ${pointText(x0)}`;
+      out.desc = `turns ${360 / n}° about the axis ${lineText(x0, u)}, then inverts through ${pointText(x0)}`;
     }
     return out;
   }
