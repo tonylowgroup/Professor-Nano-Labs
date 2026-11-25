@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en" data-track="symmetry">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 230 Space Groups · Professor Nano Labs</title>
+<meta name="description" content="Pick any of the 230 space groups and see its symmetry operations act on a 3D unit cell: rotations, screw axes, mirrors, glide planes, inversion centres; read the International Tables diagram; and watch the operations build real crystals from a few atoms. A lab from the Professor Nano YouTube channel.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+  .ovl { text-decoration: overline; }
+  .sg-pick { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+  .sg-pick input { width: 84px; font: inherit; font-size: 18px; font-weight: 700; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; text-align: center; color: var(--ink); }
+  .sg-pick button { width: 38px; height: 38px; }
+  .op-panel { height: 340px; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; padding: 6px; background: var(--surface); }
+  .op-panel h4 { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 6px 4px; }
+  .op-panel h4:first-child { margin-top: 4px; }
+  .op-btn { display: grid; grid-template-columns: 54px 1fr; gap: 8px; align-items: baseline; width: 100%; text-align: left; border: 0; background: transparent; padding: 6px 8px; border-radius: 7px; font: inherit; color: var(--ink-2); cursor: pointer; }
+  .op-btn:hover { background: var(--brand-soft); }
+  .op-btn[aria-pressed="true"] { background: var(--brand); color: #fff; }
+  .op-btn b { font-size: 15px; }
+  .op-btn span { font-size: 12.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .op-card { height: 100%; overflow: auto; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+  .op-card .mat { display: inline-grid; grid-template-columns: repeat(3, 2.4em) 1.2em 3.4em; gap: 2px 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; padding: 8px 12px; border-left: 2px solid var(--ink-2); border-right: 2px solid var(--ink-2); border-radius: 4px; margin: 6px 0 10px; }
+  .op-card .mat span { text-align: right; }
+  .op-card table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  .op-card td, .op-card th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+  .op-card th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  @container (max-width: 640px) { .op-panel { height: 260px; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="site-nav__inner">
+    <a class="brand" href="../../index.html" aria-label="Professor Nano Labs, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 3.5 26.8 9.75v12.5L16 28.5 5.2 22.25V9.75Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <g fill="currentColor"><circle cx="16" cy="3.5" r="2.6"/><circle cx="26.8" cy="9.75" r="2.6"/><circle cx="26.8" cy="22.25" r="2.6"/><circle cx="16" cy="28.5" r="2.6"/><circle cx="5.2" cy="22.25" r="2.6"/><circle cx="5.2" cy="9.75" r="2.6"/></g>
+        <circle cx="16" cy="16" r="3.4" fill="#f2a541"/>
+      </svg>
+      <span class="brand__name">Professor Nano <span class="brand__sub">Labs</span></span>
+    </a>
+    <div class="site-nav__links">
+      <a href="../../index.html">Home</a>
+      <a href="../../index.html#labs" aria-current="page">Labs</a>
+      <a href="../../index.html#how">How it works</a>
+      <a href="../../index.html#about">About</a>
+      <a href="../../index.html#summer-school">Summer school</a>
+      <a class="nav-cta" href="https://www.youtube.com/@professornano">YouTube <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</nav>
+
+<header class="lab-hero">
+  <div class="shell">
+    <div class="crumbs"><a href="../../index.html#labs">Labs</a> / <a href="../../index.html#symmetry">Symmetry</a></div>
+    <div class="eyebrow eyebrow--light">Symmetry · Live lab</div>
+    <h1>The 230 Space Groups</h1>
+    <p>Every crystal belongs to one of exactly 230 space groups: the complete list of ways a pattern can repeat in three dimensions. Pick a group by its number and watch its operations act on a unit cell, one at a time: rotations and screw axes, mirrors and glide planes, inversion centres. Then read its diagram the way the International Tables draw it, and watch the same operations build real crystals from a handful of atoms.</p>
+    <div class="lab-hero__actions">
+      <a class="btn btn--ghost" href="space_groups.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the notebook</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell lab-main">
+
+  <!-- Watch first, watch later -->
+  <section class="panel watch" aria-label="Videos">
+    <div class="watch__first">
+      <div class="label-caps">Step 1 · Watch</div>
+      <h2>Watch first</h2>
+      <p>Which symmetries a repeating pattern is allowed, and why a five-fold axis is not one of them.</p>
+      <a class="video video--feature" href="https://www.youtube.com/watch?v=KI25B8Vz4rk" target="_blank" rel="noopener" title="Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/KI25B8Vz4rk/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Why Can Quasicrystals Have “Forbidden” Fivefold Symmetry?<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a>
+    </div>
+    <div class="watch__later">
+      <div class="label-caps label-caps--muted">Optional</div>
+      <h2>Watch later</h2>
+      <p>Related episodes, if you want to go further.</p>
+      <ul class="watch__list">
+        <li><a class="video" href="https://www.youtube.com/watch?v=rpZOt_rBx4I" target="_blank" rel="noopener" title="Basics of crystal structure and terminologies, we make it easier to understand in 2D">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/rpZOt_rBx4I/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Basics of crystal structure and terminologies, we make it easier to understand in 2D<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=Bj2rNT5fa9s" target="_blank" rel="noopener" title="Deriving the Bloch's theorem">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/Bj2rNT5fa9s/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Deriving the Bloch's theorem<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+        <li><a class="video" href="https://www.youtube.com/watch?v=cu-XQdRFKbE" target="_blank" rel="noopener" title="Spatial vs momentum translation operators in quantum mechanics">
+          <span class="video__thumb"><img src="https://i.ytimg.com/vi/cu-XQdRFKbE/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"></span>
+          <span class="video__title">Spatial vs momentum translation operators in quantum mechanics<span class="visually-hidden"> (YouTube, opens in a new tab)</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The idea -->
+  <section class="panel" aria-labelledby="idea-title">
+    <h2 id="idea-title">Moves that leave a crystal unchanged</h2>
+    <p>A symmetry operation is a move that leaves a crystal looking exactly as before: every atom lands on an atom of the same kind. Shifting by a whole unit cell is one, and so are turns about an axis, reflections in a plane and inversion through a point. Combine them with half or third steps along the way and you get screw axes and glide planes, which only an infinite repeating pattern can have.</p>
+    <p>All the operations of a crystal together form its space group. In 1891 Fedorov and Schoenflies, working separately, showed that there are exactly 230 of them. Each has a number and a Hermann–Mauguin symbol such as P2₁/c, whose letters name the lattice and the symmetry along the main directions.</p>
+    <dl class="gloss" aria-label="Words you'll meet">
+      <div id="g-op"><dt>Symmetry operation</dt><dd>A move that maps the crystal onto itself: written \(x\to Wx+w\) in cell coordinates, a matrix \(W\) for the turning or reflecting part and a vector \(w\) for the shift.</dd></div>
+      <div id="g-screw"><dt>Screw axis</dt><dd>Turn about an axis, then slide along it: 2₁ is half a turn and half a cell; 6₃ is a sixth of a turn and half a cell.</dd></div>
+      <div id="g-glide"><dt>Glide plane</dt><dd>Reflect in a plane, then slide parallel to it by half a cell (a, b, c, n glides) or a quarter (d glides).</dd></div>
+      <div id="g-inv"><dt>Inversion centre</dt><dd>A point through which every atom has a twin on the opposite side, at the same distance.</dd></div>
+      <div id="g-gp"><dt>General position</dt><dd>A point that sits on no symmetry element. Its copies, one per operation, show the whole group; their number is the group's order in one cell.</dd></div>
+      <div id="g-wy"><dt>Wyckoff position</dt><dd>A set of points on symmetry elements, with fewer copies: an atom at the 8a position of diamond has 8 copies in the cell, not 192.</dd></div>
+    </dl>
+    <details class="math"><summary>The math</summary>
+      <p>An operation \((W,w)\) sends \(x\) to \(Wx+w\). Repeating it \(k\) times, where \(W^k=1\), gives a pure translation; a third of it, a half, and so on, is the intrinsic screw or glide part, and what is left fixes the symmetry element in place:</p>
+      <div class="equation">$$w_{\rm intr}=\frac1k\big(w+Ww+\dots+W^{k-1}w\big),\qquad (W-1)\,x_0=-(w-w_{\rm intr}),\qquad \det W=\pm1,\quad \mathrm{tr}\,W=1+2\cos\tfrac{2\pi}{n}$$</div>
+      <p>In cell coordinates \(W\) has whole-number entries, so its trace must be a whole number: \(n\) can only be 1, 2, 3, 4 or 6. That is the crystallographic restriction, and why crystals have no five-fold axes.</p>
+    </details>
+  </section>
+
+  <!-- The lab -->
+  <section class="panel lab-tabs" aria-label="Experiments">
+    <div class="tabs" role="tablist" aria-label="Experiments">
+      <button class="tab" role="tab" id="tab-ops" aria-controls="lab" aria-selected="true" data-mode="ops">1 · The operations</button>
+      <button class="tab" role="tab" id="tab-diagram" aria-controls="lab" aria-selected="false" data-mode="diagram" tabindex="-1">2 · The diagram</button>
+      <button class="tab" role="tab" id="tab-crystal" aria-controls="lab" aria-selected="false" data-mode="crystal" tabindex="-1">3 · Building crystals</button>
+    </div>
+    <div class="depth-row">
+      <span class="depth-row__label" id="depth-label">Show</span>
+      <div class="seg seg--inline" role="group" aria-labelledby="depth-label">
+        <button type="button" data-depth="simple" aria-pressed="true">The essentials</button><button type="button" data-depth="deep" aria-pressed="false">Go deeper</button>
+      </div>
+      <span class="depth-row__hint" id="depth-hint"></span>
+    </div>
+    <div class="mode-intro" data-for="ops">
+      <h2>One operation at a time.</h2>
+      <p>The cell holds a small handed object, three coloured balls on a stand, at a general position, and one copy of it for every operation of the group. Pick an operation from the list: its symmetry element appears in the cell, and every copy, with the cell itself, moves as one rigid block. A rotation turns them, a mirror flips them into mirror images; a screw turns them and then slides them along its axis, and a glide reflects them and then slides them along its plane. At the end every moved copy sits where the repeating pattern has a copy, in this cell or the next. The Move switch can show a single object, or the copies without the cell.</p>
+      <p class="notice"><b>What to notice:</b> rotations and screws keep the object's handedness; mirrors, glides, inversion and rotoinversions swap it, shown by a white hub instead of a dark one. Groups with no operation of the second kind, only rotations and screws, are the 65 that chiral molecules and crystals such as quartz can have.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The determinant and trace of \(W\) give the kind of operation; the eigenvector of \(W\) with eigenvalue \(+1\) (of \(-W\) for the improper ones) gives the axis, and for a mirror the plane is spanned by the eigenvectors with eigenvalue \(+1\). The list shows each operation's symbol, its element in the notation of the International Tables (\(0,0,z\) is the line along \(c\) through the origin; \(x,\tfrac14,z\) the plane at \(y=\tfrac14\)), and the coordinate triplet:</p>
+        <div class="equation">$$\det W=+1:\ \mathrm{tr}\,W=3,-1,0,1,2\ \Rightarrow\ 1,2,3,4,6;\qquad \det W=-1:\ \mathrm{tr}\,W=-3,1,0,-1,-2\ \Rightarrow\ \bar1,m,\bar3,\bar4,\bar6$$</div>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="diagram" hidden>
+      <h2>The group, looking down c.</h2>
+      <p>The International Tables draw each group from above. The general-position diagram shows every copy of one point as a circle, labelled with its height: + is a little above the plane, − a little below, ½+ half a cell higher. A comma inside marks a mirror-image copy. The symmetry-element diagram adds the axes, the planes and the inversion centres in their standard symbols.</p>
+      <p class="notice"><b>What to notice:</b> a 2₁ screw along c moves a copy half a cell up as it turns it, so the copies come in pairs at + and ½+; a plain 2-fold leaves them at the same height. Glide planes are dashed or dotted lines, mirrors solid. Elements that are tilted to the page, like the three-fold axes of a cubic group, are counted but not drawn.</p>
+      <details class="math"><summary>The math</summary>
+        <p>The circle for operation \((W,w)\) sits at \((Wx_0+w)\) brought into the cell, drawn at its \(x\) and \(y\). If \(W\) sends \(z\) to \(\pm z\), its height is \(\pm z_0+w_3\), which the diagram writes as + or − with the fraction in front; otherwise the height depends on \(x_0\) and \(y_0\) too, and is written as a number.</p>
+      </details>
+    </div>
+    <div class="mode-intro" data-for="crystal" hidden>
+      <h2>A few atoms, and the group does the rest.</h2>
+      <p>A crystal structure is stored as its space group, its cell, and the atoms of the asymmetric unit: the smallest set from which the group's operations generate everything else. Pick a material and watch: the operations turn one silicon atom into the eight of the diamond cell, two atoms into graphite's layers. Pick an operation and apply it to the whole crystal: every atom lands on an atom of the same kind.</p>
+      <p class="notice"><b>What to notice:</b> an atom on a symmetry element has fewer copies than a general one: its Wyckoff position's multiplicity. Compare diamond, Fd3̄m, with zincblende, F4̄3m: the same atoms, but two kinds of them, and half the operations are lost.</p>
+      <details class="math"><summary>The math</summary>
+        <p>Each atom at \(x_j\) in the asymmetric unit has copies \(Wx_j+w\) for every operation, brought into the cell; copies that coincide are counted once. The number of distinct copies, the multiplicity, is the group's order divided by the order of the atom's site symmetry:</p>
+        <div class="equation">$$\text{multiplicity}=\frac{|G|}{|G_{x_j}|},\qquad\text{e.g. diamond: }\frac{192}{24}=8$$</div>
+      </details>
+    </div>
+  </section>
+
+  <div class="lab-grid" id="lab" role="tabpanel" aria-labelledby="tab-ops">
+    <aside class="panel controls" aria-label="Lab controls">
+      <div class="ctrl-group">
+        <div class="label-caps"><label for="sgn">Space group number</label></div>
+        <div class="sg-pick">
+          <button class="chip-btn" type="button" id="sg-prev" aria-label="Previous space group">−</button>
+          <input id="sgn" type="number" min="1" max="230" step="1" value="14" inputmode="numeric">
+          <button class="chip-btn" type="button" id="sg-next" aria-label="Next space group">+</button>
+        </div>
+        <div class="ctrl__hint" id="sg-name"></div>
+        <div class="label-caps" style="margin-top:12px">Famous groups</div>
+        <div class="chips" role="group" aria-label="Famous space groups">
+          <button class="chip-btn" type="button" data-sg="1">P1</button><button class="chip-btn" type="button" data-sg="2">P<span class="ovl">1</span></button><button class="chip-btn" type="button" data-sg="4">P2₁</button><button class="chip-btn" type="button" data-sg="14">P2₁/c</button><button class="chip-btn" type="button" data-sg="62">Pnma</button><button class="chip-btn" type="button" data-sg="136">P4₂/mnm</button><button class="chip-btn" type="button" data-sg="152">P3₁21</button><button class="chip-btn" type="button" data-sg="194">P6₃/mmc</button><button class="chip-btn" type="button" data-sg="221">Pm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="225">Fm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="227">Fd<span class="ovl">3</span>m</button>
+        </div>
+      </div>
+      <div class="ctrl-group" data-modes="crystal">
+        <div class="label-caps">Material</div>
+        <div class="chips" role="group" aria-label="Materials" id="crystal-chips"></div>
+      </div>
+      <div class="ctrl-group" data-modes="ops crystal">
+        <div data-modes="ops">
+          <div class="label-caps">Move</div>
+          <div class="seg" role="group" aria-label="What moves">
+            <button type="button" data-move="one" aria-pressed="false">One object</button><button type="button" data-move="all" aria-pressed="false">Every copy</button><button type="button" data-move="cell" aria-pressed="true">Copies and cell</button>
+          </div>
+        </div>
+        <div class="ctrl__hint">Drag the picture to turn it.</div>
+      </div>
+      <div class="ctrl-group" data-modes="diagram">
+        <div class="label-caps">Draw</div>
+        <div class="seg" role="group" aria-label="What to draw">
+          <button type="button" data-draw="both" aria-pressed="true">Both</button><button type="button" data-draw="pos" aria-pressed="false">Positions</button><button type="button" data-draw="el" aria-pressed="false">Elements</button>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <button class="chip-btn" type="button" id="video-values">Back to the starting values</button>
+      </div>
+    </aside>
+
+    <div class="plots">
+      <div class="stats stats--4 stats--steady stats--wrap" id="stats"></div>
+
+      <section class="panel plot-card diagram-card">
+        <div class="plot-card__head"><h3 id="dg-title"></h3><div class="head-btns"><button class="btn-quiet btn-small" id="anim" type="button" aria-pressed="true">❚❚ Pause</button></div></div>
+        <p class="plot-card__cap" id="dg-cap"></p>
+        <ul class="legend" id="dg-legend"></ul>
+        <div class="mag-view mag-view--wide" id="mag-view">
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="view" class="zone-map" role="img" aria-label="The unit cell"></canvas><canvas id="proj" role="img" aria-label="The diagram" hidden></canvas></div></div>
+          <div class="mag-view__side" id="side-box"><div class="op-panel" id="oplist" role="group" aria-label="The operations of the group"></div></div>
+        </div>
+      </section>
+
+      <div class="note" id="info" role="status" aria-live="polite"></div>
+
+      <div class="plot-pair">
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pa-title"></h3></div>
+          <p class="plot-card__cap" id="pa-cap"></p>
+          <ul class="legend" id="pa-legend"></ul>
+          <div class="plot-box plot-box--tall"><canvas id="stereo" role="img" aria-label="Stereographic projection"></canvas></div>
+        </section>
+        <section class="panel plot-card">
+          <div class="plot-card__head"><h3 id="pb-title"></h3></div>
+          <p class="plot-card__cap" id="pb-cap"></p>
+          <div class="plot-box plot-box--tall"><div class="op-card" id="opcard"></div></div>
+        </section>
+      </div>
+
+      <div class="note" id="takeaway"></div>
+    </div>
+  </div>
+
+  <!-- Predict first -->
+  <section class="panel" aria-labelledby="predict-title">
+    <div class="label-caps">Step 2 · Predict, then test</div>
+    <h2 id="predict-title" style="margin-top:6px">Predict first</h2>
+    <p>Load each example, make a prediction, then check it in the lab.</p>
+    <div class="predict-list">
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 1 · Operations</span><button class="predict__load" type="button" data-q="p21c">Load P2₁/c</button></div>
+        <p>P2₁/c (No. 14) is the most common space group of all, home to a third of all organic crystals. How many copies of a general point does one cell hold, and what are the operations that make them?</p>
+        <details><summary>Show answer</summary>
+          <p>Four. The identity; a 2₁ screw axis along \(b\), at \(0,y,\tfrac14\): half a turn and half a cell along \(b\); an inversion centre at the origin; and a \(c\)-glide plane at \(y=\tfrac14\): reflect, then slide half a cell along \(c\). Two of the four copies are mirror images of the other two. The symbol says it all: P for a primitive lattice, 2₁/c for a screw axis along \(b\) with a glide plane perpendicular to it.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 2 · Diagram</span><button class="predict__load" type="button" data-q="p21">Load P2₁, from above</button></div>
+        <p>P2 (No. 3) and P2₁ (No. 4) both have a two-fold axis along \(b\) and two copies of each point. What is different about where the two copies sit?</p>
+        <details><summary>Show answer</summary>
+          <p>In P2 the second copy is at \((-x, y, -z)\), at the same height along the axis; in P2₁ it is at \((-x, y+\tfrac12, -z)\), half a cell further along \(b\). The 2₁ screw turns and slides. Both have two operations, and from far away they look alike, but the screw axis makes a helix, and in a diffraction pattern it wipes out every other spot along \(b\) (the reflections \(0k0\) with \(k\) odd).</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 3 · Operations</span><button class="predict__load" type="button" data-q="pnma">Load Pnma</button></div>
+        <p>Pnma (No. 62) is the group of many perovskites and of olivine. Its symbol has three letters after P. What does each one stand for?</p>
+        <details><summary>Show answer</summary>
+          <p>Each letter is the plane perpendicular to one axis: an \(n\)-glide perpendicular to \(a\) (at \(x=\tfrac14\), sliding along the diagonal \((0,\tfrac12,\tfrac12)\)), a mirror perpendicular to \(b\) (at \(y=\tfrac14\)), and an \(a\)-glide perpendicular to \(c\) (at \(z=\tfrac14\), sliding half a cell along \(a\)). Together with three 2₁ screw axes and an inversion centre at the origin they give eight operations, and eight copies of a general point.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 4 · Operations</span><button class="predict__load" type="button" data-q="fm3m">Load Fm3̄m</button></div>
+        <p>Fm3̄m (No. 225), the group of rock salt and of copper, has the full symmetry of a cube, 48 operations. How many copies of a general point are there in its conventional cubic cell?</p>
+        <details><summary>Show answer</summary>
+          <p>192: the 48 operations of the cube, each combined with the four lattice points of the face-centred cell, \((0,0,0)\), \((0,\tfrac12,\tfrac12)\), \((\tfrac12,0,\tfrac12)\), \((\tfrac12,\tfrac12,0)\). The list shows the 48 once, as the International Tables do, and the centring translations at the end. Rock salt has only 8 atoms in the same cell, because each sits on a site that 48 operations leave in place: \(192/48=4\) of each kind.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 5 · Crystals</span><button class="predict__load" type="button" data-q="gaas">Load zincblende, GaAs</button></div>
+        <p>Diamond and zincblende have the same arrangement of atoms; in zincblende, alternate atoms are gallium and arsenic. What symmetry does that lose?</p>
+        <details><summary>Show answer</summary>
+          <p>Every operation that swaps the two sublattices, half of them: the group drops from Fd3̄m (No. 227), with 192 operations in the cell, to F4̄3m (No. 216), with 96. Among the losses are all the inversion centres, which sit midway between neighbouring atoms in diamond. No inversion centre is what lets zincblende semiconductors such as GaAs be piezoelectric and generate second harmonics of light.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 6 · Crystals</span><button class="predict__load" type="button" data-q="graphite">Load graphite</button></div>
+        <p>Graphite stacks graphene sheets in an ABAB pattern. Apply the 6₃ screw operation to the whole crystal. Where does a sheet go?</p>
+        <details><summary>Show answer</summary>
+          <p>Onto the next sheet. A 6₃ screw turns by 60° about the axis and slides half a cell along \(c\); the axis runs through atoms that sit directly above one another in neighbouring sheets, and turning an A sheet by 60° about it gives the B pattern, which the slide lifts to where the B sheet is. Every atom lands on an atom. Without the screw axis, AA stacking, the group would be P6/mmm, and graphite would have one sheet per cell instead of two.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 7 · Crystals</span><button class="predict__load" type="button" data-q="quartz">Load α-quartz</button></div>
+        <p>Look through the operations of α-quartz, P3₁21 (No. 152). Is there a mirror, a glide plane or an inversion centre? What does that mean for the crystal?</p>
+        <details><summary>Show answer</summary>
+          <p>None: only the identity, 3₁ screws and two-fold axes, six operations, all of them rotations. So the crystal is chiral: its mirror image cannot be turned into it. Left- and right-handed quartz both exist, in the pair of groups P3₁21 and P3₂21 (No. 154), and they rotate the polarisation of light in opposite directions. Only 65 of the 230 groups contain no mirror-type operation at all.</p>
+        </details>
+      </div>
+      <div class="predict">
+        <div class="predict__head"><span class="predict__tag">Question 8 · Symmetry</span><span class="predict__level">Challenge</span><button class="predict__load" type="button" data-q="six">Load P6/mmm</button></div>
+        <p>The highest rotation in any of the 230 groups is six-fold. Why can't a crystal have a five-fold or an eight-fold axis?</p>
+        <details><summary>Show answer</summary>
+          <p>In cell coordinates every operation is a matrix of whole numbers, because it must send lattice points to lattice points; so its trace is a whole number. A rotation by \(2\pi/n\) has trace \(1+2\cos(2\pi/n)\), which is a whole number only for \(n=1,2,3,4,6\): for \(n=5\) it is 1.618, the golden ratio. Five-fold patterns can be ordered without repeating, as in quasicrystals, but they cannot be periodic.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Python notebook -->
+  <section class="panel notebook" aria-labelledby="nb-title">
+    <div class="notebook__text">
+      <div class="label-caps">Python notebook</div>
+      <h2 id="nb-title">Run the same calculation in Python</h2>
+      <p>The companion Jupyter notebook loads any space group's operations with spglib, classifies each one from its determinant and trace, finds its axis or plane and its screw or glide part, counts the general positions, generates crystals from their Wyckoff positions, and checks the crystallographic restriction. It needs NumPy, Matplotlib and spglib.</p>
+    </div>
+    <a class="btn btn--brand" href="space_groups.ipynb" download><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download notebook <span class="btn__meta" id="nb-size">.ipynb · 14 KB</span></a>
+  </section>
+
+  <!-- What is computed -->
+  <section class="panel computed">
+    <details>
+      <summary>What is being computed?</summary>
+      <div class="prose" id="computed">
+        <ul>
+          <li><strong>The groups:</strong> all 230, in the standard settings of the International Tables: unique axis \(b\) for monoclinic groups, origin choice 2 (an inversion centre at the origin) for the 24 groups that have two, and hexagonal axes for the rhombohedral groups. The operations were taken from the gemmi crystallography library; for each, the coset representatives are stored and the lattice centring adds the rest. Five orthorhombic groups are shown by their current symbols (Aem2, Aea2, Cmce, Cmme, Ccce).</li>
+          <li><strong>The classification:</strong> from the determinant and trace of \(W\); the axis from the null space of \(W-1\) (or \(W+1\)); the screw or glide part by averaging \(w\) over one cycle of \(W\); the element's position by solving \((W-1)x_0=-(w-w_{\rm intr})\). Glide vectors are reduced by lattice translations lying in the plane, and named \(a\), \(b\), \(c\), \(n\) or \(d\). A separate Python check confirmed every one of the 2609 operations, and that every screw axis and glide plane in every Hermann–Mauguin symbol appears in its group.</li>
+          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.137, 0.229, 0.083)\). The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells; the animation of the whole block uses the one that keeps the moved cell overlapping the original most, with screws sliding forwards along their axis, and selecting a screw stands its axis upright.</li>
+          <li><strong>The stereogram:</strong> the point group, the operations with their shifts removed, acting on one direction; upper-hemisphere poles are dots, lower ones circles.</li>
+          <li><strong>The crystals:</strong> published cell parameters and Wyckoff positions; the bonds are drawn between atoms closer than a cut-off for each material, and the computed bond lengths (2.82 Å in NaCl, 2.35 Å in silicon, 1.42 Å in graphite, 1.59 Å for Si–O in quartz) match the measured ones.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <strong>Professor Nano Labs</strong>
+      <span>Interactive companions to the Professor Nano YouTube channel · Tony Low · University of Minnesota</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="../../index.html#labs">All labs</a>
+      <a href="https://www.youtube.com/@professornano">YouTube</a>
+      <a href="https://github.com/tonylowgroup/Professor-Nano-Labs">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="crystals.js"></script>
+<script src="physics.js"></script>
+<script src="lab.js"></script>
+</body>
+</html>
