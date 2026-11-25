@@ -143,7 +143,7 @@
     </div>
     <div class="mode-intro" data-for="ops">
       <h2>One operation at a time.</h2>
-      <p>The cell holds a small handed object, three coloured balls on a stand, at a general position, and one copy of it for every operation of the group. Pick an operation from the list: its symmetry element appears in the cell, and the original object moves to its image. A rotation turns it, a screw turns and slides it, a mirror flips it to its mirror image, a glide flips and slides it.</p>
+      <p>The cell holds a small handed object, three coloured balls on a stand, at a general position, and one copy of it for every operation of the group. Pick an operation from the list: its symmetry element appears in the cell, and every copy, with the cell itself, moves as one rigid block. A rotation turns them, a mirror flips them into mirror images; a screw turns them and then slides them along its axis, and a glide reflects them and then slides them along its plane. At the end every moved copy sits where the repeating pattern has a copy, in this cell or the next. The Move switch can show a single object, or the copies without the cell.</p>
       <p class="notice"><b>What to notice:</b> rotations and screws keep the object's handedness; mirrors, glides, inversion and rotoinversions swap it, shown by a white hub instead of a dark one. Groups with no operation of the second kind, only rotations and screws, are the 65 that chiral molecules and crystals such as quartz can have.</p>
       <details class="math"><summary>The math</summary>
         <p>The determinant and trace of \(W\) give the kind of operation; the eigenvector of \(W\) with eigenvalue \(+1\) (of \(-W\) for the improper ones) gives the axis, and for a mirror the plane is spanned by the eigenvectors with eigenvalue \(+1\). The list shows each operation's symbol, its element in the notation of the International Tables (\(0,0,z\) is the line along \(c\) through the origin; \(x,\tfrac14,z\) the plane at \(y=\tfrac14\)), and the coordinate triplet:</p>
@@ -189,9 +189,11 @@
         <div class="chips" role="group" aria-label="Materials" id="crystal-chips"></div>
       </div>
       <div class="ctrl-group" data-modes="ops crystal">
-        <div class="label-caps">Show</div>
-        <div class="seg" role="group" aria-label="What to show in the cell">
-          <button type="button" data-show="all" aria-pressed="true">All copies</button><button type="button" data-show="one" aria-pressed="false">Just the move</button>
+        <div data-modes="ops">
+          <div class="label-caps">Move</div>
+          <div class="seg" role="group" aria-label="What moves">
+            <button type="button" data-move="one" aria-pressed="false">One object</button><button type="button" data-move="all" aria-pressed="false">Every copy</button><button type="button" data-move="cell" aria-pressed="true">Copies and cell</button>
+          </div>
         </div>
         <div class="ctrl__hint">Drag the picture to turn it.</div>
       </div>
@@ -322,7 +324,7 @@
         <ul>
           <li><strong>The groups:</strong> all 230, in the standard settings of the International Tables: unique axis \(b\) for monoclinic groups, origin choice 2 (an inversion centre at the origin) for the 24 groups that have two, and hexagonal axes for the rhombohedral groups. The operations were taken from the gemmi crystallography library; for each, the coset representatives are stored and the lattice centring adds the rest. Five orthorhombic groups are shown by their current symbols (Aem2, Aea2, Cmce, Cmme, Ccce).</li>
           <li><strong>The classification:</strong> from the determinant and trace of \(W\); the axis from the null space of \(W-1\) (or \(W+1\)); the screw or glide part by averaging \(w\) over one cycle of \(W\); the element's position by solving \((W-1)x_0=-(w-w_{\rm intr})\). Glide vectors are reduced by lattice translations lying in the plane, and named \(a\), \(b\), \(c\), \(n\) or \(d\). A separate Python check confirmed every one of the 2609 operations, and that every screw axis and glide plane in every Hermann–Mauguin symbol appears in its group.</li>
-          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.137, 0.229, 0.083)\). The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre, plus the screw or glide slide, and finally a whole-cell shift that brings the image back into the cell.</li>
+          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.137, 0.229, 0.083)\). The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells; the animation of the whole block uses the one that keeps the moved cell overlapping the original most, with screws sliding forwards along their axis, and selecting a screw stands its axis upright.</li>
           <li><strong>The stereogram:</strong> the point group, the operations with their shifts removed, acting on one direction; upper-hemisphere poles are dots, lower ones circles.</li>
           <li><strong>The crystals:</strong> published cell parameters and Wyckoff positions; the bonds are drawn between atoms closer than a cut-off for each material, and the computed bond lengths (2.82 Å in NaCl, 2.35 Å in silicon, 1.42 Å in graphite, 1.59 Å for Si–O in quartz) match the measured ones.</li>
         </ul>

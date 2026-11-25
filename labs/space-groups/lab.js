@@ -4,7 +4,7 @@
   const G = window.SG, CRYSTALS = window.SG_CRYSTALS;
   const $ = id => document.getElementById(id);
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const START = { n: 14, op: 1, show: 'all', draw: 'both', crystal: 'diamond' };
+  const START = { n: 14, op: 1, show: 'all', move: 'cell', draw: 'both', crystal: 'diamond' };
   const S = JSON.parse(JSON.stringify(START));
   let mode = 'ops';
   let deep = false;
@@ -57,23 +57,37 @@
     return { o, W: o.W, w, el };
   }
 
+  function variantMid(o) {
+    if (o.kind === 't' || o.kind === '1') return variant(o, [0.5, 0.5, 0.5]);
+    const mid = [0.5, 0.5, 0.5], cands = [];
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) {
+      const w = G.add(o.w, [i, j, k]), y = G.add(G.mv(o.W, mid), w), el = G.classify({ W: o.W, w }, grp().cv, cellM());
+      const fwd = !(el.screw > 0) || G.dot(el.tin, el.u) > 1e-9;
+      cands.push({ w, el, fwd, d: G.norm(G.mv(cellM(), G.sub(y, mid))) });
+    }
+    const best = cands.filter(c => c.fwd).sort((a, b) => a.d - b.d)[0] || cands.sort((a, b) => a.d - b.d)[0];
+    return { o, W: o.W, w: best.w, el: best.el };
+  }
   // ---------- a small 3D renderer on a plain canvas ----------
   const cv3 = $('view'), c3 = cv3.getContext('2d');
-  const view = { yaw: -0.55, pitch: 0.42, w: 0, h: 0 };
+  const view = { yaw: -0.55, pitch: 0.42, w: 0, h: 0, up: [0, 0, 1] };
   function size(c) { const r = c.parentElement.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 3), w = Math.max(200, Math.round(r.width)), h = Math.max(160, Math.round(r.height)); c.width = Math.round(w * d); c.height = Math.round(h * d); c.style.width = w + 'px'; c.style.height = h + 'px'; c.getContext('2d').setTransform(d, 0, 0, d, 0, 0); return { w, h }; }
-  function camera(M) {
+  function camera(M, extra) {
     const ca = Math.cos(view.yaw), sa = Math.sin(view.yaw), cp = Math.cos(view.pitch), sp = Math.sin(view.pitch);
-    const centre = G.mv(M, [0.5, 0.5, 0.5]);
-    const r = p => { const v = G.sub(p, centre), x1 = ca * v[0] - sa * v[1], y1 = sa * v[0] + ca * v[1]; return [x1, sp * y1 + cp * v[2], cp * y1 - sp * v[2]]; };
+    // look at the middle of the cell, or of the cell and where it moves to
+    const c0 = G.mv(M, [0.5, 0.5, 0.5]), centre = extra && extra.length ? G.scl(G.add(c0, G.scl(extra.reduce((a, p) => G.add(a, p), [0, 0, 0]), 1 / extra.length)), 0.5) : c0;
+    const U = view.up, E1 = (() => { const t = Math.abs(U[2]) > 0.99 ? [1, 0, 0] : G.cross([0, 0, 1], U); const w = G.sub(t, G.scl(U, G.dot(t, U))); return G.scl(w, 1 / G.norm(w)); })(), E2 = G.cross(U, E1);
+    const r = p => { const d = G.sub(p, centre), v = [G.dot(d, E1), G.dot(d, E2), G.dot(d, U)], x1 = ca * v[0] - sa * v[1], y1 = sa * v[0] + ca * v[1]; return [x1, sp * y1 + cp * v[2], cp * y1 - sp * v[2]]; };
     let ext = 0; for (const f of CORNERS) { const q = r(G.mv(M, f)); ext = Math.max(ext, Math.abs(q[0]), Math.abs(q[1])); }
-    const sc = 0.44 * Math.min(view.w, view.h) / Math.max(ext, 1e-6);
-    return p => { const q = r(p); return [view.w / 2 + q[0] * sc, view.h / 2 - q[1] * sc, q[2], sc]; };
+    for (const p of extra || []) { const q = r(p); ext = Math.max(ext, Math.abs(q[0]), Math.abs(q[1])); }
+    const sc = 0.44 * Math.min(view.w, view.h - 30) / Math.max(ext, 1e-6);
+    return p => { const q = r(p); return [view.w / 2 + q[0] * sc, (view.h + 30) / 2 - q[1] * sc, q[2], sc]; };
   }
   const CORNERS = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]];
   const EDGES = [[0, 1], [0, 2], [0, 3], [1, 4], [1, 5], [2, 4], [2, 6], [3, 5], [3, 6], [4, 7], [5, 7], [6, 7]];
-  function draw3D(prims, M) {
+  function draw3D(prims, M, caption, extra) {
     const s = size(cv3); view.w = s.w; view.h = s.h;
-    const P = camera(M), ctx = c3;
+    const P = camera(M, extra), ctx = c3;
     ctx.clearRect(0, 0, view.w, view.h);
     const items = [];
     for (const [i, j] of EDGES) {
@@ -111,6 +125,7 @@
     ctx.font = '700 12px Inter, system-ui, sans-serif'; ctx.fillStyle = GREY; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     [['a', [1.08, 0, 0]], ['b', [0, 1.08, 0]], ['c', [0, 0, 1.08]]].forEach(([l, f]) => { const q = P(G.mv(M, f)); ctx.fillText(l, q[0], q[1]); });
     ctx.fillText('0', o[0] - 8, o[1] + 8);
+    if (caption) caption.forEach((c, k) => { ctx.font = `${c.on ? 700 : 600} 13px Inter, system-ui, sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,255,255,0.95)'; ctx.strokeText(c.text, 10, 8 + 19 * k); ctx.fillStyle = c.on ? c.color || BRAND : '#8a99a3'; ctx.fillText(c.text, 10, 8 + 19 * k); });
   }
   // shade a colour towards white or black
   function shade(hex, a) { const v = parseInt(hex.slice(1), 16), t = a > 0 ? 255 : 0, f = Math.abs(a); return `rgb(${[v >> 16, (v >> 8) & 255, v & 255].map(c => Math.round(c + (t - c) * f)).join(',')})`; }
@@ -119,7 +134,8 @@
   // ---------- the handed object: a hub and three unequal legs, red, green and blue ----------
   const LEGS = [[0.085, 0, 0], [0, 0.062, 0], [0, 0, 0.046]], LEGC = [RED, GREEN, BLUE], LEGR = [0.03, 0.025, 0.02];
   function motif(p, legs, hand, extra) {
-    const out = [ball(p, 0.018, hand > 0 ? INK : '#ffffff', Object.assign({ ring: hand > 0 ? null : INK }, extra))];
+    if (mode === 'ops' && S.move !== 'one') legs = legs.map(d => G.scl(d, 1.3));
+    const out = [ball(p, extra && extra.hub ? 0.026 : 0.018, extra && extra.hub ? extra.hub : hand > 0 ? INK : '#ffffff', Object.assign({ ring: hand > 0 ? null : INK }, extra))];
     legs.forEach((d, k) => { const q = G.add(p, d); out.push({ t: 'seg', a: p, b: q, color: '#5b6b75', w: 2, alpha: extra && extra.alpha }); out.push(ball(q, LEGR[k], LEGC[k], extra)); });
     return out;
   }
@@ -130,21 +146,43 @@
   function mover(vr, M) {
     const el = vr.el, Mi = G.inv3(M), Wc = G.mm(G.mm(M, vr.W), Mi);
     const tC = G.mv(M, el.tin || [0, 0, 0]), cC = G.mv(M, el.x0 || [0, 0, 0]);
-    if (el.kind === 't' || el.kind === '1') { const sh = G.mv(M, vr.w); return (p, s) => G.add(p, G.scl(sh, s)); }
-    if (el.kind === 'm') {
+    // screws and glides in two steps: the turn (or reflection) first, then the slide along the axis (or in the plane)
+    const two = (el.screw > 0) || (el.kind === 'm' && el.letter && el.letter !== 'm');
+    const R1 = s => (two ? Math.min(1, s / 0.6) : s), Q = s => (two ? Math.max(0, (s - 0.6) / 0.4) : s);
+    let f;
+    if (el.kind === 't' || el.kind === '1') { const sh = G.mv(M, vr.w); f = (p, s, isLeg) => (isLeg ? p : G.add(p, G.scl(sh, s))); }
+    else if (el.kind === 'm') {
       const nu = (() => { for (const e of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) { const v = G.sub(e, G.mv(Wc, e)); if (G.norm(v) > 1e-6) return G.scl(v, 1 / G.norm(v)); } return [0, 0, 1]; })();
       const lin = (d, s) => G.sub(d, G.scl(nu, 2 * s * G.dot(d, nu)));
-      return (p, s, isLeg) => (isLeg ? lin(p, s) : G.add(G.add(cC, lin(G.sub(p, cC), s)), G.scl(tC, s)));
+      f = (p, s, isLeg) => (isLeg ? lin(p, R1(s)) : G.add(G.add(cC, lin(G.sub(p, cC), R1(s))), G.scl(tC, Q(s))));
+    } else if (el.kind === '-1') { const lin = (d, s) => G.scl(d, 1 - 2 * s); f = (p, s, isLeg) => (isLeg ? lin(p, s) : G.add(cC, lin(G.sub(p, cC), s))); }
+    else {
+      // rotations and rotoinversions: axis and signed angle from the Cartesian matrix
+      const improper = el.det < 0, R = improper ? Wc.map(r => r.map(v => -v)) : Wc;
+      const uc = G.mv(M, el.u), un = G.scl(uc, 1 / G.norm(uc));
+      const cs = (R[0][0] + R[1][1] + R[2][2] - 1) / 2, sn = 0.5 * G.dot(un, [R[2][1] - R[1][2], R[0][2] - R[2][0], R[1][0] - R[0][1]]), th = Math.atan2(sn, cs);
+      const lin = (d, s) => { const r = rodrigues(un, s * th, d); return improper ? G.scl(r, 1 - 2 * s) : r; };
+      f = (p, s, isLeg) => (isLeg ? lin(p, R1(s)) : G.add(G.add(cC, lin(G.sub(p, cC), R1(s))), G.scl(tC, Q(s))));
     }
-    if (el.kind === '-1') { const lin = (d, s) => G.scl(d, 1 - 2 * s); return (p, s, isLeg) => (isLeg ? lin(p, s) : G.add(cC, lin(G.sub(p, cC), s))); }
-    // rotations and rotoinversions: axis and signed angle from the Cartesian matrix
-    const improper = el.det < 0, R = improper ? Wc.map(r => r.map(v => -v)) : Wc;
-    const uc = G.mv(M, el.u), un = G.scl(uc, 1 / G.norm(uc));
-    const cs = (R[0][0] + R[1][1] + R[2][2] - 1) / 2, sn = 0.5 * G.dot(un, [R[2][1] - R[1][2], R[0][2] - R[2][0], R[1][0] - R[0][1]]), th = Math.atan2(sn, cs);
-    const lin = (d, s) => { const r = rodrigues(un, s * th, d); return improper ? G.scl(r, 1 - 2 * s) : r; };
-    return (p, s, isLeg) => (isLeg ? lin(p, s) : G.add(G.add(cC, lin(G.sub(p, cC), s)), G.scl(tC, s)));
+    f.two = two; f.R1 = R1; f.Q = Q; f.tC = tC;
+    return f;
   }
-
+  // an arrow in the cell, with a small head
+  function arrow3(a, b, color, alpha) {
+    const d = G.sub(b, a), L = G.norm(d); if (L < 1e-6) return [];
+    const u = G.scl(d, 1 / L), side = (() => { const t = G.cross(u, view.up); return G.norm(t) > 1e-3 ? G.scl(t, 1 / G.norm(t)) : [1, 0, 0]; })();
+    const h = Math.min(0.06, 0.35 * L), back = G.sub(b, G.scl(u, h));
+    return [{ t: 'seg', a, b, color, w: 3.2, alpha }, { t: 'seg', a: b, b: G.add(back, G.scl(side, h * 0.6)), color, w: 3.2, alpha }, { t: 'seg', a: b, b: G.sub(back, G.scl(side, h * 0.6)), color, w: 3.2, alpha }];
+  }
+  // what the picture says, step by step
+  function stepCaption(vr, s, mvr) {
+    const el = vr.el;
+    if (!mvr.two) return null;
+    const slide = el.screw > 0 ? (() => { const g = grp(), u = el.u; const lam = G.dot(el.tin, u) / G.dot(u, u); const axis = u.filter(v => v !== 0).length === 1 ? 'abc'[u.findIndex(v => v !== 0)] : `[${u.join('')}]`; return `${nice(G.frac(Math.abs(lam)))} ${axis}`; })() : `(${nice(G.pointText(el.glide || el.tin))})`;
+    const first = el.screw > 0 ? `1 · turn ${360 / Math.abs(Number(el.kind))}° about the ${el.sym.replace(/[⁺⁻]/g, '')} axis` : '1 · reflect in the plane';
+    const second = el.screw > 0 ? `2 · slide ${slide} along the axis` : `2 · slide by ${slide} within the plane`;
+    return [{ text: first, on: s < 0.6 || s >= 1 }, { text: second, on: s >= 0.6, color: ORANGE }];
+  }
   // ---------- the symmetry element, clipped to the cell ----------
   function clipLine(x0, u) {
     let lo = -1e9, hi = 1e9;
@@ -196,13 +234,42 @@
     const g = grp(), M = cellM(), Mi = G.inv3(M), e = cur(), prims = [];
     const orbit = G.orbit(g, X0);
     const legsOf = W => { const Wc = G.mm(G.mm(M, W), Mi); return LEGS.map(d => G.mv(Wc, d)); };
-    if (S.show === 'all') orbit.forEach(o => prims.push(...motif(G.mv(M, o.f), legsOf(o.op.W), o.det, { alpha: 0.32 })));
-    const vr = variant(e.o, X0), mv = mover(vr, M), p0 = G.mv(M, X0), s = f;
+    if (S.move === 'one') {
+      if (S.show === 'all') orbit.forEach(o => prims.push(...motif(G.mv(M, o.f), legsOf(o.op.W), o.det, { alpha: 0.32 })));
+      const vr = variant(e.o, X0), mv = mover(vr, M), p0 = G.mv(M, X0), s = f;
+      prims.push(...elementPrims(vr.el, M));
+      if (s < 1) prims.push(...motif(p0, LEGS, 1, { alpha: 0.25 }));
+      prims.push(...motif(mv(p0, s), LEGS.map(d => mv(d, s, true)), (e.o.det || 1) > 0 || s < 0.5 ? 1 : -1, {}));
+      if (mv.two) { const pr = mv(p0, 0.6); prims.push(...arrow3(pr, G.add(pr, mv.tC), ORANGE, s >= 0.6 ? 1 : 0.3)); }
+      draw3D(prims, M, stepCaption(vr, s, mv));
+      return;
+    }
+    // the whole pattern moves at once (and, in 'cell', the cell with it): the version of the operation that keeps
+    // the middle of the cell inside the cell, so the moved block overlaps the original as much as it can
+    const vr = variantMid(e.o), mv = mover(vr, M), det = e.o.det || 1;
     prims.push(...elementPrims(vr.el, M));
-    // the target copy, outlined; and the original, faint, where it started
-    if (s < 1) prims.push(...motif(p0, LEGS, 1, { alpha: 0.25 }));
-    prims.push(...motif(mv(p0, s), LEGS.map(d => mv(d, s, true)), (e.o.det || 1) > 0 || s < 0.5 ? 1 : -1, {}));
-    draw3D(prims, M);
+    if (mv.two) {
+      const el = vr.el, mid = [0.5, 0.5, 0.5];
+      const pc = el.screw > 0 ? G.add(el.x0, G.scl(el.u, G.dot(G.sub(mid, el.x0), el.u) / G.dot(el.u, el.u))) : G.sub(mid, G.scl(el.n, (G.dot(el.n, mid) - G.dot(el.n, el.x0)) / G.dot(el.n, el.n)));
+      const P = G.mv(M, pc), h = G.scl(mv.tC, 0.5);
+      prims.push(...arrow3(G.sub(P, h), G.add(P, h), ORANGE, f >= 0.6 ? 1 : 0.35));
+    }
+    // where the copies were, faint: at the end every moving copy lands on one of these
+    orbit.forEach(o => prims.push(...motif(G.mv(M, o.f), legsOf(o.op.W), o.det, { alpha: 0.18 })));
+    // the copies move with the operation and stay where it puts them, in the moved cell
+    const s = f;
+    orbit.forEach(o => {
+      const legs = legsOf(o.op.W), p = G.mv(M, o.f), hand = o.det * (det < 0 && s >= 0.5 ? -1 : 1);
+      const orig = o.op.W.every((r, i) => r.every((v, j) => v === (i === j ? 1 : 0))) && o.op.w.every(v => Math.abs(v) < 1e-9);
+      prims.push(...motif(mv(p, s), legs.map(d => mv(d, s, true)), hand, orig ? { hub: BRAND } : {}));
+    });
+    if (S.move === 'cell') {
+      const C = CORNERS.map(c => mv(G.mv(M, c), s));
+      EDGES.forEach(([i, j]) => { for (let k = 0; k < 4; k++) prims.push({ t: 'seg', a: G.add(C[i], G.scl(G.sub(C[j], C[i]), k / 4)), b: G.add(C[i], G.scl(G.sub(C[j], C[i]), (k + 1) / 4)), color: BRAND, w: 2.2, dash: [6, 4] }); });
+      const lab = mv(G.mv(M, [1.08, 0, 0]), s), lbb = mv(G.mv(M, [0, 1.08, 0]), s), lbc = mv(G.mv(M, [0, 0, 1.08]), s);
+      [['a′', lab], ['b′', lbb], ['c′', lbc]].forEach(([t, p]) => prims.push({ t: 'text', p, text: t, color: BRAND, size: 12, halo: true }));
+    }
+    draw3D(prims, M, stepCaption(vr, s, mv), S.move === 'cell' ? CORNERS.map(c => mv(G.mv(M, c), 1)) : orbit.map(o => mv(G.mv(M, o.f), 1)));
   }
   // crystals: the atoms, their bonds, and the operation applied to all of them
   const crystalCache = new Map();
@@ -230,17 +297,12 @@
     const rad = el => A.r0 * (['O', 'F', 'N', 'B', 'C', 'Si', 'P'].includes(el) ? 0.85 : 1);
     const e = cur(), vr = variant(e.o, [0.5, 0.5, 0.5]), mv = mover(vr, M);
     prims.push(...elementPrims(vr.el, M));
-    const moving = f > 0 && f < 1 && e.o.kind !== '1';
+    const moving = f > 0 && e.o.kind !== '1';
     A.bonds.forEach(([i, j]) => prims.push({ t: 'seg', a: G.mv(M, A.shown[i].f), b: G.mv(M, A.shown[j].f), color: '#9aa8b1', w: 2.2, alpha: moving ? 0.35 : 1 }));
     A.shown.forEach(a => prims.push(ball(G.mv(M, a.f), rad(a.el), ELCOL[a.el] || GREY, { alpha: moving ? 0.3 : 1 })));
     if (moving) {
-      // every atom of the cell, carried by the operation; near the end each fades into its copy back inside the cell
-      const s = Math.min(1, f / 0.85), fade = f > 0.85 ? (f - 0.85) / 0.15 : 0;
-      A.base.forEach(a => {
-        const p = mv(G.mv(M, a.f), s), y = G.add(G.mv(vr.W, a.f), vr.w), inside = G.wrap(y);
-        prims.push(ball(p, rad(a.el), ELCOL[a.el] || GREY, { alpha: 1 - fade, ring: INK }));
-        if (fade > 0 && G.norm(G.sub(y, inside)) > 1e-6) prims.push(ball(G.mv(M, inside), rad(a.el), ELCOL[a.el] || GREY, { alpha: fade, ring: INK }));
-      });
+      // every atom of the cell, carried by the operation, staying where it lands
+      A.base.forEach(a => prims.push(ball(mv(G.mv(M, a.f), f), rad(a.el), ELCOL[a.el] || GREY, { ring: INK })));
     }
     draw3D(prims, M);
   }
@@ -421,15 +483,20 @@
     const key = `${g.n}|${S.op}`;
     if ($('oplist').dataset.key !== key) { $('oplist').dataset.key = key; $('oplist').innerHTML = html; const b = $('oplist').querySelector('[aria-pressed="true"]'); if (b) b.scrollIntoView({ block: 'nearest' }); }
   }
+  // a screw n_m: turn 360/n degrees and slide m/n of a cell; n of them make one full turn and m whole cells
+  function staircase(o) {
+    const n = Math.abs(Number(o.kind)), m = o.screw, sub = '₀₁₂₃₄₅'[m];
+    return `A ${n}${sub} screw is a turn of ${360 / n}° plus a slide of ${m}/${n} of a cell along the axis, done together. Repeat it ${n} times and you have turned all the way round and moved ${m === 1 ? 'one whole cell' : `${m} whole cells`} along the axis, which is just a lattice translation: the copies climb round the axis like a spiral staircase.`;
+  }
   function renderOps() {
     const g = grp(), e = cur(), o = e.o;
     put('dg-title', `${g.n} · ${g.html}: the operations`);
-    put('dg-cap', 'The handed object at a general position, and a faint copy for every operation. Pick an operation on the right to see its symmetry element (teal-green) and watch the object move to its image. Drag to turn the cell.');
+    put('dg-cap', S.move === 'one' ? 'The handed object at a general position, and a faint copy for every operation. Pick an operation on the right to see its symmetry element and watch the object move to its image. Drag to turn the cell.' : `Every copy in the cell moves at once${S.move === 'cell' ? ', and so does the cell itself (dashed)' : ''}; the faint ones show where the copies were. At the end the moved copies stay where the operation puts them: every one lands where the repeating pattern has a copy, whether in this cell or the next. The original object has a green hub.`);
     legend('dg-legend', [[INK, 'swatch--dot', 'dark hub: original handedness'], [GREY, 'swatch--dot', 'white hub: mirror image'], [BRAND, '', 'the symmetry element']]);
     const keeps = o.det > 0;
     put('info', o.kind === '1' ? `<b>The identity.</b> Every group has it: the move that does nothing. ${g.all.length} operations in all, so ${g.all.length} copies of the object in the cell.`
       : o.kind === 't' ? `<b>A centring translation.</b> The lattice is ${CENNAME[g.cen]}, so this shift by (${nice(G.pointText(o.w))}) is a symmetry too; it doubles (or triples, or quadruples) the copies of every other operation.`
-      : `<b>${o.sym} · ${o.name}.</b> It ${nice(o.desc)}. ${keeps ? 'It keeps the object\'s handedness.' : 'It turns the object into its mirror image.'}`);
+      : `<b>${o.sym} · ${o.name}.</b> It ${nice(o.desc)}. ${keeps ? 'It keeps the object\'s handedness.' : 'It turns the object into its mirror image.'}${o.screw > 0 ? ` ${staircase(o)}` : ''}`);
     frameFn = opsScene;
     put('pa-title', 'The point group, as a stereogram'); put('pa-cap', `The ${g.reps.length} operations with their shifts removed, acting on one direction: dots above the equator, circles below. Teal-green: mirror planes and rotation axes.`);
     legend('pa-legend', [[INK, 'swatch--dot', 'pole, upper half'], [BRAND, '', 'mirror plane']]);
@@ -484,7 +551,7 @@
   // ---------- controls ----------
   function syncControls() {
     const pressed = (attr, val) => document.querySelectorAll(`button[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val))));
-    pressed('sg', S.n); pressed('show', S.show); pressed('draw', S.draw); pressed('cr', S.crystal); pressed('depth', deep ? 'deep' : 'simple');
+    pressed('sg', S.n); pressed('move', S.move); pressed('draw', S.draw); pressed('cr', S.crystal); pressed('depth', deep ? 'deep' : 'simple');
     $('sgn').disabled = mode === 'crystal'; $('sg-prev').disabled = mode === 'crystal' || S.n <= 1; $('sg-next').disabled = mode === 'crystal' || S.n >= 230;
     $('depth-hint').textContent = deep ? 'The details: the matrix test for each operation, its intrinsic shift, and heights on the axes in the diagram.' : 'The main ideas; switch to Go deeper for the matrices and the shifts.';
   }
@@ -511,7 +578,10 @@
   }
   // the materials
   $('crystal-chips').innerHTML = CRYSTALS.map(c => `<button class="chip-btn" type="button" data-cr="${c.id}" aria-pressed="false">${c.name.split(',')[0]}</button>`).join('');
-  const setGroup = n => { S.n = Math.max(1, Math.min(230, Math.round(n) || 1)); S.op = Math.min(1, entries().length - 1); animT0 = performance.now(); render(); };
+  function uprightFor(o) {
+    if (o && o.screw > 0 && mode === 'ops') { let v = G.mv(cellM(), o.u); v = G.scl(v, 1 / G.norm(v)); if (v[2] < -1e-6) v = G.scl(v, -1); view.up = v; view.pitch = 0.28; }
+  }
+  const setGroup = n => { S.n = Math.max(1, Math.min(230, Math.round(n) || 1)); S.op = Math.min(1, entries().length - 1); view.up = [0, 0, 1]; view.pitch = 0.42; uprightFor(cur().o); animT0 = performance.now(); render(); };
   $('sgn').addEventListener('change', e => setGroup(+e.target.value));
   $('sgn').addEventListener('keydown', e => { if (e.key === 'Enter') setGroup(+e.target.value); });
   $('sg-prev').addEventListener('click', () => setGroup(S.n - 1));
@@ -519,11 +589,11 @@
   document.querySelector('.lab-main').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     const d = b.dataset;
-    if (d.op !== undefined && b.closest('#oplist')) { S.op = +d.op; animT0 = performance.now(); render(); return; }
+    if (d.op !== undefined && b.closest('#oplist')) { S.op = +d.op; uprightFor(cur().o); animT0 = performance.now(); render(); return; }
     if (!b.closest('.controls')) return;
     if (d.sg) { if (mode === 'crystal') { mode = 'ops'; applyMode(); } setGroup(+d.sg); return; }
     if (d.cr) { S.crystal = d.cr; S.op = 1; animT0 = performance.now(); }
-    else if (d.show) S.show = d.show;
+    else if (d.move) { S.move = d.move; animT0 = performance.now(); }
     else if (d.draw) S.draw = d.draw;
     else if (b.id === 'video-values') Object.assign(S, JSON.parse(JSON.stringify(START)));
     else return;
@@ -570,12 +640,14 @@
   };
   document.querySelectorAll('.predict__load[data-q]').forEach(b => b.addEventListener('click', () => {
     QUESTIONS[b.dataset.q]();
+    view.up = [0, 0, 1]; view.pitch = 0.42; uprightFor(cur().o);
     applyMode();
     document.querySelector('.lab-tabs').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     const t = tabs.find(x => x.dataset.mode === mode); if (t) t.focus({ preventScroll: true });
   }));
 
   syncAnim();
+  uprightFor(cur().o);
   applyMode();
   window.__sg = { S, render, setMode: m => { mode = m; applyMode(); }, frame: f => frameFn && frameFn(f), diag: () => diagInfo };
 })();
