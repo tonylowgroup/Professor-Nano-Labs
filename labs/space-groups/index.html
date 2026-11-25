@@ -17,6 +17,9 @@
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
 <style>
   .ovl { text-decoration: overline; }
+  .swatch--ring { width: 10px; height: 10px; border: 2px solid currentColor; border-radius: 50%; background: #fff; box-sizing: border-box; }
+  .mag-view--single .plot-box.plot-box--mag { height: 460px; }
+  @container (max-width: 640px) { .mag-view--single .plot-box.plot-box--mag { height: 360px; } }
   .sg-pick { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
   .sg-pick input { width: 84px; font: inherit; font-size: 18px; font-weight: 700; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; text-align: center; color: var(--ink); }
   .sg-pick button { width: 38px; height: 38px; }
@@ -110,19 +113,19 @@
   <!-- The idea -->
   <section class="panel" aria-labelledby="idea-title">
     <h2 id="idea-title">Moves that leave a crystal unchanged</h2>
-    <p>A symmetry operation is a move that leaves a crystal looking exactly as before: every atom lands on an atom of the same kind. Shifting by a whole unit cell is one, and so are turns about an axis, reflections in a plane and inversion through a point. Combine them with half or third steps along the way and you get screw axes and glide planes, which only an infinite repeating pattern can have.</p>
+    <p>A symmetry operation is a move that leaves a crystal looking exactly as before: every atom lands on an atom of the same kind. Shifting by a whole unit cell is one, and so are turns about an axis, reflections in a plane and inversion through a point. Combine them with half, third, quarter or sixth steps along the way and you get screw axes and glide planes, which only an infinite repeating pattern can have.</p>
     <p>All the operations of a crystal together form its space group. In 1891 Fedorov and Schoenflies, working separately, showed that there are exactly 230 of them. Each has a number and a Hermann–Mauguin symbol such as P2₁/c, whose letters name the lattice and the symmetry along the main directions.</p>
     <dl class="gloss" aria-label="Words you'll meet">
       <div id="g-op"><dt>Symmetry operation</dt><dd>A move that maps the crystal onto itself: written \(x\to Wx+w\) in cell coordinates, a matrix \(W\) for the turning or reflecting part and a vector \(w\) for the shift.</dd></div>
       <div id="g-screw"><dt>Screw axis</dt><dd>Turn about an axis, then slide along it: 2₁ is half a turn and half a cell; 6₃ is a sixth of a turn and half a cell.</dd></div>
-      <div id="g-glide"><dt>Glide plane</dt><dd>Reflect in a plane, then slide parallel to it by half a cell (a, b, c, n glides) or a quarter (d glides).</dd></div>
+      <div id="g-glide"><dt>Glide plane</dt><dd>Reflect in a plane, then slide parallel to it: by half a cell along an axis (a, b, c glides), along a diagonal (n), by a quarter of a diagonal (d), or in some other direction (g). An e in a group's symbol marks a plane that is two glides at once.</dd></div>
       <div id="g-inv"><dt>Inversion centre</dt><dd>A point through which every atom has a twin on the opposite side, at the same distance.</dd></div>
       <div id="g-gp"><dt>General position</dt><dd>A point that sits on no symmetry element. Its copies, one per operation, show the whole group; their number is the group's order in one cell.</dd></div>
       <div id="g-wy"><dt>Wyckoff position</dt><dd>A set of points on symmetry elements, with fewer copies: an atom at the 8a position of diamond has 8 copies in the cell, not 192.</dd></div>
     </dl>
     <details class="math"><summary>The math</summary>
       <p>An operation \((W,w)\) sends \(x\) to \(Wx+w\). Repeating it \(k\) times, where \(W^k=1\), gives a pure translation; a third of it, a half, and so on, is the intrinsic screw or glide part, and what is left fixes the symmetry element in place:</p>
-      <div class="equation">$$w_{\rm intr}=\frac1k\big(w+Ww+\dots+W^{k-1}w\big),\qquad (W-1)\,x_0=-(w-w_{\rm intr}),\qquad \det W=\pm1,\quad \mathrm{tr}\,W=1+2\cos\tfrac{2\pi}{n}$$</div>
+      <div class="equation">$$w_{\rm intr}=\frac1k\big(w+Ww+\dots+W^{k-1}w\big),\qquad (W-1)\,x_0=-(w-w_{\rm intr}),\qquad \det W=\pm1,\quad \mathrm{tr}\,W=\det W\,\big(1+2\cos\tfrac{2\pi}{n}\big)$$</div>
       <p>In cell coordinates \(W\) has whole-number entries, so its trace must be a whole number: \(n\) can only be 1, 2, 3, 4 or 6. That is the crystallographic restriction, and why crystals have no five-fold axes.</p>
     </details>
   </section>
@@ -152,7 +155,7 @@
     </div>
     <div class="mode-intro" data-for="diagram" hidden>
       <h2>The group, looking down c.</h2>
-      <p>The International Tables draw each group from above. The general-position diagram shows every copy of one point as a circle, labelled with its height: + is a little above the plane, − a little below, ½+ half a cell higher. A comma inside marks a mirror-image copy. The symmetry-element diagram adds the axes, the planes and the inversion centres in their standard symbols.</p>
+      <p>The International Tables draw each group from above. The general-position diagram shows every copy of one point as a circle, labelled with its height: + is a little above the plane, − a little below, ½+ half a cell higher. A comma inside marks a mirror-image copy. The symmetry-element diagram adds the axes, the planes and the inversion centres in symbols modelled on the International Tables' ones.</p>
       <p class="notice"><b>What to notice:</b> a 2₁ screw along c moves a copy half a cell up as it turns it, so the copies come in pairs at + and ½+; a plain 2-fold leaves them at the same height. Glide planes are dashed or dotted lines, mirrors solid. Elements that are tilted to the page, like the three-fold axes of a cubic group, are counted but not drawn.</p>
       <details class="math"><summary>The math</summary>
         <p>The circle for operation \((W,w)\) sits at \((Wx_0+w)\) brought into the cell, drawn at its \(x\) and \(y\). If \(W\) sends \(z\) to \(\pm z\), its height is \(\pm z_0+w_3\), which the diagram writes as + or − with the fraction in front; otherwise the height depends on \(x_0\) and \(y_0\) too, and is written as a number.</p>
@@ -181,7 +184,7 @@
         <div class="ctrl__hint" id="sg-name"></div>
         <div class="label-caps" style="margin-top:12px">Famous groups</div>
         <div class="chips" role="group" aria-label="Famous space groups">
-          <button class="chip-btn" type="button" data-sg="1">P1</button><button class="chip-btn" type="button" data-sg="2">P<span class="ovl">1</span></button><button class="chip-btn" type="button" data-sg="4">P2₁</button><button class="chip-btn" type="button" data-sg="14">P2₁/c</button><button class="chip-btn" type="button" data-sg="62">Pnma</button><button class="chip-btn" type="button" data-sg="136">P4₂/mnm</button><button class="chip-btn" type="button" data-sg="152">P3₁21</button><button class="chip-btn" type="button" data-sg="194">P6₃/mmc</button><button class="chip-btn" type="button" data-sg="221">Pm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="225">Fm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="227">Fd<span class="ovl">3</span>m</button>
+          <button class="chip-btn" type="button" data-sg="1">P1</button><button class="chip-btn" type="button" data-sg="2" aria-label="P 1-bar">P<span class="ovl">1</span></button><button class="chip-btn" type="button" data-sg="4">P2₁</button><button class="chip-btn" type="button" data-sg="14">P2₁/c</button><button class="chip-btn" type="button" data-sg="62">Pnma</button><button class="chip-btn" type="button" data-sg="136">P4₂/mnm</button><button class="chip-btn" type="button" data-sg="152">P3₁21</button><button class="chip-btn" type="button" data-sg="194">P6₃/mmc</button><button class="chip-btn" type="button" data-sg="221" aria-label="Pm 3-bar m">Pm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="225" aria-label="Fm 3-bar m">Fm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="227" aria-label="Fd 3-bar m">Fd<span class="ovl">3</span>m</button>
         </div>
       </div>
       <div class="ctrl-group" data-modes="crystal">
@@ -216,7 +219,7 @@
         <p class="plot-card__cap" id="dg-cap"></p>
         <ul class="legend" id="dg-legend"></ul>
         <div class="mag-view mag-view--wide" id="mag-view">
-          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="view" class="zone-map" role="img" aria-label="The unit cell"></canvas><canvas id="proj" role="img" aria-label="The diagram" hidden></canvas></div></div>
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="view" style="cursor:grab;touch-action:pan-y" role="img" aria-label="The unit cell"></canvas><canvas id="proj" role="img" aria-label="The diagram" hidden></canvas></div></div>
           <div class="mag-view__side" id="side-box"><div class="op-panel" id="oplist" role="group" aria-label="The operations of the group"></div></div>
         </div>
       </section>
@@ -323,10 +326,10 @@
       <div class="prose" id="computed">
         <ul>
           <li><strong>The groups:</strong> all 230, in the standard settings of the International Tables: unique axis \(b\) for monoclinic groups, origin choice 2 (an inversion centre at the origin) for the 24 groups that have two, and hexagonal axes for the rhombohedral groups. The operations were taken from the gemmi crystallography library; for each, the coset representatives are stored and the lattice centring adds the rest. Five orthorhombic groups are shown by their current symbols (Aem2, Aea2, Cmce, Cmme, Ccce).</li>
-          <li><strong>The classification:</strong> from the determinant and trace of \(W\); the axis from the null space of \(W-1\) (or \(W+1\)); the screw or glide part by averaging \(w\) over one cycle of \(W\); the element's position by solving \((W-1)x_0=-(w-w_{\rm intr})\). Glide vectors are reduced by lattice translations lying in the plane, and named \(a\), \(b\), \(c\), \(n\) or \(d\). A separate Python check confirmed every one of the 2609 operations, and that every screw axis and glide plane in every Hermann–Mauguin symbol appears in its group.</li>
-          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.137, 0.229, 0.083)\). The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells; the animation of the whole block uses the one that keeps the moved cell overlapping the original most, with screws sliding forwards along their axis, and selecting a screw stands its axis upright.</li>
+          <li><strong>The classification:</strong> from the determinant and trace of \(W\); the axis from the null space of \(W-1\) (or \(W+1\)); the screw or glide part by averaging \(w\) over one cycle of \(W\); the element's position by solving \((W-1)x_0=-(w-w_{\rm intr})\). Glide vectors are reduced by lattice translations lying in the plane, and named \(a\), \(b\), \(c\), \(n\) or \(d\), or \(g\) for any other glide direction. The description of each operation gives its own slide, and says when it is the same plane as a conventional glide one lattice translation away. A separate Python check confirmed every one of the 2609 operations, and that every screw axis and glide plane in every Hermann–Mauguin symbol appears in its group.</li>
+          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.41, 0.29, 0.16)\), chosen so that no two of its copies nearly coincide in any group. The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells. The animations always use the element in the list, with the same symbol and the same slide, moved sideways by whole cells if that helps: for one object, so that it stays in the cell when it can; for the whole block, so that the moved cell overlaps the original most. Copies that land in the next cell land on copies drawn faintly there. Selecting a screw stands its axis upright.</li>
           <li><strong>The stereogram:</strong> the point group, the operations with their shifts removed, acting on one direction; upper-hemisphere poles are dots, lower ones circles.</li>
-          <li><strong>The crystals:</strong> published cell parameters and Wyckoff positions; the bonds are drawn between atoms closer than a cut-off for each material, and the computed bond lengths (2.82 Å in NaCl, 2.35 Å in silicon, 1.42 Å in graphite, 1.59 Å for Si–O in quartz) match the measured ones.</li>
+          <li><strong>The crystals:</strong> published cell parameters and Wyckoff positions; the bonds are drawn between atoms closer than a cut-off for each material, and the computed bond lengths (2.82 Å in NaCl, 2.35 Å in silicon, 1.42 Å in graphite, 1.60 and 1.61 Å for Si–O in quartz) match the measured ones.</li>
         </ul>
       </div>
     </details>
