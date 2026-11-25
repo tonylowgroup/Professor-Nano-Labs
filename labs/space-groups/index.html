@@ -17,6 +17,9 @@
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
 <style>
   .ovl { text-decoration: overline; }
+  .swatch--ring { width: 10px; height: 10px; border: 2px solid currentColor; border-radius: 50%; background: #fff; box-sizing: border-box; }
+  .mag-view--single .plot-box.plot-box--mag { height: 460px; }
+  @container (max-width: 640px) { .mag-view--single .plot-box.plot-box--mag { height: 360px; } }
   .sg-pick { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
   .sg-pick input { width: 84px; font: inherit; font-size: 18px; font-weight: 700; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; text-align: center; color: var(--ink); }
   .sg-pick button { width: 38px; height: 38px; }
@@ -181,7 +184,7 @@
         <div class="ctrl__hint" id="sg-name"></div>
         <div class="label-caps" style="margin-top:12px">Famous groups</div>
         <div class="chips" role="group" aria-label="Famous space groups">
-          <button class="chip-btn" type="button" data-sg="1">P1</button><button class="chip-btn" type="button" data-sg="2">P<span class="ovl">1</span></button><button class="chip-btn" type="button" data-sg="4">P2₁</button><button class="chip-btn" type="button" data-sg="14">P2₁/c</button><button class="chip-btn" type="button" data-sg="62">Pnma</button><button class="chip-btn" type="button" data-sg="136">P4₂/mnm</button><button class="chip-btn" type="button" data-sg="152">P3₁21</button><button class="chip-btn" type="button" data-sg="194">P6₃/mmc</button><button class="chip-btn" type="button" data-sg="221">Pm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="225">Fm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="227">Fd<span class="ovl">3</span>m</button>
+          <button class="chip-btn" type="button" data-sg="1">P1</button><button class="chip-btn" type="button" data-sg="2" aria-label="P 1-bar">P<span class="ovl">1</span></button><button class="chip-btn" type="button" data-sg="4">P2₁</button><button class="chip-btn" type="button" data-sg="14">P2₁/c</button><button class="chip-btn" type="button" data-sg="62">Pnma</button><button class="chip-btn" type="button" data-sg="136">P4₂/mnm</button><button class="chip-btn" type="button" data-sg="152">P3₁21</button><button class="chip-btn" type="button" data-sg="194">P6₃/mmc</button><button class="chip-btn" type="button" data-sg="221" aria-label="Pm 3-bar m">Pm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="225" aria-label="Fm 3-bar m">Fm<span class="ovl">3</span>m</button><button class="chip-btn" type="button" data-sg="227" aria-label="Fd 3-bar m">Fd<span class="ovl">3</span>m</button>
         </div>
       </div>
       <div class="ctrl-group" data-modes="crystal">
@@ -216,7 +219,7 @@
         <p class="plot-card__cap" id="dg-cap"></p>
         <ul class="legend" id="dg-legend"></ul>
         <div class="mag-view mag-view--wide" id="mag-view">
-          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="view" class="zone-map" role="img" aria-label="The unit cell"></canvas><canvas id="proj" role="img" aria-label="The diagram" hidden></canvas></div></div>
+          <div class="mag-view__side"><div class="plot-box plot-box--mag"><canvas id="view" style="cursor:grab;touch-action:pan-y" role="img" aria-label="The unit cell"></canvas><canvas id="proj" role="img" aria-label="The diagram" hidden></canvas></div></div>
           <div class="mag-view__side" id="side-box"><div class="op-panel" id="oplist" role="group" aria-label="The operations of the group"></div></div>
         </div>
       </section>
@@ -324,7 +327,7 @@
         <ul>
           <li><strong>The groups:</strong> all 230, in the standard settings of the International Tables: unique axis \(b\) for monoclinic groups, origin choice 2 (an inversion centre at the origin) for the 24 groups that have two, and hexagonal axes for the rhombohedral groups. The operations were taken from the gemmi crystallography library; for each, the coset representatives are stored and the lattice centring adds the rest. Five orthorhombic groups are shown by their current symbols (Aem2, Aea2, Cmce, Cmme, Ccce).</li>
           <li><strong>The classification:</strong> from the determinant and trace of \(W\); the axis from the null space of \(W-1\) (or \(W+1\)); the screw or glide part by averaging \(w\) over one cycle of \(W\); the element's position by solving \((W-1)x_0=-(w-w_{\rm intr})\). Glide vectors are reduced by lattice translations lying in the plane, and named \(a\), \(b\), \(c\), \(n\) or \(d\), or \(g\) for any other glide direction. The description of each operation gives its own slide, and says when it is the same plane as a conventional glide one lattice translation away. A separate Python check confirmed every one of the 2609 operations, and that every screw axis and glide plane in every Hermann–Mauguin symbol appears in its group.</li>
-          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.137, 0.229, 0.083)\). The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells; the animation of the whole block uses the one that keeps the moved cell overlapping the original most, with screws sliding forwards along their axis, and selecting a screw stands its axis upright.</li>
+          <li><strong>The pictures:</strong> the cell shapes are only illustrations: the group fixes which shapes are allowed (cubic, hexagonal...), not the lengths. The handed object sits at the general position \((0.41, 0.29, 0.16)\), chosen so that no two of its copies nearly coincide in any group. The animations interpolate each operation: a turn about the axis, a reflection squeezed through the plane, an inversion squeezed through the centre; screws and glides in two steps, the turn or reflection first and then the slide. Every operation comes with copies shifted by whole cells. The animations always use the element in the list, with the same symbol and the same slide, moved sideways by whole cells if that helps: for one object, so that it stays in the cell when it can; for the whole block, so that the moved cell overlaps the original most. Copies that land in the next cell land on copies drawn faintly there. Selecting a screw stands its axis upright.</li>
           <li><strong>The stereogram:</strong> the point group, the operations with their shifts removed, acting on one direction; upper-hemisphere poles are dots, lower ones circles.</li>
           <li><strong>The crystals:</strong> published cell parameters and Wyckoff positions; the bonds are drawn between atoms closer than a cut-off for each material, and the computed bond lengths (2.82 Å in NaCl, 2.35 Å in silicon, 1.42 Å in graphite, 1.60 and 1.61 Å for Si–O in quartz) match the measured ones.</li>
         </ul>

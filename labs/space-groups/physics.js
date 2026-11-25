@@ -222,7 +222,7 @@
   // text (with -3 for 3-bar) and HTML (with an overline) versions of the Hermann-Mauguin symbol
   function symbolText(xhm, system) { return prettyTokens(xhm, system).map(t => t.replace(/^(\d)(\d)/, (m, a, b) => a + SUBS[b]).replace(/\/(\d)(\d)/, (m, a, b) => '/' + a + SUBS[b])).join(''); }
   function symbolHTML(xhm, system) {
-    return prettyTokens(xhm, system).map(t => t.replace(/^(\d)(\d)/, (m, a, b) => `${a}<sub>${b}</sub>`).replace(/\/(\d)(\d)/, (m, a, b) => `/${a}<sub>${b}</sub>`).replace(/-(\d)/g, '<span class="ovl">$1</span>')).join('');
+    return prettyTokens(xhm, system).map(t => t.replace(/^(\d)(\d)/, (m, a, b) => `${a}<sub>${b}</sub>`).replace(/\/(\d)(\d)/, (m, a, b) => `/${a}<sub>${b}</sub>`).replace(/-(\d)/g, '<span class="ovl" aria-hidden="true">$1</span><span class="visually-hidden">$1-bar</span>')).join('');
   }
   const MODERN = { 39: 'Aem2', 41: 'Aea2', 64: 'Cmce', 67: 'Cmme', 68: 'Ccce' };
   const cache = new Map();
